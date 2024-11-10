@@ -581,3 +581,106 @@
 2024-11-10T13:14:37.684Z [INFO]:Starts findWithFilters
 2024-11-10T13:14:37.961Z [INFO]:result: [object Object]
 2024-11-10T13:14:37.961Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T15:54:16.653Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T16:04:36.104Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T16:39:41.221Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T16:40:01.064Z [INFO]:custom validation
+2024-11-10T16:40:01.071Z [INFO]:starts processAuthRequest
+2024-11-10T16:40:01.072Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T16:40:01.158Z [INFO]:pass: $2b$10$gxYT/RmqB8JXNqsqltRB/O6b2DZ0Tp.7Z8AXtO.xASrqPT3U8YZOS
+2024-11-10T16:40:01.158Z [INFO]:Starts findWithFilters
+2024-11-10T16:40:01.466Z [INFO]:result: [object Object]
+2024-11-10T16:40:01.467Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T16:45:25.349Z [INFO]:custom validation
+2024-11-10T16:45:25.350Z [INFO]:starts processAuthRequest
+2024-11-10T16:45:25.351Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T16:45:25.435Z [INFO]:pass: $2b$10$OCRwUP.kCC8heY.QayKh0uwZkL2tiN.B01iHlB7FShhza2AU9hxI.
+2024-11-10T16:45:25.435Z [INFO]:Starts findWithFilters
+2024-11-10T16:45:25.720Z [INFO]:result: [object Object]
+2024-11-10T16:45:25.720Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T16:47:17.458Z [INFO]:custom validation
+2024-11-10T16:47:17.459Z [INFO]:starts processAuthRequest
+2024-11-10T16:47:17.459Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T16:47:17.538Z [INFO]:pass: $2b$10$pGi.nWw23NAGwbLpcjzud.HJki6knt1BVx2D.QMd1VoX9sPotUVlq
+2024-11-10T16:47:17.538Z [INFO]:Starts findWithFilters
+2024-11-10T16:47:17.879Z [INFO]:result: [object Object]
+2024-11-10T16:47:17.880Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T17:49:16.459Z [INFO]:custom validation
+2024-11-10T17:49:16.466Z [INFO]:starts processAuthRequest
+2024-11-10T17:50:26.573Z [INFO]:custom validation
+2024-11-10T17:50:26.574Z [INFO]:starts processAuthRequest
+2024-11-10T17:50:47.747Z [INFO]:custom validation
+2024-11-10T17:50:47.749Z [INFO]:starts processAuthRequest
+2024-11-10T17:52:20.207Z [INFO]:custom validation
+2024-11-10T17:52:20.219Z [INFO]:starts processAuthRequest
+2024-11-10T17:56:05.605Z [INFO]:custom validation
+2024-11-10T17:56:05.613Z [INFO]:starts processAuthRequest
+2024-11-10T17:56:27.103Z [INFO]:custom validation
+2024-11-10T17:56:27.105Z [INFO]:starts processAuthRequest
+2024-11-10T17:58:36.770Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T17:58:40.767Z [INFO]:custom validation
+2024-11-10T17:58:40.779Z [INFO]:starts processAuthRequest
+2024-11-10T18:00:35.400Z [INFO]:custom validation
+2024-11-10T18:00:35.410Z [INFO]:starts processAuthRequest
+2024-11-10T18:03:15.797Z [INFO]:custom validation
+2024-11-10T18:03:15.800Z [INFO]:starts processAuthRequest
+2024-11-10T18:03:25.536Z [INFO]:custom validation
+2024-11-10T18:03:25.537Z [INFO]:starts processAuthRequest
+2024-11-10T18:12:07.241Z [INFO]:custom validation
+2024-11-10T18:12:07.243Z [INFO]:starts processAuthRequest
+2024-11-10T18:12:12.967Z [INFO]:custom validation
+2024-11-10T18:12:12.969Z [INFO]:starts processAuthRequest
+2024-11-10T18:12:12.969Z [INFO]:DO_LOGIN
+2024-11-10T18:12:12.970Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T18:12:13.055Z [INFO]:pass: $2b$10$oI6kK7is4Q/Un3F3zgt.SuPip.Emy8aim0ldK8xv8MfEvRBnWlLRa
+2024-11-10T18:12:13.055Z [INFO]:Starts findWithFilters
+2024-11-10T18:12:13.363Z [INFO]:result: [object Object]
+2024-11-10T18:12:13.363Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T18:32:29.658Z [INFO]:custom validation
+2024-11-10T18:32:29.660Z [INFO]:starts processAuthRequest
+2024-11-10T18:32:29.661Z [INFO]:DO_LOGIN
+2024-11-10T18:32:29.661Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T18:32:29.742Z [INFO]:pass: $2b$10$cfnIvDbzjVbfdNRmdTxV1em9MJyO6ERYLavtNVanA2ZHpFXEyexvu
+2024-11-10T18:32:29.743Z [INFO]:Starts findWithFilters
+2024-11-10T18:32:30.031Z [INFO]:result: [object Object]
+2024-11-10T18:32:30.031Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T18:37:07.087Z [INFO]:custom validation
+2024-11-10T18:37:07.091Z [INFO]:starts processAuthRequest
+2024-11-10T18:37:07.092Z [INFO]:DO_LOGIN
+2024-11-10T18:37:07.092Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T18:37:07.175Z [INFO]:pass: $2b$10$V9lfCkxu/nXk40u7DdsyruuYeefJlJuazDxqWO0HatcT6IqNHw.Je
+2024-11-10T18:37:07.175Z [INFO]:Starts findWithFilters
+2024-11-10T18:37:07.479Z [INFO]:result: [object Object]
+2024-11-10T18:37:07.479Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T18:55:19.983Z [INFO]:custom validation
+2024-11-10T18:55:19.984Z [INFO]:starts processAuthRequest
+2024-11-10T18:55:19.984Z [INFO]:DO_LOGIN
+2024-11-10T18:55:19.984Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T18:55:20.073Z [INFO]:pass: $2b$10$QRlifh/wrGvs88.N37R5vu5Laud2tarnJRsXCrbGiKGBMZPY9jfVa
+2024-11-10T18:55:20.073Z [INFO]:Starts findWithFilters
+2024-11-10T18:55:20.396Z [INFO]:result: [object Object]
+2024-11-10T18:55:20.397Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T18:57:27.416Z [INFO]:custom validation
+2024-11-10T18:57:27.419Z [INFO]:starts processAuthRequest
+2024-11-10T18:57:27.420Z [INFO]:DO_LOGIN
+2024-11-10T18:57:27.420Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T18:57:27.502Z [INFO]:pass: $2b$10$1sMDscaiVr4FfQPrx3BbduTESHtF7hd5e2zCyjUvB5rhWhb0Q0DFa
+2024-11-10T18:57:27.502Z [INFO]:Starts findWithFilters
+2024-11-10T18:57:27.809Z [INFO]:result: [object Object]
+2024-11-10T18:57:27.810Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T19:12:32.680Z [INFO]:custom validation
+2024-11-10T19:12:32.685Z [INFO]:starts processAuthRequest
+2024-11-10T19:12:32.686Z [INFO]:DO_LOGIN
+2024-11-10T19:12:32.686Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T19:12:32.769Z [INFO]:pass: $2b$10$PJlAOzx42or8JHhmPkVdlOmWIpLwMubb15M3dA9HpFDW9gtvLpKMG
+2024-11-10T19:12:32.769Z [INFO]:Starts findWithFilters
+2024-11-10T19:12:33.048Z [INFO]:result: [object Object]
+2024-11-10T19:12:33.049Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T19:20:31.747Z [INFO]:custom validation
+2024-11-10T19:20:31.747Z [INFO]:starts processAuthRequest
+2024-11-10T19:20:31.748Z [INFO]:DO_LOGIN
+2024-11-10T19:20:31.748Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T19:20:31.831Z [INFO]:pass: $2b$10$Ona/jRzRj.ZiJRY0pStkn.sUvZCeLhPuqyshhqC6oqUAdI1VS1hNW
+2024-11-10T19:20:31.831Z [INFO]:Starts findWithFilters
+2024-11-10T19:20:32.148Z [INFO]:result: [object Object]
+2024-11-10T19:20:32.148Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}

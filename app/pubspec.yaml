@@ -35,7 +35,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  intl: ^0.18.0  # Versión más reciente de intls
+  intl: ^0.19.0  # Versión más reciente de intls
   device_preview: ^1.1.0
   http: ^0.13.5
   fluttertoast: ^8.1.2

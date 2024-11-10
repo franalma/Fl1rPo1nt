@@ -56,7 +56,7 @@ async function processAuthRequest(req, res) {
 
         } else {
             const { action } = req.body;
-
+            logger.info(action);
             switch (action) {
                 case hostActions.PUT_USER: {
                     result = await userHandler.registerUser(req.body.input);
