@@ -684,3 +684,43 @@
 2024-11-10T19:20:31.831Z [INFO]:Starts findWithFilters
 2024-11-10T19:20:32.148Z [INFO]:result: [object Object]
 2024-11-10T19:20:32.148Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T20:31:38.593Z [INFO]:custom validation
+2024-11-10T20:31:38.597Z [INFO]:starts processAuthRequest
+2024-11-10T20:31:38.597Z [INFO]:DO_LOGIN
+2024-11-10T20:31:38.597Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T20:31:38.679Z [INFO]:pass: $2b$10$RCOGdQqiLwmqRnFaVnFDH.YS0EtCVAUBD7kRs.3ivwAXYDCFfj7dy
+2024-11-10T20:31:38.679Z [INFO]:Starts findWithFilters
+2024-11-10T20:31:38.997Z [INFO]:result: [object Object]
+2024-11-10T20:31:38.998Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T20:44:41.495Z [INFO]:custom validation
+2024-11-10T20:44:41.496Z [INFO]:starts processAuthRequest
+2024-11-10T20:44:41.496Z [INFO]:DO_LOGIN
+2024-11-10T20:44:41.496Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T20:44:41.579Z [INFO]:pass: $2b$10$O7lHmXd9.3g39/PpAFEWdOzm57Dtb/QGqYmQ0cbBQapF9k5MFCgbu
+2024-11-10T20:44:41.579Z [INFO]:Starts findWithFilters
+2024-11-10T20:44:41.889Z [INFO]:result: [object Object]
+2024-11-10T20:44:41.890Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T20:47:39.852Z [INFO]:custom validation
+2024-11-10T20:47:39.853Z [INFO]:starts processAuthRequest
+2024-11-10T20:47:39.853Z [INFO]:DO_LOGIN
+2024-11-10T20:47:39.853Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T20:47:39.938Z [INFO]:pass: $2b$10$Dgpc52ghskWmKGq27oDehePWRRrx8ti9rh3Rfo1OtEIaHUR0pofdu
+2024-11-10T20:47:39.938Z [INFO]:Starts findWithFilters
+2024-11-10T20:47:40.245Z [INFO]:result: [object Object]
+2024-11-10T20:47:40.246Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T20:48:04.864Z [INFO]:custom validation
+2024-11-10T20:48:04.865Z [INFO]:starts processAuthRequest
+2024-11-10T20:48:04.865Z [INFO]:DO_LOGIN
+2024-11-10T20:48:04.865Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T20:48:04.944Z [INFO]:pass: $2b$10$M/bqtxxL9WlHxzLtbFWekepq5aPkJyZ1mJMwKxejBxxQ8iscT94Bq
+2024-11-10T20:48:04.944Z [INFO]:Starts findWithFilters
+2024-11-10T20:48:05.252Z [INFO]:result: [object Object]
+2024-11-10T20:48:05.253Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T20:50:49.189Z [INFO]:custom validation
+2024-11-10T20:50:49.190Z [INFO]:starts processAuthRequest
+2024-11-10T20:50:49.190Z [INFO]:DO_LOGIN
+2024-11-10T20:50:49.190Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T20:50:49.272Z [INFO]:pass: $2b$10$2BzjmnVLipOfgbtrT6XhGOP8Vxq4r4io6lVIPdUYAAXvSClFwApQO
+2024-11-10T20:50:49.272Z [INFO]:Starts findWithFilters
+2024-11-10T20:50:49.556Z [INFO]:result: [object Object]
+2024-11-10T20:50:49.556Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}

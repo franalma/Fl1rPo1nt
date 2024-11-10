@@ -1,8 +1,8 @@
 import 'package:app/app_localizations.dart';
+import 'package:app/model/session.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
 
 class QrGeneratePage extends StatefulWidget {
   @override
@@ -17,6 +17,8 @@ class _QrGeneratePage extends State<QrGeneratePage> {
     {"name": "Teléfono", "isChecked": false},
     {"name": "Mail", "isChecked": false},
   ];
+  TextEditingController controller = TextEditingController();
+  List selectedIndex = [];
 
   @override
   Widget build(BuildContext context) {
@@ -38,27 +40,41 @@ class _QrGeneratePage extends State<QrGeneratePage> {
                   onChanged: (bool? value) {
                     setState(() {
                       items[index]["isChecked"] = value!;
+                      updateValue(index);
                     });
                   },
                 );
               },
             )),
             const Spacer(), // Este widget empuja el botón hacia abajo
-            ElevatedButton(
-              onPressed: () {
-                
-                generateQrCode();
-              },
-              child: Text('Generar QR'),
-            ),
+            (selectedIndex.isNotEmpty) ?QrImageView(data: controller.text, size: 260):Container()
           ],
         )));
   }
 
-  void generateQrCode(){
-      QrImage qr = QrImage(data:"fadfdsa");
+  void updateValue(int index) {
+    String text = ""; 
+    if (items[index]["isChecked"]) {
+      selectedIndex.add(index);
+    } else {
+      selectedIndex.add(index);
+    }
+    
+    selectedIndex.forEach((value) {
 
-           
-           
+      switch (value) {
+        case 0:
+          {
+            text = "$text${Session.user.name}:";
+            break;
+          }
+          case 1:
+          {
+            text = "$text${Session.user.phone}:";
+            break;
+          }
+      }
+      controller.text = text; 
+    });
   }
 }

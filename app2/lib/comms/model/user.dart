@@ -2,10 +2,15 @@ import 'dart:convert';
 
 class User {
   late String name;
+  late String phone; 
+  late String email; 
+  late String city; 
+  late String country; 
   late String token;
+  
   late String refreshToken;
 
-  User(this.name, this.token, this.refreshToken);
+  User(this.name, this.phone, this.email, this.city, this.country, this.token, this.refreshToken);
 
 
   // static User fromJson(input) {
