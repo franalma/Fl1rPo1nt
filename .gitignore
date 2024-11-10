@@ -1,0 +1,8 @@
+
+app/build/
+
+server/node_modules/
+
+server/.env
+
+app/.dart_tool/

@@ -1,0 +1,583 @@
+2024-11-08T14:33:10.191Z [INFO]:starts connection:mongodb://admin:Aa123456$@localhost:27016/sport_health
+2024-11-08T14:33:51.103Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T14:34:03.885Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T14:34:11.113Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.22:27016/sport_health
+2024-11-08T14:34:24.193Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T14:35:05.367Z [INFO]:custom validation
+2024-11-08T14:35:05.370Z [INFO]:starts processRequest
+2024-11-08T14:35:59.099Z [INFO]:custom validation
+2024-11-08T14:35:59.100Z [INFO]:starts processRequest
+2024-11-08T14:43:48.602Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T14:43:51.915Z [INFO]:custom validation
+2024-11-08T14:43:51.919Z [INFO]:starts processRequest
+2024-11-08T14:44:07.986Z [INFO]:custom validation
+2024-11-08T14:44:07.987Z [INFO]:starts processRequest
+2024-11-08T14:44:18.616Z [INFO]:custom validation
+2024-11-08T14:44:18.618Z [INFO]:starts processRequest
+2024-11-08T14:59:31.744Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T14:59:34.776Z [INFO]:custom validation
+2024-11-08T14:59:34.782Z [INFO]:starts processRequest
+2024-11-08T14:59:49.983Z [INFO]:custom validation
+2024-11-08T14:59:49.994Z [INFO]:starts processRequest
+2024-11-08T14:59:56.037Z [INFO]:custom validation
+2024-11-08T14:59:56.039Z [INFO]:starts processRequest
+2024-11-08T15:09:00.947Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:09:03.957Z [INFO]:custom validation
+2024-11-08T15:10:17.772Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:10:20.372Z [INFO]:custom validation
+2024-11-08T15:10:39.901Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:10:42.198Z [INFO]:custom validation
+2024-11-08T15:10:42.203Z [INFO]:starts processRequest
+2024-11-08T15:10:42.204Z [INFO]:start registerUser
+2024-11-08T15:30:46.879Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:30:52.553Z [INFO]:custom validation
+2024-11-08T15:30:52.559Z [INFO]:starts processRequest
+2024-11-08T15:30:52.559Z [INFO]:start registerUser
+2024-11-08T15:30:52.849Z [INFO]:Starts
+2024-11-08T15:32:06.201Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:32:09.586Z [INFO]:custom validation
+2024-11-08T15:32:09.592Z [INFO]:starts processRequest
+2024-11-08T15:32:09.592Z [INFO]:start registerUser
+2024-11-08T15:32:09.963Z [INFO]:Starts
+2024-11-08T15:33:54.490Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:34:02.069Z [INFO]:custom validation
+2024-11-08T15:34:02.076Z [INFO]:starts processRequest
+2024-11-08T15:34:02.077Z [INFO]:start registerUser
+2024-11-08T15:34:02.077Z [INFO]:Starts findWithFilters
+2024-11-08T15:34:02.418Z [INFO]:Starts addDocument
+2024-11-08T15:34:57.305Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:34:59.612Z [INFO]:custom validation
+2024-11-08T15:34:59.617Z [INFO]:starts processRequest
+2024-11-08T15:34:59.618Z [INFO]:start registerUser
+2024-11-08T15:34:59.618Z [INFO]:Starts findWithFilters
+2024-11-08T15:34:59.977Z [INFO]:Starts addDocument
+2024-11-08T15:36:00.705Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:36:08.112Z [INFO]:custom validation
+2024-11-08T15:36:08.117Z [INFO]:starts processRequest
+2024-11-08T15:36:08.118Z [INFO]:start registerUser
+2024-11-08T15:36:08.118Z [INFO]:Starts findWithFilters
+2024-11-08T15:36:08.479Z [INFO]:Starts addDocument
+2024-11-08T15:37:20.944Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:37:25.530Z [INFO]:custom validation
+2024-11-08T15:37:25.535Z [INFO]:starts processRequest
+2024-11-08T15:37:25.536Z [INFO]:start registerUser
+2024-11-08T15:37:25.536Z [INFO]:Starts findWithFilters
+2024-11-08T15:37:25.910Z [INFO]:Starts addDocument: undefined
+2024-11-08T15:38:07.710Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:38:10.466Z [INFO]:custom validation
+2024-11-08T15:38:10.484Z [INFO]:starts processRequest
+2024-11-08T15:38:10.486Z [INFO]:start registerUse: 
+2024-11-08T15:38:10.487Z [INFO]:Starts findWithFilters
+2024-11-08T15:38:10.865Z [INFO]:Starts addDocument: {"id":"5b2799c4-e69a-425c-8b06-1281fec06c5c","name":"Name1","email":"test@gmail.com","password":"$2b$10$qIf1hmBYqF/pi.EzAo4et.hRwOt8I1TwHkSv0aLnirlITZ.y8sXjK","surname":"surname1"}
+2024-11-08T15:40:25.410Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:40:36.426Z [INFO]:custom validation
+2024-11-08T15:40:36.432Z [INFO]:starts processRequest
+2024-11-08T15:40:36.433Z [INFO]:start registerUse: 
+2024-11-08T15:40:36.433Z [INFO]:Starts findWithFilters
+2024-11-08T15:40:36.794Z [INFO]:Starts addDocument: {"id":"0df2a942-c09d-47e6-9eee-bd7af07df914","name":"Name1","email":"test@gmail.com","password":"$2b$10$Bh7Mfit3l1Eg6sHeZo4LYufSnlrk2MI91uErYw/27MqQf18qEeKG6","surname":"surname1"}
+2024-11-08T15:57:56.317Z [INFO]:Init
+2024-11-08T15:57:56.317Z [INFO]:{"authorization":"Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjkyOTM4MywiZW1haWwiOiJmcmFAZy5jb20iLCJpYXQiOjE3MzEwNjgyNDgsImV4cCI6MTczMTA2OTE0OH0.1r2rjaeTsTcObU49zYv90iQHkbZQVe06UF_8h0ucdUU}","content-type":"application/json","user-agent":"PostmanRuntime/7.42.0","accept":"*/*","cache-control":"no-cache","postman-token":"48142cc5-a07e-4b03-9f34-7f211bf97df1","host":"localhost:3000","accept-encoding":"gzip, deflate, br","connection":"keep-alive","content-length":"117"}
+2024-11-08T15:59:15.771Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T15:59:17.896Z [INFO]:custom validation
+2024-11-08T15:59:17.901Z [INFO]:starts processRequest
+2024-11-08T15:59:17.902Z [INFO]:Start doLogin
+2024-11-08T15:59:17.978Z [INFO]:Starts findWithFilters
+2024-11-08T15:59:28.457Z [INFO]:custom validation
+2024-11-08T15:59:28.459Z [INFO]:starts processRequest
+2024-11-08T15:59:28.459Z [INFO]:Start doLogin
+2024-11-08T15:59:28.549Z [INFO]:Starts findWithFilters
+2024-11-08T15:59:33.756Z [INFO]:custom validation
+2024-11-08T15:59:33.757Z [INFO]:starts processRequest
+2024-11-08T15:59:33.758Z [INFO]:Start doLogin
+2024-11-08T15:59:33.849Z [INFO]:Starts findWithFilters
+2024-11-08T16:00:15.795Z [INFO]:custom validation
+2024-11-08T16:00:15.796Z [INFO]:starts processRequest
+2024-11-08T16:00:15.797Z [INFO]:Start doLogin
+2024-11-08T16:00:15.869Z [INFO]:Starts findWithFilters
+2024-11-08T16:00:46.009Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:00:48.868Z [INFO]:custom validation
+2024-11-08T16:00:48.873Z [INFO]:starts processRequest
+2024-11-08T16:00:48.874Z [INFO]:Start doLogin
+2024-11-08T16:00:48.952Z [INFO]:Starts findWithFilters
+2024-11-08T16:00:48.953Z [INFO]:user: {}
+2024-11-08T16:03:38.867Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:03:41.551Z [INFO]:custom validation
+2024-11-08T16:03:41.557Z [INFO]:starts processRequest
+2024-11-08T16:03:41.558Z [INFO]:Start doLogin
+2024-11-08T16:03:41.632Z [INFO]:Starts findWithFilters
+2024-11-08T16:03:46.190Z [INFO]:custom validation
+2024-11-08T16:03:46.192Z [INFO]:starts processRequest
+2024-11-08T16:03:46.192Z [INFO]:Start doLogin
+2024-11-08T16:03:46.292Z [INFO]:Starts findWithFilters
+2024-11-08T16:04:00.170Z [INFO]:custom validation
+2024-11-08T16:04:00.172Z [INFO]:starts processRequest
+2024-11-08T16:04:00.173Z [INFO]:Start doLogin
+2024-11-08T16:04:00.245Z [INFO]:Starts findWithFilters
+2024-11-08T16:04:14.109Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:04:16.440Z [INFO]:custom validation
+2024-11-08T16:04:16.450Z [INFO]:starts processRequest
+2024-11-08T16:04:16.451Z [INFO]:Start doLogin
+2024-11-08T16:04:16.538Z [INFO]:Starts findWithFilters
+2024-11-08T16:04:16.539Z [INFO]:user: {}
+2024-11-08T16:04:35.653Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:04:37.685Z [INFO]:custom validation
+2024-11-08T16:04:37.690Z [INFO]:starts processRequest
+2024-11-08T16:04:37.691Z [INFO]:Start doLogin
+2024-11-08T16:04:37.766Z [INFO]:Starts findWithFilters
+2024-11-08T16:04:37.767Z [INFO]:user: {}
+2024-11-08T16:05:55.570Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:06:02.973Z [INFO]:custom validation
+2024-11-08T16:06:02.978Z [INFO]:starts processRequest
+2024-11-08T16:06:02.978Z [INFO]:Start doLogin
+2024-11-08T16:06:03.053Z [INFO]:Starts findWithFilters
+2024-11-08T16:06:03.054Z [INFO]:user: {}
+2024-11-08T16:06:03.347Z [INFO]:result: [object Object]
+2024-11-08T16:06:33.250Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:06:35.994Z [INFO]:custom validation
+2024-11-08T16:06:36.000Z [INFO]:starts processRequest
+2024-11-08T16:06:36.000Z [INFO]:Start doLogin
+2024-11-08T16:06:36.075Z [INFO]:Starts findWithFilters
+2024-11-08T16:06:36.367Z [INFO]:result: null
+2024-11-08T16:06:36.368Z [INFO]:user: null
+2024-11-08T16:06:50.580Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:06:53.128Z [INFO]:custom validation
+2024-11-08T16:06:53.134Z [INFO]:starts processRequest
+2024-11-08T16:06:53.134Z [INFO]:Start doLogin
+2024-11-08T16:06:53.212Z [INFO]:Starts findWithFilters
+2024-11-08T16:06:53.511Z [INFO]:result: [object Object]
+2024-11-08T16:06:53.512Z [INFO]:user: {"_id":"672e30f511b031d6b4c99427","id":"0df2a942-c09d-47e6-9eee-bd7af07df914","name":"Name1","email":"test@gmail.com","password":"$2b$10$Bh7Mfit3l1Eg6sHeZo4LYufSnlrk2MI91uErYw/27MqQf18qEeKG6","surname":"surname1"}
+2024-11-08T16:07:43.264Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:07:46.933Z [INFO]:custom validation
+2024-11-08T16:07:46.939Z [INFO]:starts processRequest
+2024-11-08T16:07:46.939Z [INFO]:Start doLogin
+2024-11-08T16:07:47.014Z [INFO]:pass: $2b$10$fUgl3G9NnPj4qgw6a1RxL.wFQsqikp3mt1l/n.HeYS5RanvLYT73G
+2024-11-08T16:07:47.015Z [INFO]:Starts findWithFilters
+2024-11-08T16:07:47.297Z [INFO]:result: null
+2024-11-08T16:07:47.298Z [INFO]:user: null
+2024-11-08T16:08:22.456Z [INFO]:custom validation
+2024-11-08T16:08:22.459Z [INFO]:starts processRequest
+2024-11-08T16:08:22.459Z [INFO]:Start registerUser
+2024-11-08T16:08:22.460Z [INFO]:Starts findWithFilters
+2024-11-08T16:08:22.744Z [INFO]:result: [object Object]
+2024-11-08T16:08:24.170Z [INFO]:custom validation
+2024-11-08T16:08:24.172Z [INFO]:starts processRequest
+2024-11-08T16:08:24.173Z [INFO]:Start registerUser
+2024-11-08T16:08:24.173Z [INFO]:Starts findWithFilters
+2024-11-08T16:08:24.456Z [INFO]:result: [object Object]
+2024-11-08T16:08:26.217Z [INFO]:custom validation
+2024-11-08T16:08:26.218Z [INFO]:starts processRequest
+2024-11-08T16:08:26.218Z [INFO]:Start registerUser
+2024-11-08T16:08:26.218Z [INFO]:Starts findWithFilters
+2024-11-08T16:08:26.498Z [INFO]:result: [object Object]
+2024-11-08T16:08:40.211Z [INFO]:custom validation
+2024-11-08T16:08:40.212Z [INFO]:starts processRequest
+2024-11-08T16:08:40.212Z [INFO]:Start doLogin
+2024-11-08T16:08:40.290Z [INFO]:pass: $2b$10$6Ozbr4ZJ5MwjDcKu7yeal.aj4ghpRjfvy6ea1xgG6wuvtZdTbTXr6
+2024-11-08T16:08:40.290Z [INFO]:Starts findWithFilters
+2024-11-08T16:08:40.667Z [INFO]:result: null
+2024-11-08T16:08:40.668Z [INFO]:user: null
+2024-11-08T16:09:35.084Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:09:46.117Z [INFO]:custom validation
+2024-11-08T16:09:46.121Z [INFO]:starts processRequest
+2024-11-08T16:09:46.122Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-08T16:09:46.198Z [INFO]:pass: $2b$10$Or9btvFYM8WIb4I8j9Gki.4NN.tWEyjyUaaarz/BRNbO6A0/dla6u
+2024-11-08T16:09:46.198Z [INFO]:Starts findWithFilters
+2024-11-08T16:09:46.566Z [INFO]:result: null
+2024-11-08T16:09:46.567Z [INFO]:user: null
+2024-11-08T16:12:52.644Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-08T16:12:54.756Z [INFO]:custom validation
+2024-11-08T16:12:54.762Z [INFO]:starts processRequest
+2024-11-08T16:12:54.762Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-08T16:12:54.839Z [INFO]:pass: $2b$10$txxsy2qsxe4fBM6up.K2TebqbN/6kXWHQ/ofAVyHjB/KOoxVMftaa
+2024-11-08T16:12:54.840Z [INFO]:Starts findWithFilters
+2024-11-08T16:12:55.126Z [INFO]:result: [object Object]
+2024-11-08T16:12:55.127Z [INFO]:user: {"_id":"672e30f511b031d6b4c99427","id":"0df2a942-c09d-47e6-9eee-bd7af07df914","name":"Name1","email":"test@gmail.com","password":"$2b$10$Bh7Mfit3l1Eg6sHeZo4LYufSnlrk2MI91uErYw/27MqQf18qEeKG6","surname":"surname1"}
+2024-11-08T16:13:03.280Z [INFO]:custom validation
+2024-11-08T16:13:03.282Z [INFO]:starts processRequest
+2024-11-08T16:13:03.282Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa12367$"}
+2024-11-08T16:13:03.359Z [INFO]:pass: $2b$10$Iot5vhOWgfrJeHYzCLctdunaniLGHWjJBMEmP7DWNA87wMCQfd.Oa
+2024-11-08T16:13:03.359Z [INFO]:Starts findWithFilters
+2024-11-08T16:13:03.647Z [INFO]:result: [object Object]
+2024-11-08T16:13:03.647Z [INFO]:user: {"_id":"672e30f511b031d6b4c99427","id":"0df2a942-c09d-47e6-9eee-bd7af07df914","name":"Name1","email":"test@gmail.com","password":"$2b$10$Bh7Mfit3l1Eg6sHeZo4LYufSnlrk2MI91uErYw/27MqQf18qEeKG6","surname":"surname1"}
+2024-11-08T16:13:07.954Z [INFO]:custom validation
+2024-11-08T16:13:07.955Z [INFO]:starts processRequest
+2024-11-08T16:13:07.956Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-08T16:13:08.053Z [INFO]:pass: $2b$10$g8V96VpyNRAPyHWc3AopbOUK/s65z5jvmvGV727bNxeef9TKyh4k.
+2024-11-08T16:13:08.053Z [INFO]:Starts findWithFilters
+2024-11-08T16:13:08.324Z [INFO]:result: [object Object]
+2024-11-08T16:13:08.324Z [INFO]:user: {"_id":"672e30f511b031d6b4c99427","id":"0df2a942-c09d-47e6-9eee-bd7af07df914","name":"Name1","email":"test@gmail.com","password":"$2b$10$Bh7Mfit3l1Eg6sHeZo4LYufSnlrk2MI91uErYw/27MqQf18qEeKG6","surname":"surname1"}
+2024-11-08T16:13:12.227Z [INFO]:custom validation
+2024-11-08T16:13:12.228Z [INFO]:starts processRequest
+2024-11-08T16:13:12.228Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567"}
+2024-11-08T16:13:12.319Z [INFO]:pass: $2b$10$9WdqI64hn31eoIhSiJ9veemkaqdK61tMvPqeG8rwxxLaZXmvpXEha
+2024-11-08T16:13:12.319Z [INFO]:Starts findWithFilters
+2024-11-08T16:13:12.601Z [INFO]:result: [object Object]
+2024-11-08T16:13:12.602Z [INFO]:user: {"_id":"672e30f511b031d6b4c99427","id":"0df2a942-c09d-47e6-9eee-bd7af07df914","name":"Name1","email":"test@gmail.com","password":"$2b$10$Bh7Mfit3l1Eg6sHeZo4LYufSnlrk2MI91uErYw/27MqQf18qEeKG6","surname":"surname1"}
+2024-11-10T09:52:36.424Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-10T09:53:08.705Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/sport_health
+2024-11-10T09:54:22.600Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T09:57:06.794Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T09:57:11.119Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T09:57:56.768Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:02:54.219Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:07:39.655Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:07:41.534Z [INFO]:custom validation
+2024-11-10T10:07:41.539Z [INFO]:starts processRequest
+2024-11-10T10:07:41.539Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567"}
+2024-11-10T10:07:41.614Z [INFO]:pass: $2b$10$0IA4/AZ25emqbVuHBqZPcuZ5xgameVVtnhYTbrlcJpEG1qds827Fu
+2024-11-10T10:07:41.614Z [INFO]:Starts findWithFilters
+2024-11-10T10:07:41.916Z [INFO]:result: null
+2024-11-10T10:07:41.917Z [INFO]:user: null
+2024-11-10T10:08:02.069Z [INFO]:custom validation
+2024-11-10T10:08:02.071Z [INFO]:starts processRequest
+2024-11-10T10:08:02.072Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567"}
+2024-11-10T10:08:02.152Z [INFO]:pass: $2b$10$4ntwUfenuD25keO3YpGoA.fGnfx8m1Xsy6MkN6iMfwZHi/eaGHkXK
+2024-11-10T10:08:02.152Z [INFO]:Starts findWithFilters
+2024-11-10T10:08:02.449Z [INFO]:result: null
+2024-11-10T10:08:02.449Z [INFO]:user: null
+2024-11-10T10:11:32.784Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:11:37.970Z [INFO]:custom validation
+2024-11-10T10:11:37.982Z [INFO]:starts processRequest
+2024-11-10T10:11:37.986Z [INFO]:Start registerUser
+2024-11-10T10:11:37.987Z [INFO]:Starts findWithFilters
+2024-11-10T10:11:38.265Z [INFO]:result: null
+2024-11-10T10:11:38.344Z [INFO]:Starts addDocument: {"id":"ec713a05-4a74-4f4e-baed-296b3e0851d1","name":"Name1","email":"test@gmail.com","password":"$2b$10$3HJptwS0F/p00ek.DOFBdunrdOlF6di7Kg5GmO0FZnHI0qDVTY7fy","surname":"surname1"}
+2024-11-10T10:12:46.647Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:12:49.094Z [INFO]:custom validation
+2024-11-10T10:12:49.106Z [INFO]:starts processRequest
+2024-11-10T10:12:49.110Z [INFO]:Start registerUser
+2024-11-10T10:12:49.110Z [INFO]:Starts findWithFilters
+2024-11-10T10:12:49.393Z [INFO]:result: [object Object]
+2024-11-10T10:13:43.933Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:13:47.212Z [INFO]:custom validation
+2024-11-10T10:13:47.225Z [INFO]:starts processRequest
+2024-11-10T10:13:47.230Z [INFO]:Start registerUser
+2024-11-10T10:13:47.230Z [INFO]:Starts findWithFilters
+2024-11-10T10:13:47.507Z [INFO]:result: [object Object]
+2024-11-10T10:13:47.508Z [INFO]:Cannot set headers after they are sent to the client
+2024-11-10T10:14:03.449Z [INFO]:custom validation
+2024-11-10T10:14:03.456Z [INFO]:starts processRequest
+2024-11-10T10:14:03.457Z [INFO]:Start registerUser
+2024-11-10T10:14:03.457Z [INFO]:Starts findWithFilters
+2024-11-10T10:14:03.749Z [INFO]:result: [object Object]
+2024-11-10T10:14:03.749Z [INFO]:Cannot set headers after they are sent to the client
+2024-11-10T10:14:16.340Z [INFO]:custom validation
+2024-11-10T10:14:16.341Z [INFO]:starts processRequest
+2024-11-10T10:14:16.342Z [INFO]:Start registerUser
+2024-11-10T10:14:16.342Z [INFO]:Starts findWithFilters
+2024-11-10T10:14:16.628Z [INFO]:result: [object Object]
+2024-11-10T10:14:16.629Z [INFO]:Cannot set headers after they are sent to the client
+2024-11-10T10:14:23.706Z [INFO]:custom validation
+2024-11-10T10:14:23.707Z [INFO]:starts processRequest
+2024-11-10T10:14:23.707Z [INFO]:Start registerUser
+2024-11-10T10:14:23.707Z [INFO]:Starts findWithFilters
+2024-11-10T10:14:23.993Z [INFO]:result: [object Object]
+2024-11-10T10:14:23.993Z [INFO]:Cannot set headers after they are sent to the client
+2024-11-10T10:15:03.497Z [INFO]:custom validation
+2024-11-10T10:15:03.498Z [INFO]:starts processRequest
+2024-11-10T10:15:03.499Z [INFO]:Start registerUser
+2024-11-10T10:15:03.499Z [INFO]:Starts findWithFilters
+2024-11-10T10:15:03.792Z [INFO]:result: null
+2024-11-10T10:15:03.872Z [INFO]:Starts addDocument: {"id":"a450db6b-fba1-47a4-8649-034148dcf35b","name":"Name1","email":"test@gmail.com","password":"$2b$10$pBryYI7i3lGxH4vXfstyUethoj8ZfGf2CyG6WsUM6v91ZPCSpYnlK","surname":"surname1"}
+2024-11-10T10:15:04.147Z [INFO]:Cannot set headers after they are sent to the client
+2024-11-10T10:17:35.825Z [INFO]:custom validation
+2024-11-10T10:17:35.826Z [INFO]:starts processRequest
+2024-11-10T10:17:35.826Z [INFO]:Start registerUser
+2024-11-10T10:17:35.826Z [INFO]:Starts findWithFilters
+2024-11-10T10:17:35.868Z [INFO]:result: [object Object]
+2024-11-10T10:17:35.869Z [INFO]:Cannot set headers after they are sent to the client
+2024-11-10T10:17:37.424Z [INFO]:custom validation
+2024-11-10T10:17:37.425Z [INFO]:starts processRequest
+2024-11-10T10:17:37.426Z [INFO]:Start registerUser
+2024-11-10T10:17:37.426Z [INFO]:Starts findWithFilters
+2024-11-10T10:17:37.713Z [INFO]:result: [object Object]
+2024-11-10T10:17:37.713Z [INFO]:Cannot set headers after they are sent to the client
+2024-11-10T10:17:41.061Z [INFO]:custom validation
+2024-11-10T10:17:41.062Z [INFO]:starts processRequest
+2024-11-10T10:17:41.063Z [INFO]:Start registerUser
+2024-11-10T10:17:41.063Z [INFO]:Starts findWithFilters
+2024-11-10T10:17:41.348Z [INFO]:result: [object Object]
+2024-11-10T10:17:41.349Z [INFO]:Cannot set headers after they are sent to the client
+2024-11-10T10:17:50.513Z [INFO]:custom validation
+2024-11-10T10:17:50.514Z [INFO]:starts processRequest
+2024-11-10T10:17:50.514Z [INFO]:Start registerUser
+2024-11-10T10:17:50.515Z [INFO]:Starts findWithFilters
+2024-11-10T10:17:50.817Z [INFO]:result: [object Object]
+2024-11-10T10:17:50.817Z [INFO]:Cannot set headers after they are sent to the client
+2024-11-10T10:18:31.947Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:18:34.285Z [INFO]:custom validation
+2024-11-10T10:18:34.297Z [INFO]:starts processRequest
+2024-11-10T10:18:34.357Z [INFO]:Start registerUser
+2024-11-10T10:18:34.357Z [INFO]:Starts findWithFilters
+2024-11-10T10:18:34.749Z [INFO]:result: [object Object]
+2024-11-10T10:18:34.749Z [INFO]:processAuthRequest:Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+2024-11-10T10:19:32.109Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:19:50.397Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:19:54.564Z [INFO]:custom validation
+2024-11-10T10:19:54.577Z [INFO]:starts processRequest
+2024-11-10T10:20:19.619Z [INFO]:custom validation
+2024-11-10T10:20:19.625Z [INFO]:starts processRequest
+2024-11-10T10:20:26.531Z [INFO]:custom validation
+2024-11-10T10:20:26.533Z [INFO]:starts processRequest
+2024-11-10T10:20:32.292Z [INFO]:custom validation
+2024-11-10T10:20:32.293Z [INFO]:starts processRequest
+2024-11-10T10:21:02.946Z [INFO]:custom validation
+2024-11-10T10:21:02.949Z [INFO]:starts processRequest
+2024-11-10T10:21:17.132Z [INFO]:custom validation
+2024-11-10T10:21:17.133Z [INFO]:starts processRequest
+2024-11-10T10:21:22.997Z [INFO]:custom validation
+2024-11-10T10:21:22.998Z [INFO]:starts processRequest
+2024-11-10T10:22:13.819Z [INFO]:custom validation
+2024-11-10T10:22:13.820Z [INFO]:starts processRequest
+2024-11-10T10:22:15.018Z [INFO]:custom validation
+2024-11-10T10:22:15.019Z [INFO]:starts processRequest
+2024-11-10T10:22:16.425Z [INFO]:custom validation
+2024-11-10T10:22:16.426Z [INFO]:starts processRequest
+2024-11-10T10:22:28.538Z [INFO]:custom validation
+2024-11-10T10:22:28.539Z [INFO]:starts processRequest
+2024-11-10T10:23:12.875Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:23:16.062Z [INFO]:custom validation
+2024-11-10T10:23:16.069Z [INFO]:starts processAuthRequest
+2024-11-10T10:23:16.069Z [INFO]:Start registerUser
+2024-11-10T10:23:16.070Z [INFO]:Starts findWithFilters
+2024-11-10T10:23:16.350Z [INFO]:result: null
+2024-11-10T10:23:16.422Z [INFO]:Starts addDocument: {"id":"94191cac-9b3e-4d26-84fb-b2b35caab58e","name":"Name1","email":"test@gmail.com","password":"$2b$10$DeRC3CuRr4I/q4Xy62.iC.sfR635MfKjHkIglmWIWosE3E3vtlk8.","surname":"surname1"}
+2024-11-10T10:23:31.764Z [INFO]:custom validation
+2024-11-10T10:23:31.769Z [INFO]:starts processAuthRequest
+2024-11-10T10:23:31.770Z [INFO]:Start registerUser
+2024-11-10T10:23:31.770Z [INFO]:Starts findWithFilters
+2024-11-10T10:23:31.818Z [INFO]:result: [object Object]
+2024-11-10T10:23:44.556Z [INFO]:custom validation
+2024-11-10T10:23:44.559Z [INFO]:starts processAuthRequest
+2024-11-10T10:23:44.559Z [INFO]:Start registerUser
+2024-11-10T10:23:44.559Z [INFO]:Starts findWithFilters
+2024-11-10T10:23:44.824Z [INFO]:result: [object Object]
+2024-11-10T10:23:51.943Z [INFO]:custom validation
+2024-11-10T10:23:51.944Z [INFO]:starts processAuthRequest
+2024-11-10T10:23:51.944Z [INFO]:Start registerUser
+2024-11-10T10:23:51.944Z [INFO]:Starts findWithFilters
+2024-11-10T10:23:52.214Z [INFO]:result: [object Object]
+2024-11-10T10:23:59.564Z [INFO]:custom validation
+2024-11-10T10:23:59.567Z [INFO]:starts processAuthRequest
+2024-11-10T10:25:52.891Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:26:00.631Z [INFO]:custom validation
+2024-11-10T10:26:00.641Z [INFO]:starts processAuthRequest
+2024-11-10T10:26:00.641Z [INFO]:Start registerUser
+2024-11-10T10:26:00.641Z [INFO]:Starts findWithFilters
+2024-11-10T10:26:00.934Z [INFO]:result: null
+2024-11-10T10:26:01.014Z [INFO]:Starts addDocument: {"id":"303846f7-277c-4e9c-8b3f-7cbabc92b491","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234360934,"update_at":1731234360934,"password":"$2b$10$DjA9zglwBZdcGpWB3qB7sOcJ6FKSPrmpIvjOZuAX0y9xc2qC1x5qW","surname":"surname1"}
+2024-11-10T10:26:51.761Z [INFO]:custom validation
+2024-11-10T10:26:51.763Z [INFO]:starts processAuthRequest
+2024-11-10T10:26:51.764Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567"}
+2024-11-10T10:26:51.836Z [INFO]:pass: $2b$10$iCdKdISOcGuaNAe4JY7/O.Og5fOUJX5qGYcg5WtD4YM1qc8yhI9K.
+2024-11-10T10:26:51.836Z [INFO]:Starts findWithFilters
+2024-11-10T10:26:51.879Z [INFO]:result: [object Object]
+2024-11-10T10:26:51.880Z [INFO]:user: {"_id":"67308a39864930ff6f7a3536","id":"303846f7-277c-4e9c-8b3f-7cbabc92b491","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234360934,"update_at":1731234360934,"password":"$2b$10$DjA9zglwBZdcGpWB3qB7sOcJ6FKSPrmpIvjOZuAX0y9xc2qC1x5qW","surname":"surname1"}
+2024-11-10T10:26:58.108Z [INFO]:custom validation
+2024-11-10T10:26:58.110Z [INFO]:starts processAuthRequest
+2024-11-10T10:26:58.110Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T10:26:58.192Z [INFO]:pass: $2b$10$k5h7g7Br94Ll8cArKfSNgOSNzZ.VbuxlW6DPK65ZTUPe4SnPgkqaC
+2024-11-10T10:26:58.192Z [INFO]:Starts findWithFilters
+2024-11-10T10:26:58.474Z [INFO]:result: [object Object]
+2024-11-10T10:26:58.474Z [INFO]:user: {"_id":"67308a39864930ff6f7a3536","id":"303846f7-277c-4e9c-8b3f-7cbabc92b491","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234360934,"update_at":1731234360934,"password":"$2b$10$DjA9zglwBZdcGpWB3qB7sOcJ6FKSPrmpIvjOZuAX0y9xc2qC1x5qW","surname":"surname1"}
+2024-11-10T10:33:10.344Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T10:33:12.740Z [INFO]:custom validation
+2024-11-10T10:33:12.749Z [INFO]:starts processAuthRequest
+2024-11-10T10:33:12.749Z [INFO]:Start registerUser
+2024-11-10T10:33:12.750Z [INFO]:Starts findWithFilters
+2024-11-10T10:33:13.102Z [INFO]:result: null
+2024-11-10T10:33:13.174Z [INFO]:Starts addDocument: {"id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T10:53:28.767Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T11:35:59.873Z [INFO]:custom validation
+2024-11-10T11:35:59.886Z [INFO]:starts processAuthRequest
+2024-11-10T11:35:59.887Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T11:35:59.965Z [INFO]:pass: $2b$10$g6fMCnq1/awqlGtz705.wO/wZ9fyNLU7mHsyiYHsfe6BBzEziCUWK
+2024-11-10T11:35:59.966Z [INFO]:Starts findWithFilters
+2024-11-10T11:36:00.393Z [INFO]:result: [object Object]
+2024-11-10T11:36:00.394Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T11:36:15.589Z [INFO]:custom validation
+2024-11-10T11:36:15.591Z [INFO]:starts processAuthRequest
+2024-11-10T11:42:16.782Z [INFO]:custom validation
+2024-11-10T11:42:16.784Z [INFO]:starts processAuthRequest
+2024-11-10T12:01:36.587Z [INFO]:custom validation
+2024-11-10T12:01:36.589Z [INFO]:starts processAuthRequest
+2024-11-10T12:02:02.267Z [INFO]:custom validation
+2024-11-10T12:02:02.268Z [INFO]:starts processAuthRequest
+2024-11-10T12:07:31.109Z [INFO]:starts connection:mongodb://admin:Aa123456$@101.46.142.223:27016/fl1rpo1nt
+2024-11-10T12:07:34.198Z [INFO]:custom validation
+2024-11-10T12:07:34.199Z [INFO]:starts processAuthRequest
+2024-11-10T12:09:08.695Z [INFO]:custom validation
+2024-11-10T12:09:08.696Z [INFO]:starts processAuthRequest
+2024-11-10T12:09:11.739Z [INFO]:custom validation
+2024-11-10T12:09:11.739Z [INFO]:starts processAuthRequest
+2024-11-10T12:41:52.683Z [INFO]:custom validation
+2024-11-10T12:41:52.685Z [INFO]:starts processAuthRequest
+2024-11-10T12:43:10.189Z [INFO]:custom validation
+2024-11-10T12:43:10.189Z [INFO]:starts processAuthRequest
+2024-11-10T12:44:01.912Z [INFO]:custom validation
+2024-11-10T12:44:01.913Z [INFO]:starts processAuthRequest
+2024-11-10T12:44:01.961Z [INFO]:custom validation
+2024-11-10T12:44:01.961Z [INFO]:starts processAuthRequest
+2024-11-10T12:44:36.297Z [INFO]:custom validation
+2024-11-10T12:44:36.306Z [INFO]:starts processAuthRequest
+2024-11-10T12:48:55.984Z [INFO]:custom validation
+2024-11-10T12:48:55.985Z [INFO]:starts processAuthRequest
+2024-11-10T12:48:55.986Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T12:48:56.066Z [INFO]:pass: $2b$10$24IPmbTFt1KB6JMqAzD9oeYT8H6pANRwsu7Kka//ATUOOr41UQEpC
+2024-11-10T12:48:56.066Z [INFO]:Starts findWithFilters
+2024-11-10T12:48:56.378Z [INFO]:result: [object Object]
+2024-11-10T12:48:56.379Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T12:54:43.924Z [INFO]:custom validation
+2024-11-10T12:54:43.926Z [INFO]:starts processAuthRequest
+2024-11-10T12:54:43.926Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T12:54:44.000Z [INFO]:pass: $2b$10$wguyLu/iMHVf0hk0SLCAweKvzLD7fSFX.lk2THaZh.MeJEmWipalC
+2024-11-10T12:54:44.000Z [INFO]:Starts findWithFilters
+2024-11-10T12:54:44.267Z [INFO]:result: [object Object]
+2024-11-10T12:54:44.267Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T12:55:18.444Z [INFO]:custom validation
+2024-11-10T12:55:18.445Z [INFO]:starts processAuthRequest
+2024-11-10T12:55:18.446Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T12:55:18.518Z [INFO]:pass: $2b$10$.9JCyFg7bUigfOyN6cv0HujGUTlJaBnqfaFnrQruGqbyCK6y9dHRi
+2024-11-10T12:55:18.518Z [INFO]:Starts findWithFilters
+2024-11-10T12:55:18.807Z [INFO]:result: [object Object]
+2024-11-10T12:55:18.807Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T12:57:47.682Z [INFO]:custom validation
+2024-11-10T12:57:47.684Z [INFO]:starts processAuthRequest
+2024-11-10T12:57:47.684Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T12:57:47.759Z [INFO]:pass: $2b$10$IEBqiNNQF8IasDGHXE4PC.zg1RioWduReb2M4wHIJ7V0C.aaNGUw6
+2024-11-10T12:57:47.759Z [INFO]:Starts findWithFilters
+2024-11-10T12:57:48.049Z [INFO]:result: [object Object]
+2024-11-10T12:57:48.049Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T12:58:44.711Z [INFO]:custom validation
+2024-11-10T12:58:44.712Z [INFO]:starts processAuthRequest
+2024-11-10T12:58:44.712Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T12:58:44.783Z [INFO]:pass: $2b$10$38199P8N/jG0se8Jp5Zwk.73N65mnsGZ3HsCmXzGHNYJFOfM2IS0y
+2024-11-10T12:58:44.783Z [INFO]:Starts findWithFilters
+2024-11-10T12:58:45.077Z [INFO]:result: [object Object]
+2024-11-10T12:58:45.077Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:00:22.087Z [INFO]:custom validation
+2024-11-10T13:00:22.088Z [INFO]:starts processAuthRequest
+2024-11-10T13:00:22.088Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:00:22.158Z [INFO]:pass: $2b$10$WYse53iUsHruWVzNrLXFSOYo6no0KEFvZG5EIVUQuBsa9j/x78/9u
+2024-11-10T13:00:22.158Z [INFO]:Starts findWithFilters
+2024-11-10T13:00:22.462Z [INFO]:result: [object Object]
+2024-11-10T13:00:22.462Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:01:02.157Z [INFO]:custom validation
+2024-11-10T13:01:02.157Z [INFO]:starts processAuthRequest
+2024-11-10T13:01:02.158Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:01:02.205Z [INFO]:custom validation
+2024-11-10T13:01:02.206Z [INFO]:starts processAuthRequest
+2024-11-10T13:01:02.206Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:01:02.228Z [INFO]:pass: $2b$10$Gospbmbj6igyw12GM3eNLeUMSicL2U5NBmkckMl6xvEigXkQXJ73.
+2024-11-10T13:01:02.228Z [INFO]:Starts findWithFilters
+2024-11-10T13:01:02.277Z [INFO]:pass: $2b$10$eCXTfR1WsYl0s.d04c4/ze8uZMP/omGLxwxzqOrNPaWBOhJOY1fJu
+2024-11-10T13:01:02.278Z [INFO]:Starts findWithFilters
+2024-11-10T13:01:02.503Z [INFO]:result: [object Object]
+2024-11-10T13:01:02.503Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:01:02.506Z [INFO]:Topology is closed
+2024-11-10T13:01:02.506Z [INFO]:user: null
+2024-11-10T13:02:01.909Z [INFO]:custom validation
+2024-11-10T13:02:01.910Z [INFO]:starts processAuthRequest
+2024-11-10T13:02:01.910Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:02:01.981Z [INFO]:pass: $2b$10$5nj8ievedDQzM6AeR.NVxOTGJ.7M1WaAlhRx2qGcUFB71nAbz2ODq
+2024-11-10T13:02:01.982Z [INFO]:Starts findWithFilters
+2024-11-10T13:02:02.248Z [INFO]:result: [object Object]
+2024-11-10T13:02:02.248Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:02:42.811Z [INFO]:custom validation
+2024-11-10T13:02:42.811Z [INFO]:starts processAuthRequest
+2024-11-10T13:02:42.811Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:02:42.882Z [INFO]:pass: $2b$10$/9vIujvOgSWzUuE5Yw4OVO2V4N6I.czMA7xHdyVy8n6foh5tZagfq
+2024-11-10T13:02:42.882Z [INFO]:Starts findWithFilters
+2024-11-10T13:02:43.160Z [INFO]:result: [object Object]
+2024-11-10T13:02:43.161Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:03:57.652Z [INFO]:custom validation
+2024-11-10T13:03:57.653Z [INFO]:starts processAuthRequest
+2024-11-10T13:03:57.653Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:03:57.722Z [INFO]:pass: $2b$10$.J87OPZcOWaA4IXwTbNleeNdAuKlISFI.scYnv6pQcyBr7XQbG.Ju
+2024-11-10T13:03:57.723Z [INFO]:Starts findWithFilters
+2024-11-10T13:03:58.006Z [INFO]:result: [object Object]
+2024-11-10T13:03:58.006Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:05:03.095Z [INFO]:custom validation
+2024-11-10T13:05:03.095Z [INFO]:starts processAuthRequest
+2024-11-10T13:05:03.095Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:05:03.166Z [INFO]:pass: $2b$10$Sts78zGcT4GPEp4.fbvby.FpN.3VA5T.5KdoRvnF7q6kJ56en3j8S
+2024-11-10T13:05:03.167Z [INFO]:Starts findWithFilters
+2024-11-10T13:05:03.431Z [INFO]:result: [object Object]
+2024-11-10T13:05:03.432Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:05:55.200Z [INFO]:custom validation
+2024-11-10T13:05:55.200Z [INFO]:starts processAuthRequest
+2024-11-10T13:05:55.201Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:05:55.269Z [INFO]:pass: $2b$10$6ICj8/AypK.mRKqJTmEfju/c9Lm.bk4JAtJIxtFy.VmcP.I5OzRIW
+2024-11-10T13:05:55.269Z [INFO]:Starts findWithFilters
+2024-11-10T13:05:55.544Z [INFO]:result: [object Object]
+2024-11-10T13:05:55.545Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:06:51.814Z [INFO]:custom validation
+2024-11-10T13:06:51.815Z [INFO]:starts processAuthRequest
+2024-11-10T13:06:51.815Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:06:51.886Z [INFO]:pass: $2b$10$SzNwSDXh89rHNL1hSIDN6uMnSwWuVSitChBe60.DSJYukXp6tFmiy
+2024-11-10T13:06:51.886Z [INFO]:Starts findWithFilters
+2024-11-10T13:06:52.175Z [INFO]:result: [object Object]
+2024-11-10T13:06:52.175Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:08:15.009Z [INFO]:custom validation
+2024-11-10T13:08:15.009Z [INFO]:starts processAuthRequest
+2024-11-10T13:08:15.009Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:08:15.080Z [INFO]:pass: $2b$10$Npjf7dXOlyM7zWcZaCH3Z.yLn3JkLQI15iUWmXOdp6bhpfF6m4PC6
+2024-11-10T13:08:15.080Z [INFO]:Starts findWithFilters
+2024-11-10T13:08:15.363Z [INFO]:result: [object Object]
+2024-11-10T13:08:15.363Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:09:43.815Z [INFO]:custom validation
+2024-11-10T13:09:43.815Z [INFO]:starts processAuthRequest
+2024-11-10T13:09:43.815Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:09:43.904Z [INFO]:pass: $2b$10$/0BNB4efqdT5kzMZ4tetMuFOyK21qhW3VEpk.APFZ3AGfcUuBNCHu
+2024-11-10T13:09:43.904Z [INFO]:Starts findWithFilters
+2024-11-10T13:09:44.190Z [INFO]:result: [object Object]
+2024-11-10T13:09:44.191Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:10:38.104Z [INFO]:custom validation
+2024-11-10T13:10:38.104Z [INFO]:starts processAuthRequest
+2024-11-10T13:10:38.104Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:10:38.162Z [INFO]:custom validation
+2024-11-10T13:10:38.163Z [INFO]:starts processAuthRequest
+2024-11-10T13:10:38.163Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:10:38.176Z [INFO]:pass: $2b$10$c4ZCNcM1bC7n4hQnOZTol.5YN6vdO.1ES3T46DErp3SiWR7Q.54lK
+2024-11-10T13:10:38.176Z [INFO]:Starts findWithFilters
+2024-11-10T13:10:38.234Z [INFO]:pass: $2b$10$N0qjWa.fIjzXqUF2xhdriuRhpi53Y0dKJZOw2hvpmT4L/5DdwA6tC
+2024-11-10T13:10:38.234Z [INFO]:Starts findWithFilters
+2024-11-10T13:10:38.455Z [INFO]:result: [object Object]
+2024-11-10T13:10:38.455Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:10:38.527Z [INFO]:Attempted to check out a connection from closed connection pool
+2024-11-10T13:10:38.527Z [INFO]:user: null
+2024-11-10T13:12:25.183Z [INFO]:custom validation
+2024-11-10T13:12:25.184Z [INFO]:starts processAuthRequest
+2024-11-10T13:12:25.184Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:12:25.258Z [INFO]:pass: $2b$10$sZoXlby6UXk/yKvk43aXl.IbJiD/M1VTcHstfQ7yDDE3yPbnOsRA2
+2024-11-10T13:12:25.258Z [INFO]:Starts findWithFilters
+2024-11-10T13:12:25.523Z [INFO]:result: [object Object]
+2024-11-10T13:12:25.523Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:13:34.887Z [INFO]:custom validation
+2024-11-10T13:13:34.888Z [INFO]:starts processAuthRequest
+2024-11-10T13:13:34.888Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:13:34.959Z [INFO]:pass: $2b$10$En4/UZRYdPsupI/TwOurIuWESfc4xdkYV6yXkH0DW6St2mHxWFAlu
+2024-11-10T13:13:34.959Z [INFO]:Starts findWithFilters
+2024-11-10T13:13:35.243Z [INFO]:result: [object Object]
+2024-11-10T13:13:35.243Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:14:02.414Z [INFO]:custom validation
+2024-11-10T13:14:02.415Z [INFO]:starts processAuthRequest
+2024-11-10T13:14:02.415Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa123567$"}
+2024-11-10T13:14:02.491Z [INFO]:pass: $2b$10$tcZEViY2Z3wCU4oxOWFD2O6aU5fpkyC1GlcqLStvf5GWK5R.FpZje
+2024-11-10T13:14:02.492Z [INFO]:Starts findWithFilters
+2024-11-10T13:14:02.771Z [INFO]:result: [object Object]
+2024-11-10T13:14:02.771Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:14:16.208Z [INFO]:custom validation
+2024-11-10T13:14:16.209Z [INFO]:starts processAuthRequest
+2024-11-10T13:14:16.209Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa123567$"}
+2024-11-10T13:14:16.292Z [INFO]:pass: $2b$10$fsmDTed7NN7ypEPuJoxp1eumFBS4SSZBi5L/FlIacXRhGbIH3w0ym
+2024-11-10T13:14:16.292Z [INFO]:Starts findWithFilters
+2024-11-10T13:14:16.557Z [INFO]:result: [object Object]
+2024-11-10T13:14:16.557Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
+2024-11-10T13:14:37.609Z [INFO]:custom validation
+2024-11-10T13:14:37.609Z [INFO]:starts processAuthRequest
+2024-11-10T13:14:37.609Z [INFO]:Start doLogin: {"email":"test@gmail.com","password":"Aa1234567$"}
+2024-11-10T13:14:37.684Z [INFO]:pass: $2b$10$8aiq8Pfox7pPJL0tXLb.9utwtIUiuFegWxBaKjR7a18sBNKmNUGKC
+2024-11-10T13:14:37.684Z [INFO]:Starts findWithFilters
+2024-11-10T13:14:37.961Z [INFO]:result: [object Object]
+2024-11-10T13:14:37.961Z [INFO]:user: {"_id":"67308be90e92fcae0642d087","id":"92b4deca-5df3-4c0a-b3de-40d38652d8f5","name":"Name1","email":"test@gmail.com","phone":"+34676404766","zip_code":"2841","created_at":1731234793102,"update_at":1731234793102,"password":"$2b$10$sBW0vdWmnuZwWtLAQ/9qmuIOjhzKjBdjYbYEO3s5BSeq.QhvP/Ezm","surname":"surname1"}
