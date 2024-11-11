@@ -1,9 +1,11 @@
 const tokenHandler = require("./token_generator");
 const logger = require("../logger/log");
+const { body, validationResult } = require('express-validator');
+const validationRules = require('../validators/validation_rules');
+const hostActions = require("../constants/host_actions");
+let validationSet = [];
 
-
-
-function requestValidation(req, res, next) {
+function requestAuthValidation(req, res, next) {
     logger.info("Init");
     const authHeader = req.headers['authorization'];
 
@@ -19,13 +21,80 @@ function requestValidation(req, res, next) {
     if (isTokenValid) {
         next();
     } else {
-        es.status(403).json({ message: 'No valid token or expired' });
+        res.status(403).json({ message: 'No valid token or expired' });
     }
-
-
 
 }
 
+function requestFieldsValidation(req, res, next) {
+    logger.info("custom requestFieldsValidation");
+    const { action } = req.body;
+    switch (action) {
+        case hostActions.PUT_USER: {
+            validationSet = validationRules.NEW_USER_VALIDATION_RULES;
+            break;
+        }
+        case hostActions.DO_LOGIN: {
+            validationSet = validationRules.DO_LOGIN_RULES;
+            break;
+        }
+        case hostActions.PUT_USER_QR_BY_USER_ID:{
+            validationSet = validationRules.PUT_QR_BY_USER_ID_RULES;
+            break; 
+        }
+        case hostActions.DELETE_USER_QR_BY_USER_ID_QR_ID:{
+            validationSet = validationRules.REMOVE_QR_BY_USER_ID_QR_ID_RULES;
+            break; 
+        }
+        case hostActions.GET_USER_QR_BY_USER_ID:{
+            validationSet = validationRules.GET_QR_BY_USER_ID_RULES;
+            break; 
+        }
+        case hostActions.PUT_ALL_SOCIAL_NETWORKS:{
+            validationSet = validationRules.PUT_ALL_SOCIAL_NETWORKS_RULES;
+            break; 
+        }
+        case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID:{
+            validationSet = validationRules.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES;
+            break; 
+        }
+        case hostActions.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID:{
+            validationSet = validationRules.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES;
+            break; 
+            
+        }
+        case hostActions.GET_USER_CONTACTS_BY_USER_ID:{
+            validationSet = validationRules.GET_USER_CONTACTS_BY_USER_ID_RULES
+            break; 
+        }
+        case hostActions.GET_USER_BY_DISTANCE_FROM_POINT:{
+            validationSet = validationRules.GET_USER_BY_DISTANCE_FROM_POINT_RULES
+            break; 
+        }
+        
+
+        default:{
+            logger.info("No request verification needed for "+action);
+        }
+
+
+    }
+
+    Promise.all(validationSet.map(validation => validation.run(req)))
+        .then(() => next())
+        .catch(next);
+}
+
+function requestDoValidation(req) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return { errors: errors.array() };
+    }
+    return null;
+}
+
 module.exports = {
-    requestValidation
+    requestAuthValidation,
+    requestFieldsValidation, 
+    requestDoValidation
 }

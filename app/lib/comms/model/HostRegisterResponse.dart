@@ -1,12 +1,11 @@
 class HostRegisterResponse {
-  final int id;
-  const HostRegisterResponse({
-    required this.id,
-  });
+  String id = "";
+
+  HostRegisterResponse(this.id);
+  HostRegisterResponse.empty();
+  
 
   factory HostRegisterResponse.fromJson(Map<String, dynamic> json) {
-    return HostRegisterResponse(
-      id: json['id'],
-    );
+    return HostRegisterResponse(json['id']);
   }
 }

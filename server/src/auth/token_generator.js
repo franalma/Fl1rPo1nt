@@ -37,6 +37,7 @@ function generateRefreshToken(user) {
 
 
 function verifyToken(token) {
+    console.log("verifyToken: "+token);
     const secretKey = process.env.SECRET_TOKEN;
     
     let ret = true; 

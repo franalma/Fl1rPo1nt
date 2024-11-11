@@ -2,6 +2,7 @@
 const { MongoClient } = require('mongodb');
 const logger = require("../logger/log");
 const database = process.env.DATABASE_NAME;
+const json= require("../utils/json_utils"); 
 
 const uri = 'mongodb://' +
     process.env.DATABASE_USER + ":" +
@@ -57,7 +58,7 @@ async function updateDocument(newDocument, filter, path) {
     return result;
 }
 
-async function deleteDocument(document, filter, path) {
+async function deleteDocument(filter, path) {
     let result = null;
     try {
         await client.connect();
@@ -82,8 +83,14 @@ async function findWithFilters(filters, path) {
         await client.connect();
         const db = client.db(database);
         const collection = db.collection(path);
-        result = await collection.findOne(filters);
-        logger.info("result: " + result);
+        if (filters && filters.length >0 ){
+            const cursor = await collection.find(filters);    
+            result = await cursor.toArray();    
+        }else{
+            const cursor = await collection.find();   
+            result = await cursor.toArray();     
+        }
+        
     } catch (error) {
         logger.info(error);
     } finally {

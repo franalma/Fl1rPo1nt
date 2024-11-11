@@ -40,7 +40,10 @@ class MyApp extends StatelessWidget {
         .doLogin("test@gmail.com", "Aa1234567\$")
         .then((response) {
       if (response.id.isNotEmpty) {
-        Session.user = User(response.mail, response.name, response.mail);
+        // this.name, this.phone, this.email, this.city, this.country, this.token, this.refreshToken
+        Session.user = User(response.name, response.phone, 
+        response.mail, "","",
+        response.token, response.resfreshToken);
         NavigatorApp.push(Home(), context);
       } else {
         FlutterToast().showToast("Usuario/contraseña incorrectos");

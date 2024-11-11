@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const tokenHandler = require('../../auth/token_generator')
 
 const userColletion = "users";
+const locationCollection = "users_coordinates";
 
 async function hashPassword(plainPassword) {
     try {
@@ -30,13 +31,13 @@ async function verifyPassword(plainPassword, hashedPassword) {
 }
 
 async function creatInternalUser(input) {
-    const currentTime = Date.now(); 
+    const currentTime = Date.now();
     let user = {
         id: uuidv4(),
         name: input.name,
         email: input.email,
-        phone: input.phone, 
-        zip_code:input.zip_code,
+        phone: input.phone,
+        zip_code: input.zip_code,
         created_at: currentTime,
         update_at: currentTime
     }
@@ -44,8 +45,6 @@ async function creatInternalUser(input) {
     user.surname = input.surname ? input.surname : ""
     return user;
 }
-
-
 
 
 async function registerUser(input) {
@@ -64,7 +63,7 @@ async function registerUser(input) {
                 status: 200,
                 message: "User created successfully",
                 response: {
-                    user_id: user.id, 
+                    user_id: user.id,
                     create_at: user.created_at
                 }
 
@@ -84,10 +83,13 @@ async function doLogin(input) {
         email: input.email,
     };
 
-    let user = await dbHandler.findWithFilters(filters, userColletion);
-    logger.info("user: " + JSON.stringify(user));
-    if (user && user.id) {
+    let users = await dbHandler.findWithFilters(filters, userColletion);
+    logger.info("users: " + JSON.stringify(users));
+    if (users && users.length == 1 && users[0].id) {
+        const user = users[0];
         const passCheck = await verifyPassword(input.password, user.password);
+        logger.info("check pass: " + passCheck);
+
         if (passCheck) {
             const currentToken = await tokenHandler.generateToken({ id: user.id, email: user.email })
             const currentRefreshToken = await tokenHandler.generateRefreshToken({ id: user.id, email: user.email })
@@ -119,12 +121,42 @@ async function doLogin(input) {
 
 }
 
+async function getUsersByDistanceFromPoint(input) {
+    logger.info("Starts getUsersByDistanceFromPoint");
+    const distanceInRadians = input.radio / 6378.1; // 6378.1 es el radio de la Tierra en km
+    let result = {};
+    const filters = {
+        location: {
+            $geoWithin: {
+                $centerSphere: [[input.latitude,input.longitude], distanceInRadians]
+            }
+        }        
+    };
+
+    const dbResponse = await dbHandler.findWithFilters(filters,locationCollection);
+    if (dbResponse){
+        result.status = 200;
+        result.flirts = [];
+        logger.info("items: "+JSON.stringify(dbResponse));
+        for (let item in dbResponse) {        
+            result.flirts.push(item);
+        }
+    
+    }else{
+        result.status = 500; 
+    }
+    return result; 
+    
+    
+}
+
 
 
 
 module.exports = {
     registerUser,
-    doLogin
+    doLogin,
+    getUsersByDistanceFromPoint
 }
 
 

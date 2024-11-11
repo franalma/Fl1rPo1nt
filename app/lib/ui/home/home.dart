@@ -1,7 +1,7 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
-import 'package:app/ui/elements/Navigator.dart';
-import 'package:app/ui/elements/UIElements.dart';
+import 'package:app/ui/utils/location.dart';
+import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -34,22 +34,22 @@ class _HomeState extends State<Home> {
               left: 20,
               child: FloatingActionButton(
                 onPressed: () {
-                  print('Botón flotante 1 presionado');
+                  onStartFlirt();
                 },
-                child: const Icon(Icons.add),
-              ),
-            ),
-            Positioned(
-              bottom: 50, // Ajusta la posición del botón en la segunda parte
-              right: 20,
-              child: FloatingActionButton(
-                onPressed: () {
-                  print('Botón flotante 2 presionado');
-                },
-                child: const Icon(Icons.add),
+                child: const Text("Fl1rt!"),
               ),
             ),
           ],
         )));
+  }
+
+  void onErrorLocationHandler(String message) {
+    FlutterToast().showToast(message);
+  }
+
+  void onStartFlirt() async {
+    LocationHandler handler = LocationHandler(this.onErrorLocationHandler);
+    Location location = await handler.getCurrentLocation();
+    print("location lat: ${location.lat}, ${location.lon}");
   }
 }
