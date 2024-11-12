@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const tokenHandler = require('../../auth/token_generator')
 
 const userColletion = "users";
-const locationCollection = "users_coordinates";
+const locationCollection = "user_coordinates";
 
 async function hashPassword(plainPassword) {
     try {
@@ -44,6 +44,19 @@ async function creatInternalUser(input) {
     user.password = await hashPassword(input.password);
     user.surname = input.surname ? input.surname : ""
     return user;
+}
+
+function createUserLocationExternal(value) {
+    logger.info("createUserLocationExternal: " + JSON.stringify(value));
+    logger.info("user_id: "+value.user_id);
+    const result = {
+        user_id: value.user_id,
+        location: [value.location.coordinates[1], value.location.coordinates[0]]
+    };
+
+    logger.info("createUserLocationExternal result: " + JSON.stringify(result));
+    
+    return result; 
 }
 
 
@@ -122,32 +135,38 @@ async function doLogin(input) {
 }
 
 async function getUsersByDistanceFromPoint(input) {
-    logger.info("Starts getUsersByDistanceFromPoint");
-    const distanceInRadians = input.radio / 6378.1; // 6378.1 es el radio de la Tierra en km
+    logger.info("Starts getUsersByDistanceFromPoint: ");
+    // const distanceInRadians = input.radio / 6378.1; // 6378.1 es el radio de la Tierra en km
     let result = {};
     const filters = {
         location: {
-            $geoWithin: {
-                $centerSphere: [[input.latitude,input.longitude], distanceInRadians]
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [input.longitude, input.latitude]
+                },
+                $maxDistance: input.radio
             }
-        }        
+        }
     };
 
-    const dbResponse = await dbHandler.findWithFilters(filters,locationCollection);
-    if (dbResponse){
+    logger.info("---> filters: " + JSON.stringify(filters));
+
+    const dbResponse = await dbHandler.findWithFilters(filters, locationCollection);
+    if (dbResponse) {
         result.status = 200;
         result.flirts = [];
-        logger.info("items: "+JSON.stringify(dbResponse));
-        for (let item in dbResponse) {        
-            result.flirts.push(item);
+        logger.info("items: " + JSON.stringify(dbResponse));
+        for (let item of dbResponse) {
+            result.flirts.push(createUserLocationExternal(item));
         }
-    
-    }else{
-        result.status = 500; 
+
+    } else {
+        result.status = 500;
     }
-    return result; 
-    
-    
+    return result;
+
+
 }
 
 

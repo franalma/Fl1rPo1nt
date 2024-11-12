@@ -83,10 +83,11 @@ async function findWithFilters(filters, path) {
         await client.connect();
         const db = client.db(database);
         const collection = db.collection(path);
-        if (filters && filters.length >0 ){
+        if (filters){
             const cursor = await collection.find(filters);    
             result = await cursor.toArray();    
         }else{
+            logger.info("No filters detected");
             const cursor = await collection.find();   
             result = await cursor.toArray();     
         }

@@ -10,7 +10,7 @@ async function addBulkCoordinates(input) {
                 name: "User_" + userId,
                 location: {
                     type: "Point",
-                    coordinates: [item.latitude, item.longitude]
+                    coordinates: [item.longitude,item.latitude]
                 }
             };
             await dbHandler.addDocument(value, colletion);

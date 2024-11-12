@@ -41,6 +41,7 @@ dependencies:
   geolocator: ^9.0.2 
   qr_flutter: ^4.1.0
   google_maps_flutter: ^2.2.5 
+  logger: ^1.4.0  # Check for the latest version on pub.dev
 
 
 

@@ -1,12 +1,17 @@
 import 'package:app/app_localizations.dart';
+import 'package:app/comms/model/request/HostLoginRequest.dart';
+import 'package:app/comms/model/user.dart';
+import 'package:app/model/session.dart';
+import 'package:app/ui/home/home.dart';
+import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 import '../NavigatorApp.dart';
 import '../register/RegisterPage.dart';
 
 class LoginPage extends StatefulWidget {
-  void Function(String, String, BuildContext context) onLoginTapped;
+  // void Function(String, String, BuildContext context) onLoginTapped;
 
-  LoginPage(this.onLoginTapped, {super.key});
+  LoginPage({super.key});
 
   @override
   State<LoginPage> createState() {
@@ -16,6 +21,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   bool isChecked = false;
+  late bool _isLoading = false;
+
   TextEditingController userController = TextEditingController();
   TextEditingController passController = TextEditingController();
 
@@ -141,6 +148,7 @@ class _LoginPage extends State<LoginPage> {
                     height: 15,
                   ),
                   _buildLoginButton(),
+                  _buildLoadingIndicator(),
                   const SizedBox(
                     height: 10,
                   ),
@@ -179,6 +187,14 @@ class _LoginPage extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return _isLoading
+        ? (const Center(
+            child: CircularProgressIndicator(),
+          ))
+        : Container();
   }
 
   Widget _buildSignUpQuestion() {
@@ -242,7 +258,7 @@ class _LoginPage extends State<LoginPage> {
           fillColor: MaterialStateProperty.all(Colors.white),
         ),
         Text(
-         AppLocalizations.of(context)!.translate("remind_me"),
+          AppLocalizations.of(context)!.translate("remind_me"),
           style: const TextStyle(
             fontFamily: 'PT-Sans',
             fontSize: 14,
@@ -281,8 +297,7 @@ class _LoginPage extends State<LoginPage> {
           ),
         ),
         onPressed: () {
-          widget.onLoginTapped(
-              userController.text, passController.text, context);
+          _processLogin(userController.text, userController.text);
         },
       ),
     );
@@ -321,5 +336,27 @@ class _LoginPage extends State<LoginPage> {
     //   ],
     // );
     return Container();
+  }
+
+  void _processLogin(String user, String pass) {
+    setState(() {
+      _isLoading = true;
+    });
+
+    HostLoginRequest().run("test@gmail.com", "Aa1234567\$").then((response) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (response.userId.isNotEmpty) {
+        // this.name, this.phone, this.email, this.city, this.country, this.token, this.refreshToken
+        Session.user = User(response.userId, response.name, response.phone,
+            response.mail, "", "", response.token, response.resfreshToken);
+        NavigatorApp.push(Home(), context);
+      } else {
+        FlutterToast().showToast("Usuario/contraseña incorrectos");
+      }
+    }).onError((error, stackTrace) {
+      FlutterToast().showToast("Error desconocido");
+    });
   }
 }

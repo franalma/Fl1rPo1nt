@@ -1,4 +1,4 @@
-import 'package:app/ui/register/RegisterController.dart';
+import 'package:app/comms/model/request/HostRegisterRequest.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +10,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPage extends State<RegisterPage> {
-  final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
@@ -123,7 +122,7 @@ class _RegisterPage extends State<RegisterPage> {
                     FlutterToast().showToast("Confirmación de contraseña errónea"); 
                   }
 
-                  RegisterCongroller().doRegister(name, phone, email, pass, country, city).then((value){
+                  HostRegisterRequest().run(name, "",phone, email, pass, country, city).then((value){
                       if (value.id.isEmpty){
                         FlutterToast().showToast("Error el proceso, revisa los campos");
                       }else{
