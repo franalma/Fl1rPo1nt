@@ -9,7 +9,7 @@ const contactHandler = require('./model/user/contact_handler');
 const qrHandler = require("./model/qr/qr_handler");
 const socialHandler = require("./model/social_network/social_network_handler");
 const bulkHandler = require("./model/bulk/bulk_handler");
-
+const bulkHostActions = require ("./constants/bulk_host_actions");
 
 const app = express();
 app.use(express.json());
@@ -53,18 +53,23 @@ async function procesBulkRequest(req, res) {
     const { action } = req.body;
     let result = -1;
     switch (action) {
-        case "BULK_TEST_COORDINATE": {
+        case bulkHostActions.BULK_TEST_COORDINATE: {
             result = await bulkHandler.addBulkCoordinates(req.body.input);
             break;
 
         }
-        case "BULK_LOAD_SEX_ORIENTATIONS": {
+        case bulkHostActions.BULK_LOAD_SEX_ORIENTATIONS: {
             result = await bulkHandler.addSexOrientation(req.body.input);
             break;
 
         }
-        case "BULK_LOAD_TYPE_RELATIONSHIPS": {
+        case bulkHostActions.BULK_LOAD_TYPE_RELATIONSHIPS: {
             result = await bulkHandler.addTypeRelationships(req.body.input);
+            break;
+
+        }
+        case bulkHostActions.BUKL_PUT_ALL_SOCIAL_NETWORKS: {
+            result = await bulkHandler.addBaseNetworks(req.body.input);
             break;
 
         }

@@ -2,6 +2,7 @@ const dbHandler = require("../../database/database_handler");
 const user_coordinates_collection = "user_coordinates";
 const sex_orientations_collection = "sex_orientations";
 const type_relationships_collection = "type_relationships";
+const social_networks_collection = "social_networks";
 
 async function addBulkCoordinates(input) {
     try {
@@ -70,8 +71,29 @@ async function addTypeRelationships(input) {
 
 }
 
+async function addBaseNetworks(input) {
+    try {
+        let docs = [];
+        for (let item of input.networks) {
+            let value = {
+                id: item.id,
+                name: item.name,                
+                created_ad: Date.now()
+            };
+            docs.push(value);         
+        }
+        await dbHandler.addManyDocuments(docs, social_networks_collection);
+        return 0;
+    } catch (error) {
+        console.log(error);
+    }
+    return -1;
+
+}
+
 module.exports = {
     addBulkCoordinates,
     addSexOrientation,
-    addTypeRelationships
+    addTypeRelationships,
+    addBaseNetworks
 }
