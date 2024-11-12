@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 Container getButton(String text, Function() action) {
   return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size.fromHeight(

@@ -58,6 +58,16 @@ async function procesBulkRequest(req, res) {
             break;
 
         }
+        case "BULK_LOAD_SEX_ORIENTATIONS": {
+            result = await bulkHandler.addSexOrientation(req.body.input);
+            break;
+
+        }
+        case "BULK_LOAD_TYPE_RELATIONSHIPS": {
+            result = await bulkHandler.addTypeRelationships(req.body.input);
+            break;
+
+        }
     }
 
     if (result == 0) {

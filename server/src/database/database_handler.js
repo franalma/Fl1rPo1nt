@@ -47,6 +47,22 @@ async function addDocument(document, path) {
     return result;
 }
 
+async function addManyDocuments(document, path) {
+    logger.info("Starts addDocument: " + JSON.stringify(document));
+    let result = {};
+    try {
+        await client.connect();
+        const db = client.db(database);
+        const collection = db.collection(path);
+        result = await collection.insertMany(document);
+        console.log(`Document added with id= ${result.insertedId}`);
+    } catch (error) {
+        logger.info(error);
+    }
+
+    return result;
+}
+
 
 async function updateDocument(newDocument, filter, path) {
     await client.connect();
@@ -109,5 +125,6 @@ module.exports = {
     addDocument,
     updateDocument,
     deleteDocument,
-    findWithFilters
+    findWithFilters,
+    addManyDocuments
 }
