@@ -1,6 +1,7 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
+import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/qr_manager/QrPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
 import 'package:app/ui/utils/location.dart';
@@ -41,8 +42,7 @@ class AppDrawerMenu {
         ListTile(
           title: const Text('Mis redes'),
           onTap: () {
-            // Update the state of the app.
-            // ...
+            NavigatorApp.push(MySocialNetworksPage(), context);
           },
         ),
         ListTile(

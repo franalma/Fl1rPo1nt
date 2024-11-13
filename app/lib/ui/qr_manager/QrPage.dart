@@ -17,7 +17,7 @@ class QrPage extends StatefulWidget {
 
 class _QrPage extends State<QrPage> {
   List<QrValue> qrList = Session.user.qrValues;
-  // bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
