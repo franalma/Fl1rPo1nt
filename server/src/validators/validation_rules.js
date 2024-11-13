@@ -63,6 +63,56 @@ const GET_USER_BY_DISTANCE_FROM_POINT_RULES = [
 ];
 
 
+const UPDATE_USER_NETWORK_BY_USER_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),
+    body('input.values.networks').notEmpty().isArray().withMessage("Networks are required"),
+
+];
+
+
+const UPDATE_USER_SEARCHING_RANGE_BY_USER_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),
+    body('input.distance').notEmpty().isNumeric().withMessage("Distance is required"),
+
+];
+
+const UPDATE_USER_INTERESTS_BY_USER_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),
+    body('input.values.user_interests').notEmpty().isObject().withMessage("User interestes are required"),
+
+];
+
+const UPDATE_USER_QRS_BY_USER_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),
+    body('input.qr_values').notEmpty().isArray().withMessage("QR values are required"),
+
+];
+
+
+const PUT_USER_FLIRT_BY_USER_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),
+    body('input.relationship_id').notEmpty().isNumeric().withMessage("Relation id required"),
+    body('input.relationship_name').notEmpty().isString().withMessage("Relation name required"),
+    body('input.orientation_id').notEmpty().isNumeric().withMessage("Orientation id required"),
+    body('input.orientation_name').notEmpty().isString().withMessage("Orientation name required"),
+    body('input.location').notEmpty().isObject().withMessage("Location is required"),
+
+];
+
+const UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),
+    body('input.flirt_id').notEmpty().isString().withMessage("Flirt id required"),
+    body('input.values').notEmpty().isObject().withMessage("Values are required")
+
+];
+
+const GET_USER_FLIRTS_RULES = [
+    body('input.filters.user_id').notEmpty().isString().withMessage("User id is required"),
+    body('input.filters').notEmpty().isObject().withMessage("Flirt id required")
+];
+
+
+
 
 
 
@@ -78,6 +128,12 @@ module.exports = {
     PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES,
     REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES,
     GET_USER_CONTACTS_BY_USER_ID_RULES,
-    GET_USER_BY_DISTANCE_FROM_POINT_RULES
-
+    GET_USER_BY_DISTANCE_FROM_POINT_RULES,
+    UPDATE_USER_NETWORK_BY_USER_ID_RULES,
+    UPDATE_USER_SEARCHING_RANGE_BY_USER_ID_RULES,
+    UPDATE_USER_INTERESTS_BY_USER_ID_RULES,
+    UPDATE_USER_QRS_BY_USER_ID_RULES,
+    PUT_USER_FLIRT_BY_USER_ID_RULES,
+    UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID_RULES,
+    GET_USER_FLIRTS_RULES
 }

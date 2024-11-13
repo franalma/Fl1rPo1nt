@@ -1,8 +1,9 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/HostLoginRequest.dart';
-import 'package:app/comms/model/user.dart';
-import 'package:app/model/session.dart';
+import 'package:app/model/Session.dart';
+import 'package:app/model/User.dart';
 import 'package:app/ui/home/home.dart';
+import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 import '../NavigatorApp.dart';
@@ -344,13 +345,12 @@ class _LoginPage extends State<LoginPage> {
     });
 
     HostLoginRequest().run("test@gmail.com", "Aa1234567\$").then((response) {
+      
       setState(() {
         _isLoading = false;
-      });
-      if (response.userId.isNotEmpty) {
-        // this.name, this.phone, this.email, this.city, this.country, this.token, this.refreshToken
-        Session.user = User(response.userId, response.name, response.phone,
-            response.mail, "", "", response.token, response.resfreshToken);
+      });            
+      if (response.userId.isNotEmpty) {        
+        Session.user = User.fromHost(response);
         NavigatorApp.push(Home(), context);
       } else {
         FlutterToast().showToast("Usuario/contraseña incorrectos");

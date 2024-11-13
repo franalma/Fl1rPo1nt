@@ -38,18 +38,18 @@ function requestFieldsValidation(req, res, next) {
             validationSet = validationRules.DO_LOGIN_RULES;
             break;
         }
-        case hostActions.PUT_USER_QR_BY_USER_ID:{
-            validationSet = validationRules.PUT_QR_BY_USER_ID_RULES;
-            break; 
-        }
-        case hostActions.DELETE_USER_QR_BY_USER_ID_QR_ID:{
-            validationSet = validationRules.REMOVE_QR_BY_USER_ID_QR_ID_RULES;
-            break; 
-        }
-        case hostActions.GET_USER_QR_BY_USER_ID:{
-            validationSet = validationRules.GET_QR_BY_USER_ID_RULES;
-            break; 
-        }
+        // case hostActions.PUT_USER_QR_BY_USER_ID:{
+        //     validationSet = validationRules.PUT_QR_BY_USER_ID_RULES;
+        //     break; 
+        // }
+        // case hostActions.DELETE_USER_QR_BY_USER_ID_QR_ID:{
+        //     validationSet = validationRules.REMOVE_QR_BY_USER_ID_QR_ID_RULES;
+        //     break; 
+        // }
+        // case hostActions.GET_USER_QR_BY_USER_ID:{
+        //     validationSet = validationRules.GET_QR_BY_USER_ID_RULES;
+        //     break; 
+        // }
         case hostActions.PUT_ALL_SOCIAL_NETWORKS:{
             validationSet = validationRules.PUT_ALL_SOCIAL_NETWORKS_RULES;
             break; 
@@ -71,10 +71,46 @@ function requestFieldsValidation(req, res, next) {
             validationSet = validationRules.GET_USER_BY_DISTANCE_FROM_POINT_RULES
             break; 
         }
+        case hostActions.UPDATE_USER_NETWORK_BY_USER_ID:{
+            validationSet = validationRules.UPDATE_USER_NETWORK_BY_USER_ID_RULES
+            break; 
+        }
+        case hostActions.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID:{
+            validationSet = validationRules.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID_RULES
+            break; 
+        }
+        case hostActions.UPDATE_USER_INTERESTS_BY_USER_ID:{
+            validationSet = validationRules.UPDATE_USER_INTERESTS_BY_USER_ID_RULES
+            break; 
+        }
+        case hostActions.UPDATE_USER_QRS_BY_USER_ID:{
+            validationSet = validationRules.UPDATE_USER_QRS_BY_USER_ID_RULES
+            break; 
+        }
+        case hostActions.PUT_USER_FLIRT_BY_USER_ID:{
+            validationSet = validationRules.PUT_USER_FLIRT_BY_USER_ID_RULES
+            break; 
+        }
+
+        case hostActions.UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID:{
+            validationSet = validationRules.UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID_RULES
+            break; 
+        }
+
+        case hostActions.GET_USER_FLIRTS:{
+            validationSet = validationRules.GET_USER_FLIRTS_RULES
+            break; 
+        }
+
+        
+        
+        
+        
         
 
         default:{
             logger.info("No request verification needed for "+action);
+            validationSet = [];
         }
 
 

@@ -39,7 +39,7 @@ async function creatInternalUser(input) {
         phone: input.phone,
         zip_code: input.zip_code,
         created_at: currentTime,
-        update_at: currentTime
+        updated_at: currentTime
     }
     user.password = await hashPassword(input.password);
     user.surname = input.surname ? input.surname : ""
@@ -48,15 +48,15 @@ async function creatInternalUser(input) {
 
 function createUserLocationExternal(value) {
     logger.info("createUserLocationExternal: " + JSON.stringify(value));
-    logger.info("user_id: "+value.user_id);
+    logger.info("user_id: " + value.user_id);
     const result = {
         user_id: value.user_id,
         location: [value.location.coordinates[1], value.location.coordinates[0]]
     };
 
     logger.info("createUserLocationExternal result: " + JSON.stringify(result));
-    
-    return result; 
+
+    return result;
 }
 
 
@@ -64,7 +64,7 @@ async function registerUser(input) {
     logger.info("Start registerUser");
     let checkExist = await dbHandler.findWithFilters({ email: input.email }, userColletion);
     let result = {};
-    if (checkExist) {
+    if (checkExist.length >0) {
         result.status = 500;
         result.message = "User already exists";
 
@@ -115,9 +115,14 @@ async function doLogin(input) {
                     surname: user.surname,
                     email: user.email,
                     token: currentToken,
-                    refresh_token: currentRefreshToken
+                    refresh_token: currentRefreshToken,
+                    networks: user.networks, 
+                    user_interests: user.user_interests, 
+                    qr_values: user.qr_values
                 }
             }
+       
+
         } else {
             result = {
                 status: 500,
@@ -169,13 +174,104 @@ async function getUsersByDistanceFromPoint(input) {
 
 }
 
+async function updateUserNetworksByUserId(input) {
+    logger.info("Start update");
+
+    let result = {};
+    const filters = { id: input.user_id };
+    const newValues = { "networks": input.values.networks, "updated_at": Date.now() };
+    logger.info("--> new values: " + JSON.stringify(newValues));
+    const dbResponse = await dbHandler.updateDocument(newValues, filters, userColletion);
+    logger.info("-> db result: " + dbResponse);
+    if (dbResponse) {
+        result.status = 200;
+        result.message = "Networks updated";
+        result.networks = input.values.networks;
+
+    } else {
+        result.status = 500;
+    }
+    return result;
+
+}
+
+async function updateUserSearchingRangeByUserId(input) {
+    logger.info("Starts updateUserSearchingRangeByUserId");
+    let result = {};
+    const filters = { id: input.user_id };
+    const newValues = { "exploring_max_radio": input.distance, "updated_at": Date.now() };
+    const dbResponse = await dbHandler.updateDocument(newValues, filters, userColletion);
+    logger.info("-> db result: " + dbResponse);
+    if (dbResponse) {
+        result.status = 200;
+        result.message = "Exploring radio updated";
+        result.distance = input.distance;
+
+    } else {
+        result.status = 500;
+    }
+    return result;
+
+}
+
+async function updateUserInterestsByUserId(input) {
+    logger.info("Starts updateUserInterestsByUserId");
+    let result = {};
+    const filters = { id: input.user_id };
+    const newValues = {
+        user_interests: input.values.user_interests,
+        updated_at: Date.now()
+    };
+    const dbResponse = await dbHandler.updateDocument(newValues, filters, userColletion);
+    logger.info("-> db result: " + dbResponse);
+    if (dbResponse) {
+        result.status = 200;
+        result.message = "User interests updated";        
+    } else {
+        result.status = 500;
+    }
+    return result;
+}
+
+async function updateUserQrsByUserId(input){
+    logger.info("Starts updateUserInterestsByUserId");
+    let result = {};
+    const filters = { id: input.user_id };
+    let qrValues =[];
+    for (let item of input.qr_values){
+        let qr = {
+            user_id: input.user_id,
+            qr_id: uuidv4(), 
+            name: item.name, 
+            content: item.content
+        }
+        qrValues.push(qr);
+    }
+    const newValues = {
+        qr_values: qrValues,
+        updated_at: Date.now()
+    };
+    const dbResponse = await dbHandler.updateDocument(newValues, filters, userColletion);
+    logger.info("-> db result: " + dbResponse);
+    if (dbResponse) {
+        result.status = 200;
+        result.message = "User QR values updated";        
+    } else {
+        result.status = 500;
+    }
+    return result;
+}
 
 
 
 module.exports = {
     registerUser,
     doLogin,
-    getUsersByDistanceFromPoint
+    getUsersByDistanceFromPoint,
+    updateUserNetworksByUserId,
+    updateUserSearchingRangeByUserId,
+    updateUserInterestsByUserId,
+    updateUserQrsByUserId
 }
 
 

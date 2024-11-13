@@ -1,5 +1,5 @@
 import 'package:app/app_localizations.dart';
-import 'package:app/model/session.dart';
+import 'package:app/model/Session.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:app/ui/utils/toast_message.dart';
@@ -90,9 +90,9 @@ class _HomeState extends State<Home> {
     });
     LocationHandler handler = LocationHandler(this.onErrorLocationHandler);
     Location location = await handler.getCurrentLocation();
-    print("location lat: ${location.lat}, ${location.lon}");
-    Session.user.latitude = location.lat; 
-    Session.user.longitude = location.lon; 
+    // print("location lat: ${location.lat}, ${location.lon}");
+    // Session.user.latitude = location.lat; 
+    // Session.user.longitude = location.lon; 
   }
 
 

@@ -2,7 +2,7 @@
 const { MongoClient } = require('mongodb');
 const logger = require("../logger/log");
 const database = process.env.DATABASE_NAME;
-const json= require("../utils/json_utils"); 
+const json = require("../utils/json_utils");
 
 const uri = 'mongodb://' +
     process.env.DATABASE_USER + ":" +
@@ -24,8 +24,7 @@ async function connectToDatabase() {
 
     } catch (error) {
         console.error('Error loading document:', error);
-    } finally {
-        // Cerrar la conexión al cliente
+    } finally {        
         await client.close();
     }
     return null;
@@ -43,6 +42,9 @@ async function addDocument(document, path) {
     } catch (error) {
         logger.info(error);
     }
+    finally{
+        await client.close(); 
+    }
 
     return result;
 }
@@ -59,18 +61,37 @@ async function addManyDocuments(document, path) {
     } catch (error) {
         logger.info(error);
     }
+    finally{
+        await client.close(); 
+    }
 
     return result;
 }
 
 
 async function updateDocument(newDocument, filter, path) {
-    await client.connect();
-    const db = client.db(database);
-    const collection = db.collection(path);
-    const update = { $set: newDocument }
-    const result = await collection.updateOne(filter, update);
-    console.log(`Document updated with id= ${result.modifiedCount}`);
+    let result = {};
+    try {
+        await client.connect();
+        const db = client.db(database);
+        const collection = db.collection(path);
+        const update = { $set: newDocument }
+        // logger.info("--> update info: "+ JSON.stringify(update));
+        // logger.info("--> filter info: "+ JSON.stringify(filter));
+        result = await collection.updateOne(filter, update);
+        console.log(`Num. documents updated= ${result.modifiedCount}`);
+
+        if (result.modifiedCount == 0) {
+            logger.info("no documents updated");
+            result = null;
+        }
+    } catch (error) {
+        logger.info("error found updating: " + error);
+    } finally {
+        await client.close();
+    }
+
+
     return result;
 }
 
@@ -85,7 +106,7 @@ async function deleteDocument(filter, path) {
     } catch (error) {
         logger.info("error found searching: " + error)
     } finally {
-        client.close();
+        await client.close();
     }
 
 
@@ -93,25 +114,39 @@ async function deleteDocument(filter, path) {
 }
 
 async function findWithFilters(filters, path) {
-    logger.info("Starts findWithFilters")
+    logger.info("Starts findWithFilters: "+ JSON.stringify(filters));
     let result = null;
     try {
         await client.connect();
         const db = client.db(database);
         const collection = db.collection(path);
-        if (filters){
-            const cursor = await collection.find(filters);    
-            result = await cursor.toArray();    
-        }else{
-            logger.info("No filters detected");
-            const cursor = await collection.find();   
-            result = await cursor.toArray();     
-        }
-        
+        const cursor = await collection.find(filters);
+        result = await cursor.toArray();
+        json.printJson(result);
     } catch (error) {
         logger.info(error);
     } finally {
-        client.close();
+        await client.close();
+    }
+
+    return result;
+}
+
+async function findAll(path) {
+    logger.info("Starts findAll")
+    let result = null;
+    try {
+        await client.connect();
+        const db = client.db(database);
+        const collection = db.collection(path);
+        logger.info("No filters detected");
+        const cursor = await collection.find();
+        result = await cursor.toArray();
+
+    } catch (error) {
+        logger.info(error);
+    } finally {
+        await client.close();
     }
 
     return result;
@@ -126,5 +161,6 @@ module.exports = {
     updateDocument,
     deleteDocument,
     findWithFilters,
-    addManyDocuments
+    addManyDocuments,
+    findAll
 }

@@ -5,10 +5,8 @@ import 'package:app/comms/model/response/HostLoginResponse.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
 
-class HostLoginRequest{
-  
-
-    Future<HostLoginResponse> run(String user, String pass) async {
+class HostLoginRequest {
+  Future<HostLoginResponse> run(String user, String pass) async {
     Log.d("Start doLogin: $user:$pass");
     try {
       HostActions option = HostActions.LOGIN;
@@ -18,13 +16,14 @@ class HostLoginRequest{
         "input": {"email": user, "password": pass}
       };
 
-      String jsonBody = json.encode(mapBody); 
-      Log.d(jsonBody);  
+      String jsonBody = json.encode(mapBody);
+      Log.d(jsonBody);
       var response = await http.post(url, headers: jsonHeaders, body: jsonBody);
-      
+
       if (response.statusCode == 200) {
         var value = jsonDecode(response.body)["response"];
-        return HostLoginResponse.fromJson(value);
+        HostLoginResponse hostLoginResponse = HostLoginResponse.fromJson(value);
+        return hostLoginResponse;
       }
     } catch (error, stackTrace) {
       Log.d(stackTrace.toString());

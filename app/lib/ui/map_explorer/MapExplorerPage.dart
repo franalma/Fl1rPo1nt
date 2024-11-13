@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:app/comms/model/request/HostGetPeopleArroundRequest.dart';
-import 'package:app/comms/model/user.dart';
-import 'package:app/model/session.dart';
+import 'package:app/model/User.dart';
+import 'package:app/model/Session.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -65,15 +65,15 @@ class _MapExplorerController extends State<MapExplorerController> {
 
   Future<void> _fetchFromHost() async {
     Log.d("Starts");
-    User user = Session.user;
-    HostGetPeopleArroundRequest()
-        .run(user.latitude, user.longitude, 5000)
-        .then((value) {
-      for (var item in value) {      
-        Log.d("lat: ${item.latitude}  lon:${item.longitude}");
-        _addMarker(LatLng(item.latitude, item.longitude), item.userId.toString());
-      }
-    });
+    // User user = Session.user;
+    // HostGetPeopleArroundRequest()
+    //     .run(user.latitude, user.longitude, 5000)
+    //     .then((value) {
+    //   for (var item in value) {      
+    //     Log.d("lat: ${item.latitude}  lon:${item.longitude}");
+    //     _addMarker(LatLng(item.latitude, item.longitude), item.userId.toString());
+    //   }
+    // });
 
   
   }

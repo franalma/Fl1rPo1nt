@@ -1,4 +1,5 @@
 import 'package:app/app_localizations.dart';
+import 'package:app/model/Flirt.dart';
 import 'package:app/model/QrValue.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
@@ -8,16 +9,16 @@ import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class QrPage extends StatefulWidget {
+class FlirtsPage extends StatefulWidget {
   @override
-  State<QrPage> createState() {
-    return _QrPage();
+  State<FlirtsPage> createState() {
+    return _FlirtsPage();
   }
 }
 
-class _QrPage extends State<QrPage> {
-  List<QrValue> qrList = Session.user.qrValues;
-  // bool _isLoading = true;
+class _FlirtsPage extends State<FlirtsPage> {
+  List<Flirt> flirtList = [];
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -43,13 +44,12 @@ class _QrPage extends State<QrPage> {
   
   Widget _buildList() {
     return ListView.builder(
-        itemCount: qrList.length,
+        itemCount: flirtList.length,
         itemBuilder: (context, index) {
           return Card(
             margin: EdgeInsets.all(8.0),
             child: Column(children: [
-              Text(qrList[index].qrId),
-              QrImageView(data: qrList[index].content, size: 100)
+              Text(flirtList[index].id),              
             ]),
           );
         });

@@ -7,9 +7,10 @@ const hostActions = require("./constants/host_actions");
 const userHandler = require('./model/user/user_handler');
 const contactHandler = require('./model/user/contact_handler');
 const qrHandler = require("./model/qr/qr_handler");
-const socialHandler = require("./model/social_network/social_network_handler");
+const generalValuesHandler = require("./model/general_values/general_values_handler");
 const bulkHandler = require("./model/bulk/bulk_handler");
 const bulkHostActions = require ("./constants/bulk_host_actions");
+const flirtHandler = require ("./model/flirt/flirt_handler");
 
 const app = express();
 app.use(express.json());
@@ -107,11 +108,11 @@ async function processRequest(req, res) {
                     break;
                 }
                 case hostActions.GET_ALL_SOCIAL_NETWORKS: {
-                    result = await socialHandler.getAllSocialNetworks();
+                    result = await generalValuesHandler.getAllSocialNetworks();
                     break;
                 }
                 case hostActions.PUT_ALL_SOCIAL_NETWORKS: {
-                    result = await socialHandler.putAllSocialNetworks(req.body.input);
+                    result = await generalValuesHandler.putAllSocialNetworks(req.body.input);
                     break;
                 }
                 case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID: {
@@ -130,8 +131,43 @@ async function processRequest(req, res) {
                     result = await userHandler.getUsersByDistanceFromPoint(req.body.input);
                     break;
                 }
+                case hostActions.UPDATE_USER_NETWORK_BY_USER_ID:{
+                    result = await userHandler.updateUserNetworksByUserId(req.body.input);
+                    break;
+                }
+                case hostActions.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID:{
+                    result = await userHandler.updateUserSearchingRangeByUserId(req.body.input);
+                    break;
+                }
 
+                case hostActions.GET_ALL_SEXUAL_ORIENTATIONS_RELATIONSHIPS:{
+                    result = await generalValuesHandler.getAllSexualOrientationsRelationships(req.body.input);
+                    break;
+                }
 
+                case hostActions.UPDATE_USER_INTERESTS_BY_USER_ID:{
+                    result = await userHandler.updateUserInterestsByUserId(req.body.input);
+                    break;
+                }
+
+                case hostActions.UPDATE_USER_QRS_BY_USER_ID:{
+                    result = await userHandler.updateUserQrsByUserId(req.body.input);
+                    break;
+                }
+
+                case hostActions.PUT_USER_FLIRT_BY_USER_ID:{
+                    result = await flirtHandler.putUserFlirts(req.body.input);
+                    break;
+                }
+
+                case hostActions.UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID:{
+                    result = await flirtHandler.udpateUserFlirts(req.body.input);
+                    break;
+                }
+                case hostActions.GET_USER_FLIRTS:{
+                    result = await flirtHandler.getUserFlirts(req.body.input);
+                    break;
+                }
 
             }
             if (result && result.status) {

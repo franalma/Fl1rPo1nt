@@ -1,5 +1,5 @@
 import 'package:app/app_localizations.dart';
-import 'package:app/model/session.dart';
+import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +93,7 @@ class _QrGeneratePage extends State<QrGeneratePage> {
 
   void onSaveQr()async {
 
-    
+
 
   }
 }
