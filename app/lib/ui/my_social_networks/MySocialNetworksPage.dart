@@ -31,14 +31,20 @@ class _MySocialNetworksPage extends State<MySocialNetworksPage> {
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  NavigatorApp.push(NewSocialNetwork(), context);
+                  NavigatorApp.pushWithCallback(
+                      NewSocialNetwork(), context, _onPop);
                 },
               ),
             ]),
         body: _buildList());
   }
 
-  
+  void _onPop() {
+    setState(() {
+      networks = Session.user.networks;
+    });
+  }
+
   Widget _buildList() {
     return ListView.builder(
         itemCount: networks.length,
@@ -52,5 +58,5 @@ class _MySocialNetworksPage extends State<MySocialNetworksPage> {
             ]),
           );
         });
-  } 
+  }
 }

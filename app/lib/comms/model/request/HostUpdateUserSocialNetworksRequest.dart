@@ -11,26 +11,28 @@ class HostUpdateUserSocialNetworksRequest extends BaseRequest {
   Future<List<HostUpdateUserSocialNetworksResponse>> run(
       String userId, List<SocialNetwork> networks) async {
     try {
-      Log.d("Start HostUpdateUserSocialNetworksResponse");
+      Log.d("Start HostUpdateUserSocialNetworksRequest");
       HostActions option = HostActions.UPDATE_USER_NETWORK_BY_USER_ID;
       Uri url = Uri.parse(option.url);
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
-        "values": {"networks": networks}
+        "input": {
+          "user_id": userId,
+          "values": {"networks": networks.map((e) => e.toHost()).toList()}
+        }
       };
 
       String jsonBody = json.encode(mapBody);
+      Log.d("-->payload: $jsonBody");
       var response =
           await http.post(url, headers: buildHeader(), body: jsonBody);
-      var value = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
         List<dynamic> value = jsonDecode(response.body)["networks"];
         return value
-            .map((item) => HostUpdateUserSocialNetworksResponse.fromJson(item))
+            .map((e) => HostUpdateUserSocialNetworksResponse.fromJson(e))
             .toList();
-            
       }
     } catch (error) {
       Log.d(error.toString());

@@ -1,7 +1,7 @@
 import 'package:app/ui/utils/Log.dart';
 
 class RelationShip {
-  String id = "";
+  int id = 0;
   String value = "";
 
   RelationShip(this.id, this.value);

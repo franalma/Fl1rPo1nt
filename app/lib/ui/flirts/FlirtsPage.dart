@@ -1,13 +1,10 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/model/Flirt.dart';
-import 'package:app/model/QrValue.dart';
-import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/qr_manager/qr_add/QrGeneratePage.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class FlirtsPage extends StatefulWidget {
   @override

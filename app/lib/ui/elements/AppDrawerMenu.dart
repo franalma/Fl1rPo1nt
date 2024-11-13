@@ -4,6 +4,7 @@ import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/qr_manager/QrPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
+import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -48,8 +49,7 @@ class AppDrawerMenu {
         ListTile(
           title: const Text('Mi estado'),
           onTap: () {
-            // Update the state of the app.
-            // ...
+            NavigatorApp.push(UserStatePage(), context);
           },
         ),
         ListTile(

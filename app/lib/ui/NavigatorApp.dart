@@ -14,6 +14,17 @@ class NavigatorApp {
     );
   }
 
+  static void pushWithCallback(
+      Widget widget, BuildContext context, Function callback) {
+    navigator!
+        .push(
+      MaterialPageRoute(builder: (context) => widget),
+    )
+        .then((_) {
+      callback();
+    });
+  }
+
   static void pop(BuildContext context) {
     navigator!.pop(context);
   }

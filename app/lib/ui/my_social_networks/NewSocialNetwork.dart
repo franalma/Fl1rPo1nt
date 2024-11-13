@@ -4,7 +4,9 @@ import 'package:app/comms/model/request/HostUpdateUserSocialNetworksRequest.dart
 import 'package:app/model/Session.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/User.dart';
+import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
+import 'package:app/ui/elements/Navigator.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
@@ -115,11 +117,24 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
   }
 
   Future<void> _onSaveData() async {
-    // Log.d("Starts _onSaveData");
-    // networks
-    //     .add(SocialNetwork("", selectedNetwork!, editNetworkController.text));
-    // var result = await HostUpdateUserSocialNetworksRequest()
-    //     .run(user.userId, networks)
-       
+    Log.d("Starts _onSaveData");
+    var networksToUpate = user.networks;
+    if (selectedNetwork != null) {
+      var newNetwork =
+          SocialNetwork("", selectedNetwork!, editNetworkController.text);
+      networksToUpate.add(newNetwork);
+      HostUpdateUserSocialNetworksRequest()
+          .run(user.userId, networksToUpate)
+          .then((value) {
+        if (value.isEmpty) {
+          FlutterToast().showToast("No se ha podido añadir la red");
+          networksToUpate.remove(newNetwork);
+        } else {
+          NavigatorApp.pop(context);
+        }
+      });
+    } else {
+      FlutterToast().showToast("Debes rellenar todos los campos");
+    }
   }
 }
