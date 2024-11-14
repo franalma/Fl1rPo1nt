@@ -51,7 +51,7 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
   }
 
   Widget _buildLoading() {
-    return CircularProgressIndicator();
+    return Center(child: CircularProgressIndicator());
   }
 
   Widget _buildEditOptions() {
@@ -93,8 +93,7 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
             selectedNetwork = newValue!;
           });
         },
-        items: networks.map<DropdownMenuItem<String>>((value) {
-          print(value.name + " " + value.networkId);
+        items: networks.map<DropdownMenuItem<String>>((value) {          
           return DropdownMenuItem<String>(
             value: value.networkId,
             child: Text(value.name),

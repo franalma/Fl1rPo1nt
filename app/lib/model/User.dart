@@ -20,6 +20,7 @@ class User {
   late SexAlternative sexAlternatives;
   late List<SocialNetwork> networks;
   late int exploringMaxRadion;
+  bool isFlirting = false; 
 
   late String refreshToken;
 

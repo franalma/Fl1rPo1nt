@@ -1,11 +1,13 @@
 import 'package:app/app_localizations.dart';
+import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
-import 'package:app/ui/qr_manager/QrPage.dart';
+import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
 import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:app/ui/utils/location.dart';
+import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -23,17 +25,18 @@ class AppDrawerMenu {
           child: Text(AppLocalizations.of(context)!.translate("app_name")),
         ),
         ListTile(
-          title: const Text('Explorar'),
+          title: const Text('Inicio'),
           onTap: () {
-            launchMapExplorer(context);
+            NavigatorApp.popUntil(context);
           },
         ),
-        ListTile(
-          title: const Text('Mis QR'),
-          onTap: () {
-            NavigatorApp.push(QrPage(), context);
-          },
-        ),
+
+        // ListTile(
+        //   title: const Text('Mis QR'),
+        //   onTap: () {
+        //     NavigatorApp.push(ListQrPage(), context);
+        //   },
+        // ),
         ListTile(
           title: const Text('Mi perfil'),
           onTap: () {
@@ -41,17 +44,29 @@ class AppDrawerMenu {
           },
         ),
         ListTile(
-          title: const Text('Mis redes'),
+          title: const Text('Explorar'),
           onTap: () {
-            NavigatorApp.push(MySocialNetworksPage(), context);
+            launchMapExplorer(context);
           },
         ),
         ListTile(
-          title: const Text('Mi estado'),
+          title: const Text('Puntos de interés'),
           onTap: () {
-            NavigatorApp.push(UserStatePage(), context);
+            //  NavigatorApp.push(ShowPointOfInterest(), context);
           },
         ),
+        // ListTile(
+        //   title: const Text('Mis redes'),
+        //   onTap: () {
+        //     NavigatorApp.push(MySocialNetworksPage(), context);
+        //   },
+        // ),
+        // ListTile(
+        //   title: const Text('Mi estado'),
+        //   onTap: () {
+        //     NavigatorApp.push(UserStatePage(), context);
+        //   },
+        // ),
         ListTile(
           title: const Text('Mis contactos'),
           onTap: () {
@@ -59,13 +74,13 @@ class AppDrawerMenu {
             // ...
           },
         ),
-        ListTile(
-          title: const Text('Cerrar sesión'),
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
+        // ListTile(
+        //   title: const Text('Cerrar sesión'),
+        //   onTap: () {
+        //     // Update the state of the app.
+        //     // ...
+        //   },
+        // ),
       ],
     ));
   }
@@ -73,10 +88,14 @@ class AppDrawerMenu {
   void onErrorLocation(String message) {}
 
   void launchMapExplorer(BuildContext context) async {
-    LocationHandler(onErrorLocation).getCurrentLocation().then((value) {
-      LatLng coordinates = LatLng(value.lat, value.lon);
-      print("-->coordinates: "+coordinates.latitude.toString()+":"+coordinates.longitude.toString());
-      NavigatorApp.push(MapExplorerController(coordinates), context);
-    });
+    if (Session.user.isFlirting) {
+      LocationHandler(onErrorLocation).getCurrentLocation().then((value) {
+        LatLng coordinates = LatLng(value.lat, value.lon);
+
+        NavigatorApp.push(MapExplorerController(coordinates), context);
+      });
+    }else{
+      FlutterToast().showToast("Debes comenzar a ligar para ver el mapa");
+    }
   }
 }

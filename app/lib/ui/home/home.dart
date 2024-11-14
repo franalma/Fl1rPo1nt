@@ -1,6 +1,11 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/model/Session.dart';
+import 'package:app/model/User.dart';
+import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
+import 'package:app/ui/qr_manager/QrCodeScannerPage.dart';
+import 'package:app/ui/qr_manager/ShowQrCodeToShare.dart';
+import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +17,25 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool _isEnabled = false;
+  Color? _sexAltColor;
+  Color? _relAltColor;
+  User user = Session.user;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.translate('app_name'))),
+            title: Text(AppLocalizations.of(context)!.translate('app_name')),
+            actions: [
+              IconButton(
+                  onPressed: () { NavigatorApp.push(QrCodeScannerPage(), context);}, icon: const Icon(Icons.camera_enhance)),
+              IconButton(
+                  onPressed: () {
+                    NavigatorApp.push(ShowQrCodeToShare(), context);
+                  },
+                  icon: const Icon(Icons.qr_code)),
+            ]),
         body: Center(
           child: _isEnabled
               ? _buildEnabledFlirtPanel()
@@ -36,7 +53,7 @@ class _HomeState extends State<Home> {
         ),
         Expanded(
           child: Container(
-             color: const Color.fromARGB(255, 243, 243, 244),
+            color: const Color.fromARGB(255, 243, 243, 244),
           ),
         ),
         Positioned(
@@ -57,14 +74,10 @@ class _HomeState extends State<Home> {
     return Column(
       children: [
         Expanded(
-          child: Container(
-            color: Color.fromARGB(255, 240, 243, 33),
-          ),
+          child: Container(color: _sexAltColor),
         ),
         Expanded(
-          child: Container(
-            color: Colors.green,
-          ),
+          child: Container(color: _relAltColor),
         ),
         Positioned(
           top: 50, // Ajusta la posición del botón en la primera parte
@@ -85,23 +98,36 @@ class _HomeState extends State<Home> {
   }
 
   void _onStartFlirt() async {
-    setState(() {
-      _isEnabled=true; 
-    });
-    LocationHandler handler = LocationHandler(this.onErrorLocationHandler);
+    if (user.sexAlternatives.color == null ||
+        user.sexAlternatives.color == null) {
+      FlutterToast()
+          .showToast("Debes indicar tus preferencias antes de comenzar");
+    } else {
+      _sexAltColor = Color(CommonUtils.colorToInt(user.sexAlternatives.color));
+      _relAltColor = Color(CommonUtils.colorToInt(user.relationShip.color));
+      setState(() {
+        _isEnabled = true;
+      });
+    }
+
+    LocationHandler handler = LocationHandler(onErrorLocationHandler);
     Location location = await handler.getCurrentLocation();
-    // print("location lat: ${location.lat}, ${location.lon}");
-    // Session.user.latitude = location.lat; 
-    // Session.user.longitude = location.lon; 
+
+    if (location.lat == 0 && location.lon == 0){
+      FlutterToast().showToast("No ha sido posible obtener la localización");
+    }else{
+        Session.location = location; 
+        user.isFlirting = true; 
+        //enable flirting on host
+    }
+
+    
   }
 
-
-  void _onStopFlirt() async {    
-    
+  void _onStopFlirt() async {
+     user.isFlirting = false; 
     setState(() {
-      _isEnabled = false; 
+      _isEnabled = false;
     });
   }
-
-
 }

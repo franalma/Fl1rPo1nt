@@ -22,11 +22,13 @@ class HostUpdateUserInterestRequest extends BaseRequest {
             "user_interests": {
               "relationship": {
                 "id": relationship.id,
-                "name": relationship.value
+                "name": relationship.value,
+                "color":relationship.color
               },
               "sex_alternative": {
                 "id": sexAlternative.id,
-                "name": sexAlternative.name
+                "name": sexAlternative.name,
+                "color":sexAlternative.color
               }
             }
           }

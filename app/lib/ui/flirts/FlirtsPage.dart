@@ -2,7 +2,7 @@ import 'package:app/app_localizations.dart';
 import 'package:app/model/Flirt.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
-import 'package:app/ui/qr_manager/qr_add/QrGeneratePage.dart';
+import 'package:app/ui/qr_manager/NewQrGeneratePage.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 

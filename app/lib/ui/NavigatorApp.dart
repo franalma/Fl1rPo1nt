@@ -1,3 +1,4 @@
+import 'package:app/ui/home/home.dart';
 import 'package:flutter/material.dart';
 
 class NavigatorApp {
@@ -27,5 +28,16 @@ class NavigatorApp {
 
   static void pop(BuildContext context) {
     navigator!.pop(context);
+  }
+  static void popUntil(BuildContext context) {
+     Navigator.popUntil(context, (route) => route.isFirst);
+  }
+
+  static pushAndRemoveUntil(BuildContext context, StatefulWidget screen){
+     Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => screen),
+              (Route<dynamic> route) => false,
+            );
   }
 }

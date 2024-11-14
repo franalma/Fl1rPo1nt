@@ -19,4 +19,8 @@ class QrValue {
     }
     return QrValue.empty();
   }
+
+  Map<String, dynamic> toHost() {
+    return {"name": name, "content": content, "user_id": userId};
+  }
 }

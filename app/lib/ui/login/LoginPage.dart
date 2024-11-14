@@ -351,7 +351,8 @@ class _LoginPage extends State<LoginPage> {
       });            
       if (response.userId.isNotEmpty) {        
         Session.user = User.fromHost(response);
-        NavigatorApp.push(Home(), context);
+
+        NavigatorApp.pushAndRemoveUntil(context, Home());
       } else {
         FlutterToast().showToast("Usuario/contraseña incorrectos");
       }
