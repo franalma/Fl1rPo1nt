@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:app/comms/model/HostContants.dart';
-import 'package:app/comms/model/response/HostLoginResponse.dart';
+import 'package:app/comms/model/response/auth/HostLoginResponse.dart';
+
 import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
 

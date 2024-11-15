@@ -1,8 +1,10 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/contacts/ListContactsPage.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
+import 'package:app/ui/point_interest/ListPointOfInterestPage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
 import 'package:app/ui/user_state/UserStatePage.dart';
@@ -25,62 +27,35 @@ class AppDrawerMenu {
           child: Text(AppLocalizations.of(context)!.translate("app_name")),
         ),
         ListTile(
-          title: const Text('Inicio'),
-          onTap: () {
-            NavigatorApp.popUntil(context);
-          },
-        ),
-
-        // ListTile(
-        //   title: const Text('Mis QR'),
-        //   onTap: () {
-        //     NavigatorApp.push(ListQrPage(), context);
-        //   },
-        // ),
-        ListTile(
+          leading:
+              const Icon(Icons.account_box_rounded), // Icon at the beginning
           title: const Text('Mi perfil'),
+
           onTap: () {
             NavigatorApp.push(UserProfilePage(), context);
           },
         ),
         ListTile(
+          leading: const Icon(Icons.map_outlined), // Icon at the beginning
           title: const Text('Explorar'),
           onTap: () {
             launchMapExplorer(context);
           },
         ),
         ListTile(
+          leading: const Icon(Icons.place_outlined),
           title: const Text('Puntos de interés'),
           onTap: () {
-            //  NavigatorApp.push(ShowPointOfInterest(), context);
+            NavigatorApp.push(ListPointOfInterestPage(), context);
           },
         ),
-        // ListTile(
-        //   title: const Text('Mis redes'),
-        //   onTap: () {
-        //     NavigatorApp.push(MySocialNetworksPage(), context);
-        //   },
-        // ),
-        // ListTile(
-        //   title: const Text('Mi estado'),
-        //   onTap: () {
-        //     NavigatorApp.push(UserStatePage(), context);
-        //   },
-        // ),
         ListTile(
+          leading: const Icon(Icons.message),
           title: const Text('Mis contactos'),
           onTap: () {
-            // Update the state of the app.
-            // ...
+            NavigatorApp.push(ListContactsPage(), context);
           },
         ),
-        // ListTile(
-        //   title: const Text('Cerrar sesión'),
-        //   onTap: () {
-        //     // Update the state of the app.
-        //     // ...
-        //   },
-        // ),
       ],
     ));
   }
@@ -94,7 +69,7 @@ class AppDrawerMenu {
 
         NavigatorApp.push(MapExplorerController(coordinates), context);
       });
-    }else{
+    } else {
       FlutterToast().showToast("Debes comenzar a ligar para ver el mapa");
     }
   }

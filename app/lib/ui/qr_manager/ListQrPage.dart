@@ -1,5 +1,6 @@
 import 'package:app/app_localizations.dart';
-import 'package:app/comms/model/request/HostUpdateUserQrRequest.dart';
+import 'package:app/comms/model/request/qr/HostUpdateUserQrRequest.dart';
+
 import 'package:app/model/QrValue.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -30,7 +31,7 @@ class _ListQrPage extends State<ListQrPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: AppDrawerMenu().getDrawer(context),
+        // drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
             title: Text(AppLocalizations.of(context)!.translate('app_name')),
             actions: [
@@ -73,14 +74,11 @@ class _ListQrPage extends State<ListQrPage> {
   }
 
   void _removeItem(int index) {
-    Log.d("Starts _removeItem");
-    QrValue qrAux = qrList[index];
+    Log.d("Starts _removeItem");    
     qrList.removeAt(index);
     HostUpdateUserQrRequest().run(user.userId, qrList).then((value) {
-      if (!value) {
-        qrList.add(qrAux);
-        FlutterToast().showToast("No se ha podido eliminar el QR");
-      }
+      qrList = value.map((item) => item.qrValue).toList(); 
+      user.qrValues = qrList; 
       setState(() {});
     });
   }

@@ -1,9 +1,10 @@
+
 import 'package:app/app_localizations.dart';
-import 'package:app/comms/model/request/HostLoginRequest.dart';
+import 'package:app/comms/model/request/auth/HostLoginRequest.dart';
+import 'package:app/comms/socket_subscription/SocketSubscriptionController.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/home/home.dart';
-import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 import '../NavigatorApp.dart';
@@ -344,13 +345,15 @@ class _LoginPage extends State<LoginPage> {
       _isLoading = true;
     });
 
-    HostLoginRequest().run("test@gmail.com", "Aa1234567\$").then((response) {
-      
+    HostLoginRequest().run(userController.text, "Aa1234567\$").then((response) {
       setState(() {
         _isLoading = false;
-      });            
-      if (response.userId.isNotEmpty) {        
+      });
+      if (response.userId.isNotEmpty) {
         Session.user = User.fromHost(response);
+        Session.socketSubscription =
+            SocketSubscriptionController()
+                .initializeSocketConnection();
 
         NavigatorApp.pushAndRemoveUntil(context, Home());
       } else {
@@ -359,5 +362,11 @@ class _LoginPage extends State<LoginPage> {
     }).onError((error, stackTrace) {
       FlutterToast().showToast("Error desconocido");
     });
+  }
+
+  @override
+  void initState() {    
+    super.initState();
+    userController.text = "test@gmail.com";
   }
 }

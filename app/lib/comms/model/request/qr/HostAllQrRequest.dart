@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
-import 'package:app/comms/model/response/HostAllQrResponse.dart';
+import 'package:app/comms/model/response/qr/HostAllQrResponse.dart';
 import 'package:app/ui/utils/Log.dart';
 
 class HostAllQrRequest extends BaseRequest {

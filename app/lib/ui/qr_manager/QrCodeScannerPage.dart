@@ -1,3 +1,4 @@
+import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -16,6 +17,17 @@ class _QrCodeScannerPage extends State<QrCodeScannerPage> {
   }
   @override
   Widget build(BuildContext context) {
+    
+    return Container(); 
+  }
+
+  Future<void> _onQrScanned() async {
+    Log.d("_onQrScanned");
+
+
+  }
+
+  Widget _buildCameraScanner(){
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -31,11 +43,17 @@ class _QrCodeScannerPage extends State<QrCodeScannerPage> {
             height: 600,
             child: MobileScanner(onDetect: (capture) {
               final List<Barcode> barcodes = capture.barcodes;
-              print("Detectionooooooooooooon");
+              
               for (final barcode in barcodes) {
                 print("-->qr value: " + barcode.rawValue.toString() ??
                     "No Data found in QR");
               }
             })));
   }
+  @override
+  void dispose() {    
+    super.dispose();
+    controller.stop();
+  }
+  
 }

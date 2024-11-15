@@ -2,12 +2,19 @@ const jsonHeaders = {
   'Content-Type': 'application/json', // Define el tipo de contenido como JSON
 };
 
-const String _HOST_IP = "192.168.2.206";
-const String _DEV_HOST = "http://$_HOST_IP:3000";
+const String _DEV_HOST_IP = "192.168.2.206";
+const String _DEV_HOST = "http://$_DEV_HOST_IP:3000";
 const String _DEV_BASE_API_URL = "$_DEV_HOST/api";
 const String _DEV_BASE_AUTH_URL = "$_DEV_HOST/auth";
+
+
+
+
 const String SERVER_API = _DEV_BASE_API_URL;
 const String SERVER_AUTH = _DEV_BASE_AUTH_URL;
+const String HOST = _DEV_HOST; 
+
+
 
 enum HostActions {
   LOGIN("DO_LOGIN", SERVER_AUTH),
@@ -30,7 +37,17 @@ enum HostActions {
   UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID(
       "UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID", SERVER_API),
   GET_USER_FLIRTS("GET_USER_FLIRTS", SERVER_API),
+  PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID("PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID", SERVER_API),
+
+
+
+
+
+
+  SOCKET_LISTEN("", HOST),
   ;
+
+
 
   final String action;
   final String url;

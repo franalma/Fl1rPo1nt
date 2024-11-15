@@ -1,5 +1,6 @@
 import 'package:app/app_localizations.dart';
-import 'package:app/comms/model/request/HostUpdateUserQrRequest.dart';
+import 'package:app/comms/model/request/qr/HostUpdateUserQrRequest.dart';
+
 import 'package:app/model/QrValue.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -36,7 +37,7 @@ class _QrGeneratePage extends State<QrGeneratePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: AppDrawerMenu().getDrawer(context),
+        // drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
             title: Text(AppLocalizations.of(context)!.translate('app_name')),
             actions: [
@@ -102,16 +103,10 @@ class _QrGeneratePage extends State<QrGeneratePage> {
         selectedIndex.remove(index);
       }
       for (var item in qrItems) {
-        if (item["isChecked"]) {        
+        if (item["isChecked"]) {
           text = "${text + ";" + item["name"]}:" + item["value"];
         }
       }
-      // text = qrItems.map((e) {
-      //   if (e["isChecked"]) {
-      //     return e["name"] + ":" + e["value"];
-      //   }
-      //   return "";
-      // }).toString();
     } catch (error) {
       Log.d(error.toString());
     }
@@ -124,30 +119,12 @@ class _QrGeneratePage extends State<QrGeneratePage> {
     if (controller.text.isEmpty) {
       FlutterToast().showToast("Es necesario que selecciones algún valor");
     } else {
-      // var values = controller.text.split(",");
-      // print(values);
-      // List<dynamic> preparedList = [];
-
-      // for (var it in values) {
-      //   if (it.isNotEmpty) {
-      //     print("-->it:$it");
-      //     print(it.split(":"));
-      //     preparedList
-      //         .add({"name": it.split(":")[0], "value": it.split(":")[1]});
-      //   }
-      // }
-
-      // preparedList.map((e) => print(e["name"] + ":" + e["value"])).toList();
-
-      QrValue qrValue = QrValue(user.userId, "",_qrEditingController.text , controller.text);
+      QrValue qrValue =
+          QrValue(user.userId, "", _qrEditingController.text, controller.text);
       user.qrValues.add(qrValue);
       HostUpdateUserQrRequest().run(user.userId, user.qrValues).then((result) {
-        if (result) {
-          NavigatorApp.pop(context);
-        } else {
-          user.qrValues.remove(qrValue);
-          FlutterToast().showToast("No ha sido posible actualizar los valores");
-        }
+        user.qrValues = result.map((e) => e.qrValue).toList();
+        NavigatorApp.pop(context);
       });
     }
   }

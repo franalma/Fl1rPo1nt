@@ -39,7 +39,7 @@ async function putUserFlirts(input) {
                     message: "Flirt registered successfully",
                     response: {
                         flirt_id: flirt.flirt_id,
-                        create_at: flirt.created_at
+                        created_at: flirt.created_at
                     }
                 };
             }

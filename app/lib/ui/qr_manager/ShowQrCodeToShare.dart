@@ -1,4 +1,5 @@
 import 'package:app/app_localizations.dart';
+import 'package:app/model/QrValue.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
@@ -21,11 +22,17 @@ class _ShowQrCodeToShare extends State<ShowQrCodeToShare> {
   TextEditingController controller = TextEditingController();
   List selectedIndex = [];
   User user = Session.user;
+  late String qrValue; 
 
   @override
   void initState() {
     super.initState();
+    qrValue = "${user.qrValues[0].qrId}:${user.userId}";  
   }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +48,7 @@ class _ShowQrCodeToShare extends State<ShowQrCodeToShare> {
         child: Container(
             child: user.qrValues.isNotEmpty
                 ? QrImageView(
-                    data: user.qrValues[0].content,
+                    data: qrValue,
                     size: 300,
                     // foregroundColor: foregroundColor,
                     // backgroundColor: backgroundColor,

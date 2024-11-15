@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:app/comms/model/response/HostLoginResponse.dart';
+
+import 'package:app/comms/model/response/auth/HostLoginResponse.dart';
 import 'package:app/model/QrValue.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/UserInterest.dart';

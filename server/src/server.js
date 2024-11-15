@@ -11,11 +11,14 @@ const generalValuesHandler = require("./model/general_values/general_values_hand
 const bulkHandler = require("./model/bulk/bulk_handler");
 const bulkHostActions = require ("./constants/bulk_host_actions");
 const flirtHandler = require ("./model/flirt/flirt_handler");
+const socketHandler = require ("./sockets/socket_handler");
+const http = require('http');
 
 const app = express();
 app.use(express.json());
-
 const port = process.env.PORT
+const server = http.createServer(app);
+socketHandler.socketInit(server);
 
 
 async function processAuthRequest(req, res) {
@@ -115,8 +118,8 @@ async function processRequest(req, res) {
                     result = await generalValuesHandler.putAllSocialNetworks(req.body.input);
                     break;
                 }
-                case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID: {
-                    result = await contactHandler.addUserContactByUserIdContactId(req.body.input);
+                case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID: {
+                    result = await contactHandler.addUserContactByUserIdContactIdQrId(req.body.input);
                     break;
                 }
                 case hostActions.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID: {
@@ -202,7 +205,7 @@ app.post('/bulk', (req, res) => {
 
 
 
-app.listen(port, () => {
+server.listen(port, () => {
     dbHandler.connectToDatabase().then(result => {
         if (result == null) {
             throw 'Db connection error';

@@ -1,3 +1,5 @@
+
+
 import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/HostGetAllSexRelationshipRequest.dart';
 import 'package:app/comms/model/request/HostUpdateUserInterestRequest.dart';
@@ -5,7 +7,6 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserInterest.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
@@ -37,8 +38,7 @@ class _UserStatePage extends State<UserStatePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: AppDrawerMenu().getDrawer(context),
+    return Scaffold(       
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.translate('app_name')),
           actions: [
@@ -125,15 +125,19 @@ class _UserStatePage extends State<UserStatePage> {
       try {
         sexAlternativeSelected = user.sexAlternatives;
         relationshipSelected = user.relationShip;
-        if (sexAlternativeSelected != null) {
+        if (sexAlternativeSelected != null && sexAlternativeSelected!.color.isNotEmpty) {
           print("---from host sexAlt: ${sexAlternativeSelected!.name} color: ${sexAlternativeSelected!.color}");
           sexAlternativeColor =
               Color(CommonUtils.colorToInt(sexAlternativeSelected!.color));
+        }else{
+          sexAlternativeSelected = sexAlternatives[0];
         }
 
-        if (relationshipSelected != null) {
+        if (relationshipSelected != null && relationshipSelected!.color.isNotEmpty) {
           relationshipColor =
               Color(CommonUtils.colorToInt(relationshipSelected!.color));
+        }else{
+          relationshipSelected = relationship[0];
         }
       } catch (error) {
         Log.d(error.toString());

@@ -1,4 +1,4 @@
-import 'package:app/comms/model/request/HostRegisterRequest.dart';
+import 'package:app/comms/model/request/auth/HostRegisterRequest.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 

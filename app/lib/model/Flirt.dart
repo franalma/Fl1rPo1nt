@@ -5,7 +5,7 @@ class Flirt {
   Flirt(this.id, this.createdAt);
   Flirt.empty();
 
-  factory Flirt.fromHost() {
-    return Flirt.empty();
+  factory Flirt.fromHost(Map<String, dynamic> map) {    
+    return Flirt(map["flirt_id"], map["created_at"]);
   }
 }

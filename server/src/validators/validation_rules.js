@@ -39,10 +39,11 @@ const PUT_ALL_SOCIAL_NETWORKS_RULES = [
     body('input.networks').notEmpty().isArray().withMessage("Social networks cant be empty")
 ]
 
-const PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES = [
-    body('input.networks').notEmpty().isArray().withMessage("Social networks cant be empty"),
+const PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID_RULES = [    
     body('input.user_id').notEmpty().isString().withMessage("User id cant be empty"),
-    body('input.contact_id').notEmpty().isString().withMessage("User id cant be empty")
+    body('input.contact_id').notEmpty().isString().withMessage("Contact id cant be empty"),
+    body('input.qr_id').notEmpty().isString().withMessage("Qr id  cant be empty"),
+    body('input.flirt_id').notEmpty().isString().withMessage("Flirt id  cant be empty"),
 ]
 
 const REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES = [
@@ -125,7 +126,7 @@ module.exports = {
     REMOVE_QR_BY_USER_ID_QR_ID_RULES,
     GET_QR_BY_USER_ID_RULES,
     PUT_ALL_SOCIAL_NETWORKS_RULES,
-    PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES,
+    PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID_RULES,
     REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES,
     GET_USER_CONTACTS_BY_USER_ID_RULES,
     GET_USER_BY_DISTANCE_FROM_POINT_RULES,

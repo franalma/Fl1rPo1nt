@@ -64,7 +64,7 @@ async function registerUser(input) {
     logger.info("Start registerUser");
     let checkExist = await dbHandler.findWithFilters({ email: input.email }, userColletion);
     let result = {};
-    if (checkExist.length >0) {
+    if (checkExist.length > 0) {
         result.status = 500;
         result.message = "User already exists";
 
@@ -116,12 +116,12 @@ async function doLogin(input) {
                     email: user.email,
                     token: currentToken,
                     refresh_token: currentRefreshToken,
-                    networks: user.networks, 
-                    user_interests: user.user_interests, 
-                    qr_values: user.qr_values
+                    networks: user.networks ? user.networks : [],
+                    user_interests: user.user_interests ? user.user_interests: {relationship:{}, sex_alternative:{}},
+                    qr_values: user.qr_values ? user.qr_values: []
                 }
             }
-       
+
 
         } else {
             result = {
@@ -226,23 +226,23 @@ async function updateUserInterestsByUserId(input) {
     logger.info("-> db result: " + dbResponse);
     if (dbResponse) {
         result.status = 200;
-        result.message = "User interests updated";        
+        result.message = "User interests updated";
     } else {
         result.status = 500;
     }
     return result;
 }
 
-async function updateUserQrsByUserId(input){
+async function updateUserQrsByUserId(input) {
     logger.info("Starts updateUserInterestsByUserId");
     let result = {};
     const filters = { id: input.user_id };
-    let qrValues =[];
-    for (let item of input.qr_values){
+    let qrValues = [];
+    for (let item of input.qr_values) {
         let qr = {
             user_id: input.user_id,
-            qr_id: uuidv4(), 
-            name: item.name, 
+            qr_id: uuidv4(),
+            name: item.name,
             content: item.content
         }
         qrValues.push(qr);
@@ -255,11 +255,38 @@ async function updateUserQrsByUserId(input){
     logger.info("-> db result: " + dbResponse);
     if (dbResponse) {
         result.status = 200;
-        result.message = "User QR values updated";        
+        result.message = "User QR values updated";
+        result.qr_values = qrValues;
     } else {
         result.status = 500;
     }
     return result;
+}
+
+async function getUserInfoByUserIdQrId(userId, qrId) {
+    logger.info("Starts getUserInfoByUserIdQrId");
+    const filter = { id: userId };
+    let dbResponse = await dbHandler.findWithFilters(filter, userColletion);
+    let result = {};
+    if (dbResponse) {
+        logger.info("checking...");
+        let userInfo = dbResponse[0];
+        // result.user_name = userInfo.name; 
+        for (var item of userInfo.qr_values) {
+            if (item.qr_id == qrId) {
+                result.contact_info = [];
+                let values = item.content.split(";");
+                for (var value of values) {
+                    if (value.length > 0) {
+                        result.contact_info.push(value);
+                    }
+                }
+                break;
+            }
+        }
+    }
+    return result;
+
 }
 
 
@@ -271,7 +298,8 @@ module.exports = {
     updateUserNetworksByUserId,
     updateUserSearchingRangeByUserId,
     updateUserInterestsByUserId,
-    updateUserQrsByUserId
+    updateUserQrsByUserId,
+    getUserInfoByUserIdQrId
 }
 
 

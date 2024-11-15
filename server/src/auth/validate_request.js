@@ -54,8 +54,8 @@ function requestFieldsValidation(req, res, next) {
             validationSet = validationRules.PUT_ALL_SOCIAL_NETWORKS_RULES;
             break; 
         }
-        case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID:{
-            validationSet = validationRules.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES;
+        case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID:{
+            validationSet = validationRules.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID_RULES;
             break; 
         }
         case hostActions.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID:{
