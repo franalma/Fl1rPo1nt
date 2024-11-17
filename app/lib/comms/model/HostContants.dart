@@ -2,7 +2,7 @@ const jsonHeaders = {
   'Content-Type': 'application/json', // Define el tipo de contenido como JSON
 };
 
-const String _DEV_HOST_IP = "192.168.2.206";
+const String _DEV_HOST_IP = "192.168.2.91";
 const String _DEV_HOST = "http://$_DEV_HOST_IP:3000";
 const String _DEV_BASE_API_URL = "$_DEV_HOST/api";
 const String _DEV_BASE_AUTH_URL = "$_DEV_HOST/auth";

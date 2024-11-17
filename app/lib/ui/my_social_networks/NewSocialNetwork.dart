@@ -35,7 +35,7 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: AppDrawerMenu().getDrawer(context),
+        // drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
             title: Text(AppLocalizations.of(context)!.translate('app_name')),
             actions: [

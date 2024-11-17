@@ -4,15 +4,14 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/my_social_networks/NewSocialNetwork.dart';
 import 'package:app/ui/utils/Log.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class MySocialNetworksPage extends StatefulWidget {
+  const MySocialNetworksPage({super.key});
+
   @override
   State<MySocialNetworksPage> createState() {
     return _MySocialNetworksPage();

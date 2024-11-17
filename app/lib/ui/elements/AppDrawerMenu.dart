@@ -2,12 +2,12 @@ import 'package:app/app_localizations.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ListContactsPage.dart';
+import 'package:app/ui/elements/CircleProfileImage.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/point_interest/ListPointOfInterestPage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
-import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,19 @@ class AppDrawerMenu {
           decoration: const BoxDecoration(
             color: Colors.blue,
           ),
-          child: Text(AppLocalizations.of(context)!.translate("app_name")),
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 30, // Size of the circle
+                backgroundImage: NetworkImage(
+                  'https://images.ctfassets.net/denf86kkcx7r/4IPlg4Qazd4sFRuCUHIJ1T/f6c71da7eec727babcd554d843a528b8/gatocomuneuropeo-97?fm=webp&w=913', // Replace with your image URL'
+                ),
+              ),
+              Text("usser name"),
+              Text("Escanos"),
+              Text("Escaneado"),
+            ],
+          ),
         ),
         ListTile(
           leading:

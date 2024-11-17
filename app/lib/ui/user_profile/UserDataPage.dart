@@ -2,6 +2,12 @@ import 'dart:ffi';
 
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/user_profile/UserAudiosPage.dart';
+import 'package:app/ui/user_profile/UserBiographyPage.dart';
+import 'package:app/ui/user_profile/UserHobbiesPage.dart';
+import 'package:app/ui/user_profile/UserPhotosPage.dart';
+import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 
 class UserDataPage extends StatefulWidget {
@@ -19,7 +25,8 @@ class _UserDataPage extends State<UserDataPage> {
     'Contraseña',
     'Biografía',
     'Aficiones',
-    "Fotos"
+    "Fotos",
+    "Audios"
   ];
 
   @override
@@ -30,6 +37,7 @@ class _UserDataPage extends State<UserDataPage> {
 
   void _initInternal() {
     itemsValue.add(user.name);
+    itemsValue.add("");
     itemsValue.add("");
     itemsValue.add("");
     itemsValue.add("");
@@ -86,7 +94,7 @@ class _UserDataPage extends State<UserDataPage> {
           return Column(
             children: [
               ListTile(
-                onTap: () => _editItem(index),
+                onTap: () => _onItemSelected(index),
                 title: Text(itemsTitles[index],
                     style: const TextStyle(fontSize: 20)),
                 subtitle: Text(itemsValue[index]),
@@ -98,4 +106,39 @@ class _UserDataPage extends State<UserDataPage> {
       ),
     );
   }
+
+  void _onItemSelected(int index){
+    Log.d("Start on _onItemSelected");
+
+    switch(index){
+      case 0: 
+      case 1: 
+      {
+        _editItem(index);
+        break; 
+      }
+      case 2: {
+        //Biography
+        NavigatorApp.push(UserBiographyPage(), context);
+        break; 
+      }
+      case 3:{
+        //Hobbies
+        NavigatorApp.push(UserHobbiesPage(), context);
+        break;
+      }
+      case 4:{
+        //Photos
+        NavigatorApp.push(UserPhotosPage(), context);
+        break;
+      }
+      case 5:{
+        //Photos
+        NavigatorApp.push(UserAudiosPage(), context);
+        break;
+      }
+    }
+
+  }
+
 }

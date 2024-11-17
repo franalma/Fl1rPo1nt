@@ -2,10 +2,10 @@ import 'package:app/app_localizations.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
+import 'package:app/ui/flirts/FlirtsStatsPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/user_profile/UserDataPage.dart';
-import 'package:app/ui/user_profile/UserStatsPage.dart';
 import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +54,7 @@ class _UserProfilePage extends State<UserProfilePage> {
         ListTile(
             title: Text("Mis estadísticas"),
             trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
-            onTap: () => NavigatorApp.push(UserStatsPage(), context)),
+            onTap: () => NavigatorApp.push(FlirtsStatsPage(), context)),
         Divider(),
         ListTile(
             title: Text("Cerrar sesión", style: TextStyle(color: Colors.red),),

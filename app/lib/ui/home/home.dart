@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/flirt/HostDisableFlirtByFlirtIdUserId.dart';
+import 'package:app/comms/model/request/flirt/HostGetUserFlirtsRequest.dart';
 import 'package:app/comms/model/request/flirt/HostPutFlirtByUserIdRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -26,12 +27,13 @@ class _HomeState extends State<Home> {
   Color? _sexAltColor;
   Color? _relAltColor;
   User user = Session.user;
-  bool _isLoading = false;
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
     Session.socketSubscription?.onNewContactRequested =
         _handleNewContactRequest;
+    _fetchFlirtStateFromHost();
   }
 
   void _handleNewContactRequest(String data) {
@@ -83,29 +85,31 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildDisabledFlirtPanel() {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            color: const Color.fromARGB(255, 243, 243, 244),
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          _onStartFlirt();
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.green], // Two-color gradient
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(30), // Rounded corners
+          ),
+          child: Text(
+            "Comienza un Floiint!",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        Expanded(
-          child: Container(
-            color: const Color.fromARGB(255, 243, 243, 244),
-          ),
-        ),
-        Positioned(
-          top: 50, // Ajusta la posición del botón en la primera parte
-          left: 20,
-          child: FloatingActionButton(
-            onPressed: () {
-              _onStartFlirt();
-            },
-            child: const Text("Dale!"),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -134,6 +138,41 @@ class _HomeState extends State<Home> {
 
   void onErrorLocationHandler(String message) {
     FlutterToast().showToast(message);
+  }
+
+  void _fetchFlirtStateFromHost() async {
+    LocationHandler handler = LocationHandler(onErrorLocationHandler);
+    Location location = await handler.getCurrentLocation();
+
+    HostGetUserFlirtsRequest().run(Session.user.userId, 1).then((value) {
+      if (value.flirts != null && value.flirts!.isNotEmpty) {
+        Session.user.isFlirting = true;
+        _sexAltColor =
+            Color(CommonUtils.colorToInt(user.sexAlternatives.color));
+        _relAltColor = Color(CommonUtils.colorToInt(user.relationShip.color));
+
+        if (location.lat == 0 && location.lon == 0) {
+          FlutterToast()
+              .showToast("No ha sido posible obtener la localización");
+          setState(() {
+            _isLoading = false;
+          });
+        } else {
+          Session.location = location;
+          var flirt = value.flirts?[0];
+          Session.currentFlirt = flirt;
+          setState(() {
+            _isEnabled = true;
+            _isLoading = false;
+          });
+        }
+      } else {
+        setState(() {
+          _isLoading = false;
+          _isEnabled = false;
+        });
+      }
+    });
   }
 
   void _onStartFlirt() async {

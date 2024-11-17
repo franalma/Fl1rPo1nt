@@ -5,11 +5,9 @@ import 'package:app/model/QrValue.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/qr_manager/NewQrGeneratePage.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
-import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -60,10 +58,15 @@ class _ListQrPage extends State<ListQrPage> {
             children: [
               ListTile(
                   title:Text(qrList[index].name),
+                  subtitle: Column(
+                    children: [
+                      Text("Contenido" + qrList[index].content.substring(1))
+                    ],
+                  ),
                   leading:  _buildQrCode(index),
                   trailing: ElevatedButton(
                       onPressed: () => _removeItem(index),
-                      child: Text('Remove Item'),
+                      child: Text('Borrar'),
                     ),
                     ),
                     Divider()
