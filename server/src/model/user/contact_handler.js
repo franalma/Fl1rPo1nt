@@ -4,6 +4,7 @@ const dbHandler = require('../../database/database_handler');
 const userContactCollection = "users_contacts";
 const sockerHandler = require('../../sockets/socket_handler');
 const userHandler = require('../user/user_handler');
+const { printJson } = require('../../utils/json_utils');
 
 
 async function createUserContactInternal(input) {
@@ -31,20 +32,24 @@ async function addUserContactByUserIdContactIdQrId(input) {
     let dbResponse = await dbHandler.addDocument(doc, userContactCollection);
     let result = {};
 
+    printJson(dbResponse);
     if (dbResponse) {
         result = {
             status: 200,
-            message: "Contact added sucessfully"
-        }
+            message: "Contact added sucessfully",
+            contact_info: doc.contact_info
 
+        }
+        const message = {
+            requested_user_id: input.user_id
+        }
+        sockerHandler.sendMessageToUser("new_contact_request", input.contact_id, message);
     }
+
     return result;
 
 
-    // const message = {
-    //     requested_user_id: input.user_id
-    // }
-    // sockerHandler.sendMessageToUser("new_contact_request", input.contact_id, message);
+
 }
 
 async function removeUserContactByUserIdContactId(input) {

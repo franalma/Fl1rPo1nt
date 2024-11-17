@@ -56,29 +56,24 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
   Widget _buildEditOptions() {
     return ListView(
       children: [
-        Card(
-          child: ListTile(
-              title: Text("Introduce el nombre que quieres compartir "),
-              subtitle: TextFormField(
-                controller: editNameController,
-                keyboardType: TextInputType.name,
-              )),
-        ),
-        Card(
-          child: ListTile(
-              title: Text("Introduce el valor de tu red social"),
-              subtitle: TextFormField(
-                controller: editNetworkController,
-                keyboardType: TextInputType.emailAddress,
-              )),
-        ),
-        Card(
-            child: Column(
+        ListTile(
+            title: Text("Introduce el nombre de esta red"),
+            subtitle: TextFormField(
+              controller: editNameController,
+              keyboardType: TextInputType.name,
+            )),
+        ListTile(
+            title: Text("Introduce tu red social"),
+            subtitle: TextFormField(
+              controller: editNetworkController,
+              keyboardType: TextInputType.emailAddress,
+            )),
+        Column(
           children: [
             Text("Selecciona la red social"),
             _buildSocialNetworkOptions()
           ],
-        ))
+        )
       ],
     );
   }
@@ -92,7 +87,7 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
             selectedNetwork = newValue!;
           });
         },
-        items: networks.map<DropdownMenuItem<String>>((value) {          
+        items: networks.map<DropdownMenuItem<String>>((value) {
           return DropdownMenuItem<String>(
             value: value.networkId,
             child: Text(value.name),
@@ -119,7 +114,7 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
     var networksToUpate = user.networks;
     if (selectedNetwork != null) {
       var newNetwork =
-          SocialNetwork("", selectedNetwork!, editNetworkController.text);
+          SocialNetwork(selectedNetwork!, editNameController.text, editNetworkController.text);
       networksToUpate.add(newNetwork);
       HostUpdateUserSocialNetworksRequest()
           .run(user.userId, networksToUpate)

@@ -57,8 +57,8 @@ class _UserProfilePage extends State<UserProfilePage> {
             onTap: () => NavigatorApp.push(UserStatsPage(), context)),
         Divider(),
         ListTile(
-            title: Text("Cerrar sesión"),
-            trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
+            title: Text("Cerrar sesión", style: TextStyle(color: Colors.red),),
+        
             onTap: () => NavigatorApp.push(UserStatePage(), context)),
       ],
     );

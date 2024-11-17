@@ -56,20 +56,20 @@ class _ListQrPage extends State<ListQrPage> {
     return ListView.builder(
         itemCount: qrList.length,
         itemBuilder: (context, index) {
-          return Card(
-            margin: EdgeInsets.all(8.0),
-            child: Row(children: [
-              Text(qrList[index].name),
-              _buildQrCode(index),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () => _removeItem(index),
-                  child: Text('Remove Item'),
-                ),
-              )
-            ]),
+          return Column(
+            children: [
+              ListTile(
+                  title:Text(qrList[index].name),
+                  leading:  _buildQrCode(index),
+                  trailing: ElevatedButton(
+                      onPressed: () => _removeItem(index),
+                      child: Text('Remove Item'),
+                    ),
+                    ),
+                    Divider()
+            ],
           );
+        
         });
   }
 
@@ -96,7 +96,7 @@ class _ListQrPage extends State<ListQrPage> {
     }
     return QrImageView(
         data: qrList[index].content,
-        size: 100,
+        size: 30,
         foregroundColor: foregroundColor,
         backgroundColor: backgroundColor);
   }

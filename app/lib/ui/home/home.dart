@@ -60,7 +60,7 @@ class _HomeState extends State<Home> {
                   icon: const Icon(Icons.camera_enhance)),
               IconButton(
                   onPressed: () {
-                    if (true) {
+                    if (user.isFlirting) {
                       NavigatorApp.push(ShowQrCodeToShare(), context);
                     } else {
                       FlutterToast()

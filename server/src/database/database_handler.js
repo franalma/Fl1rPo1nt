@@ -41,6 +41,7 @@ async function addDocument(document, path) {
         console.log(`Document added with id= ${result.insertedId}`);
     } catch (error) {
         logger.info(error);
+        return null; 
     }
     finally{
         await client.close(); 
