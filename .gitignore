@@ -10,3 +10,5 @@ app/.dart_tool/
 .vscode/
 
 server/app.log
+
+server_profile_image/

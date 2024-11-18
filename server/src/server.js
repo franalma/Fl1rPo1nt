@@ -9,16 +9,18 @@ const contactHandler = require('./model/user/contact_handler');
 const qrHandler = require("./model/qr/qr_handler");
 const generalValuesHandler = require("./model/general_values/general_values_handler");
 const bulkHandler = require("./model/bulk/bulk_handler");
-const bulkHostActions = require ("./constants/bulk_host_actions");
-const flirtHandler = require ("./model/flirt/flirt_handler");
-const socketHandler = require ("./sockets/socket_handler");
+const bulkHostActions = require("./constants/bulk_host_actions");
+const flirtHandler = require("./model/flirt/flirt_handler");
+const socketHandler = require("./sockets/socket_handler");
 const http = require('http');
-
+const fileHandler = require("./images/file_handler");
 const app = express();
 app.use(express.json());
 const port = process.env.PORT
 const server = http.createServer(app);
 socketHandler.socketInit(server);
+
+const upload = fileHandler.config();
 
 
 async function processAuthRequest(req, res) {
@@ -130,44 +132,44 @@ async function processRequest(req, res) {
                     result = await contactHandler.getUserContactsByUserId(req.body.input);
                     break;
                 }
-                case hostActions.GET_USER_BY_DISTANCE_FROM_POINT:{
+                case hostActions.GET_USER_BY_DISTANCE_FROM_POINT: {
                     result = await userHandler.getUsersByDistanceFromPoint(req.body.input);
                     break;
                 }
-                case hostActions.UPDATE_USER_NETWORK_BY_USER_ID:{
+                case hostActions.UPDATE_USER_NETWORK_BY_USER_ID: {
                     result = await userHandler.updateUserNetworksByUserId(req.body.input);
                     break;
                 }
-                case hostActions.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID:{
+                case hostActions.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID: {
                     result = await userHandler.updateUserSearchingRangeByUserId(req.body.input);
                     break;
                 }
 
-                case hostActions.GET_ALL_SEXUAL_ORIENTATIONS_RELATIONSHIPS:{
+                case hostActions.GET_ALL_SEXUAL_ORIENTATIONS_RELATIONSHIPS: {
                     result = await generalValuesHandler.getAllSexualOrientationsRelationships(req.body.input);
                     break;
                 }
 
-                case hostActions.UPDATE_USER_INTERESTS_BY_USER_ID:{
+                case hostActions.UPDATE_USER_INTERESTS_BY_USER_ID: {
                     result = await userHandler.updateUserInterestsByUserId(req.body.input);
                     break;
                 }
 
-                case hostActions.UPDATE_USER_QRS_BY_USER_ID:{
+                case hostActions.UPDATE_USER_QRS_BY_USER_ID: {
                     result = await userHandler.updateUserQrsByUserId(req.body.input);
                     break;
                 }
 
-                case hostActions.PUT_USER_FLIRT_BY_USER_ID:{
+                case hostActions.PUT_USER_FLIRT_BY_USER_ID: {
                     result = await flirtHandler.putUserFlirts(req.body.input);
                     break;
                 }
 
-                case hostActions.UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID:{
+                case hostActions.UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID: {
                     result = await flirtHandler.udpateUserFlirts(req.body.input);
                     break;
                 }
-                case hostActions.GET_USER_FLIRTS:{
+                case hostActions.GET_USER_FLIRTS: {
                     result = await flirtHandler.getUserFlirts(req.body.input);
                     break;
                 }
@@ -201,6 +203,37 @@ app.post('/api', requestValidator.requestAuthValidation, requestValidator.reques
 
 app.post('/bulk', (req, res) => {
     procesBulkRequest(req, res);
+});
+
+app.post('/upload', requestValidator.requestAuthValidation, upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+    const userId = req.body.user_id;
+
+    fileHandler.doUploadImageByUserId(req, userId).then((result) => {
+        console.log("---result: " + result);
+        if (result) {
+            res.status(200).json(result);
+        } else {
+            res.status(501).json({
+                message: "Not possible to add image"
+            })
+        }
+    });
+
+});
+
+app.get('/protected-image/:fileName', requestValidator.requestAuthValidation, (req, res) => {
+    const fileName = req.params.fileName;
+    fileHandler.getImageByUrl(fileName).then((result)=>{
+        console.log(result);
+        if (result!=null){
+            res.status(200).sendFile(result.filepath);
+        }else{
+            res.status(404);
+        }
+    });     
 });
 
 
