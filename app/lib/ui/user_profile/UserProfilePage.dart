@@ -1,7 +1,5 @@
 import 'package:app/app_localizations.dart';
-import 'package:app/model/SocialNetwork.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/flirts/FlirtsStatsPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
@@ -32,8 +30,8 @@ class _UserProfilePage extends State<UserProfilePage> {
     return ListView(
       children: [
         ListTile(
-            title: Text("Mis datos"),
-            trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
+            title: const Text("Mis datos"),
+            trailing: const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
             onTap: () => NavigatorApp.push(UserDataPage(), context)),
         Divider(),
         ListTile(

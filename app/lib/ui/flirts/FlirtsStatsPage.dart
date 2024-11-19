@@ -44,19 +44,25 @@ class _FlirtsStatsPage extends State<FlirtsStatsPage> {
     return ListView.builder(
         itemCount: _flirtList.length,
         itemBuilder: (context, index) {
-          return ListTile(
-              title: Text(_flirtList[index].id.substring(0, 10)),
-              subtitle: Column(
-                children: [
-                  Text("Fecha: " + _timeFromEpoch(_flirtList[index].createdAt)),
-                  Text(
-                      "Dónde:  [${_flirtList[index].location?.lat},${_flirtList[index].location?.lon}]"),
-                  Text("Estado: ${_getFlirtStatus(index)}")
-                ],
-              ),
-              trailing: (_flirtList[index].status == 0)
-                  ? ElevatedButton(onPressed: () {}, child: Text("Borrar"))
-                  : Container());
+          return Column(
+            children: [
+              ListTile(
+                  title: Text(_flirtList[index].id.substring(0, 10)),
+                  subtitle: Column(
+                    children: [
+                      Text("Fecha: " +
+                          _timeFromEpoch(_flirtList[index].createdAt)),
+                      Text(
+                          "Dónde:  [${_flirtList[index].location?.lat},${_flirtList[index].location?.lon}]"),
+                      Text("Estado: ${_getFlirtStatus(index)}")
+                    ],
+                  ),
+                  trailing: (_flirtList[index].status == 0)
+                      ? ElevatedButton(onPressed: () {}, child: Text("Borrar"))
+                      : Container()),
+              Divider()
+            ],
+          );
         });
   }
 

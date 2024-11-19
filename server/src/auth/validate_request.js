@@ -114,6 +114,11 @@ function requestFieldsValidation(req, res, next) {
             break; 
         }
 
+        case hostActions.UPDATE_USER_HOBBIES_BY_USER_ID:{
+            validationSet = validationRules.UPDATE_USER_HOBBIES_BY_USER_RULES
+            break; 
+        }
+
         
 
         

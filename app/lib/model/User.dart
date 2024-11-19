@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:app/comms/model/response/auth/HostLoginResponse.dart';
 import 'package:app/model/QrValue.dart';
 import 'package:app/model/SocialNetwork.dart';
@@ -21,9 +20,10 @@ class User {
   late SexAlternative sexAlternatives;
   late List<SocialNetwork> networks;
   late int exploringMaxRadion;
-  bool isFlirting = false; 
-  late String biography; 
+  bool isFlirting = false;
+  late String biography;
   late String refreshToken;
+  late List<dynamic> hobbies = [];
 
   User(
       this.userId,
@@ -38,7 +38,8 @@ class User {
       this.qrValues,
       this.relationShip,
       this.sexAlternatives,
-      this.biography);
+      this.biography,
+      this.hobbies);
 
   User.empty();
   factory User.fromHost(HostLoginResponse response) {
@@ -58,20 +59,16 @@ class User {
       }
 
       if (response.relationShip.isNotEmpty) {
-        relationShip =
-            RelationShip.load(response.relationShip);
+        relationShip = RelationShip.load(response.relationShip);
       } else {
         relationShip = RelationShip.empty();
       }
 
       if (response.sexAlternatives.isNotEmpty) {
-        sexAlternatives =
-            SexAlternative.load(response.sexAlternatives);
+        sexAlternatives = SexAlternative.load(response.sexAlternatives);
       } else {
         sexAlternatives = SexAlternative.empty();
       }
-
-      
 
       return User(
           response.userId,
@@ -85,8 +82,9 @@ class User {
           networks,
           qrValues,
           relationShip,
-         sexAlternatives,
-         response.biography);
+          sexAlternatives,
+          response.biography,
+          response.hobbies);
     } catch (error) {
       Log.d(error.toString());
     }

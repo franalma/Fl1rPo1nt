@@ -41,11 +41,14 @@ dependencies:
   geolocator: ^9.0.2 
   qr_flutter: ^4.1.0
   google_maps_flutter: ^2.2.5 
-  logger: ^1.4.0  # Check for the latest version on pub.dev
+  logger: ^2.0.2  # Check for the latest version on pub.dev
   font_awesome_flutter: ^10.5.0
   mobile_scanner: ^6.0.2
   socket_io_client: ^2.0.0
   image_picker: ^0.8.7+4  # Check for the latest version on pub.dev
+  flutter_sound: ^9.2.14  # Check for the latest version on pub.dev
+  permission_handler: ^10.2.0  # Check for the latest version on pub.dev
+  audioplayers: ^6.1.0
   
 
 

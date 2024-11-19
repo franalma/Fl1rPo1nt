@@ -22,11 +22,13 @@ class _UserDataPage extends State<UserDataPage> {
   List<String> itemsValue = [];
   List<String> itemsTitles = [
     'Nombre',
-    'Contraseña',
+    'Contraseña',    
     'Biografía',
     'Aficiones',
     "Fotos",
-    "Audios"
+    "Audios",
+    "Radio de búsqueda"
+
   ];
 
   @override
@@ -42,7 +44,9 @@ class _UserDataPage extends State<UserDataPage> {
     itemsValue.add("");
     itemsValue.add("");
     itemsValue.add("");
-    itemsValue.add("");
+    itemsValue.add("100 kms");
+    
+  
 
   }
   void _editItem(int index) {
@@ -111,6 +115,8 @@ class _UserDataPage extends State<UserDataPage> {
     switch(index){
       case 0:
       case 1: 
+      case 6: 
+      
       return null;
     
     }
@@ -123,6 +129,7 @@ class _UserDataPage extends State<UserDataPage> {
     switch(index){
       case 0: 
       case 1: 
+      case 6:
       {
         _editItem(index);
         break; 

@@ -119,7 +119,8 @@ async function doLogin(input) {
                     networks: user.networks ? user.networks : [],
                     user_interests: user.user_interests ? user.user_interests : { relationship: {}, sex_alternative: {} },
                     qr_values: user.qr_values ? user.qr_values : [],
-                    biography: user.biography
+                    biography: user.biography,
+                    hobbies:user.hobbies
                 }
             }
 
@@ -310,10 +311,30 @@ async function updateUserBiographyByUserId(input) {
         }
     }
     return result;
-
-
-
 }
+
+async function updateUserHobbiesByUserId(input) {
+    logger.info("Starts updateUserHobbiesByUserId");
+    let result = { status: 200, "message": "Hobbies updated" };
+    try {
+        const filters = { id: input.user_id };
+
+        const newValues = {
+            hobbies: input.hobbies,
+            updated_at: Date.now()
+        }
+        await dbHandler.updateDocument(newValues, filters, userColletion);
+    } catch (error) {
+        logger.info(error);
+        result = {
+            status: 500,
+            message: "Error updating hobbies"
+        }
+    }
+    return result;
+}
+
+
 
 module.exports = {
     registerUser,
@@ -324,7 +345,8 @@ module.exports = {
     updateUserInterestsByUserId,
     updateUserQrsByUserId,
     getUserInfoByUserIdQrId,
-    updateUserBiographyByUserId
+    updateUserBiographyByUserId,
+    updateUserHobbiesByUserId
 }
 
 

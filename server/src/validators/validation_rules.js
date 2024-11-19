@@ -127,6 +127,11 @@ const UPDATE_USER_BIOGRAPHY_BY_USER_RULES = [
     body('input.biography').notEmpty().isString().withMessage("Biography  is required"),    
 ];
 
+const UPDATE_USER_HOBBIES_BY_USER_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.hobbies').notEmpty().isArray().withMessage("Hobbies are required"),    
+];
+
 
 
 
@@ -157,5 +162,6 @@ module.exports = {
     GET_USER_FLIRTS_RULES,
     GET_USER_IMAGES_BY_USER_RULES,
     REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_RULES,
-    UPDATE_USER_BIOGRAPHY_BY_USER_RULES
+    UPDATE_USER_BIOGRAPHY_BY_USER_RULES,
+    UPDATE_USER_HOBBIES_BY_USER_RULES
 }

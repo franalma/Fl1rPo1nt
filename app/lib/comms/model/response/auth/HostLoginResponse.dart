@@ -12,6 +12,7 @@ class HostLoginResponse {
   Map<String, dynamic> sexAlternatives = {};
   List<dynamic> qrValues = [];
   String biography = "";
+  List<dynamic> hobbies = [];
 
   HostLoginResponse(
       this.userId,
@@ -24,7 +25,8 @@ class HostLoginResponse {
       this.relationShip,
       this.sexAlternatives,
       this.qrValues,
-      this.biography);
+      this.biography,
+      this.hobbies);
   HostLoginResponse.empty();
 
   factory HostLoginResponse.fromJson(Map<String, dynamic> json) {
@@ -40,12 +42,17 @@ class HostLoginResponse {
       var relationShip = json["user_interests"]["relationship"];
       var sexAlternatives = json["user_interests"]["sex_alternative"];
       var qrValues = json["qr_values"];
+      List<dynamic> hobbies = [];
 
       if (json.containsKey("phone")) {
         phone = json['phone'].toString();
       }
       if (json.containsKey("biography")) {
         biography = json['biography'].toString();
+      }
+
+      if (json.containsKey("hobbies")) {
+        hobbies = json['hobbies'];
       }
 
       HostLoginResponse response = HostLoginResponse(
@@ -59,7 +66,8 @@ class HostLoginResponse {
           relationShip,
           sexAlternatives,
           qrValues,
-          biography);
+          biography,
+          hobbies);
       return response;
     } catch (error, stackTrace) {
       Log.d("$stackTrace error $error");

@@ -14,6 +14,7 @@ const flirtHandler = require("./model/flirt/flirt_handler");
 const socketHandler = require("./sockets/socket_handler");
 const http = require('http');
 const fileHandler = require("./images/file_handler");
+const hobbiesHandler = require ("./model/hobbies/hobbies_handler");
 const app = express();
 app.use(express.json());
 const port = process.env.PORT
@@ -76,6 +77,11 @@ async function procesBulkRequest(req, res) {
         }
         case bulkHostActions.BUKL_PUT_ALL_SOCIAL_NETWORKS: {
             result = await bulkHandler.addBaseNetworks(req.body.input);
+            break;
+
+        }
+        case bulkHostActions.BULK_PUT_ALL_HOBBIES: {
+            result = await bulkHandler.addHobbies(req.body.input);
             break;
 
         }
@@ -185,10 +191,16 @@ async function processRequest(req, res) {
                     result = await userHandler.updateUserBiographyByUserId(req.body.input);
                     break;
                 }
+                case hostActions.GET_ALL_HOBBIES: {
+                    result = await hobbiesHandler.getAllHobbies(req.body.input);
+                    break;
+                }
 
-                
-                
-                
+                case hostActions.UPDATE_USER_HOBBIES_BY_USER_ID: {
+                    result = await userHandler.updateUserHobbiesByUserId(req.body.input);
+                    break;
+                }
+
                 
 
             }
