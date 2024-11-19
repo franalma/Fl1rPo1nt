@@ -117,8 +117,9 @@ async function doLogin(input) {
                     token: currentToken,
                     refresh_token: currentRefreshToken,
                     networks: user.networks ? user.networks : [],
-                    user_interests: user.user_interests ? user.user_interests: {relationship:{}, sex_alternative:{}},
-                    qr_values: user.qr_values ? user.qr_values: []
+                    user_interests: user.user_interests ? user.user_interests : { relationship: {}, sex_alternative: {} },
+                    qr_values: user.qr_values ? user.qr_values : [],
+                    biography: user.biography
                 }
             }
 
@@ -290,6 +291,29 @@ async function getUserInfoByUserIdQrId(userId, qrId) {
 }
 
 
+async function updateUserBiographyByUserId(input) {
+    logger.info("Starts updateUserBiographyByUserId");
+    let result = { status: 200, "message": "Biography updated" };
+    try {
+        const filters = { id: input.user_id };
+
+        const newValues = {
+            biography: input.biography,
+            updated_at: Date.now()
+        }
+        await dbHandler.updateDocument(newValues, filters, userColletion);
+    } catch (error) {
+        logger.info(error);
+        result = {
+            status: 500,
+            message: "Error updating biography"
+        }
+    }
+    return result;
+
+
+
+}
 
 module.exports = {
     registerUser,
@@ -299,7 +323,8 @@ module.exports = {
     updateUserSearchingRangeByUserId,
     updateUserInterestsByUserId,
     updateUserQrsByUserId,
-    getUserInfoByUserIdQrId
+    getUserInfoByUserIdQrId,
+    updateUserBiographyByUserId
 }
 
 

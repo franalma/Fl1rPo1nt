@@ -101,6 +101,20 @@ function requestFieldsValidation(req, res, next) {
             validationSet = validationRules.GET_USER_FLIRTS_RULES
             break; 
         }
+        case hostActions.GET_USER_IMAGES_BY_USER_ID:{
+            validationSet = validationRules.GET_USER_IMAGES_BY_USER_RULES
+            break; 
+        }
+        case hostActions.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID:{
+            validationSet = validationRules.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_RULES
+            break; 
+        }
+        case hostActions.UPDATE_USER_BIOGRAPHY_BY_USER_ID:{
+            validationSet = validationRules.UPDATE_USER_BIOGRAPHY_BY_USER_RULES
+            break; 
+        }
+
+        
 
         
         

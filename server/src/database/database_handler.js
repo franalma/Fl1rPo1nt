@@ -104,6 +104,7 @@ async function deleteDocument(filter, path) {
         const collection = db.collection(path);
         result = await collection.deleteOne(filter);
         console.log(`Document deleted with id= ${result.deletedCount}`);
+        json.printJson(result);
     } catch (error) {
         logger.info("error found searching: " + error)
     } finally {

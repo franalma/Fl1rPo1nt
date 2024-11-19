@@ -10,10 +10,21 @@ class HostLoginResponse {
   List<dynamic> networks = [];
   Map<String, dynamic> relationShip = {};
   Map<String, dynamic> sexAlternatives = {};
-  List<dynamic>qrValues = [];
+  List<dynamic> qrValues = [];
+  String biography = "";
 
-  HostLoginResponse(this.userId, this.name, this.phone, this.mail, this.token,
-      this.resfreshToken, this.networks, this.relationShip, this.sexAlternatives, this.qrValues);
+  HostLoginResponse(
+      this.userId,
+      this.name,
+      this.phone,
+      this.mail,
+      this.token,
+      this.resfreshToken,
+      this.networks,
+      this.relationShip,
+      this.sexAlternatives,
+      this.qrValues,
+      this.biography);
   HostLoginResponse.empty();
 
   factory HostLoginResponse.fromJson(Map<String, dynamic> json) {
@@ -21,6 +32,7 @@ class HostLoginResponse {
       var userId = json['user_id'];
       var name = json['name'];
       var phone = "";
+      var biography = "";
       var mail = json['email'];
       var token = json['token'];
       var refreshToken = json['refresh_token'];
@@ -32,9 +44,22 @@ class HostLoginResponse {
       if (json.containsKey("phone")) {
         phone = json['phone'].toString();
       }
+      if (json.containsKey("biography")) {
+        biography = json['biography'].toString();
+      }
 
-      HostLoginResponse response = HostLoginResponse(userId, name, phone, mail,
-          token, refreshToken, networks,relationShip, sexAlternatives,qrValues);
+      HostLoginResponse response = HostLoginResponse(
+          userId,
+          name,
+          phone,
+          mail,
+          token,
+          refreshToken,
+          networks,
+          relationShip,
+          sexAlternatives,
+          qrValues,
+          biography);
       return response;
     } catch (error, stackTrace) {
       Log.d("$stackTrace error $error");

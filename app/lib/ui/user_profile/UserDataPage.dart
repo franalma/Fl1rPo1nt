@@ -37,7 +37,7 @@ class _UserDataPage extends State<UserDataPage> {
 
   void _initInternal() {
     itemsValue.add(user.name);
-    itemsValue.add("");
+    itemsValue.add("*********");
     itemsValue.add("");
     itemsValue.add("");
     itemsValue.add("");
@@ -95,9 +95,9 @@ class _UserDataPage extends State<UserDataPage> {
             children: [
               ListTile(
                 onTap: () => _onItemSelected(index),
-                title: Text(itemsTitles[index],
-                    style: const TextStyle(fontSize: 20)),
+                title: Text(itemsTitles[index]),
                 subtitle: Text(itemsValue[index]),
+                trailing: _buildTrailing(index),
               ),
               Divider(),
             ],
@@ -107,6 +107,16 @@ class _UserDataPage extends State<UserDataPage> {
     );
   }
 
+  Widget? _buildTrailing(int index){
+    switch(index){
+      case 0:
+      case 1: 
+      return null;
+    
+    }
+    return Icon(Icons.arrow_forward_ios);
+    
+  }
   void _onItemSelected(int index){
     Log.d("Start on _onItemSelected");
 

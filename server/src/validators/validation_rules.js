@@ -112,6 +112,24 @@ const GET_USER_FLIRTS_RULES = [
     body('input.filters').notEmpty().isObject().withMessage("Flirt id required")
 ];
 
+const GET_USER_IMAGES_BY_USER_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+];
+
+
+const REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.file_id').notEmpty().isString().withMessage("File id is required"),    
+];
+
+const UPDATE_USER_BIOGRAPHY_BY_USER_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.biography').notEmpty().isString().withMessage("Biography  is required"),    
+];
+
+
+
+
 
 
 
@@ -136,5 +154,8 @@ module.exports = {
     UPDATE_USER_QRS_BY_USER_ID_RULES,
     PUT_USER_FLIRT_BY_USER_ID_RULES,
     UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID_RULES,
-    GET_USER_FLIRTS_RULES
+    GET_USER_FLIRTS_RULES,
+    GET_USER_IMAGES_BY_USER_RULES,
+    REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_RULES,
+    UPDATE_USER_BIOGRAPHY_BY_USER_RULES
 }

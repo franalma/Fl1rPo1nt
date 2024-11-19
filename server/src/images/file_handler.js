@@ -4,7 +4,8 @@ const rootDir = "/Users/fran/Desktop/Projects/Personal/Fl1rPo1nt/Fl1rPo1nt/serve
 const fs = require('fs');
 const dbHandler = require("./../database/database_handler");
 const userImageCollection = "user_images";
-
+const logger = require("../logger/log");
+const { v4: uuidv4 } = require('uuid');
 let upload;
 
 
@@ -38,6 +39,7 @@ async function doUploadImageByUserId(req, userId) {
         const fileName = path.basename(req.file.path);
         const doc = {
             user_id: userId,
+            file_id: uuidv4(),
             filename: fileName,
             created_at: Date.now()
         }
@@ -47,7 +49,7 @@ async function doUploadImageByUserId(req, userId) {
             return {
                 status: 200,
                 user_id: userId,
-                filename: fileName
+                file_id: doc.file_id
             }
         }
     } catch (error) {
@@ -57,28 +59,94 @@ async function doUploadImageByUserId(req, userId) {
 
 }
 
-async function getImageByUrl(fileName) {
-    const filePath = path.join(rootDir, fileName);
-    console.log(filePath);
+async function getImageByUrl(fileId) {
 
-    // Check if the file exists
-    let value = await fs.access(filePath, fs.constants.F_OK , ()=>{});
+    logger.info("Starts getImageByUrl: " + fileId);
+    const filters = { file_id: fileId }
+    const dbResponse = await dbHandler.findWithFilters(filters, userImageCollection);
 
-    if (value) {
-        console.log("err");
-        return null;
+    if (dbResponse) {
+        let fileName = dbResponse[0].filename;
+        const filePath = path.join(rootDir, fileName);
+        console.log(filePath);
 
-    } else {
-        console.log("no error");
-        return {
-            status: 200,
-            filepath: filePath
+        // Check if the file exists
+        let value = await fs.access(filePath, fs.constants.F_OK, () => { });
+
+        if (value) {
+            console.log("err");
+            return null;
+
+        } else {
+            console.log("no error");
+            return {
+                status: 200,
+                filepath: filePath
+            }
         }
     }
 
+
+
 }
-function callback(){
-    
+
+async function getUserImagesByUserId(input) {
+    logger.info("Starts getUserImagesByUserId");
+    let result = { status: 200 };
+    result.images = [];
+    try {
+        const filters = { user_id: input.user_id };
+        const dbResponse = await dbHandler.findWithFilters(filters, userImageCollection);
+
+        if (dbResponse) {
+
+            for (var item of dbResponse) {
+                let fileName = item.filename;
+                const filePath = path.join(rootDir, fileName);
+                const imageData = fs.readFileSync(filePath);
+
+                result.images.push({
+                    file_id: item.file_id,
+                    created_at: item.created_at,
+                    file: imageData.toString('base64')
+                });
+            }
+        }
+    } catch (error) {
+        logger.info(error);
+        result.status = 500;
+    }
+
+    return result;
+
+}
+
+async function removeUserImageByImageIdUserId(input) {
+    logger.info("Starts removeUserImageByImageIdUserId");
+    let result = { status: 200 };
+    result.images = [];
+    try {
+        const filters = { user_id: input.user_id, file_id: input.file_id };
+        let dbResponse = await dbHandler.findWithFilters(filters, userImageCollection);
+        if (dbResponse && dbResponse.length > 0) {
+            const filePath = rootDir + "/" + dbResponse[0].filename;
+            logger.info("Filename: " + filePath);
+
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    result.status = 500;
+                }
+            });
+            dbResponse = await dbHandler.deleteDocument(filters, userImageCollection);
+            
+        };
+    } catch (error) {
+        logger.info(error);
+        result.status = 500;
+    }
+
+    return result;
+
 }
 
 
@@ -86,5 +154,7 @@ function callback(){
 module.exports = {
     doUploadImageByUserId,
     config,
-    getImageByUrl
+    getImageByUrl,
+    getUserImagesByUserId,
+    removeUserImageByImageIdUserId
 }

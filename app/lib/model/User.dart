@@ -22,7 +22,7 @@ class User {
   late List<SocialNetwork> networks;
   late int exploringMaxRadion;
   bool isFlirting = false; 
-
+  late String biography; 
   late String refreshToken;
 
   User(
@@ -37,7 +37,8 @@ class User {
       this.networks,
       this.qrValues,
       this.relationShip,
-      this.sexAlternatives);
+      this.sexAlternatives,
+      this.biography);
 
   User.empty();
   factory User.fromHost(HostLoginResponse response) {
@@ -70,6 +71,8 @@ class User {
         sexAlternatives = SexAlternative.empty();
       }
 
+      
+
       return User(
           response.userId,
           response.name,
@@ -82,7 +85,8 @@ class User {
           networks,
           qrValues,
           relationShip,
-         sexAlternatives);
+         sexAlternatives,
+         response.biography);
     } catch (error) {
       Log.d(error.toString());
     }

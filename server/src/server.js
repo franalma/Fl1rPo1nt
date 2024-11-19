@@ -173,6 +173,23 @@ async function processRequest(req, res) {
                     result = await flirtHandler.getUserFlirts(req.body.input);
                     break;
                 }
+                case hostActions.GET_USER_IMAGES_BY_USER_ID: {
+                    result = await fileHandler.getUserImagesByUserId(req.body.input);
+                    break;
+                }
+                case hostActions.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID: {
+                    result = await fileHandler.removeUserImageByImageIdUserId(req.body.input);
+                    break;
+                }
+                case hostActions.UPDATE_USER_BIOGRAPHY_BY_USER_ID: {
+                    result = await userHandler.updateUserBiographyByUserId(req.body.input);
+                    break;
+                }
+
+                
+                
+                
+                
 
             }
             if (result && result.status) {
@@ -224,9 +241,9 @@ app.post('/upload', requestValidator.requestAuthValidation, upload.single('image
 
 });
 
-app.get('/protected-image/:fileName', requestValidator.requestAuthValidation, (req, res) => {
-    const fileName = req.params.fileName;
-    fileHandler.getImageByUrl(fileName).then((result)=>{
+app.get('/protected-image/:file_id', requestValidator.requestAuthValidation, (req, res) => {
+    const fileId = req.params.file_id;
+    fileHandler.getImageByUrl(fileId).then((result)=>{
         console.log(result);
         if (result!=null){
             res.status(200).sendFile(result.filepath);
