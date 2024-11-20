@@ -12,3 +12,7 @@ app/.dart_tool/
 server/app.log
 
 server_profile_image/
+
+server_user_audios/
+
+server_user_images/

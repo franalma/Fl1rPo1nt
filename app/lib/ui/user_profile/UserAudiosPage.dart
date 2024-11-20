@@ -1,4 +1,17 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:app/comms/model/request/HostGetUserAudiosRequest.dart';
+import 'package:app/comms/model/request/HostRemoveAudioRequest.dart';
+import 'package:app/comms/model/request/HostUploadAudioRequest.dart';
+import 'package:app/model/FileData.dart';
+import 'package:app/model/Session.dart';
+import 'package:app/model/User.dart';
+import 'package:app/ui/elements/SlideRowLeft.dart';
 import 'package:app/ui/utils/Log.dart';
+import 'package:app/ui/utils/toast_message.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -16,28 +29,22 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   FlutterSoundRecorder? _audioRecorder;
   bool _isRecording = false;
   int? _currentlyPlayingIndex;
+  User user = Session.user;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _isLoading = false;
 
   // List of audio files or URLs
-  final List<Map<String, String>> _audioList = [
-    {
-      "title": "Un poco sobre mí",
-      "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-    },
-    {
-      "title": "Otra cosita",
-      "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
-    },
-    {
-      "title": "A ver qué tal",
-      "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-    },
-  ];
+  List<FileData> _audioList = [];
+  Timer? _timer;
+  int _maxDuration = 10; // Maximum recording duration in seconds
+  int _currentDuration = 0;
 
+  @override
   void initState() {
     super.initState();
     _audioRecorder = FlutterSoundRecorder();
     _initializeRecorder();
+    _fetchAudiosFromHost();
   }
 
   Future<void> _startRecording() async {
@@ -48,7 +55,6 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   }
 
   Future<void> _initializeRecorder() async {
-    // Request microphone permission
     final status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
       throw 'Microphone permission not granted';
@@ -71,30 +77,42 @@ class _UserAudiosPage extends State<UserAudiosPage> {
       _isRecording = false;
     });
 
-    if (filePath != null) {}
+    if (filePath != null) {
+      _saveAudioOnHost(filePath);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mensajes de voz'),
-        actions: [
-          _isRecording
-              ? IconButton(
-                  onPressed: _stopRecording, icon: const Icon(Icons.stop))
-              : IconButton(
-                  onPressed: _startRecording,
-                  icon: const Icon(Icons.record_voice_over_outlined))
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: _audioList.length,
-        itemBuilder: (context, index) {
-          return Column(
+        appBar: AppBar(
+          title: const Text('Mensajes de voz'),
+          actions: [
+            _isRecording
+                ? IconButton(
+                    onPressed: _stopRecording, icon: const Icon(Icons.stop))
+                : IconButton(
+                    onPressed: _startRecording,
+                    icon: const Icon(Icons.record_voice_over_outlined))
+          ],
+        ),
+        body: _isLoading ? _buildLoading() : _buildBody());
+  }
+
+  Widget _buildLoading() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  Widget _buildBody() {
+    return ListView.builder(
+      itemCount: _audioList.length,
+      itemBuilder: (context, index) {
+        return SlideRowLeft(
+          onSlide: () => _onDelete(index),
+          child: Column(
             children: [
               ListTile(
-                title: Text(_audioList[index]["title"]!),
+                title: Text("Audio $index"),
                 trailing: IconButton(
                   icon: Icon(
                     _currentlyPlayingIndex == index
@@ -112,22 +130,40 @@ class _UserAudiosPage extends State<UserAudiosPage> {
               ),
               Divider()
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
   Future<void> _playAudio(int index) async {
-    String url = _audioList[index]["url"]!;
+    Uint8List bytes = base64Decode(_audioList[index].file!);
     try {
-      await _audioPlayer.play(UrlSource(url));
+      await _audioPlayer.play(BytesSource(bytes));
       setState(() {
         _currentlyPlayingIndex = index;
       });
     } catch (error) {
       Log.d(error.toString());
     }
+  }
+
+  void _onDelete(int index) async {
+    Log.d("_onDelete $index");
+    setState(() {
+      _isLoading = true;
+    });
+    HostRemoveAudioRequest()
+        .run(user.userId, _audioList[index].id!)
+        .then((response) {
+      if (response) {
+        _audioList.removeAt(index);
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   Future<void> _stopAudio() async {
@@ -139,6 +175,55 @@ class _UserAudiosPage extends State<UserAudiosPage> {
       Log.d(error.toString());
     }
     await _audioPlayer.stop();
-   
+  }
+
+  Future<void> _fetchAudiosFromHost() async {
+    Log.d("Starts _fetchAudiosFromHost");
+    setState(() {
+      _isLoading = true;
+    });
+    HostGetUserAudiosRequest().run(user.userId).then((response) {
+      if (response.fileList != null) {
+        _audioList = response.fileList!;
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  Future<void> _saveAudioOnHost(String path) async {
+    Log.d("Starts _saveAudioOnHost:$path");
+    setState(() {
+      _isLoading = true;
+    });
+    File file = File(path);
+    var bytes = await file.readAsBytes();
+
+    HostUploadAudioRequest().run(user.userId, path).then((fileId) {
+      if (fileId.isEmpty) {
+        FlutterToast().showToast("No ha sido posible guardar tu audio");
+      } else {
+        _audioList.add(FileData(fileId, -1, base64Encode(bytes)));
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+//TODO
+  void checkRecordingLenght() {
+    // Timer to track recording duration
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _currentDuration++;
+      });
+
+      // Stop recording when max duration is reached
+      if (_currentDuration >= _maxDuration) {
+        _stopRecording();
+      }
+    });
   }
 }

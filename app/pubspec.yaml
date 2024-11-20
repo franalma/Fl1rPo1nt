@@ -59,7 +59,6 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
-  flutter_native_splash: ^2.2.18
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0

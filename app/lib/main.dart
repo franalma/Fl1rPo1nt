@@ -1,5 +1,6 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/ui/login/LoginPage.dart';
+import 'package:app/ui/login/LoginPage2.dart';
 import 'package:app/ui/splash/SplashPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
         ],
         theme: _buildThemeData(),
-        home: SplashPage());
+        // home: SplashPage());
+        home:LoginPage2(onTap: () {  },));
   }
 
   

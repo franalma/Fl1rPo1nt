@@ -1,7 +1,7 @@
 
 import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/auth/HostLoginRequest.dart';
-import 'package:app/comms/model/request/flirt/HostGetUserFlirtsRequest.dart';
+
 import 'package:app/comms/socket_subscription/SocketSubscriptionController.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';

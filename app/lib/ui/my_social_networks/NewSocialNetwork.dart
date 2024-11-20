@@ -25,11 +25,49 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
   TextEditingController editNetworkController = TextEditingController();
   TextEditingController editNameController = TextEditingController();
   bool _isLoading = true;
-
+  List<String> itemsValue = ["","", ""];
   @override
   void initState() {
     super.initState();
     _fetchFromHost();
+  }
+
+
+  void _editItem(int index, String title) {
+    TextEditingController _controller = TextEditingController();
+    _controller.text = itemsValue[index];
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              hintText: 'Introduce un nuevo valor',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  itemsValue[index] = _controller.text;
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -57,23 +95,28 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
     return ListView(
       children: [
         ListTile(
-            title: Text("Introduce el nombre de esta red"),
-            subtitle: TextFormField(
-              controller: editNameController,
-              keyboardType: TextInputType.name,
-            )),
+            title: Text("Red social", style: TextStyle(fontWeight: FontWeight.w600),), trailing: _buildSocialNetworkOptions(),
+            // subtitle: Text(networks.reduce((value, element) => value.networkId == selectedNetwork!).name))
+
+            ),
+        Divider(),
         ListTile(
-            title: Text("Introduce tu red social"),
-            subtitle: TextFormField(
-              controller: editNetworkController,
-              keyboardType: TextInputType.emailAddress,
-            )),
-        Column(
-          children: [
-            Text("Selecciona la red social"),
-            _buildSocialNetworkOptions()
-          ],
-        )
+          title: Text("Valor de tu red", style: TextStyle(fontWeight: FontWeight.w600)),
+          subtitle: Text(itemsValue[1]),
+          onTap: () {
+            _editItem(1,"Valor de tu red");
+          },
+        ),
+        Divider(),
+        ListTile(
+          title: Text("Url: ",  style: TextStyle(fontWeight: FontWeight.w600)),
+          subtitle: Text(itemsValue[2]),  
+          onTap: (){
+            _editItem(2,"Url");
+          },        
+        ),
+         Divider(),
+
       ],
     );
   }
@@ -113,8 +156,8 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
     Log.d("Starts _onSaveData");
     var networksToUpate = user.networks;
     if (selectedNetwork != null) {
-      var newNetwork =
-          SocialNetwork(selectedNetwork!, editNameController.text, editNetworkController.text);
+      var newNetwork = SocialNetwork(selectedNetwork!, editNameController.text,
+          editNetworkController.text);
       networksToUpate.add(newNetwork);
       HostUpdateUserSocialNetworksRequest()
           .run(user.userId, networksToUpate)

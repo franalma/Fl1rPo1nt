@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:app/comms/model/request/HostGetUserImagesRequest.dart';
 import 'package:app/comms/model/request/HostRemoveImageRequest.dart';
-import 'package:app/comms/model/request/HostUploadFileRequest.dart';
+import 'package:app/comms/model/request/HostUploadImageRequest.dart';
 import 'package:app/model/FileData.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -99,12 +99,12 @@ class _UserPhotosPage extends State<UserPhotosPage> {
         _isLoading = true;
       });
 
-      HostUploadFileRequest().run(user.userId, pickedImage.path).then((value) {
-        if (value) {
+      HostUploadImageRequest().run(user.userId, pickedImage.path).then((fileId) {
+        if (fileId.isNotEmpty) {
           _isLoading = false;
           setState(() {
             File image = File(pickedImage.path);
-            _imageList.add(LocalFile(Image.file(image, fit: BoxFit.cover), ""));
+            _imageList.add(LocalFile(Image.file(image, fit: BoxFit.cover),fileId));
           });
         } else {
           Fluttertoast.showToast(msg: "No es posible actualizar tu imagen");

@@ -13,7 +13,7 @@ const bulkHostActions = require("./constants/bulk_host_actions");
 const flirtHandler = require("./model/flirt/flirt_handler");
 const socketHandler = require("./sockets/socket_handler");
 const http = require('http');
-const fileHandler = require("./images/file_handler");
+const fileHandler = require("./files/file_handler");
 const hobbiesHandler = require ("./model/hobbies/hobbies_handler");
 const app = express();
 app.use(express.json());
@@ -21,7 +21,8 @@ const port = process.env.PORT
 const server = http.createServer(app);
 socketHandler.socketInit(server);
 
-const upload = fileHandler.config();
+const uploadImages = fileHandler.configImages();
+const uploadAudios = fileHandler.configAudios();
 
 
 async function processAuthRequest(req, res) {
@@ -201,8 +202,14 @@ async function processRequest(req, res) {
                     break;
                 }
 
-                
-
+                case hostActions.GET_USER_AUDIOS_BY_USER_ID: {
+                    result = await fileHandler.getUserAudiosByUserId(req.body.input);
+                    break;
+                }
+                case hostActions.REMOVE_USER_AUDIO_BY_USER_ID_AUDIO_ID: {
+                    result = await fileHandler.removeUserAudioByAudioIdUserId(req.body.input);
+                    break;
+                }
             }
             if (result && result.status) {
                 res.status(result.status).json(result);
@@ -234,7 +241,7 @@ app.post('/bulk', (req, res) => {
     procesBulkRequest(req, res);
 });
 
-app.post('/upload', requestValidator.requestAuthValidation, upload.single('image'), (req, res) => {
+app.post('/upload/image', requestValidator.requestAuthValidation, uploadImages.single('image'), (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
@@ -253,17 +260,37 @@ app.post('/upload', requestValidator.requestAuthValidation, upload.single('image
 
 });
 
-app.get('/protected-image/:file_id', requestValidator.requestAuthValidation, (req, res) => {
-    const fileId = req.params.file_id;
-    fileHandler.getImageByUrl(fileId).then((result)=>{
-        console.log(result);
-        if (result!=null){
-            res.status(200).sendFile(result.filepath);
-        }else{
-            res.status(404);
+app.post('/upload/audio', requestValidator.requestAuthValidation, uploadAudios.single('audio'), (req, res) => {
+    if (!req.file) {
+        logger.info("no audio file");
+        return res.status(400).send('No file uploaded.');
+    }
+    const userId = req.body.user_id;
+
+    fileHandler.doUploadAudioByUserId(req, userId).then((result) => {
+        console.log("---result: " + result);
+        if (result) {
+            res.status(200).json(result);
+        } else {
+            res.status(501).json({
+                message: "Not possible to add audio"
+            })
         }
-    });     
+    });
+
 });
+
+// app.get('/protected-image/:file_id', requestValidator.requestAuthValidation, (req, res) => {
+//     const fileId = req.params.file_id;
+//     fileHandler.getImageByUrl(fileId).then((result)=>{
+//         console.log(result);
+//         if (result!=null){
+//             res.status(200).sendFile(result.filepath);
+//         }else{
+//             res.status(404);
+//         }
+//     });     
+// });
 
 
 
