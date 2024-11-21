@@ -1,11 +1,15 @@
 import 'package:app/app_localizations.dart';
+import 'package:app/model/Session.dart';
+import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/flirts/FlirtsStatsPage.dart';
+import 'package:app/ui/login/LoginPage2.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/user_profile/UserDataPage.dart';
 import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -57,8 +61,12 @@ class _UserProfilePage extends State<UserProfilePage> {
         ListTile(
             title: Text("Cerrar sesión", style: TextStyle(color: Colors.red),),
         
-            onTap: () => NavigatorApp.push(UserStatePage(), context)),
+            onTap: () => _closeSession())
       ],
     );
+  }
+
+  void _closeSession(){
+      SystemNavigator.pop(); 
   }
 }

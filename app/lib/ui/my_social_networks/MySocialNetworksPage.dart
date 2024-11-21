@@ -4,7 +4,10 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/my_social_networks/NewSocialNetwork.dart';
+import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/SlideRowLeft.dart';
+import 'package:app/ui/my_social_networks/new_social_network/NewSocialNetwork.dart';
+
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,6 +23,7 @@ class MySocialNetworksPage extends StatefulWidget {
 
 class _MySocialNetworksPage extends State<MySocialNetworksPage> {
   List<SocialNetwork> networks = Session.user.networks;
+
   bool _isLoading = false;
   User user = Session.user;
   @override
@@ -38,11 +42,11 @@ class _MySocialNetworksPage extends State<MySocialNetworksPage> {
                 icon: const Icon(Icons.add),
                 onPressed: () {
                   NavigatorApp.pushWithCallback(
-                      NewSocialNetwork(), context, _onPop);
+                      NewSocialNetwork(null), context, _onPop);
                 },
               ),
             ]),
-        body: _isLoading ? _buildLoading() : _buildList());
+        body: _isLoading ? AlertDialogs().buildLoading() : _buildList());
   }
 
   void _onPop() {
@@ -51,23 +55,29 @@ class _MySocialNetworksPage extends State<MySocialNetworksPage> {
     });
   }
 
-  Widget _buildLoading() {
-    return Center(child: CircularProgressIndicator());
-  }
-
   Widget _buildList() {
     return ListView.builder(
         itemCount: networks.length,
         itemBuilder: (context, index) {
-          return ListTile(
-              title: Text(networks[index].name),
-              leading: _getIconFromNetwork(index),
-              trailing: ElevatedButton(
-                onPressed: () {
-                  _onDeleteSocialNetwork(index);
-                },
-                child: Text("Eliminar"),
-              ));
+          networks[index].print();
+          return SlideRowLeft(
+            onSlide: () {
+              _onDeleteSocialNetwork(index);
+            },
+            child: Column(
+              children: [
+                ListTile(
+                    title: Text(networks[index].name),
+                    leading: _getIconFromNetwork(index),
+                    trailing: Icon(Icons.arrow_forward_ios_sharp),
+                    onTap: () {
+                      NavigatorApp.pushWithCallback(
+                          NewSocialNetwork(networks[index]), context, _onPop);
+                    }),
+                const Divider()
+              ],
+            ),
+          );
         });
   }
 

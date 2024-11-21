@@ -26,6 +26,8 @@ class _LoginPageState extends State<LoginPage2> {
   
   @override
   void initState() {
+    _emailController.text = "test2@gmail.com";
+    _passwordController.text = "Aa1234567\$";
     NavigatorApp(context);
     super.initState();
   }
@@ -42,7 +44,7 @@ class _LoginPageState extends State<LoginPage2> {
     showDialog(
         context: context,
         builder: (context) {
-          _processLogin("test@gmail.com","Aa1234567\$"); 
+          _processLogin(_emailController.text, _passwordController.text); 
           return Center(child: CircularProgressIndicator());
         });
   }
