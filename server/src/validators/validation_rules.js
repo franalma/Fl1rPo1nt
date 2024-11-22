@@ -133,8 +133,15 @@ const UPDATE_USER_HOBBIES_BY_USER_RULES = [
 ];
 
 
+const UPDATE_USER_NAME_BY_USER_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.user_name').notEmpty().isString().withMessage("Name is required"),    
+];
 
-
+const UPDATE_USER_IMAGE_PROFILE_BY_USER_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.image_id').notEmpty().isString().withMessage("Image id is required"),    
+];
 
 
 
@@ -163,5 +170,7 @@ module.exports = {
     GET_USER_IMAGES_BY_USER_RULES,
     REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_RULES,
     UPDATE_USER_BIOGRAPHY_BY_USER_RULES,
-    UPDATE_USER_HOBBIES_BY_USER_RULES
+    UPDATE_USER_HOBBIES_BY_USER_RULES,
+    UPDATE_USER_NAME_BY_USER_RULES,
+    UPDATE_USER_IMAGE_PROFILE_BY_USER_RULES
 }

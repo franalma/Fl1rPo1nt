@@ -1,15 +1,13 @@
 import 'package:app/app_localizations.dart';
-import 'package:app/model/Session.dart';
-import 'package:app/model/User.dart';
+import 'package:app/main.dart';
+import 'package:app/model/SecureStorage.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/flirts/FlirtsStatsPage.dart';
-import 'package:app/ui/login/LoginPage2.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/user_profile/UserDataPage.dart';
 import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -19,11 +17,9 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePage extends State<UserProfilePage> {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.translate('app_name')),
         ),
@@ -35,7 +31,8 @@ class _UserProfilePage extends State<UserProfilePage> {
       children: [
         ListTile(
             title: const Text("Mis datos"),
-            trailing: const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
+            trailing:
+                const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
             onTap: () => NavigatorApp.push(UserDataPage(), context)),
         Divider(),
         ListTile(
@@ -52,21 +49,26 @@ class _UserProfilePage extends State<UserProfilePage> {
             title: Text("Mis redes"),
             trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
             onTap: () => NavigatorApp.push(MySocialNetworksPage(), context)),
-        Divider(),        
+        Divider(),
         ListTile(
             title: Text("Mis estadísticas"),
-            trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
+            trailing: const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
             onTap: () => NavigatorApp.push(FlirtsStatsPage(), context)),
         Divider(),
         ListTile(
-            title: Text("Cerrar sesión", style: TextStyle(color: Colors.red),),
-        
+            title: const Text(
+              "Cerrar sesión",
+              style: TextStyle(color: Colors.red),
+            ),
             onTap: () => _closeSession())
       ],
     );
   }
 
-  void _closeSession(){
-      SystemNavigator.pop(); 
+  void _closeSession() async {
+    await SecureStorage().deleteSecureData("user_id");
+    await SecureStorage().deleteSecureData("token");
+    await SecureStorage().deleteSecureData("refresh_token");
+    await NavigatorApp.pushAndRemoveUntil(context, const MyApp());
   }
 }

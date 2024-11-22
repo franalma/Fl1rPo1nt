@@ -44,7 +44,7 @@ class NavigatorApp {
      Navigator.pop(context, values);
   }
 
-  static pushAndRemoveUntil(BuildContext context, StatefulWidget screen){
+  static pushAndRemoveUntil(BuildContext context, dynamic screen){
      Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => screen),

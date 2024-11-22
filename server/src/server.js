@@ -45,6 +45,10 @@ async function processAuthRequest(req, res) {
                     result = await userHandler.doLogin(req.body.input);
                     break;
                 }
+                case hostActions.TOKEN_LOGIN: {
+
+                    break; 
+                }
             }
             if (result && result.status) {
                 res.status(result.status).json(result);
@@ -202,6 +206,16 @@ async function processRequest(req, res) {
                     break;
                 }
 
+                case hostActions.UPDATE_USER_NAME_BY_USER_ID: {
+                    result = await userHandler.updateUserNameByUserId(req.body.input);
+                    break;
+                }
+
+                case hostActions.UPDATE_USER_IMAGE_PROFILE_BY_USER_ID: {
+                    result = await userHandler.updateUserImageProfileByUserId(req.body.input);
+                    break;
+                }
+
                 case hostActions.GET_USER_AUDIOS_BY_USER_ID: {
                     result = await fileHandler.getUserAudiosByUserId(req.body.input);
                     break;
@@ -210,6 +224,7 @@ async function processRequest(req, res) {
                     result = await fileHandler.removeUserAudioByAudioIdUserId(req.body.input);
                     break;
                 }
+
             }
             if (result && result.status) {
                 res.status(result.status).json(result);
@@ -231,6 +246,8 @@ app.post('/auth', requestValidator.requestFieldsValidation, (req, res) => {
     }
 
 });
+
+
 
 app.post('/api', requestValidator.requestAuthValidation, requestValidator.requestFieldsValidation, (req, res) => {
     processRequest(req, res);
