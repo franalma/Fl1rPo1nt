@@ -1,12 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:app/comms/model/request/HostGetUserImagesRequest.dart';
 import 'package:app/comms/model/request/HostRemoveImageRequest.dart';
+import 'package:app/comms/model/request/HostUpdateUserImageProfileRequest.dart';
 import 'package:app/comms/model/request/HostUploadImageRequest.dart';
 import 'package:app/model/FileData.dart';
+import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,8 +19,9 @@ import 'package:image_picker/image_picker.dart';
 class LocalFile {
   Image? image;
   String? id;
+  Uint8List buffer;
 
-  LocalFile(this.image, this.id);
+  LocalFile(this.image, this.id, this.buffer);
 }
 
 class UserPhotosPage extends StatefulWidget {
@@ -32,11 +37,13 @@ class _UserPhotosPage extends State<UserPhotosPage> {
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
   User user = Session.user;
+  int selectedUserProfileImage = 0;
 
   @override
   void initState() {
     super.initState();
     _fechImagesFromServer();
+    
   }
 
   @override
@@ -44,6 +51,11 @@ class _UserPhotosPage extends State<UserPhotosPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Tus fotos'),
+          leading: IconButton(
+              onPressed: () async {
+                _onPop();
+              },
+              icon: const Icon(Icons.arrow_back)),
           actions: [
             IconButton(
                 onPressed: () => _onAddPicture(-1), icon: const Icon(Icons.add))
@@ -83,6 +95,40 @@ class _UserPhotosPage extends State<UserPhotosPage> {
                   ),
                 ),
               ),
+              selectedUserProfileImage != index
+                  ? Positioned(
+                      top: 145,
+                      left: 8,
+                      child: GestureDetector(
+                        onTap: () => _onSetProfilePicture(index),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.black.withOpacity(0.6),
+                          radius: 16,
+                          child: const Icon(
+                            Icons.person_3_outlined,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Positioned(
+                      top: 145,
+                      left: 8,
+                      child: GestureDetector(
+                        onTap: () => _onSetProfilePicture(index),
+                        child: CircleAvatar(
+                          backgroundColor:
+                              Color.fromARGB(255, 5, 20, 242).withOpacity(0.6),
+                          radius: 16,
+                          child: const Icon(
+                            Icons.person_2_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ),
             ],
           );
         },
@@ -99,12 +145,17 @@ class _UserPhotosPage extends State<UserPhotosPage> {
         _isLoading = true;
       });
 
-      HostUploadImageRequest().run(user.userId, pickedImage.path).then((fileId) {
+      HostUploadImageRequest()
+          .run(user.userId, pickedImage.path)
+          .then((fileId) {
         if (fileId.isNotEmpty) {
           _isLoading = false;
-          setState(() {
-            File image = File(pickedImage.path);
-            _imageList.add(LocalFile(Image.file(image, fit: BoxFit.cover),fileId));
+          File image = File(pickedImage.path);
+          image.readAsBytes().then((buffer) {
+            setState(() {
+              _imageList.add(LocalFile(
+                  Image.file(image, fit: BoxFit.cover), fileId, buffer));
+            });
           });
         } else {
           Fluttertoast.showToast(msg: "No es posible actualizar tu imagen");
@@ -127,10 +178,11 @@ class _UserPhotosPage extends State<UserPhotosPage> {
         response.fileList!.map((e) {
           var content = base64Decode(e.file!);
           setState(() {
-            _imageList
-                .add(LocalFile(Image.memory(content, fit: BoxFit.cover), e.id));
+            _imageList.add(LocalFile(
+                Image.memory(content, fit: BoxFit.cover), e.id, content));
           });
         }).toList();
+        _getSelectedImageIndex();
       }
       setState(() {
         _isLoading = false;
@@ -147,9 +199,53 @@ class _UserPhotosPage extends State<UserPhotosPage> {
         setState(() {
           _imageList.removeAt(index);
         });
-      }else{
+      } else {
         Fluttertoast.showToast(msg: "No ha sido posible borrar la imagen");
       }
     });
+  }
+
+  Future<void> _onSetProfilePicture(int index) async {
+    Log.d("Starts _onSetProfilePicture");
+    setState(() {
+      selectedUserProfileImage = index;
+      Log.d("file_id: ${_imageList[selectedUserProfileImage].id}");
+    });
+  }
+
+  Future<void> _onPop() async {
+    Log.d("Starts _onPop");
+    LocalFile profileImage = _imageList[selectedUserProfileImage];
+    Log.d("Selected file id: ${profileImage.id}");
+    HostUpdateUserImageProfileRequest()
+        .run(user.userId, profileImage.id!)
+        .then((value) {
+      Log.d("setting user profile result $value");
+      if (value) {
+        if (user.userProfileImageId.isNotEmpty) {
+          SecureStorage().deleteSecureData(user.userProfileImageId);
+        }
+        SecureStorage().saveSecureData(
+            profileImage.id!, base64Encode(profileImage.buffer));
+        Session.user.userProfileImageId = profileImage.id!;
+        Session.loadProfileImage().then((value) => NavigatorApp.pop(context));
+      } else {
+        NavigatorApp.pop(context);
+      }
+    });
+  }
+
+  void _getSelectedImageIndex() {
+    if (user.userProfileImageId.isNotEmpty) {
+      for (var i = 0; i < _imageList.length; i++) {
+        if (_imageList[i].id == user.userProfileImageId) {
+          selectedUserProfileImage = i;
+          break;
+        }
+      }
+    }
+
+    Log.d("init image index: $selectedUserProfileImage");
+    
   }
 }

@@ -52,11 +52,16 @@ class _UserHobbiesPage extends State<UserHobbiesPage> {
     return ListView.builder(
         itemCount: _allHobbies.length,
         itemBuilder: (context, index) {
-          return ListTile(
-              title: CheckboxListTile(
-                  value: _selectedHobbie.contains(_allHobbies[index].id),
-                  onChanged: (value) => {_onItemChange(index, value)},
-                  title: Text(_allHobbies[index].name)));
+          return Column(
+            children: [
+              ListTile(
+                  title: CheckboxListTile(
+                      value: _selectedHobbie.contains(_allHobbies[index].id),
+                      onChanged: (value) => {_onItemChange(index, value)},
+                      title: Text(_allHobbies[index].name))),
+                      Divider()
+            ],
+          );
         });
   }
 

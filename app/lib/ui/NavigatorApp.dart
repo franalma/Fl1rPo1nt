@@ -15,6 +15,13 @@ class NavigatorApp {
     );
   }
 
+   static Future<dynamic> pushAndWait(Widget widget, BuildContext context) async{
+    var result = await navigator!.push(
+      MaterialPageRoute(builder: (context) => widget),
+    );
+    return result; 
+  }
+
   static void pushWithCallback(
       Widget widget, BuildContext context, Function callback) {
     navigator!
@@ -33,7 +40,11 @@ class NavigatorApp {
      Navigator.popUntil(context, (route) => route.isFirst);
   }
 
-  static pushAndRemoveUntil(BuildContext context, StatefulWidget screen){
+  static void popWith(BuildContext context, dynamic values){
+     Navigator.pop(context, values);
+  }
+
+  static pushAndRemoveUntil(BuildContext context, dynamic screen){
      Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => screen),

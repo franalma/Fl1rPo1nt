@@ -26,11 +26,8 @@ class AppDrawerMenu {
           child: Column(
             children: [
               CircleAvatar(
-                radius: 30, // Size of the circle
-                backgroundImage: NetworkImage(
-                  'https://images.ctfassets.net/denf86kkcx7r/4IPlg4Qazd4sFRuCUHIJ1T/f6c71da7eec727babcd554d843a528b8/gatocomuneuropeo-97?fm=webp&w=913', // Replace with your image URL'
-                ),
-              ),
+                  radius: 30, // Size of the circle
+                  backgroundImage: Session.profileImage),
               Padding(padding: EdgeInsets.all(5), child: Text(user.name)),
               Row(
                 children: [

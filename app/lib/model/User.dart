@@ -24,6 +24,7 @@ class User {
   late String biography;
   late String refreshToken;
   late List<dynamic> hobbies = [];
+  late String userProfileImageId;
 
   User(
       this.userId,
@@ -39,7 +40,8 @@ class User {
       this.relationShip,
       this.sexAlternatives,
       this.biography,
-      this.hobbies);
+      this.hobbies,
+      this.userProfileImageId);
 
   User.empty();
   factory User.fromHost(HostLoginResponse response) {
@@ -49,6 +51,7 @@ class User {
       List<QrValue> qrValues = [];
       SexAlternative sexAlternatives;
       RelationShip relationShip;
+      String userProfileImageId =""; 
 
       if (response.networks.isNotEmpty) {
         networks = response.networks.map((e) => SocialNetwork.load(e)).toList();
@@ -70,6 +73,10 @@ class User {
         sexAlternatives = SexAlternative.empty();
       }
 
+      if (response.userProfileImageId.isNotEmpty) {
+        userProfileImageId = response.userProfileImageId;
+      } 
+
       return User(
           response.userId,
           response.name,
@@ -84,7 +91,8 @@ class User {
           relationShip,
           sexAlternatives,
           response.biography,
-          response.hobbies);
+          response.hobbies,
+          userProfileImageId);
     } catch (error) {
       Log.d(error.toString());
     }

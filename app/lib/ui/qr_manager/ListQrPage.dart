@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/qr/HostUpdateUserQrRequest.dart';
 
@@ -5,7 +7,9 @@ import 'package:app/model/QrValue.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/SlideRowLeft.dart';
 import 'package:app/ui/qr_manager/NewQrGeneratePage.dart';
+import 'package:app/ui/qr_manager/model/DataToSave.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
@@ -54,34 +58,37 @@ class _ListQrPage extends State<ListQrPage> {
     return ListView.builder(
         itemCount: qrList.length,
         itemBuilder: (context, index) {
+          print(qrList[index].content);
+          DataToSave data =
+              DataToSave.fromJson(jsonDecode(qrList[index].content));
           return Column(
             children: [
-              ListTile(
-                  title:Text(qrList[index].name),
+              SlideRowLeft(
+                onSlide: () => _removeItem(index),
+                child: ListTile(
+                  title: Text(qrList[index].name),
                   subtitle: Column(
-                    children: [
-                      Text("Contenido" + qrList[index].content.substring(1))
-                    ],
-                  ),
-                  leading:  _buildQrCode(index),
-                  trailing: ElevatedButton(
-                      onPressed: () => _removeItem(index),
-                      child: Text('Borrar'),
-                    ),
-                    ),
-                    Divider()
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (data.userName.isNotEmpty) Text("Tu nombre"),
+                        if (data.userPhone.isNotEmpty) Text("Tu teléfono"),
+                        for (var item in data.networks) Text(item.networkId)
+                      ]),
+                  leading: _buildQrCode(index),
+                ),
+              ),
+              Divider()
             ],
           );
-        
         });
   }
 
   void _removeItem(int index) {
-    Log.d("Starts _removeItem");    
+    Log.d("Starts _removeItem");
     qrList.removeAt(index);
     HostUpdateUserQrRequest().run(user.userId, qrList).then((value) {
-      qrList = value.map((item) => item.qrValue).toList(); 
-      user.qrValues = qrList; 
+      qrList = value.map((item) => item.qrValue).toList();
+      user.qrValues = qrList;
       setState(() {});
     });
   }

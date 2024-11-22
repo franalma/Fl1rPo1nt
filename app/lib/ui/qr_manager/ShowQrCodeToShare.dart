@@ -30,10 +30,6 @@ class _ShowQrCodeToShare extends State<ShowQrCodeToShare> {
     qrValue = "${user.qrValues[0].qrId}:${user.userId}";  
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     Color foregroundColor =

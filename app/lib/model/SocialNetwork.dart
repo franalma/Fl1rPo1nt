@@ -1,3 +1,5 @@
+import 'package:app/ui/utils/Log.dart';
+
 class SocialNetwork {
   String networkId = "";
   String name = "";
@@ -11,5 +13,9 @@ class SocialNetwork {
 
   Map<String, dynamic> toHost() {
     return {"network_id": networkId, "name": name, "value": value};
+  }
+
+  void print() {
+    Log.d("id: ${networkId} name: ${name} value: ${value}");
   }
 }

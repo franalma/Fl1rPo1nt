@@ -120,7 +120,8 @@ async function doLogin(input) {
                     user_interests: user.user_interests ? user.user_interests : { relationship: {}, sex_alternative: {} },
                     qr_values: user.qr_values ? user.qr_values : [],
                     biography: user.biography,
-                    hobbies:user.hobbies
+                    hobbies:user.hobbies,
+                    profile_image_file_id: user.profile_image_id
                 }
             }
 
@@ -334,6 +335,51 @@ async function updateUserHobbiesByUserId(input) {
     return result;
 }
 
+async function updateUserNameByUserId(input) {
+    logger.info("Starts updateUserNameByUserId");
+    let result = { status: 200, "message": "Use name updated" };
+    try {
+        const filters = { id: input.user_id };
+
+        const newValues = {
+            name: input.user_name,
+            updated_at: Date.now()
+        }
+        await dbHandler.updateDocument(newValues, filters, userColletion);
+    } catch (error) {
+        logger.info(error);
+        result = {
+            status: 500,
+            message: "Error updating user name"
+        }
+    }
+    return result;
+}
+
+async function updateUserImageProfileByUserId(input) {
+    logger.info("Starts updateUserImageProfileByUserId");
+    let result = { status: 200, "message": "Use image profile updated" };
+    try {
+        const filters = { id: input.user_id };
+
+        const newValues = {
+            profile_image_id: input.image_id,
+            updated_at: Date.now()
+        }
+        await dbHandler.updateDocument(newValues, filters, userColletion);
+    } catch (error) {
+        logger.info(error);
+        result = {
+            status: 500,
+            message: "Error updating user image id"
+        }
+    }
+    return result;
+}
+
+
+
+
 
 
 module.exports = {
@@ -346,7 +392,9 @@ module.exports = {
     updateUserQrsByUserId,
     getUserInfoByUserIdQrId,
     updateUserBiographyByUserId,
-    updateUserHobbiesByUserId
+    updateUserHobbiesByUserId,
+    updateUserNameByUserId,
+    updateUserImageProfileByUserId
 }
 
 

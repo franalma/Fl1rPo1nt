@@ -49,6 +49,7 @@ dependencies:
   flutter_sound: ^9.2.14  # Check for the latest version on pub.dev
   permission_handler: ^10.2.0  # Check for the latest version on pub.dev
   audioplayers: ^6.1.0
+  flutter_secure_storage: ^8.0.0
   
 
 
