@@ -16,3 +16,7 @@ server_profile_image/
 server_user_audios/
 
 server_user_images/
+
+app/.flutter-plugins-dependencies
+
+app/.flutter-plugins
