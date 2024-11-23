@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/qr/HostUpdateUserQrRequest.dart';
 
@@ -57,8 +56,7 @@ class _ListQrPage extends State<ListQrPage> {
   Widget _buildList() {
     return ListView.builder(
         itemCount: qrList.length,
-        itemBuilder: (context, index) {
-          print(qrList[index].content);
+        itemBuilder: (context, index) {                
           DataToSave data =
               DataToSave.fromJson(jsonDecode(qrList[index].content));
           return Column(
@@ -70,14 +68,14 @@ class _ListQrPage extends State<ListQrPage> {
                   subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (data.userName.isNotEmpty) Text("Tu nombre"),
-                        if (data.userPhone.isNotEmpty) Text("Tu teléfono"),
+                        if (data.userName.isNotEmpty) Text(AppLocalizations.of(context)!.translate("your_name")),
+                        if (data.userPhone.isNotEmpty) Text(AppLocalizations.of(context)!.translate("your_phone")),
                         for (var item in data.networks) Text(item.networkId)
                       ]),
                   leading: _buildQrCode(index),
                 ),
               ),
-              Divider()
+              const Divider()
             ],
           );
         });
@@ -107,6 +105,7 @@ class _ListQrPage extends State<ListQrPage> {
     return QrImageView(
         data: qrList[index].content,
         size: 30,
+        // ignore: deprecated_member_use
         foregroundColor: foregroundColor,
         backgroundColor: backgroundColor);
   }

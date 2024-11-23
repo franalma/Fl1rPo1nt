@@ -50,7 +50,7 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
                   });
                 },
               ),
-              Divider()
+              const Divider()
             ],
           );
         },
@@ -63,7 +63,7 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.translate('app_name')),
           leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 _onPop();
                 // Pass a value and navigate back
@@ -81,7 +81,7 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
                 });
               },
             ),
-            Divider(),
+            const Divider(),
             user.phone.isNotEmpty
                 ? CheckboxListTile(
                     title: const Text("Teléfono"),
@@ -94,7 +94,7 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
                     },
                   )
                 : Container(),
-            user.phone.isNotEmpty ? Divider() : Container(),
+            user.phone.isNotEmpty ? const Divider() : Container(),
             _buildSocialNetwors(),
           ],
         ));

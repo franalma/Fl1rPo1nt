@@ -1,3 +1,4 @@
+import 'package:app/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class AlertDialogs {
@@ -6,11 +7,11 @@ class AlertDialogs {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Nuevo contacto añadido'),
+          title: Text(AppLocalizations.of(context)!.translate("new_contact")),
           content: Text('Se ha añadido a $message a tus contactos'),
           actions: [
             TextButton(
-              child: Text('OK'),
+              child: Text(AppLocalizations.of(context)!.translate("ok")),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
@@ -43,14 +44,14 @@ class AlertDialogs {
                 callback("");
                 Navigator.of(context).pop();
               },
-              child: Text('Cancelar'),
+              child: Text(AppLocalizations.of(context)!.translate("cancel")),
             ),
             TextButton(
               onPressed: () {
                 callback(_controller.text);
                 Navigator.of(context).pop();
               },
-              child: Text('Aceptar'),
+              child: Text(AppLocalizations.of(context)!.translate("ok")),
             ),
           ],
         );

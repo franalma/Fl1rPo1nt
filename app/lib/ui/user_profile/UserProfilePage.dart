@@ -21,7 +21,16 @@ class _UserProfilePage extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.translate('app_name')),
+         
+          flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue, Colors.purple],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
         ),
         body: _buildList());
   }
@@ -30,35 +39,35 @@ class _UserProfilePage extends State<UserProfilePage> {
     return ListView(
       children: [
         ListTile(
-            title: const Text("Mis datos"),
+            title: const Text("Mis datos", style: TextStyle(fontSize: 20)),
             trailing:
                 const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
             onTap: () => NavigatorApp.push(UserDataPage(), context)),
         Divider(),
         ListTile(
-            title: Text("Mi estado"),
+            title: Text("Mi estado",style: TextStyle(fontSize: 20)),
             trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
             onTap: () => NavigatorApp.push(UserStatePage(), context)),
         Divider(),
         ListTile(
-            title: Text("Mis QR"),
+            title: Text("Mis QR",style: TextStyle(fontSize: 20)),
             trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
             onTap: () => NavigatorApp.push(ListQrPage(), context)),
         Divider(),
         ListTile(
-            title: Text("Mis redes"),
+            title: Text("Mis redes",style: TextStyle(fontSize: 20)),
             trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
             onTap: () => NavigatorApp.push(MySocialNetworksPage(), context)),
         Divider(),
         ListTile(
-            title: Text("Mis estadísticas"),
+            title: Text("Mis estadísticas",style: TextStyle(fontSize: 20)),
             trailing: const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
             onTap: () => NavigatorApp.push(FlirtsStatsPage(), context)),
         Divider(),
         ListTile(
             title: const Text(
               "Cerrar sesión",
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: Colors.red,fontSize: 20),
             ),
             onTap: () => _closeSession())
       ],

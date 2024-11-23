@@ -36,7 +36,7 @@ class _NewSocialNetworkSelection extends State<NewSocialNetworkSelection> {
   }
 
   Widget _buildLoading() {
-    return Center(child: CircularProgressIndicator());
+    return const Center(child: CircularProgressIndicator());
   }
 
   Widget _buildEditOptions() {
@@ -47,7 +47,7 @@ class _NewSocialNetworkSelection extends State<NewSocialNetworkSelection> {
             children: [
               ListTile(
                 title: Text(networks[index].name),
-                leading: Icon(Icons.access_alarm),
+                leading: const Icon(Icons.access_alarm),
                 onTap: () {
                   widget.onSelected(networks[index]);
                   NavigatorApp.pop(context);
@@ -66,7 +66,6 @@ class _NewSocialNetworkSelection extends State<NewSocialNetworkSelection> {
         networks
             .add(SocialNetwork(item.name, item.name, ""));
       }
-      // selectedNetwork = networks[0].name;
       setState(() {
         _isLoading = false;
       });

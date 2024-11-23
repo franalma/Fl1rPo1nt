@@ -11,7 +11,7 @@ import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 
 class NewSocialNetwork extends StatefulWidget {
-  SocialNetwork? _socialNetworkSelected;
+  final SocialNetwork? _socialNetworkSelected;
   NewSocialNetwork(this._socialNetworkSelected, {super.key});
 
   @override
@@ -30,7 +30,7 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
   void initState() {
     super.initState();
     _socialNetworkSelected = widget._socialNetworkSelected;
-    
+
     if (_socialNetworkSelected != null) {
       _socialNetworkSelected!.print();
       setState(() {
@@ -38,8 +38,6 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
         editNetworkUrlController.text = _socialNetworkSelected!.value;
       });
     }
-
-    // _fetchFromHost();
   }
 
   @override
@@ -63,8 +61,8 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
     return ListView(
       children: [
         ListTile(
-          title: const Text("Red social",
-              style: TextStyle(fontWeight: FontWeight.w600)),
+          title: Text(AppLocalizations.of(context)!.translate("social_network"),
+              style: const TextStyle(fontWeight: FontWeight.w600)),
           subtitle: _socialNetworkSelected != null
               ? Text(_socialNetworkSelected!.networkId)
               : const Text(""),
@@ -79,15 +77,16 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
         ),
         const Divider(),
         ListTile(
-          title: const Text("Valor de tu red",
-              style: TextStyle(fontWeight: FontWeight.w600)),
+          title: Text(AppLocalizations.of(context)!.translate("network_value"),
+              style: const TextStyle(fontWeight: FontWeight.w600)),
           subtitle: Text(editNetworkValueController.text),
           onTap: () {
             AlertDialogs().showDialogEdit(
                 context,
                 editNetworkValueController.text,
-                "Valor de tu red social",
-                "Introduce un valor", (result) {
+                AppLocalizations.of(context)!.translate("network_value"),
+                AppLocalizations.of(context)!.translate("input_value"),
+                (result) {
               setState(() {
                 editNetworkValueController.text = result;
               });
@@ -103,8 +102,9 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
             AlertDialogs().showDialogEdit(
                 context,
                 editNetworkUrlController.text,
-                "Url de tu red social",
-                "Introduce un valor", (result) {
+                AppLocalizations.of(context)!.translate("network_url"),
+                AppLocalizations.of(context)!.translate("input_value"),
+                (result) {
               setState(() {
                 editNetworkUrlController.text = result;
               });
@@ -127,14 +127,14 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
           .run(user.userId, networksToUpate)
           .then((value) {
         if (value.isEmpty) {
-          FlutterToast().showToast("No se ha podido añadir la red");
+          FlutterToast().showToast( AppLocalizations.of(context)!.translate("network_added_error"),);
           networksToUpate.remove(newNetwork);
         } else {
           NavigatorApp.pop(context);
         }
       });
     } else {
-      FlutterToast().showToast("Debes rellenar todos los campos");
+      FlutterToast().showToast(AppLocalizations.of(context)!.translate("all_fields_required"));
     }
   }
 }

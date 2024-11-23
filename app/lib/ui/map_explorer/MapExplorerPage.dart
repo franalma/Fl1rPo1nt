@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:app/comms/model/request/HostGetPeopleArroundRequest.dart';
-import 'package:app/model/User.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
@@ -9,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapExplorerController extends StatefulWidget {
-  LatLng _location;
+  final LatLng _location;
 
   MapExplorerController(this._location);
 
@@ -20,9 +18,8 @@ class MapExplorerController extends StatefulWidget {
 }
 
 class _MapExplorerController extends State<MapExplorerController> {
-  @override
   late GoogleMapController mapController;
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -66,7 +63,6 @@ class _MapExplorerController extends State<MapExplorerController> {
 
   Future<void> _fetchFromHost() async {
     Log.d("Starts");
-    User user = Session.user;
     Location location = Session.location!;
     HostGetPeopleArroundRequest()
         .run(location.lat,location.lon, 5000)

@@ -32,7 +32,7 @@ class _QrCodeScannerPage extends State<QrCodeScannerPage> {
     var location = Session.location;
     var values = value.split(":");
 
-    if (values != null && values.length == 2) {
+    if (values.length == 2) {
       HostPutUserContactRequest()
           .run(user.userId, values[1], values[0], flirt!.id.toString(),
               location!)

@@ -26,7 +26,7 @@ function socketInit(server) {
 
 }
 
-function sendMessageToUser(action, userId, message) {
+function sendMessageToUser(action, userId, scanned, message) {
     logger.info("Starts sendMessageToUser userId: " + userId);
     try {
         const socket = mapSockets[userId]["socket"];
@@ -34,6 +34,7 @@ function sendMessageToUser(action, userId, message) {
         if (socket) {
             let payload = {
                 send_at: Date.now(),
+                scanned: scanned,
                 message: message
             }
             payload = JSON.stringify(payload);

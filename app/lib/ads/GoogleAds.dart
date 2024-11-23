@@ -1,3 +1,4 @@
+import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -11,14 +12,14 @@ class GoogleAds {
     bannerAd = BannerAd(
       adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Test Ad Unit ID
       size: AdSize.banner,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           _isAdLoadedBanner = true; 
           onLoad(true);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('Ad failed to load: $error');
+          Log.d('Ad failed to load: $error');
           ad.dispose();
           _isAdLoadedBanner = false; 
           onLoad(false);
@@ -36,7 +37,7 @@ class GoogleAds {
     adaptiveBannerAd = BannerAd(
       adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Usa un ID de prueba o el tuyo
       size: adSize!,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           _isAdaptativeAdLoaded = true; 
@@ -49,7 +50,7 @@ class GoogleAds {
       ),
     );
 
-    adaptiveBannerAd?.load();
+    adaptiveBannerAd.load();
   }
 
 

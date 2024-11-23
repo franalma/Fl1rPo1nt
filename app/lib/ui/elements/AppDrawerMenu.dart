@@ -1,4 +1,3 @@
-import 'package:app/app_localizations.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';

@@ -3,10 +3,7 @@ import 'package:app/comms/model/request/flirt/HostGetUserFlirtsRequest.dart';
 import 'package:app/model/Flirt.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
-import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/elements/AppDrawerMenu.dart';
-import 'package:app/ui/qr_manager/NewQrGeneratePage.dart';
-import 'package:app/ui/utils/Log.dart';
+import "package:app/ui/utils/Log.dart";
 import 'package:flutter/material.dart';
 
 class FlirtsStatsPage extends StatefulWidget {
@@ -50,15 +47,14 @@ class _FlirtsStatsPage extends State<FlirtsStatsPage> {
                   title: Text(_flirtList[index].id.substring(0, 10)),
                   subtitle: Column(
                     children: [
-                      Text("Fecha: " +
-                          _timeFromEpoch(_flirtList[index].createdAt)),
+                      Text("Fecha: ${_timeFromEpoch(_flirtList[index].createdAt)}"),
                       Text(
                           "Dónde:  [${_flirtList[index].location?.lat},${_flirtList[index].location?.lon}]"),
                       Text("Estado: ${_getFlirtStatus(index)}")
                     ],
                   ),
                   trailing: (_flirtList[index].status == 0)
-                      ? ElevatedButton(onPressed: () {}, child: Text("Borrar"))
+                      ? ElevatedButton(onPressed: () {}, child: Text(AppLocalizations.of(context)!.translate("delete")))
                       : Container()),
               Divider()
             ],

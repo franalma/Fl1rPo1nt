@@ -27,7 +27,7 @@ class _QrGeneratePage extends State<QrGeneratePage> {
   TextEditingController controller = TextEditingController();
 
   User user = Session.user;
-  TextEditingController _qrNameController = TextEditingController();
+  final TextEditingController _qrNameController = TextEditingController();
   DataToSave? dataToSave;
 
   @override

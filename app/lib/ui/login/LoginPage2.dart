@@ -1,24 +1,20 @@
-import 'dart:convert';
-
+import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/auth/HostLoginRequest.dart';
 import 'package:app/comms/socket_subscription/SocketSubscriptionController.dart';
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/home/home.dart';
+import 'package:app/ui/home/HomeControllerPage.dart';
 import 'package:app/ui/login/components/my_button.dart';
 import 'package:app/ui/login/components/my_textfield.dart';
-import 'package:app/ui/login/components/square_tile.dart';
+import 'package:app/ui/register/RegisterPage2.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage2 extends StatefulWidget {
-  final Function()? onTap;
-
-  LoginPage2({super.key, required this.onTap});
-
+  
   @override
   State<LoginPage2> createState() => _LoginPageState();
 }
@@ -68,16 +64,15 @@ class _LoginPageState extends State<LoginPage2> {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              const SizedBox(height: 20),
-              // const Icon(Icons.lock, size: 100),
+              const SizedBox(height: 20),              
               SizedBox(
                   height: 150,
                   width: 150,
                   child: Image.asset("assets/img/splash_icon.png")),
               const SizedBox(height: 50),
-              const Text(
-                'Inicia sesión',
-                style: TextStyle(
+               Text(AppLocalizations.of(context)!.translate("do_login"),
+                
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -87,13 +82,13 @@ class _LoginPageState extends State<LoginPage2> {
               const SizedBox(height: 25),
               MyTextField(
                 controller: _emailController,
-                hintText: 'Usuario',
+                hintText: AppLocalizations.of(context)!.translate("user"),
                 obscureText: false,
               ),
               const SizedBox(height: 10),
               MyTextField(
                 controller: _passwordController,
-                hintText: 'Contraseña',
+                hintText: AppLocalizations.of(context)!.translate("password"),
                 obscureText: true,
               ),
               const SizedBox(height: 10),
@@ -102,14 +97,14 @@ class _LoginPageState extends State<LoginPage2> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    '¿Has olvidado la contraseña?',
+                     AppLocalizations.of(context)!.translate("password_forgot"),
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 ),
               ),
               const SizedBox(height: 25),
               MyButton(
-                text: "Login",
+                text:  AppLocalizations.of(context)!.translate("do_login"),
                 onTap: () => _signUserIn(context),
               ),
 
@@ -118,15 +113,17 @@ class _LoginPageState extends State<LoginPage2> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '¿No tienes cuenta?',
+                    AppLocalizations.of(context)!.translate("no_account"),
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 4),
                   GestureDetector(
-                    onTap: widget.onTap,
-                    child: const Text(
-                      'Regístrate ahora',
-                      style: TextStyle(
+                    onTap: (){
+                        NavigatorApp.push(RegisterPage(), context);
+                    },
+                    child:  Text(
+                       AppLocalizations.of(context)!.translate("register_now"),
+                      style: const TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
@@ -165,13 +162,13 @@ class _LoginPageState extends State<LoginPage2> {
           SecureStorage().saveSecureData("user_id", Session.user.userId);
         });
 
-        NavigatorApp.pushAndRemoveUntil(context, Home());
+        NavigatorApp.pushAndRemoveUntil(context, Home2());
       } else {
         NavigatorApp.pop(context);
-        FlutterToast().showToast("Usuario/contraseña incorrectos");
+        FlutterToast().showToast(AppLocalizations.of(context)!.translate("wrong_user_pass"));
       }
     }).onError((error, stackTrace) {
-      FlutterToast().showToast("Error desconocido");
+      FlutterToast().showToast(AppLocalizations.of(context)!.translate("unknown_error"));
       NavigatorApp.pop(context);
     });
   }

@@ -7,7 +7,7 @@ import 'package:app/comms/model/request/flirt/HostPutFlirtByUserIdRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/ads/GoogleAds.dart';
+import 'package:app/ads/GoogleAds.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/qr_manager/QrCodeScannerPage.dart';
@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
   bool _isLoading = true;
   GoogleAds? _googleAds;
   bool _isBannerLoaded = false;
-  bool _isAdaptativeAdLoaded = false; 
+  bool _isAdaptativeAdLoaded = false;
 
   @override
   void initState() {
@@ -45,7 +45,6 @@ class _HomeState extends State<Home> {
     _googleAds!.loadBanner((value) {
       _isBannerLoaded = value;
     });
-    
   }
 
   void _handleNewContactRequest(String data) {
@@ -77,7 +76,7 @@ class _HomeState extends State<Home> {
   Widget _buildAdaptativeBannerd() {
     if (_isAdaptativeAdLoaded) {
       return Positioned(
-        bottom: 16, // Distance from the bottom of the screen
+        bottom: 80, // Distance from the bottom of the screen
         left: 0,
         right: 0,
         child: Center(
@@ -93,47 +92,66 @@ class _HomeState extends State<Home> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     _googleAds!.loadAdaptiveBanner(context, (value) {
       _isAdaptativeAdLoaded = value;
     });
     return Scaffold(
-        drawer: AppDrawerMenu().getDrawer(context),
-        appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.translate('app_name')),
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    if (user.isFlirting) {
-                      NavigatorApp.push(QrCodeScannerPage(), context);
-                    } else {
-                      FlutterToast()
-                          .showToast("Debes comenzar a ligar para acceder");
-                    }
-                  },
-                  icon: const Icon(Icons.camera_enhance)),
-              IconButton(
-                  onPressed: () {
-                    if (user.isFlirting) {
-                      NavigatorApp.push(ShowQrCodeToShare(), context);
-                    } else {
-                      FlutterToast()
-                          .showToast("Debes comenzar a ligar para acceder");
-                    }
-                  },
-                  icon: const Icon(Icons.qr_code)),
-            ]),
+        // drawer: AppDrawerMenu().getDrawer(context),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(56.0), // Height of the AppBarP
+          child: AppBar(
+              leading: _isEnabled
+                  ? IconButton(
+                      icon: Icon(Icons.stop),
+                      onPressed: () {
+                        _onStopFlirt();
+                      },
+                    )
+                  : IconButton(icon: Icon(Icons.play_arrow), onPressed: (){
+                    _onStartFlirt();
+                  },),
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue, Colors.purple],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      if (user.isFlirting) {
+                        NavigatorApp.push(QrCodeScannerPage(), context);
+                      } else {
+                        FlutterToast()
+                            .showToast("Debes comenzar a ligar para acceder");
+                      }
+                    },
+                    icon: const Icon(Icons.camera_enhance)),
+                IconButton(
+                    onPressed: () {
+                      if (user.isFlirting) {
+                        NavigatorApp.push(ShowQrCodeToShare(), context);
+                      } else {
+                        FlutterToast()
+                            .showToast("Debes comenzar a ligar para acceder");
+                      }
+                    },
+                    icon: const Icon(Icons.qr_code)),
+              ]),
+        ),
         body: Stack(
           children: [
             _isLoading
                 ? _buildLoading()
                 : Center(
-                    child: _isEnabled
-                        ? _buildEnabledFlirtPanel()
-                        : _buildDisabledFlirtPanel(),
-                  ),
+                    child: _isEnabled ? _buildEnabledFlirtPanel() : Container()
+                    // : _buildDisabledFlirtPanel(),
+                    ),
             // _buildBanner(),
             _buildAdaptativeBannerd()
           ],

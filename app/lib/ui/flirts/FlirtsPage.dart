@@ -3,7 +3,6 @@ import 'package:app/model/Flirt.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/qr_manager/NewQrGeneratePage.dart';
-import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 
 class FlirtsPage extends StatefulWidget {
@@ -15,7 +14,6 @@ class FlirtsPage extends StatefulWidget {
 
 class _FlirtsPage extends State<FlirtsPage> {
   List<Flirt> flirtList = [];
-  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -44,7 +42,7 @@ class _FlirtsPage extends State<FlirtsPage> {
         itemCount: flirtList.length,
         itemBuilder: (context, index) {
           return Card(
-            margin: EdgeInsets.all(8.0),
+            margin: const EdgeInsets.all(8.0),
             child: Column(children: [
               Text(flirtList[index].id),              
             ]),

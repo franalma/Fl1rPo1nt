@@ -13,14 +13,14 @@ class SlideRowLeft extends StatelessWidget {
         background: Container(
           color: Colors.red,
           alignment: Alignment.centerRight,
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Icon(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: const Icon(
             Icons.delete,
             color: Colors.white,
           ),
         ),
         onDismissed: (direction) {  
-          this.onSlide();                
+          onSlide();                
         },
         child: child);
   }

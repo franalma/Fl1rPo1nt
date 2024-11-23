@@ -1,15 +1,10 @@
-
+import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/login/components/my_button.dart';
 import 'package:app/ui/login/components/my_textfield.dart';
 import 'package:app/ui/login/components/square_tile.dart';
 import 'package:flutter/material.dart';
 
-
 class RegisterPage extends StatefulWidget {
-  final Function()? onTap;
-
-  RegisterPage({Key? key, required this.onTap}) : super(key: key);
-
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -19,6 +14,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   void showmessage(String errorMessage) {
     showDialog(
@@ -30,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _signUserup(BuildContext context) async {
     if (_passwordController.text != _confirmPasswordController.text) {
-      showmessage("Password does not match");
+      showmessage("La contraseña no coincide");
       return;
     }
 
@@ -39,8 +35,6 @@ class _RegisterPageState extends State<RegisterPage> {
         builder: (context) {
           return Center(child: CircularProgressIndicator());
         });
-
-    
   }
 
   @override
@@ -51,12 +45,15 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Center(
           child: ListView(
             padding: const EdgeInsets.all(16),
-            children: [
-              const SizedBox(height: 50),
-              const Icon(Icons.lock, size: 50),
+            children: [              
+              SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset("assets/img/splash_icon.png")),
+                                
               const SizedBox(height: 50),
               const Text(
-                'Create a new Account',
+                'Regístrate',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 24,
@@ -67,59 +64,48 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 20),
               MyTextField(
                 controller: _emailController,
-                hintText: 'Username',
+                hintText: 'Nombre',
+                obscureText: false,
+              ),
+              const SizedBox(height: 10),
+              MyTextField(
+                controller: _phoneController,
+                hintText: 'Teléfono',
                 obscureText: false,
               ),
               const SizedBox(height: 10),
               MyTextField(
                 controller: _passwordController,
-                hintText: 'Password',
+                hintText: 'Contraseña',
                 obscureText: true,
               ),
               const SizedBox(height: 10),
               MyTextField(
                 controller: _confirmPasswordController,
-                hintText: 'Confirm Password',
+                hintText: 'Confirma la contraseña',
                 obscureText: true,
               ),
 
               const SizedBox(height: 25),
               MyButton(
-                text: "Sign Up",
+                text: "Aceptar",
                 onTap: () => _signUserup(context),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
               const Divider(),
-              const SizedBox(height: 10),
-              const Text(
-                'Or continue with',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Color(0xFF707070)),
-              ),
-              const SizedBox(height: 10),
-              const Divider(),
-              const SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  SquareTile(imagePath: 'lib/images/google.png'),
-                  SizedBox(width: 25),
-                  SquareTile(imagePath: 'lib/images/apple.png'),
-                ],
-              ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Already have an account',
+                    '¿Ya tienes una cuenta?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 4),
                   GestureDetector(
-                    onTap: widget.onTap,
+                    onTap: () => NavigatorApp.pop(context),
                     child: const Text(
-                      'Login now',
+                      'Inicia sesión ahora',
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,

@@ -1,9 +1,6 @@
 import 'dart:convert';
-
 import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
-
-import 'package:app/comms/model/response/HostResponseTemplate.dart';
 import 'package:app/comms/model/response/flirt/HostGetUserFlirtsResponse.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
@@ -27,7 +24,8 @@ class HostGetUserFlirtsRequest extends BaseRequest {
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
       if (response.statusCode == 200) {
-        return HostGetUserFlirtsResponse.fromJson(jsonDecode(response.body)["flirts"]);
+        return HostGetUserFlirtsResponse.fromJson(
+            jsonDecode(response.body)["flirts"]);
       }
     } catch (error) {
       Log.d(error.toString());
@@ -53,13 +51,12 @@ class HostGetUserFlirtsRequest extends BaseRequest {
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
       if (response.statusCode == 200) {
-        return HostGetUserFlirtsResponse.fromJson(jsonDecode(response.body)["flirts"]);
+        return HostGetUserFlirtsResponse.fromJson(
+            jsonDecode(response.body)["flirts"]);
       }
     } catch (error) {
       Log.d(error.toString());
     }
     return HostGetUserFlirtsResponse.empty();
   }
-
-
 }

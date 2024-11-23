@@ -8,7 +8,6 @@ class ListContactsPage extends StatefulWidget {
 }
 
 class _ListContactsPage extends State<ListContactsPage> {
-  bool _isLoading = true; 
 
   @override
   void initState() {  
