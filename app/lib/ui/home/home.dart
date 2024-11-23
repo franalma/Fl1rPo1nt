@@ -7,6 +7,7 @@ import 'package:app/comms/model/request/flirt/HostPutFlirtByUserIdRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/ads/GoogleAds.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/qr_manager/QrCodeScannerPage.dart';
@@ -16,6 +17,7 @@ import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -28,12 +30,20 @@ class _HomeState extends State<Home> {
   Color? _relAltColor;
   User user = Session.user;
   bool _isLoading = true;
+  GoogleAds? _googleAds;
+  bool _isBannerLoaded = false;
+
   @override
   void initState() {
     super.initState();
     Session.socketSubscription?.onNewContactRequested =
         _handleNewContactRequest;
     _fetchFlirtStateFromHost();
+
+    _googleAds = GoogleAds();
+    _googleAds!.loadBanner((value) {
+      _isBannerLoaded = value;
+    });
   }
 
   void _handleNewContactRequest(String data) {
@@ -41,6 +51,25 @@ class _HomeState extends State<Home> {
     var map = jsonDecode(data);
     var contactRequested = map["message"]["requested_user_id"];
     AlertDialogs().showAlertNewContactAdded(context, contactRequested);
+  }
+
+  Widget _buildBanner() {
+    if (_isBannerLoaded) {
+      return Positioned(
+        bottom: 16, // Distance from the bottom of the screen
+        left: 0,
+        right: 0,
+        child: Center(
+          child: Container(
+            height: _googleAds!.bannerAd.size.height.toDouble(),
+            width: _googleAds!.bannerAd.size.width.toDouble(),
+            child: AdWidget(ad: _googleAds!.bannerAd),
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   @override
@@ -71,13 +100,18 @@ class _HomeState extends State<Home> {
                   },
                   icon: const Icon(Icons.qr_code)),
             ]),
-        body: _isLoading
-            ? _buildLoading()
-            : Center(
-                child: _isEnabled
-                    ? _buildEnabledFlirtPanel()
-                    : _buildDisabledFlirtPanel(),
-              ));
+        body: Stack(
+          children: [
+            _isLoading
+                ? _buildLoading()
+                : Center(
+                    child: _isEnabled
+                        ? _buildEnabledFlirtPanel()
+                        : _buildDisabledFlirtPanel(),
+                  ),
+            _buildBanner()
+          ],
+        ));
   }
 
   Widget _buildLoading() {
@@ -238,5 +272,14 @@ class _HomeState extends State<Home> {
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    if (_googleAds != null) {
+      _googleAds!.dispose();
+    }
+
+    super.dispose();
   }
 }

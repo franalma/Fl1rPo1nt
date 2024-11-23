@@ -50,6 +50,7 @@ dependencies:
   permission_handler: ^10.2.0  # Check for the latest version on pub.dev
   audioplayers: ^6.1.0
   flutter_secure_storage: ^8.0.0
+  google_mobile_ads: ^5.2.0
   
 
 
