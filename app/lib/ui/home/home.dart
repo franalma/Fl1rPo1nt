@@ -32,6 +32,7 @@ class _HomeState extends State<Home> {
   bool _isLoading = true;
   GoogleAds? _googleAds;
   bool _isBannerLoaded = false;
+  bool _isAdaptativeAdLoaded = false; 
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _HomeState extends State<Home> {
     _googleAds!.loadBanner((value) {
       _isBannerLoaded = value;
     });
+    
   }
 
   void _handleNewContactRequest(String data) {
@@ -72,8 +74,31 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Widget _buildAdaptativeBannerd() {
+    if (_isAdaptativeAdLoaded) {
+      return Positioned(
+        bottom: 16, // Distance from the bottom of the screen
+        left: 0,
+        right: 0,
+        child: Center(
+          child: Container(
+            height: _googleAds!.adaptiveBannerAd.size.height.toDouble(),
+            width: _googleAds!.adaptiveBannerAd.size.width.toDouble(),
+            child: AdWidget(ad: _googleAds!.adaptiveBannerAd),
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    _googleAds!.loadAdaptiveBanner(context, (value) {
+      _isAdaptativeAdLoaded = value;
+    });
     return Scaffold(
         drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
@@ -109,7 +134,8 @@ class _HomeState extends State<Home> {
                         ? _buildEnabledFlirtPanel()
                         : _buildDisabledFlirtPanel(),
                   ),
-            _buildBanner()
+            // _buildBanner(),
+            _buildAdaptativeBannerd()
           ],
         ));
   }
@@ -277,7 +303,7 @@ class _HomeState extends State<Home> {
   @override
   void dispose() {
     if (_googleAds != null) {
-      _googleAds!.dispose();
+      // _googleAds!.dispose();
     }
 
     super.dispose();
