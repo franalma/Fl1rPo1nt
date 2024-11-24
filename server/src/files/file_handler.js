@@ -1,6 +1,6 @@
 const multer = require('multer');
 const path = require('path');
-const rootDir = "/Users/sierra/Desktop/Projects/Personal/Fl1rPo1nt/server_content";
+const rootDir = process.env.MULTIMEDIA_PATH;;
 const rootDirImages = rootDir+"/server_user_images";
 const rootDirAudios = rootDir+"/server_user_audios";
 const fs = require('fs');

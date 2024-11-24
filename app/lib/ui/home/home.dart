@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
     Log.d("data received: $data");
     var map = jsonDecode(data);
     var contactRequested = map["message"]["requested_user_id"];
-  
+
     AlertDialogs().showAlertNewContactAdded(context, contactRequested);
   }
 
@@ -111,9 +111,12 @@ class _HomeState extends State<Home> {
                         _onStopFlirt();
                       },
                     )
-                  : IconButton(icon: Icon(Icons.play_arrow), onPressed: (){
-                    _onStartFlirt();
-                  },),
+                  : IconButton(
+                      icon: Icon(Icons.play_arrow),
+                      onPressed: () {
+                        _onStartFlirt();
+                      },
+                    ),
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -151,7 +154,9 @@ class _HomeState extends State<Home> {
             _isLoading
                 ? _buildLoading()
                 : Center(
-                    child: _isEnabled ? _buildEnabledFlirtPanel() : Container()
+                    child: _isEnabled
+                        ? _buildEnabledFlirtPanelPoint()
+                        : Container()
                     // : _buildDisabledFlirtPanel(),
                     ),
             // _buildBanner(),
@@ -193,27 +198,63 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildEnabledFlirtPanel() {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(color: _sexAltColor),
-        ),
-        Expanded(
-          child: Container(color: _relAltColor),
-        ),
-        Positioned(
-          top: 50, // Ajusta la posición del botón en la primera parte
-          left: 20,
-          child: FloatingActionButton(
-            onPressed: () {
-              _onStopFlirt();
-            },
-            child: const Text("Parar!"),
-          ),
-        ),
-      ],
-    );
+  // Widget _buildEnabledFlirtPanel() {
+  //   return Column(
+  //     children: [
+  //       Expanded(
+  //         child: Container(color: _sexAltColor),
+  //       ),
+  //       Expanded(
+  //         child: Container(color: _relAltColor),
+  //       ),
+  //       Positioned(
+  //         top: 50, // Ajusta la posición del botón en la primera parte
+  //         left: 20,
+  //         child: FloatingActionButton(
+  //           onPressed: () {
+  //             _onStopFlirt();
+  //           },
+  //           child: const Text("Parar!"),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _buildEnabledFlirtPanelPoint() {
+    return Padding(
+        padding: const EdgeInsets.only(top: 0.0),
+        child: SizedBox(
+          width: 300, // Width of the circle
+          height:
+              300, // Height of the circle (same as width for a perfect circle)
+          child: Stack(children: [
+            Container(
+              width: 150,
+              decoration: BoxDecoration(
+                color: _sexAltColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(200),
+                  bottomLeft: Radius.circular(200),
+                ),
+              ),
+            ),
+            // Second half color
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: 150, // Half the total width
+                decoration: BoxDecoration(
+                  color: _relAltColor,
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(200),
+                    bottomRight: Radius.circular(200),
+                  ),
+                ),
+              ),
+            ),
+          ]),
+        ));
   }
 
   void onErrorLocationHandler(String message) {
