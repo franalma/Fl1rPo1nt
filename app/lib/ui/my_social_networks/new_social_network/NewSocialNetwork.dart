@@ -5,6 +5,7 @@ import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/my_social_networks/new_social_network/NewSocialNetworkSelection.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
@@ -45,7 +46,7 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
     return Scaffold(
         // drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.translate('app_name')),
+            flexibleSpace: FlexibleAppBar(),
             actions: [
               IconButton(
                 icon: const Icon(Icons.save),

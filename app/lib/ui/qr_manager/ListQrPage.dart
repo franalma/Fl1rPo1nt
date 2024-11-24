@@ -6,6 +6,7 @@ import 'package:app/model/QrValue.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/SlideRowLeft.dart';
 import 'package:app/ui/qr_manager/NewQrGeneratePage.dart';
 import 'package:app/ui/qr_manager/model/DataToSave.dart';
@@ -23,6 +24,7 @@ class ListQrPage extends StatefulWidget {
 
 class _ListQrPage extends State<ListQrPage> {
   List<QrValue> qrList = Session.user.qrValues;
+  int _selectedQr = 0;
   User user = Session.user;
   @override
   void initState() {
@@ -33,17 +35,14 @@ class _ListQrPage extends State<ListQrPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         // drawer: AppDrawerMenu().getDrawer(context),
-        appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.translate('app_name')),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () {
-                  NavigatorApp.pushWithCallback(
-                      QrGeneratePage(), context, _onPop);
-                },
-              ),
-            ]),
+        appBar: AppBar(flexibleSpace: FlexibleAppBar(), actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              NavigatorApp.pushWithCallback(QrGeneratePage(), context, _onPop);
+            },
+          ),
+        ]),
         body: _buildList());
   }
 
@@ -56,7 +55,7 @@ class _ListQrPage extends State<ListQrPage> {
   Widget _buildList() {
     return ListView.builder(
         itemCount: qrList.length,
-        itemBuilder: (context, index) {                
+        itemBuilder: (context, index) {
           DataToSave data =
               DataToSave.fromJson(jsonDecode(qrList[index].content));
           return Column(
@@ -68,11 +67,23 @@ class _ListQrPage extends State<ListQrPage> {
                   subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (data.userName.isNotEmpty) Text(AppLocalizations.of(context)!.translate("your_name")),
-                        if (data.userPhone.isNotEmpty) Text(AppLocalizations.of(context)!.translate("your_phone")),
+                        if (data.userName.isNotEmpty)
+                          Text(AppLocalizations.of(context)!
+                              .translate("your_name")),
+                        if (data.userPhone.isNotEmpty)
+                          Text(AppLocalizations.of(context)!
+                              .translate("your_phone")),
                         for (var item in data.networks) Text(item.networkId)
                       ]),
                   leading: _buildQrCode(index),
+                  trailing: Radio(
+                      value: index,
+                      groupValue: _selectedQr,
+                      onChanged: ((value) {
+                        setState(() {
+                          _selectedQr = value!;
+                        });
+                      })),
                 ),
               ),
               const Divider()

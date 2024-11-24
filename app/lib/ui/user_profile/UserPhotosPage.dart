@@ -10,6 +10,7 @@ import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -49,7 +50,7 @@ class _UserPhotosPage extends State<UserPhotosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Tus fotos'),
+          flexibleSpace: FlexibleAppBar(),
           leading: IconButton(
               onPressed: () async {
                 _onPop();

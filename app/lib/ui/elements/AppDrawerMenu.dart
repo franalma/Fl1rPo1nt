@@ -44,7 +44,7 @@ class AppDrawerMenu {
           title: const Text('Mi perfil'),
 
           onTap: () {
-            NavigatorApp.push(UserProfilePage(), context);
+            // NavigatorApp.push(UserProfilePage(), context);
           },
         ),
         ListTile(

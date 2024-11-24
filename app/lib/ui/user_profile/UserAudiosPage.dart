@@ -9,6 +9,7 @@ import 'package:app/comms/model/request/HostUploadAudioRequest.dart';
 import 'package:app/model/FileData.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/SlideRowLeft.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
@@ -86,7 +87,7 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Mensajes de voz'),
+          flexibleSpace: FlexibleAppBar(),
           actions: [
             _isRecording
                 ? IconButton(
@@ -100,7 +101,7 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   }
 
   Widget _buildLoading() {
-    return Center(child: CircularProgressIndicator());
+    return const Center(child: CircularProgressIndicator());
   }
 
   Widget _buildBody() {

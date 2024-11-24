@@ -1,6 +1,7 @@
 import 'package:app/comms/model/request/HostUpdateUserBiography.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _UserBiographyPage extends State<UserBiographyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Sobre ti'),
+          flexibleSpace: FlexibleAppBar(),
           actions: [
             IconButton(
                 onPressed: () => _onSaveData(), icon: const Icon(Icons.save))

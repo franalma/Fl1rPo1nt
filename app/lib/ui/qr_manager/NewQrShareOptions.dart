@@ -4,6 +4,7 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/qr_manager/model/DataToSave.dart';
 
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.translate('app_name')),
+          flexibleSpace: FlexibleAppBar(),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {

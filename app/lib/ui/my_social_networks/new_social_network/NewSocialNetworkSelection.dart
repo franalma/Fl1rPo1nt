@@ -2,6 +2,7 @@ import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/HostGetAllSocialNetworksRequest.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 
@@ -29,9 +30,7 @@ class _NewSocialNetworkSelection extends State<NewSocialNetworkSelection> {
   Widget build(BuildContext context) {
     return Scaffold(
         // drawer: AppDrawerMenu().getDrawer(context),
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.translate('app_name')),
-        ),
+        appBar: AppBar(flexibleSpace: FlexibleAppBar()),
         body: _isLoading ? _buildLoading() : _buildEditOptions());
   }
 
@@ -63,8 +62,7 @@ class _NewSocialNetworkSelection extends State<NewSocialNetworkSelection> {
     Log.d("Starts _fetchFromHost");
     HostGetAllSocialNetworksRequest().run().then((values) {
       for (var item in values) {
-        networks
-            .add(SocialNetwork(item.name, item.name, ""));
+        networks.add(SocialNetwork(item.name, item.name, ""));
       }
       setState(() {
         _isLoading = false;

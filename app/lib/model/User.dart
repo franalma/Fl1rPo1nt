@@ -23,6 +23,8 @@ class User {
   late String refreshToken;
   late List<dynamic> hobbies = [];
   late String userProfileImageId;
+  late int nScanned; 
+  late int nScansPerformed; 
 
   User(
       this.userId,
@@ -39,7 +41,9 @@ class User {
       this.sexAlternatives,
       this.biography,
       this.hobbies,
-      this.userProfileImageId);
+      this.userProfileImageId, 
+      this.nScanned, 
+      this.nScansPerformed);
 
   User.empty();
   factory User.fromHost(HostLoginResponse response) {
@@ -75,6 +79,7 @@ class User {
         userProfileImageId = response.userProfileImageId;
       } 
 
+  
       return User(
           response.userId,
           response.name,
@@ -90,7 +95,9 @@ class User {
           sexAlternatives,
           response.biography,
           response.hobbies,
-          userProfileImageId);
+          userProfileImageId,
+          response.nScanned, 
+          response.nScansPerformed);
     } catch (error) {
       Log.d(error.toString());
     }

@@ -9,6 +9,7 @@ import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/qr_manager/NewQrShareOptions.dart';
 import 'package:app/ui/qr_manager/model/DataToSave.dart';
 import 'package:app/ui/utils/Log.dart';
@@ -96,7 +97,7 @@ class _QrGeneratePage extends State<QrGeneratePage> {
     return Scaffold(
         // drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.translate('app_name')),
+            flexibleSpace: FlexibleAppBar(),
             actions: [
               IconButton(
                 icon: const Icon(Icons.save),

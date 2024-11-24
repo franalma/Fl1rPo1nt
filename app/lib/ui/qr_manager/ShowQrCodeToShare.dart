@@ -3,6 +3,7 @@ import 'package:app/model/QrValue.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -37,9 +38,9 @@ class _ShowQrCodeToShare extends State<ShowQrCodeToShare> {
     Color backgroundColor =
         Color(CommonUtils.colorToInt(user.sexAlternatives.color));
     return Scaffold(
-      drawer: AppDrawerMenu().getDrawer(context),
+      
       appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.translate('app_name'))),
+         flexibleSpace: FlexibleAppBar()),
       body: Center(
         child: Container(
             child: user.qrValues.isNotEmpty

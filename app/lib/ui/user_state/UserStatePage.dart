@@ -6,6 +6,7 @@ import 'package:app/model/User.dart';
 import 'package:app/model/UserInterest.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/user_state/SelectRelationshipOptionPage.dart';
 import 'package:app/ui/user_state/SelectSexOptionPage.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
@@ -23,18 +24,16 @@ class _UserStatePage extends State<UserStatePage> {
   List<SexAlternative> sexAlternatives = [];
   List<RelationShip> relationship = [];
   bool _isLoading = true;
-  SexAlternative? sexAlternativeSelected;
-  RelationShip? relationshipSelected;
-  User user = Session.user;
 
-  Color sexAlternativeColor = Colors.white;
-  Color relationshipColor = Colors.white;
+  late RelationShip _relationshipSelected;
+  late SexAlternative _sexAlternativeSelected;
+  User user = Session.user;
 
   @override
   void initState() {
-    sexAlternativeColor =
-        Color(CommonUtils.colorToInt(user.sexAlternatives.color));
-    relationshipColor = Color(CommonUtils.colorToInt(user.relationShip.color));
+    
+    _sexAlternativeSelected = user.sexAlternatives;
+    _relationshipSelected = user.relationShip;
 
     _fetchFromHost();
     super.initState();
@@ -62,21 +61,39 @@ class _UserStatePage extends State<UserStatePage> {
         body: _isLoading ? _buildLoading() : _buildBody());
   }
 
+  Color _getSexAlternativeColor() {
+    Color color = Colors.white;
+    if (_sexAlternativeSelected.color.isNotEmpty) {
+      color = Color(CommonUtils.colorToInt(_sexAlternativeSelected.color));
+    }
+    return color;
+  }
+
+  Color _getRelationshipAlternativeColor() {
+    Color color = Colors.white;
+    if (_relationshipSelected.color.isNotEmpty) {
+      color = Color(CommonUtils.colorToInt(_relationshipSelected.color));
+    }
+    return color;
+  }
+
   Widget _buildBody() {
     return ListView(children: [
       ListTile(
         leading: SizedBox(
           height: 50,
           width: 50,
-          child: Container(color: sexAlternativeColor),
+          child: Container(color: _getSexAlternativeColor()),
         ),
         trailing: const Icon(Icons.arrow_forward_ios_sharp),
         title: Text("Preferencia sexual"),
-        subtitle: Text(""),
+        subtitle: Text(_sexAlternativeSelected.name),
         onTap: () async {
-          print("alternatives ${sexAlternatives.length}");
-          var selected =
-              await NavigatorApp.pushAndWait(SelectSexOptionPage(sexAlternatives), context);
+          var selected = await NavigatorApp.pushAndWait(
+              SelectSexOptionPage(sexAlternatives), context) as SexAlternative;
+          setState(() {
+            _sexAlternativeSelected = selected;
+          });
           Log.d("value selected: $selected");
         },
       ),
@@ -85,70 +102,23 @@ class _UserStatePage extends State<UserStatePage> {
         leading: SizedBox(
           height: 50,
           width: 50,
-          child: Container(color: relationshipColor),
+          child: Container(color: _getRelationshipAlternativeColor()),
         ),
         trailing: const Icon(Icons.arrow_forward_ios_sharp),
         title: Text("Estás buscando..."),
-        subtitle: Text(""),
+        subtitle: Text(_relationshipSelected.value),
+        onTap: () async {
+          var selected = await NavigatorApp.pushAndWait(
+                  SelectRelationshipOptionPage(relationship), context)
+              as RelationShip;
+          setState(() {
+            _relationshipSelected = selected;
+          });
+          Log.d("value selected: $selected");
+        },
       ),
       const Divider(),
     ]);
-  }
-
-  Widget _buildSexualInterest() {
-    return Expanded(
-      child: Column(
-        children: [
-          DropdownButton<String>(
-            value: sexAlternativeSelected?.name,
-            hint: Text("¿Cómo te identificas?"),
-            onChanged: (String? newValue) {
-              setState(() {
-                sexAlternativeSelected =
-                    sexAlternatives.firstWhere((e) => e.name == newValue);
-                sexAlternativeColor = Color(
-                    CommonUtils.colorToInt(sexAlternativeSelected!.color));
-              });
-            },
-            items: sexAlternatives.map<DropdownMenuItem<String>>((value) {
-              return DropdownMenuItem<String>(
-                  value: value.name, child: Text(value.name));
-            }).toList(),
-          ),
-          Expanded(
-            child: Container(color: sexAlternativeColor),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRelationship() {
-    return Expanded(
-      child: Column(
-        children: [
-          DropdownButton<String>(
-            value: relationshipSelected?.value,
-            hint: Text("¿Qué relación que buscas?"),
-            onChanged: (String? newValue) {
-              setState(() {
-                relationshipSelected =
-                    relationship.firstWhere((e) => e.value == newValue);
-                relationshipColor =
-                    Color(CommonUtils.colorToInt(relationshipSelected!.color));
-              });
-            },
-            items: relationship.map<DropdownMenuItem<String>>((value) {
-              return DropdownMenuItem<String>(
-                  value: value.value, child: Text(value.value));
-            }).toList(),
-          ),
-          Expanded(
-            child: Container(color: relationshipColor),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildLoading() {
@@ -166,56 +136,19 @@ class _UserStatePage extends State<UserStatePage> {
     });
   }
 
-  // Future<void> _fetchFromHost() async {
-  //   Log.d("Starts _fetchFromHost");
-  //   HostGetAllSexRelationshipRequest().run().then((value) {
-  //     relationship = value.relationships;
-  //     sexAlternatives = value.sexAlternatives;
-  //     try {
-  //       sexAlternativeSelected = user.sexAlternatives;
-  //       relationshipSelected = user.relationShip;
-  //       if (sexAlternativeSelected != null && sexAlternativeSelected!.color.isNotEmpty) {
-  //         print("---from host sexAlt: ${sexAlternativeSelected!.name} color: ${sexAlternativeSelected!.color}");
-  //         sexAlternativeColor =
-  //             Color(CommonUtils.colorToInt(sexAlternativeSelected!.color));
-  //       }else{
-  //         sexAlternativeSelected = sexAlternatives[0];
-  //       }
-
-  //       if (relationshipSelected != null && relationshipSelected!.color.isNotEmpty) {
-  //         relationshipColor =
-  //             Color(CommonUtils.colorToInt(relationshipSelected!.color));
-  //       }else{
-  //         relationshipSelected = relationship[0];
-  //       }
-  //     } catch (error) {
-  //       Log.d(error.toString());
-  //     }
-  //     // relationship
-  //     //     .map((item) => print("${item.value} + ${item.color}"))
-  //     //     .toList();
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //   });
-  // }
-
   Future<void> _onSaveData() async {
-    if (relationshipSelected != null && sexAlternativeSelected != null) {
-      HostUpdateUserInterestRequest()
-          .run(user.userId, relationshipSelected!, sexAlternativeSelected!)
-          .then((value) {
-        if (!value) {
-          FlutterToast()
-              .showToast("No ha sido posible actualizar tus preferencias");
-        } else {
-          user.relationShip = relationshipSelected!;
-          user.sexAlternatives = sexAlternativeSelected!;
-          NavigatorApp.pop(context);
-        }
-      });
-    } else {
-      FlutterToast().showToast("Selecciona todos los valores");
+    HostUpdateUserInterestRequest()
+        .run(user.userId, _relationshipSelected, _sexAlternativeSelected)
+        .then((value) {
+      if (!value) {
+        FlutterToast()
+            .showToast("No ha sido posible actualizar tus preferencias");
+      } else {
+        user.relationShip = _relationshipSelected;
+        user.sexAlternatives = _sexAlternativeSelected;
+        FlutterToast()
+            .showToast("Datos actualizados");
+      }
+    });
     }
-  }
 }

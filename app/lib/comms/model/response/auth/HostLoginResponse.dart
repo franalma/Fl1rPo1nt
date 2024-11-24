@@ -13,7 +13,9 @@ class HostLoginResponse {
   List<dynamic> qrValues = [];
   String biography = "";
   List<dynamic> hobbies = [];
-  String userProfileImageId = ""; 
+  String userProfileImageId = "";
+  int nScanned = 0;
+  int nScansPerformed = 0;
 
   HostLoginResponse(
       this.userId,
@@ -28,7 +30,9 @@ class HostLoginResponse {
       this.qrValues,
       this.biography,
       this.hobbies,
-      this.userProfileImageId);
+      this.userProfileImageId,
+      this.nScanned,
+      this.nScansPerformed);
   HostLoginResponse.empty();
 
   factory HostLoginResponse.fromJson(Map<String, dynamic> json) {
@@ -46,6 +50,8 @@ class HostLoginResponse {
       var qrValues = json["qr_values"];
       List<dynamic> hobbies = [];
       var userProfileImageId = "";
+      int nScans = 0;
+      int nScansPerformed = 0;
 
       if (json.containsKey("phone")) {
         phone = json['phone'].toString();
@@ -62,7 +68,13 @@ class HostLoginResponse {
         userProfileImageId = json['profile_image_file_id'];
       }
 
-    
+      if (json.containsKey("scanned_count")) {
+        nScans = json['scanned_count'];
+      }
+
+      if (json.containsKey("scans_performed")) {
+        nScansPerformed = json['scans_performed'];
+      }
 
       HostLoginResponse response = HostLoginResponse(
           userId,
@@ -77,7 +89,9 @@ class HostLoginResponse {
           qrValues,
           biography,
           hobbies,
-          userProfileImageId);
+          userProfileImageId,
+          nScans, 
+          nScansPerformed);
       return response;
     } catch (error, stackTrace) {
       Log.d("$stackTrace error $error");

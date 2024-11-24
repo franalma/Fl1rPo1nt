@@ -14,7 +14,6 @@ import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage2 extends StatefulWidget {
-  
   @override
   State<LoginPage2> createState() => _LoginPageState();
 }
@@ -64,14 +63,14 @@ class _LoginPageState extends State<LoginPage2> {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              const SizedBox(height: 20),              
+              const SizedBox(height: 20),
               SizedBox(
                   height: 150,
                   width: 150,
                   child: Image.asset("assets/img/splash_icon.png")),
               const SizedBox(height: 50),
-               Text(AppLocalizations.of(context)!.translate("do_login"),
-                
+              Text(
+                AppLocalizations.of(context)!.translate("do_login"),
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 24,
@@ -97,17 +96,16 @@ class _LoginPageState extends State<LoginPage2> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                     AppLocalizations.of(context)!.translate("password_forgot"),
+                    AppLocalizations.of(context)!.translate("password_forgot"),
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 ),
               ),
               const SizedBox(height: 25),
               MyButton(
-                text:  AppLocalizations.of(context)!.translate("do_login"),
+                text: AppLocalizations.of(context)!.translate("do_login"),
                 onTap: () => _signUserIn(context),
               ),
-
               const SizedBox(height: 70),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -118,11 +116,11 @@ class _LoginPageState extends State<LoginPage2> {
                   ),
                   const SizedBox(width: 4),
                   GestureDetector(
-                    onTap: (){
-                        NavigatorApp.push(RegisterPage(), context);
+                    onTap: () {
+                      NavigatorApp.push(RegisterPage(), context);
                     },
-                    child:  Text(
-                       AppLocalizations.of(context)!.translate("register_now"),
+                    child: Text(
+                      AppLocalizations.of(context)!.translate("register_now"),
                       style: const TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
@@ -160,15 +158,17 @@ class _LoginPageState extends State<LoginPage2> {
           SecureStorage()
               .saveSecureData("refresh_token", Session.user.refreshToken);
           SecureStorage().saveSecureData("user_id", Session.user.userId);
-        });
 
-        NavigatorApp.pushAndRemoveUntil(context, Home2());
+          NavigatorApp.pushAndRemoveUntil(context, Home2());
+        });
       } else {
         NavigatorApp.pop(context);
-        FlutterToast().showToast(AppLocalizations.of(context)!.translate("wrong_user_pass"));
+        FlutterToast().showToast(
+            AppLocalizations.of(context)!.translate("wrong_user_pass"));
       }
     }).onError((error, stackTrace) {
-      FlutterToast().showToast(AppLocalizations.of(context)!.translate("unknown_error"));
+      FlutterToast()
+          .showToast(AppLocalizations.of(context)!.translate("unknown_error"));
       NavigatorApp.pop(context);
     });
   }

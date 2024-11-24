@@ -18,13 +18,22 @@ class Home2 extends StatefulWidget {
 class _Home2 extends State<Home2> {
   int _currentIndex = 0;
   // List of widgets to display for each tab
-  final List<Widget> _screens = [
-    Center(child: Home()),
-    const Center(child: Text('Search Screen')),
-    const Center(child: Text('Profile Screen')),
-    Center(child: Container()),
-    Center(child: UserProfilePage()),
-  ];
+  List<Widget> _screens = [];
+
+  @override
+  void initState() {
+    print(Session.user.toString());
+
+    _screens = [
+      Center(child: Home()),
+      const Center(child: Text('Search Screen')),
+      const Center(child: Text('Profile Screen')),
+      Center(child: Container()),
+      Center(child: Container()),
+    ];
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +101,10 @@ class _Home2 extends State<Home2> {
                               ? Colors.white
                               : const Color.fromARGB(255, 18, 17, 17)),
                       onPressed: () {
-                        setState(() => _currentIndex = 4);
+                        setState(() {
+                           _currentIndex == 4;
+                        });
+                        NavigatorApp.push(UserProfilePage(), context);
                       }),
                 ],
               ),
@@ -104,15 +116,18 @@ class _Home2 extends State<Home2> {
   }
 
   void onErrorLocation(String message) {}
+
   void launchMapExplorer(BuildContext context) async {
-    if (Session.user.isFlirting) {
+    // if (Session.user.isFlirting) {
+    if(true){
       LocationHandler(onErrorLocation).getCurrentLocation().then((value) {
         LatLng coordinates = LatLng(value.lat, value.lon);
 
         NavigatorApp.push(MapExplorerController(coordinates), context);
       });
     } else {
-      FlutterToast().showToast(AppLocalizations.of(context)!.translate("map_start_required"));
+      FlutterToast().showToast(
+          AppLocalizations.of(context)!.translate("map_start_required"));
     }
   }
 }

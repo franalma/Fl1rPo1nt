@@ -1,8 +1,11 @@
-import 'package:app/app_localizations.dart';
 import 'package:app/main.dart';
 import 'package:app/model/SecureStorage.dart';
+import 'package:app/model/Session.dart';
+import 'package:app/model/User.dart';
+
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/elements/Styles.dart';
 import 'package:app/ui/flirts/FlirtsStatsPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
@@ -19,54 +22,123 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePage extends State<UserProfilePage> {
+  User user = Session.user;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(flexibleSpace: FlexibleAppBar()),
-        body: _buildList());
+      appBar: AppBar(flexibleSpace: FlexibleAppBar()),
+      body: _buildList(),
+    );
+  }
+
+  Widget _buildProfileInfo() {
+    return Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(colors: [Colors.blue, Colors.purple])),
+      child: Column(children: [
+        CircleAvatar(
+            radius: 60, // Size of the circle
+            backgroundImage: Session.profileImage),
+        Center(
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.camera_alt,
+                      size: 40,
+                    ),
+                    Text(user.nScansPerformed.toString(),
+                        style:
+                            const TextStyle(fontSize: 30, color: Colors.white))
+                  ],
+                ),
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.qr_code,
+                      size: 40,
+                    ),
+                    Text(user.nScanned.toString(),
+                        style:
+                            const TextStyle(fontSize: 30, color: Colors.white))
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+      ]),
+    );
   }
 
   Widget _buildList() {
-    return ListView(
+    return Column(
       children: [
-        ListTile(
-            title: const Text("Mis datos", style: TextStyle(fontSize: 20)),
-            trailing:
-                const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
-            onTap: () => NavigatorApp.push(UserDataPage(), context)),
-        Divider(),
-        ListTile(
-            title: Text("Mi estado", style: TextStyle(fontSize: 20)),
-            trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
-            onTap: () => NavigatorApp.push(UserStatePage(), context)),
-        Divider(),
-        ListTile(
-            title: Text("Mis QR", style: TextStyle(fontSize: 20)),
-            trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
-            onTap: () => NavigatorApp.push(ListQrPage(), context)),
-        Divider(),
-        ListTile(
-            title: Text("Mis redes", style: TextStyle(fontSize: 20)),
-            trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
-            onTap: () => NavigatorApp.push(MySocialNetworksPage(), context)),
-        Divider(),
-        ListTile(
-            title: Text("Mis Puntos", style: TextStyle(fontSize: 20)),
-            trailing: Icon(Icons.arrow_forward_ios), // Add a left arrow icon
-            onTap: () => NavigatorApp.push(SmartPointsPage(), context)),
-        Divider(),
-        ListTile(
-            title: Text("Mis estadísticas", style: TextStyle(fontSize: 20)),
-            trailing:
-                const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
-            onTap: () => NavigatorApp.push(FlirtsStatsPage(), context)),
-        Divider(),
-        ListTile(
-            title: const Text(
-              "Cerrar sesión",
-              style: TextStyle(color: Colors.red, fontSize: 20),
+        _buildProfileInfo(),
+        SizedBox(
+          height: 500,
+           
+          child: Padding(
+            padding: const EdgeInsets.only(top:10),
+            child: ListView(
+              children: [
+                ListTile(
+                    title: Text("Mis datos", style: Styles.rowCellTitleTextStyle),
+                    trailing: const Icon(
+                        Icons.arrow_forward_ios), // Add a left arrow icon
+                    onTap: () => NavigatorApp.push(UserDataPage(), context)),
+                const Divider(),
+                ListTile(
+                    title: Text("Mi estado", style: Styles.rowCellTitleTextStyle),
+                    trailing: const Icon(
+                        Icons.arrow_forward_ios), // Add a left arrow icon
+                    onTap: () => NavigatorApp.push(UserStatePage(), context)),
+                const Divider(),
+                ListTile(
+                    title: Text("Mis QR", style: Styles.rowCellTitleTextStyle),
+                    trailing: const Icon(
+                        Icons.arrow_forward_ios), // Add a left arrow icon
+                    onTap: () => NavigatorApp.push(ListQrPage(), context)),
+                const Divider(),
+                ListTile(
+                    title: Text("Mis redes", style: Styles.rowCellTitleTextStyle),
+                    trailing: const Icon(
+                        Icons.arrow_forward_ios), // Add a left arrow icon
+                    onTap: () =>
+                        NavigatorApp.push(const MySocialNetworksPage(), context)),
+                const Divider(),
+                ListTile(
+                    title:
+                        Text("Mis Puntos", style: Styles.rowCellTitleTextStyle),
+                    trailing: const Icon(
+                        Icons.arrow_forward_ios), // Add a left arrow icon
+                    onTap: () => NavigatorApp.push(SmartPointsPage(), context)),
+                const Divider(),
+                ListTile(
+                    title: Text("Mis estadísticas",
+                        style: Styles.rowCellTitleTextStyle),
+                    trailing: const Icon(
+                        Icons.arrow_forward_ios), // Add a left arrow icon
+                    onTap: () => NavigatorApp.push(FlirtsStatsPage(), context)),
+                const Divider(),
+                ListTile(
+                    title: const Text(
+                      "Cerrar sesión",
+                      style: TextStyle(color: Colors.red, fontSize: 20),
+                    ),
+                    onTap: () => _closeSession()),
+                const Divider(),
+              ],
             ),
-            onTap: () => _closeSession())
+          ),
+        ),
       ],
     );
   }

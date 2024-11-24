@@ -1,10 +1,11 @@
-import 'dart:ffi';
 
 import 'package:app/comms/model/request/HostUpdateUserNameRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/elements/Styles.dart';
 import 'package:app/ui/user_profile/UserAudiosPage.dart';
 import 'package:app/ui/user_profile/UserBiographyPage.dart';
 import 'package:app/ui/user_profile/UserHobbiesPage.dart';
@@ -48,48 +49,12 @@ class _UserDataPage extends State<UserDataPage> {
     itemsValue.add("");
     itemsValue.add("100 kms");
   }
-  // void _editItem(int index) {
-  //   TextEditingController _controller = TextEditingController();
-  //   _controller.text = itemsValue[index];
-
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(itemsTitles[index]),
-  //         content: TextField(
-  //           controller: _controller,
-  //           decoration: InputDecoration(
-  //             hintText: 'Introduce un nuevo valor',
-  //           ),
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text('Cancelar'),
-  //           ),
-  //           TextButton(
-  //             onPressed: () {
-  //               setState(() {
-  //                 itemsValue[index] = _controller.text;
-  //               });
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text('Aceptar'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tus datos'),
+        flexibleSpace: FlexibleAppBar(),
       ),
       body: ListView.builder(
         itemCount: itemsTitles.length,
@@ -100,11 +65,11 @@ class _UserDataPage extends State<UserDataPage> {
                 onTap: () async {
                   await _onItemSelected(index);
                 },
-                title: Text(itemsTitles[index]),
-                subtitle: Text(itemsValue[index]),
+                title: Text(itemsTitles[index], style: Styles.rowCellTitleTextStyle),
+                subtitle: Text(itemsValue[index],style: Styles.rowCellSubTitleTextStyle),
                 trailing: _buildTrailing(index),
               ),
-              Divider(),
+              const Divider(),
             ],
           );
         },
@@ -119,7 +84,7 @@ class _UserDataPage extends State<UserDataPage> {
       case 6:
         return null;
     }
-    return Icon(Icons.arrow_forward_ios);
+    return const Icon(Icons.arrow_forward_ios);
   }
 
   Future _onItemSelected(int index) async {

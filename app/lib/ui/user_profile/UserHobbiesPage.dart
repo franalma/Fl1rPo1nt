@@ -5,6 +5,7 @@ import 'package:app/model/Hobby.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _UserHobbiesPage extends State<UserHobbiesPage> {
     return Scaffold(
         // drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.translate('app_name')),
+            flexibleSpace: FlexibleAppBar(),
             actions: [
               IconButton(
                 icon: const Icon(Icons.save),

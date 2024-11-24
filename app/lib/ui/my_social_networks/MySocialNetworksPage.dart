@@ -5,6 +5,7 @@ import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/SlideRowLeft.dart';
 import 'package:app/ui/my_social_networks/new_social_network/NewSocialNetwork.dart';
 import 'package:app/ui/utils/Log.dart';
@@ -34,17 +35,15 @@ class _MySocialNetworksPage extends State<MySocialNetworksPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         // drawer: AppDrawerMenu().getDrawer(context),
-        appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.translate('app_name')),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () {
-                  NavigatorApp.pushWithCallback(
-                      NewSocialNetwork(null), context, _onPop);
-                },
-              ),
-            ]),
+        appBar: AppBar(flexibleSpace: FlexibleAppBar(), actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              NavigatorApp.pushWithCallback(
+                  NewSocialNetwork(null), context, _onPop);
+            },
+          ),
+        ]),
         body: _isLoading ? AlertDialogs().buildLoading() : _buildList());
   }
 

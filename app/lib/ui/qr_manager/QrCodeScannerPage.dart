@@ -1,6 +1,7 @@
 import 'package:app/comms/model/request/HostPutUserContactRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,7 @@ class _QrCodeScannerPage extends State<QrCodeScannerPage> {
   Widget _buildCameraScanner() {
     return Scaffold(
         appBar: AppBar(
+          flexibleSpace: FlexibleAppBar(),
           actions: [
             IconButton(
               icon: Icon(Icons.flash_on),
