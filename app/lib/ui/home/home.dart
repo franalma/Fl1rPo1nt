@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app/app_localizations.dart';
+import 'package:app/comms/model/request/HostPutUserContactRequest.dart';
 import 'package:app/comms/model/request/flirt/HostDisableFlirtByFlirtIdUserId.dart';
 import 'package:app/comms/model/request/flirt/HostGetUserFlirtsRequest.dart';
 import 'package:app/comms/model/request/flirt/HostPutFlirtByUserIdRequest.dart';
@@ -51,6 +52,7 @@ class _HomeState extends State<Home> {
     Log.d("data received: $data");
     var map = jsonDecode(data);
     var contactRequested = map["message"]["requested_user_id"];
+  
     AlertDialogs().showAlertNewContactAdded(context, contactRequested);
   }
 

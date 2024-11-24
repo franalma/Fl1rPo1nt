@@ -6,7 +6,6 @@ import 'package:app/comms/model/request/HostGetUserImagesRequest.dart';
 import 'package:app/comms/model/request/HostRemoveImageRequest.dart';
 import 'package:app/comms/model/request/HostUpdateUserImageProfileRequest.dart';
 import 'package:app/comms/model/request/HostUploadImageRequest.dart';
-import 'package:app/model/FileData.dart';
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';

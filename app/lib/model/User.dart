@@ -1,11 +1,9 @@
-import 'dart:convert';
 
 import 'package:app/comms/model/response/auth/HostLoginResponse.dart';
 import 'package:app/model/QrValue.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/UserInterest.dart';
 import 'package:app/ui/utils/Log.dart';
-import 'package:flutter/foundation.dart';
 
 class User {
   late String userId;
