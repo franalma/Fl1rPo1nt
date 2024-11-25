@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:app/comms/model/request/HostSendMessageToUserRequest.dart';
-import 'package:app/comms/socket_subscription/SocketSubscriptionController.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
@@ -21,7 +19,7 @@ class ShowConversationPage extends StatefulWidget {
 }
 
 class _ShowConversationPage extends State<ShowConversationPage> {
-  User _user = Session.user;
+  final User _user = Session.user;
   final List<Map<String, String>> _messages = [];
   final TextEditingController _messageController = TextEditingController();
 

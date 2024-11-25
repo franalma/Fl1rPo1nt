@@ -1,9 +1,14 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:app/comms/model/request/HostGetPeopleArroundRequest.dart';
 import 'package:app/model/Session.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapExplorerController extends StatefulWidget {
@@ -20,6 +25,8 @@ class MapExplorerController extends StatefulWidget {
 class _MapExplorerController extends State<MapExplorerController> {
   late GoogleMapController mapController;
   final Set<Marker> _markers = {};
+  BitmapDescriptor? bitmapDescriptor;
+  bool _isShowInfoWindow = false;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -29,50 +36,216 @@ class _MapExplorerController extends State<MapExplorerController> {
   void initState() {
     super.initState();
     _fetchFromHost();
+    createFontAwesomeIconBitmap(Colors.red, Colors.green).then((value) {
+      bitmapDescriptor = value;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(
-          target: widget._location,
-          zoom: 11.0,
+      appBar: AppBar(
+        flexibleSpace: FlexibleAppBar(),
+      ),
+      body: Stack(children: [
+        GoogleMap(
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: widget._location,
+            zoom: 11.0,
+          ),
+          myLocationEnabled: true,
+          markers: _markers,
+          onTap: (_) {
+            setState(() {
+              _isShowInfoWindow = false;
+            });
+          },
         ),
-        myLocationEnabled: true,
-        markers: _markers,
+        _isShowInfoWindow ? showInfoWindow() : Container()
+      ]),
+    );
+  }
+
+  Widget showInfoWindow() {
+    return Positioned(
+      top: MediaQuery.of(context).size.height * 0.4, // Adjust the position
+      left: MediaQuery.of(context).size.width * 0.3, // Adjust the position
+      child: Column(
+        children: [
+          Container(
+            width: 200,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      'https://images.ctfassets.net/denf86kkcx7r/4IPlg4Qazd4sFRuCUHIJ1T/f6c71da7eec727babcd554d843a528b8/gatocomuneuropeo-97?fm=webp&w=913'),
+                  radius: 40,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'San Francisco',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text('A beautiful city!'),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
+  Widget twoColorsIcon() {
+    return const Center(
+      child: Stack(
+        children: [
+          Icon(
+            Icons.star,
+            size: 100,
+            color: Colors.blue,
+          ),
+          ClipRect(
+            child: Align(
+              alignment: Alignment.topCenter,
+              heightFactor: 0.5, // Show only the top half
+              child: Icon(
+                Icons.star,
+                size: 100,
+                color: Colors.purple,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<BitmapDescriptor> createFontAwesomeIconBitmap(
+      Color foreground, Color background) async {
+    final PictureRecorder pictureRecorder = ui.PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+    const Size size = Size(100, 100); // Define the icon size
+
+    // Create a Paint for background (optional, for visibility)
+    final Paint paint = Paint()..color = const ui.Color.fromARGB(0, 207, 11, 11);
+    canvas.drawRect(Rect.fromLTWH(0.0, 0.0, size.width, size.height), paint);
+
+    // Draw the FontAwesomeIcon widget
+    const Icon icon = Icon(
+      FontAwesomeIcons.solidCircle,
+      size: 80.0, // Icon size
+      
+      
+    );
+    // var stack = twoColorsIcon();
+    // Use a painter to draw the icon
+    final textPainter = TextPainter(
+      textDirection: TextDirection.ltr,
+      text: TextSpan(
+        text: String.fromCharCode(icon.icon!.codePoint),
+        style: TextStyle(
+          fontSize: icon.size,
+          fontFamily: icon.icon!.fontFamily,
+          package: icon.icon!.fontPackage,
+          
+          color: ui.Color.fromARGB(255, 62, 77, 247),
+        ),
+      ),
+    );
+    textPainter.layout();
+    textPainter.paint(
+        canvas,
+        Offset((size.width - textPainter.width) / 2,
+            (size.height - textPainter.height) / 2));
+
+    // Convert the canvas into an image
+    final ui.Image image = await pictureRecorder
+        .endRecording()
+        .toImage(size.width.toInt(), size.height.toInt());
+    final ByteData? byteData =
+        await image.toByteData(format: ui.ImageByteFormat.png);
+    return BitmapDescriptor.fromBytes(byteData!.buffer.asUint8List());
+  }
+
   void _addMarker(LatLng position, String markerId) {
     final marker = Marker(
-      markerId: MarkerId(markerId),
-      position: position,
-      infoWindow: InfoWindow(title: markerId),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-    
+        markerId: MarkerId(markerId),
+        position: position,
+        onTap: () {
+          setState(() {
+            _isShowInfoWindow = true;
+          });
+        },
+        // icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        icon: bitmapDescriptor!);
+    setState(() {
+      _markers.add(marker);
+    });
+  }
+
+  Widget showInfoWindowWithPicture() {
+    return Positioned(
+      top: MediaQuery.of(context).size.height * 0.4, // Adjust the position
+      left: MediaQuery.of(context).size.width * 0.3, // Adjust the position
+      child: Column(
+        children: [
+          Container(
+            width: 200,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Image.network(
+                  'https://upload.wikimedia.org/wikipedia/commons/6/66/San_Francisco_skyline.jpg',
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'San Francisco',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text('A beautiful city!'),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
-      setState(() {
-        _markers.add(marker);
-      });
-    
   }
 
   Future<void> _fetchFromHost() async {
     Log.d("Starts");
     Location location = Session.location!;
     HostGetPeopleArroundRequest()
-        .run(location.lat,location.lon, 5000)
+        .run(location.lat, location.lon, 5000)
         .then((value) {
-      for (var item in value) {      
+      for (var item in value) {
         Log.d("lat: ${item.latitude}  lon:${item.longitude}");
-        _addMarker(LatLng(item.latitude, item.longitude), item.userId.toString());
+        _addMarker(
+            LatLng(item.latitude, item.longitude), item.userId.toString());
       }
     });
-
-  
   }
 }

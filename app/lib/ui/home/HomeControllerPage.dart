@@ -23,12 +23,12 @@ class _Home2 extends State<Home2> {
 
   @override
   void initState() {
-    print(Session.user.toString());
+    LatLng coordinates = const LatLng(0, 0);
 
     _screens = [
       Center(child: Home()),
       Center(child: Container()),
-      Center(child: Container()),
+      Center(child: MapExplorerController(coordinates)),
       Center(child: ListContactsPage()),
       Center(child: Container()),
     ];
@@ -81,10 +81,13 @@ class _Home2 extends State<Home2> {
                         color: _currentIndex == 2
                             ? Colors.white
                             : const Color.fromARGB(255, 18, 17, 17)),
-                    onPressed: () => setState(() {
+                    onPressed: () {
                       _currentIndex = 2;
-                      launchMapExplorer(context);
-                    }),
+                      var location =
+                          LatLng(Session.location!.lat, Session.location!.lon);
+                      _screens[_currentIndex] = MapExplorerController(location);
+                      setState(() {});
+                    },
                   ),
                   IconButton(
                       icon: Icon(Icons.message,
@@ -117,18 +120,4 @@ class _Home2 extends State<Home2> {
   }
 
   void onErrorLocation(String message) {}
-
-  void launchMapExplorer(BuildContext context) async {
-    // if (Session.user.isFlirting) {
-    if (true) {
-      LocationHandler(onErrorLocation).getCurrentLocation().then((value) {
-        LatLng coordinates = LatLng(value.lat, value.lon);
-
-        NavigatorApp.push(MapExplorerController(coordinates), context);
-      });
-    } else {
-      FlutterToast().showToast(
-          AppLocalizations.of(context)!.translate("map_start_required"));
-    }
-  }
 }

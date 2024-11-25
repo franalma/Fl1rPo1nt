@@ -1,6 +1,4 @@
 import 'package:app/comms/model/request/HostGetUserMacthsRequest.dart';
-import 'package:app/comms/model/request/HostSendMessageToUserRequest.dart';
-import 'package:app/comms/socket_subscription/SocketSubscriptionController.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
@@ -8,7 +6,6 @@ import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ShowConversationPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
-import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 
 class ListContactsPage extends StatefulWidget {

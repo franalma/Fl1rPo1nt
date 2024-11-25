@@ -28,13 +28,8 @@ class AppDrawerMenu {
                   radius: 30, // Size of the circle
                   backgroundImage: Session.profileImage),
               Padding(padding: EdgeInsets.all(5), child: Text(user.name)),
-              Row(
-                children: [
-                  Text("Escanos"),
-                  Spacer(),
-                  Text("Escaneado"),
-                ],
-              )
+              
+              
             ],
           ),
         ),
