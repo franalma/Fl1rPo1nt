@@ -83,7 +83,7 @@ class _UserProfilePage extends State<UserProfilePage> {
       children: [
         _buildProfileInfo(),
         SizedBox(
-          height: 500,
+          height: 420,
            
           child: Padding(
             padding: const EdgeInsets.only(top:10),

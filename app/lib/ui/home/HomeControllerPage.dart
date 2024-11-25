@@ -1,6 +1,7 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/contacts/ListContactsPage.dart';
 import 'package:app/ui/elements/Gradient1.dart';
 import 'package:app/ui/home/home.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
@@ -26,9 +27,9 @@ class _Home2 extends State<Home2> {
 
     _screens = [
       Center(child: Home()),
-      const Center(child: Text('Search Screen')),
-      const Center(child: Text('Profile Screen')),
       Center(child: Container()),
+      Center(child: Container()),
+      Center(child: ListContactsPage()),
       Center(child: Container()),
     ];
 
@@ -46,7 +47,7 @@ class _Home2 extends State<Home2> {
             child: Container(
               decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(0),
                   gradient: Gradient1().get([
                     Colors.green,
                     Colors.orange,
@@ -54,7 +55,7 @@ class _Home2 extends State<Home2> {
                     Colors.red,
                     Colors.blue,
                   ])),
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 3),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -102,7 +103,7 @@ class _Home2 extends State<Home2> {
                               : const Color.fromARGB(255, 18, 17, 17)),
                       onPressed: () {
                         setState(() {
-                           _currentIndex == 4;
+                          _currentIndex == 4;
                         });
                         NavigatorApp.push(UserProfilePage(), context);
                       }),
@@ -119,7 +120,7 @@ class _Home2 extends State<Home2> {
 
   void launchMapExplorer(BuildContext context) async {
     // if (Session.user.isFlirting) {
-    if(true){
+    if (true) {
       LocationHandler(onErrorLocation).getCurrentLocation().then((value) {
         LatLng coordinates = LatLng(value.lat, value.lon);
 

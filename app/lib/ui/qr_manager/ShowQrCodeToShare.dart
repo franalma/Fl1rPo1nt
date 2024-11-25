@@ -5,6 +5,7 @@ import 'package:app/model/User.dart';
 import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
+import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -23,32 +24,29 @@ class _ShowQrCodeToShare extends State<ShowQrCodeToShare> {
   TextEditingController controller = TextEditingController();
   List selectedIndex = [];
   User user = Session.user;
-  late String qrValue; 
+  late String qrValue;
 
   @override
   void initState() {
     super.initState();
-    qrValue = "${user.qrValues[0].qrId}:${user.userId}";  
+    if (user.qrDefaultId.isNotEmpty) {
+       qrValue = "${user.qrDefaultId}:${user.userId}";
+    } else {
+      qrValue = "${user.qrValues[0].qrId}:${user.userId}";
+    }
+    Log.d("-->qr value: $qrValue");
   }
 
   @override
   Widget build(BuildContext context) {
-    Color foregroundColor =
-        Color(CommonUtils.colorToInt(user.relationShip.color));
-    Color backgroundColor =
-        Color(CommonUtils.colorToInt(user.sexAlternatives.color));
     return Scaffold(
-      
-      appBar: AppBar(
-         flexibleSpace: FlexibleAppBar()),
+      appBar: AppBar(flexibleSpace: FlexibleAppBar()),
       body: Center(
         child: Container(
             child: user.qrValues.isNotEmpty
                 ? QrImageView(
                     data: qrValue,
                     size: 300,
-                    // foregroundColor: foregroundColor,
-                    // backgroundColor: backgroundColor,
                   )
                 : _buildNoQr()),
       ),
@@ -58,7 +56,7 @@ class _ShowQrCodeToShare extends State<ShowQrCodeToShare> {
   Widget _buildNoQr() {
     return Center(
         child: Container(
-      child: Text("Debes añadir un código QR para compartir"),
+      child: const Text("Debes añadir un código QR para compartir"),
     ));
   }
 }

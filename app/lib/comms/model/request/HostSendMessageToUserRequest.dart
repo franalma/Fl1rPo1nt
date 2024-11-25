@@ -2,28 +2,25 @@ import 'dart:convert';
 
 import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
+
 import 'package:app/ui/utils/Log.dart';
-import 'package:app/ui/utils/location.dart';
 import 'package:http/http.dart' as http;
 
-class HostPutUserContactRequest extends BaseRequest {
-  Future<bool> run(String userId, String userQrId, String contactId, String contactQrId,
-      String userFlirtId, Location location) async {
+class HostSendMessageToUserRequest extends BaseRequest {
+  Future<bool> run(String matchId, String senderId, String receiverId,
+      String message) async {
     try {
-      Log.d("Start doRegister");
-      HostActions option =
-          HostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID;
+      Log.d("Start HostSendMessageToUserRequest");
+      HostActions option = HostActions.PUT_MESSAGE_TO_USER_WITH_USER_ID;
       Uri url = Uri.parse(option.url);
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
         "input": {
-          "user_id": userId,
-          "user_qr_id": userQrId,
-          "contact_id": contactId,
-          "contact_qr_id": contactQrId,
-          "flirt_id": userFlirtId,
-          "location": {"latitude": location.lat, "longitude": location.lon}
+          "match_id": matchId,
+          "sender_id": senderId,
+          "receiver_id": receiverId,
+          "message": message
         }
       };
 

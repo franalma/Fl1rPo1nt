@@ -25,6 +25,7 @@ class User {
   late String userProfileImageId;
   late int nScanned; 
   late int nScansPerformed; 
+  late String qrDefaultId; 
 
   User(
       this.userId,
@@ -43,7 +44,8 @@ class User {
       this.hobbies,
       this.userProfileImageId, 
       this.nScanned, 
-      this.nScansPerformed);
+      this.nScansPerformed,
+      this.qrDefaultId);
 
   User.empty();
   factory User.fromHost(HostLoginResponse response) {
@@ -97,7 +99,8 @@ class User {
           response.hobbies,
           userProfileImageId,
           response.nScanned, 
-          response.nScansPerformed);
+          response.nScansPerformed,
+          response.qrDefaultId);
     } catch (error) {
       Log.d(error.toString());
     }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:app/app_localizations.dart';
+import 'package:app/comms/model/request/HostUpdateUserDefaultQr.dart';
 import 'package:app/comms/model/request/qr/HostUpdateUserQrRequest.dart';
 
 import 'package:app/model/QrValue.dart';
@@ -28,6 +29,13 @@ class _ListQrPage extends State<ListQrPage> {
   User user = Session.user;
   @override
   void initState() {
+    for (var index = 0; index < qrList.length; index++) {
+      if (qrList[index].qrId == user.qrDefaultId) {
+        _selectedQr = index;
+        break;
+      }
+    }
+
     super.initState();
   }
 
@@ -35,14 +43,24 @@ class _ListQrPage extends State<ListQrPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         // drawer: AppDrawerMenu().getDrawer(context),
-        appBar: AppBar(flexibleSpace: FlexibleAppBar(), actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              NavigatorApp.pushWithCallback(QrGeneratePage(), context, _onPop);
-            },
-          ),
-        ]),
+        appBar: AppBar(
+            flexibleSpace: FlexibleAppBar(),
+            leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  _beforeDispose();
+                }),
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.add,
+                ),
+                onPressed: () {
+                  NavigatorApp.pushWithCallback(
+                      QrGeneratePage(), context, _onPop);
+                },
+              ),
+            ]),
         body: _buildList());
   }
 
@@ -58,6 +76,7 @@ class _ListQrPage extends State<ListQrPage> {
         itemBuilder: (context, index) {
           DataToSave data =
               DataToSave.fromJson(jsonDecode(qrList[index].content));
+
           return Column(
             children: [
               SlideRowLeft(
@@ -98,7 +117,9 @@ class _ListQrPage extends State<ListQrPage> {
     HostUpdateUserQrRequest().run(user.userId, qrList).then((value) {
       qrList = value.map((item) => item.qrValue).toList();
       user.qrValues = qrList;
-      setState(() {});
+      setState(() {
+        _selectedQr = 0;
+      });
     });
   }
 
@@ -119,5 +140,24 @@ class _ListQrPage extends State<ListQrPage> {
         // ignore: deprecated_member_use
         foregroundColor: foregroundColor,
         backgroundColor: backgroundColor);
+  }
+
+  Future<void> _beforeDispose() async {
+    Log.d("Starts _beforeDispose");
+    if (qrList.isNotEmpty) {
+      if (user.qrDefaultId != qrList[_selectedQr].qrId) {
+        bool result = await HostUpdateUserDefaultQr()
+            .run(user.userId, qrList[_selectedQr].qrId);
+        if (result) {
+          user.qrDefaultId = qrList[_selectedQr].qrId;
+          NavigatorApp.pop(context);
+        }
+      }else{
+          NavigatorApp.pop(context);
+      }
+      
+    } else {
+      NavigatorApp.pop(context);
+    }
   }
 }

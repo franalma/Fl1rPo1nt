@@ -4,6 +4,7 @@ const dbHandler = require("../../database/database_handler");
 const bcrypt = require("bcrypt");
 const tokenHandler = require("../../auth/token_generator");
 const { printJson } = require("../../utils/json_utils");
+const { getUserQrByUserId } = require("../qr/qr_handler");
 
 const userColletion = "users";
 const locationCollection = "user_coordinates";
@@ -133,6 +134,7 @@ async function doLogin(input) {
           profile_image_file_id: user.profile_image_id,
           scanned_count: user.scanned_count ? user.scanned_count : 0,
           scans_performed: user.scans_performed ? user.scans_performed : 0,
+          default_qr_id: user.default_qr_id ? user.default_qr_id : ""
         },
       };
     } else {
@@ -290,23 +292,15 @@ async function updateUserQrsByUserId(input) {
 }
 
 async function getUserInfoByUserIdQrId(userId, qrId) {
-  logger.info("Starts getUserInfoByUserIdQrId");
-  const filter = { id: userId };
-  let dbResponse = await dbHandler.findWithFilters(filter, userColletion);
+  logger.info("Starts getUserInfoByUserIdQrId. user_id: " + userId + " qr_id: " + qrId);
+  const filter = { id: userId, qr_values: { $elemMatch: { qr_id: qrId } } };
+  let dbResponse = await dbHandler.findWithFilters(filter, userColletion);  
   let result = {};
   if (dbResponse) {
     logger.info("checking...");
-    let userInfo = dbResponse[0];
-    // result.user_name = userInfo.name;
-    for (var item of userInfo.qr_values) {
-      if (item.qr_id == qrId) {
-        result.contact_info = [];
-        let values = item.content.split(";");
-        for (var value of values) {
-          if (value.length > 0) {
-            result.contact_info.push(value);
-          }
-        }
+    for (let item of dbResponse[0].qr_values) {
+      if (item.qr_id === qrId) {
+        result.contact_info = item.content;
         break;
       }
     }
@@ -379,7 +373,7 @@ async function updateUserNameByUserId(input) {
 
 async function updateUserImageProfileByUserId(input) {
   logger.info("Starts updateUserImageProfileByUserId");
-  let result = { status: 200, message: "Use image profile updated" };
+  let result = { status: 200, message: "User image profile updated" };
   try {
     const filters = { id: input.user_id };
 
@@ -393,6 +387,40 @@ async function updateUserImageProfileByUserId(input) {
     result = {
       status: 500,
       message: "Error updating user image id",
+    };
+  }
+  return result;
+}
+
+async function updateUserDefaultQrByUserId(input) {
+  logger.info("Starts updateUserDefaultQrByUserId:" + JSON.stringify(input));
+  let result = { status: 200, message: "Use default qr id updated" };
+  try {
+    let found = false;
+    let values = await getUserQrByUserId(input);
+    if (values) {
+      for (let item of values.items) {
+        logger.info(item.qr_id);
+        if (item.qr_id === input.qr_id) {
+          found = true;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      return { status: 500, message: "Qr not valid" }
+    }
+    const filters = { id: input.user_id };
+    const newValues = {
+      default_qr_id: input.qr_id,
+      updated_at: Date.now(),
+    };
+    await dbHandler.updateDocument(newValues, filters, userColletion);
+  } catch (error) {
+    logger.info(error);
+    result = {
+      status: 500,
+      message: "Error updating user default qr id",
     };
   }
   return result;
@@ -429,7 +457,7 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
       scanned_count: scanned,
       updated_at: Date.now(),
     };
-    
+
 
     await dbHandler.updateDocument(newValues1, { id: userId }, userColletion);
     await dbHandler.updateDocument(
@@ -437,7 +465,7 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
       { id: contactId },
       userColletion
     );
-    result.scanned = scanned; 
+    result.scanned = scanned;
     result.scans_performed = scansPerformed;
   } catch (error) {
     logger.info(error);
@@ -463,4 +491,5 @@ module.exports = {
   updateUserNameByUserId,
   updateUserImageProfileByUserId,
   updateUserScansByUserIdContactId,
+  updateUserDefaultQrByUserId
 };

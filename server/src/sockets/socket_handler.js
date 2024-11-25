@@ -44,9 +44,25 @@ function sendMessageToUser(action, userId, scanned, message) {
     } catch (error) {
         logger.info(error);
     }
+}
 
-
-
+function sendChatMessage(action, userId, message) {
+    logger.info("Starts sendChatMessage userId: " + userId);
+    try {
+        const socket = mapSockets[userId]["socket"];
+        logger.info("socket id:" + socket.id)
+        if (socket) {
+            let payload = {
+                send_at: Date.now(),                
+                message: message
+            }
+            payload = JSON.stringify(payload);
+            socket.emit(action, payload);
+            logger.info("after send value");
+        }
+    } catch (error) {
+        logger.info(error);
+    }
 }
 
 
@@ -55,6 +71,7 @@ function sendMessageToUser(action, userId, scanned, message) {
 
 module.exports = {
     socketInit,
-    sendMessageToUser
+    sendMessageToUser,
+    sendChatMessage
 }
 

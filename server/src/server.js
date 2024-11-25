@@ -5,7 +5,7 @@ const dbHandler = require("./database/database_handler");
 const logger = require("./logger/log");
 const hostActions = require("./constants/host_actions");
 const userHandler = require("./model/user/user_handler");
-const contactHandler = require("./model/user/contact_handler");
+const contactHandler = require("./model/user/mach_handler");
 const qrHandler = require("./model/qr/qr_handler");
 const generalValuesHandler = require("./model/general_values/general_values_handler");
 const bulkHandler = require("./model/bulk/bulk_handler");
@@ -16,7 +16,7 @@ const http = require("http");
 const fileHandler = require("./files/file_handler");
 const hobbiesHandler = require("./model/hobbies/hobbies_handler");
 const nodemailer = require("nodemailer");
-const mailHandler = require ("./mail/mail_handler");
+const mailHandler = require("./mail/mail_handler");
 const app = express();
 app.use(express.json());
 const port = process.env.PORT;
@@ -240,6 +240,35 @@ async function processRequest(req, res) {
           );
           break;
         }
+
+        case hostActions.UPDATE_USER_DEFAULT_QR_BY_USER_ID: {
+          result = await userHandler.updateUserDefaultQrByUserId(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.GET_ALL_USER_MATCHS_BY_USER_ID: {
+          result = await contactHandler.getAllUserMatchsByUserId(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.PUT_MESSAGE_TO_USER_WITH_USER_ID: {
+          const receiverId = req.body.input.receiver_id;
+          const message = req.body.input.message;
+          logger.info("--message: "+message+" receiver: "+receiverId);
+
+          await socketHandler.sendChatMessage(
+            "chat_message", receiverId, message
+          );
+
+          break;
+        }
+
+
+
       }
       if (result && result.status) {
         res.status(result.status).json(result);
@@ -350,7 +379,7 @@ app.post(
       from: "noreplay@floiint.com", // Sender address
       to: "martahdelahiguera@gmail.com", // List of recipients
       subject: "Bienvenid@ a Floiint", // Subject line
-    //   text: "Hello, this is a test email sent using Nodemailer and Namecheap Private Email.", // Plain text body
+      //   text: "Hello, this is a test email sent using Nodemailer and Namecheap Private Email.", // Plain text body
       html: mailHandler.genMailBody(),
       attachments: [
         {
@@ -359,7 +388,7 @@ app.post(
           cid: 'unique-image-id', // Content ID (used in the HTML as `src="cid:unique-image-id"`)
         },
       ],
-      
+
     };
 
     transporter.sendMail(mailOptions, (error, info) => {

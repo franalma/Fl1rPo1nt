@@ -8,6 +8,7 @@ class SocialNetwork {
   SocialNetwork(this.networkId, this.name, this.value);
 
   factory SocialNetwork.load(Map<String, dynamic> map) {
+    Log.d("Starts SocialNetwork.load $map");
     return SocialNetwork(map["network_id"], map["name"], map["value"]);
   }
 

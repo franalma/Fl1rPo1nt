@@ -1,7 +1,7 @@
 const logger = require("../../logger/log");
 const { v4: uuidv4 } = require('uuid');
 const dbHandler = require('../../database/database_handler');
-const userColletion = "user_qr";
+const userColletion = "users";
 
 function createInternalQr(input) {
     logger.info("Start createInternalQr");
@@ -19,7 +19,8 @@ function createExternalQrInfo(item){
         user_id: item.user_id, 
         qr_id: item.qr_id, 
         qr_content: item.qr_content, 
-        qr_created_at: item.created_at
+        name: item.name,
+        networks: item.networks
 
     }
 }
@@ -60,21 +61,19 @@ async function removeUserQrByUserIdQrId(input) {
 
 async function getUserQrByUserId(input) {
     logger.info("Starts getUserQrByUserId: " + JSON.stringify(input));
-    let filters = { user_id: input.user_id};
-    let result = {};
+    let filters = { id: input.user_id};
+    let result = {items:[]};
     let dbResponse = await dbHandler.findWithFilters(filters, userColletion);    
     if (dbResponse) {
         result.status = 200; 
         result.items =[];
-        for (let index in dbResponse){
-            let item = createExternalQrInfo(dbResponse[index]);
+        for (let index in dbResponse[0].qr_values){
+            let item = createExternalQrInfo(dbResponse[0].qr_values[index]);
             result.items.push(item);
         }
         
         return result;
-    }
-    
-    
+    }       
 }
 
 

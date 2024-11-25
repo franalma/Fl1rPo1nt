@@ -1,28 +1,43 @@
 const logger = require("../../logger/log");
 const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
-const userContactCollection = "users_contacts";
+const userContactCollection = "users_matchs";
 const sockerHandler = require("../../sockets/socket_handler");
-const userHandler = require("../user/user_handler");
+const userHandler = require("./user_handler");
 const { printJson } = require("../../utils/json_utils");
 
-async function createUserContactInternal(input) {
-  logger.info("Starts createUserContactInternal");
+async function createMatchInternal(input) {
+  logger.info("Starts createMatchInternal");
   let doc = {
-    user_id: input.user_id,
-    contact_id: input.contact_id,
-    qr_id: input.qr_id,
+    id: uuidv4(),
+    source: 0,
+    point_id: -1,
     flirt_id: input.flirt_id,
     location: input.location,
     created_at: Date.now(),
   };
 
-  const contactInfo = await userHandler.getUserInfoByUserIdQrId(
+  const contactQrInfo = await userHandler.getUserInfoByUserIdQrId(
     input.contact_id,
-    input.qr_id
+    input.contact_qr_id
   );
-  logger.info(JSON.stringify(contactInfo));
-  doc.contact_info = contactInfo.contact_info;
+
+  const userQrInfo = await userHandler.getUserInfoByUserIdQrId(
+    input.user_id,
+    input.user_qr_id
+  );
+
+  doc.users = [
+    {
+      user_id: input.user_id,
+      contact_info: userQrInfo.contact_info
+    },
+    {
+      user_id: input.contact_id,
+      contact_info: contactQrInfo.contact_info
+    },
+  ];
+
   printJson(doc);
   return doc;
 }
@@ -30,16 +45,15 @@ async function createUserContactInternal(input) {
 async function addUserContactByUserIdContactIdQrId(input) {
   logger.info("Starts addUserContactByUserIdContactIdQrId");
   let result = { status: 500 };
-  
-  try {  
-    let doc = await createUserContactInternal(input);
+
+  try {
+    let doc = await createMatchInternal(input);
     let dbResponse = await dbHandler.addDocument(doc, userContactCollection);
-    
 
     if (dbResponse) {
       const updateUsersInfo = await userHandler.updateUserScansByUserIdContactId(
-        doc.user_id,
-        doc.contact_id
+        input.user_id,
+        input.contact_id
       );
 
       result = {
@@ -62,7 +76,6 @@ async function addUserContactByUserIdContactIdQrId(input) {
     logger.info(error);
   }
 
-  printJson(result);
   return result;
 }
 
@@ -93,8 +106,56 @@ async function getUserContactsByUserId(input) {
   return result;
 }
 
+async function getAllUserMatchsByUserId(input) {
+  logger.info("Starts getAllUserMatchsByUserId");
+  let result = {};
+  try {
+    const filters = { users: { $elemMatch: { user_id: input.user_id } } };
+    const dbResponse = await dbHandler.findWithFilters(filters, userContactCollection);
+
+    if (dbResponse) {
+      result.matchs = [];
+      for (let item of dbResponse) {
+        let contactUser = {};
+        if (item.users[0].user_id === input.user_id) {
+          contactUser = {
+            user_id: item.users[1].user_id,
+            contact_info: JSON.parse(item.users[1].contact_info)
+          }
+
+        } else {
+          contactUser = {
+            user_id: item.users[0].user_id,
+            contact_info: JSON.parse(item.users[0].contact_info)
+          }
+        }
+
+
+        let sharing = item.users[0].user_id === input.user_id ? JSON.parse(item.users[0].contact_info) : JSON.parse(item.users[1].contact_info);
+        result.status = 200;
+        result.matchs.push(
+          {
+            match_id: item.id,
+            flirt_id: item.flirt_id,
+            contact: contactUser,
+            sharing: sharing
+
+          }
+        )
+      }
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+  return result;
+
+
+
+}
+
 module.exports = {
   addUserContactByUserIdContactIdQrId,
   removeUserContactByUserIdContactId,
   getUserContactsByUserId,
+  getAllUserMatchsByUserId
 };

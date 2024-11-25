@@ -100,19 +100,19 @@ class _HomeState extends State<Home> {
       _isAdaptativeAdLoaded = value;
     });
     return Scaffold(
-        // drawer: AppDrawerMenu().getDrawer(context),
+        
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56.0), // Height of the AppBarP
           child: AppBar(
               leading: _isEnabled
                   ? IconButton(
-                      icon: Icon(Icons.stop),
+                      icon: const Icon(Icons.stop),
                       onPressed: () {
                         _onStopFlirt();
                       },
                     )
                   : IconButton(
-                      icon: Icon(Icons.play_arrow),
+                      icon: const Icon(Icons.play_arrow),
                       onPressed: () {
                         _onStartFlirt();
                       },
@@ -198,28 +198,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  // Widget _buildEnabledFlirtPanel() {
-  //   return Column(
-  //     children: [
-  //       Expanded(
-  //         child: Container(color: _sexAltColor),
-  //       ),
-  //       Expanded(
-  //         child: Container(color: _relAltColor),
-  //       ),
-  //       Positioned(
-  //         top: 50, // Ajusta la posición del botón en la primera parte
-  //         left: 20,
-  //         child: FloatingActionButton(
-  //           onPressed: () {
-  //             _onStopFlirt();
-  //           },
-  //           child: const Text("Parar!"),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+
 
   Widget _buildEnabledFlirtPanelPoint() {
     return Padding(

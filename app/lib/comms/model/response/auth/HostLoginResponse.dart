@@ -16,6 +16,7 @@ class HostLoginResponse {
   String userProfileImageId = "";
   int nScanned = 0;
   int nScansPerformed = 0;
+  String qrDefaultId = "";
 
   HostLoginResponse(
       this.userId,
@@ -32,7 +33,8 @@ class HostLoginResponse {
       this.hobbies,
       this.userProfileImageId,
       this.nScanned,
-      this.nScansPerformed);
+      this.nScansPerformed,
+      this.qrDefaultId);
   HostLoginResponse.empty();
 
   factory HostLoginResponse.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class HostLoginResponse {
       var userProfileImageId = "";
       int nScans = 0;
       int nScansPerformed = 0;
+      String qrDefaultId = "";
 
       if (json.containsKey("phone")) {
         phone = json['phone'].toString();
@@ -76,6 +79,10 @@ class HostLoginResponse {
         nScansPerformed = json['scans_performed'];
       }
 
+      if (json.containsKey("default_qr_id")) {
+        qrDefaultId = json['default_qr_id'];
+      }
+
       HostLoginResponse response = HostLoginResponse(
           userId,
           name,
@@ -90,8 +97,9 @@ class HostLoginResponse {
           biography,
           hobbies,
           userProfileImageId,
-          nScans, 
-          nScansPerformed);
+          nScans,
+          nScansPerformed,
+          qrDefaultId);
       return response;
     } catch (error, stackTrace) {
       Log.d("$stackTrace error $error");

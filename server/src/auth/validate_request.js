@@ -124,6 +124,11 @@ function requestFieldsValidation(req, res, next) {
             break; 
         }
 
+        case hostActions.UPDATE_USER_DEFAULT_QR_BY_USER_ID:{
+            validationSet = validationRules.UPDATE_USER_DEFAULT_QR_BY_USER_ID_RULES
+            break; 
+        }
+
         
 
         

@@ -41,8 +41,9 @@ const PUT_ALL_SOCIAL_NETWORKS_RULES = [
 
 const PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID_RULES = [    
     body('input.user_id').notEmpty().isString().withMessage("User id cant be empty"),
+    body('input.user_qr_id').notEmpty().isString().withMessage("User QR id cant be empty"),
     body('input.contact_id').notEmpty().isString().withMessage("Contact id cant be empty"),
-    body('input.qr_id').notEmpty().isString().withMessage("Qr id  cant be empty"),
+    body('input.contact_qr_id').notEmpty().isString().withMessage("Qr id  cant be empty"),
     body('input.flirt_id').notEmpty().isString().withMessage("Flirt id  cant be empty"),
 ]
 
@@ -143,6 +144,11 @@ const UPDATE_USER_IMAGE_PROFILE_BY_USER_RULES = [
     body('input.image_id').notEmpty().isString().withMessage("Image id is required"),    
 ];
 
+const UPDATE_USER_DEFAULT_QR_BY_USER_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.qr_id').notEmpty().isString().withMessage("QR id is required"),    
+];
+
 
 
 
@@ -172,5 +178,6 @@ module.exports = {
     UPDATE_USER_BIOGRAPHY_BY_USER_RULES,
     UPDATE_USER_HOBBIES_BY_USER_RULES,
     UPDATE_USER_NAME_BY_USER_RULES,
-    UPDATE_USER_IMAGE_PROFILE_BY_USER_RULES
+    UPDATE_USER_IMAGE_PROFILE_BY_USER_RULES,
+    UPDATE_USER_DEFAULT_QR_BY_USER_ID_RULES
 }

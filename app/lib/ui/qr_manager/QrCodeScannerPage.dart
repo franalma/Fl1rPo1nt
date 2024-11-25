@@ -35,7 +35,7 @@ class _QrCodeScannerPage extends State<QrCodeScannerPage> {
 
     if (values.length == 2) {
       HostPutUserContactRequest()
-          .run(user.userId, values[1], values[0], flirt!.id.toString(),
+          .run(user.userId, user.qrDefaultId, values[1], values[0], flirt!.id.toString(),
               location!)
           .then((value) {
         if (value) {
@@ -58,7 +58,7 @@ class _QrCodeScannerPage extends State<QrCodeScannerPage> {
           flexibleSpace: FlexibleAppBar(),
           actions: [
             IconButton(
-              icon: Icon(Icons.flash_on),
+              icon: const Icon(Icons.flash_on),
               onPressed: () {
                 controller.toggleTorch();
               },
