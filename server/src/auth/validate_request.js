@@ -128,17 +128,23 @@ function requestFieldsValidation(req, res, next) {
             validationSet = validationRules.UPDATE_USER_DEFAULT_QR_BY_USER_ID_RULES
             break; 
         }
+        case hostActions.GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY:{
+            validationSet = validationRules.GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY_RULES
+            break; 
+        }
 
-        
 
-        
+        case hostActions.UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID:{
+            validationSet = validationRules.UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID_RULES
+            break; 
+        }
 
-        
-        
-        
-        
-        
+        case hostActions.UPDATE_USER_GENDER_BY_USER_ID:{
+            validationSet = validationRules.UPDATE_USER_GENDER_BY_USER_ID_RULES
+            break; 
+        }
 
+    
         default:{
             logger.info("No request verification needed for "+action);
             validationSet = [];

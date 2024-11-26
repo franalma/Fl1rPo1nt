@@ -3,9 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:app/comms/model/request/HostGetUserAudiosRequest.dart';
-import 'package:app/comms/model/request/HostRemoveAudioRequest.dart';
-import 'package:app/comms/model/request/HostUploadAudioRequest.dart';
+import 'package:app/comms/model/request/user/audios/HostUploadAudioRequest.dart';
 import 'package:app/model/FileData.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -18,6 +16,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../comms/model/request/user/audios/HostGetUserAudiosRequest.dart';
+import '../../comms/model/request/user/audios/HostRemoveAudioRequest.dart';
 
 class UserAudiosPage extends StatefulWidget {
   @override

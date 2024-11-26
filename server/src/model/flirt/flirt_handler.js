@@ -24,9 +24,16 @@ async function putUserFlirts(input) {
             let flirt = {
                 flirt_id: uuidv4(),
                 user_id: input.user_id,
-                relationship: input.relationship,
-                orientation: input.orientation,
-                location: input.location,
+                relationship_id: input.relationship_id,
+                relationship_name: input.relationship_name,
+                sex_alternative_id: input.orientation_id,
+                sex_alternative_name: input.orientation_name,
+                location: {
+                    type: "Point",
+                    coordinates: [input.location.longitude, input.location.latitude]
+
+                },
+
                 status: FLIRT_ACTIVE,
                 created_at: currentTime,
                 updated_at: currentTime,
@@ -125,6 +132,50 @@ async function getUserFlirts(input) {
                 created_at: item.created_at,
                 updated_at: item.updated_at,
                 status: item.status,
+                location: {
+                    latitude: item.location.coordinates[1],
+                    longitude: item.location.coordinates[0],
+                },
+                relationship_name: item.relationship_name,
+                orientation_name: item.orientation_name
+            }
+            result.flirts.push(flirt);
+        }
+    }
+    return result;
+}
+
+
+
+async function getActiveFlirtsFromPointAndTendency(input) {
+    logger.info("Starts getActiveFlirtsFromPointAndTendency");
+    let filters = {
+        flirt_id: { $ne: input.flirt_id },
+        location: {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [input.longitude, input.latitude],
+                },
+                $maxDistance: input.radio,
+            },
+        },
+        status: 1,
+        sex_alternative_id: input.sex_alternative_id
+    };
+
+
+    let dbResponse = await dbHandler.findWithFilters(filters, flirtsCollection);
+    let result = {};
+    result.flirts = [];
+
+    if (dbResponse) {
+        result.status = 200;
+
+        for (var item of dbResponse) {
+            let flirt = {
+                user_id: item.user_id,
+                flirt_id: item.flirt_id,
                 location: item.location,
                 relationship_name: item.relationship_name,
                 orientation_name: item.orientation_name
@@ -137,8 +188,10 @@ async function getUserFlirts(input) {
 
 
 
+
+
 module.exports = {
     putUserFlirts,
     udpateUserFlirts,
-    getUserFlirts
+    getUserFlirts, getActiveFlirtsFromPointAndTendency
 }

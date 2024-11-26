@@ -14,6 +14,8 @@ class Session {
   static SocketSubscriptionController? socketSubscription;
   static Flirt? currentFlirt;
   static dynamic profileImage;
+  
+
 
   static Future<void> loadProfileImage() async {
     Log.d("Starts loadProfileImage ${user.userProfileImageId}");

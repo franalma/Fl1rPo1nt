@@ -134,7 +134,9 @@ async function doLogin(input) {
           profile_image_file_id: user.profile_image_id,
           scanned_count: user.scanned_count ? user.scanned_count : 0,
           scans_performed: user.scans_performed ? user.scans_performed : 0,
-          default_qr_id: user.default_qr_id ? user.default_qr_id : ""
+          default_qr_id: user.default_qr_id ? user.default_qr_id : "",
+          radio_visibility: user.radio_visibility ? user.radio_visibility: 10.0,
+          gender: user.gender
         },
       };
     } else {
@@ -149,6 +151,7 @@ async function doLogin(input) {
       message: "Wrong user or password",
     };
   }
+  printJson(result);
   return result;
 }
 
@@ -352,7 +355,7 @@ async function updateUserHobbiesByUserId(input) {
 
 async function updateUserNameByUserId(input) {
   logger.info("Starts updateUserNameByUserId");
-  let result = { status: 200, message: "Use name updated" };
+  let result = { status: 200, message: "User name updated" };
   try {
     const filters = { id: input.user_id };
 
@@ -370,6 +373,51 @@ async function updateUserNameByUserId(input) {
   }
   return result;
 }
+
+async function updateUserRadioVisibility(input) {
+  logger.info("Starts updateUserRadioVisibility");
+  let result = { status: 200, message: "User visibility updated" };
+  try {
+    const filters = { id: input.user_id };
+
+    const newValues = {
+      radio_visibility: input.radio_visibility,
+      updated_at: Date.now(),
+    };
+    await dbHandler.updateDocument(newValues, filters, userColletion);
+  } catch (error) {
+    logger.info(error);
+    result = {
+      status: 500,
+      message: "Error updating user visibility",
+    };
+  }
+  return result;
+}
+
+async function updateUserGenderByUserId(input) {
+  logger.info("Starts updateUserGenderByUserId");
+  let result = { status: 200, message: "User gender updated" };
+  try {
+    const filters = { id: input.user_id };
+
+    const newValues = {
+      gender: input.gender,
+      updated_at: Date.now(),
+    };
+    await dbHandler.updateDocument(newValues, filters, userColletion);
+  } catch (error) {
+    logger.info(error);
+    result = {
+      status: 500,
+      message: "Error updating user gender",
+    };
+  }
+  return result;
+}
+
+
+
 
 async function updateUserImageProfileByUserId(input) {
   logger.info("Starts updateUserImageProfileByUserId");
@@ -491,5 +539,7 @@ module.exports = {
   updateUserNameByUserId,
   updateUserImageProfileByUserId,
   updateUserScansByUserIdContactId,
-  updateUserDefaultQrByUserId
+  updateUserDefaultQrByUserId,
+  updateUserRadioVisibility, 
+  updateUserGenderByUserId
 };

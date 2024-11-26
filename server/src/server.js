@@ -84,6 +84,10 @@ async function procesBulkRequest(req, res) {
       result = await bulkHandler.addHobbies(req.body.input);
       break;
     }
+    case bulkHostActions.BULK_PUT_ALL_GENDERS: {
+      result = await bulkHandler.addGenderIdentity(req.body.input);
+      break;
+    }
   }
 
   if (result == 0) {
@@ -166,6 +170,16 @@ async function processRequest(req, res) {
             );
           break;
         }
+
+        case hostActions.GET_ALL_GENDERS: {
+          result =
+            await generalValuesHandler.getAllGenders(
+              req.body.input
+            );
+          break;
+        }
+
+        
 
         case hostActions.UPDATE_USER_INTERESTS_BY_USER_ID: {
           result = await userHandler.updateUserInterestsByUserId(
@@ -255,13 +269,40 @@ async function processRequest(req, res) {
           break;
         }
 
+        case hostActions.GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY: {
+          result = await flirtHandler.getActiveFlirtsFromPointAndTendency(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID: {
+          result = await userHandler.updateUserRadioVisibility(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.UPDATE_USER_GENDER_BY_USER_ID: {
+          result = await userHandler.updateUserGenderByUserId(
+            req.body.input
+          );
+          break;
+        }
+
+        
+
+
+        
         case hostActions.PUT_MESSAGE_TO_USER_WITH_USER_ID: {
           const receiverId = req.body.input.receiver_id;
+          const senderId = req.body.input.sender_id; 
           const message = req.body.input.message;
+          
           logger.info("--message: "+message+" receiver: "+receiverId);
 
           await socketHandler.sendChatMessage(
-            "chat_message", receiverId, message
+            "chat_message", receiverId, senderId, message
           );
 
           break;

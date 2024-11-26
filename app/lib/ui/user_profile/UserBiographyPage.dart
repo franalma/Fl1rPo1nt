@@ -1,4 +1,4 @@
-import 'package:app/comms/model/request/HostUpdateUserBiography.dart';
+import 'package:app/comms/model/request/user/profile/HostUpdateUserBiography.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';

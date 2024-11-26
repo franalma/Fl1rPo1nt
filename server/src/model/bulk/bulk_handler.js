@@ -4,6 +4,7 @@ const sex_orientations_collection = "sex_orientations";
 const type_relationships_collection = "type_relationships";
 const social_networks_collection = "social_networks";
 const hobbies_collection = "hobbies_collection";
+const gender_collection = "gender_collection";
 
 async function addBulkCoordinates(input) {
     try {
@@ -110,11 +111,31 @@ async function addHobbies(input){
     return -1;
 }
 
+async function addGenderIdentity(input){
+    try {
+        let docs = [];
+        for (let item of input.genders) {
+            let value = {
+                id: item.id,
+                name: item.name,                
+                created_ad: Date.now()
+            };
+            docs.push(value);         
+        }
+        await dbHandler.addManyDocuments(docs, gender_collection);
+        return 0;
+    } catch (error) {
+        console.log(error);
+    }
+    return -1;
+}
+
 
 module.exports = {
     addBulkCoordinates,
     addSexOrientation,
     addTypeRelationships,
     addBaseNetworks, 
-    addHobbies
+    addHobbies,
+    addGenderIdentity
 }

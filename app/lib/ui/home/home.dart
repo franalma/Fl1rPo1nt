@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:app/app_localizations.dart';
-import 'package:app/comms/model/request/HostPutUserContactRequest.dart';
+
 import 'package:app/comms/model/request/flirt/HostDisableFlirtByFlirtIdUserId.dart';
 import 'package:app/comms/model/request/flirt/HostGetUserFlirtsRequest.dart';
 import 'package:app/comms/model/request/flirt/HostPutFlirtByUserIdRequest.dart';
@@ -10,7 +10,6 @@ import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ads/GoogleAds.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
-import 'package:app/ui/elements/AppDrawerMenu.dart';
 import 'package:app/ui/qr_manager/QrCodeScannerPage.dart';
 import 'package:app/ui/qr_manager/ShowQrCodeToShare.dart';
 import 'package:app/ui/utils/CommonUtils.dart';

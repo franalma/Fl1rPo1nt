@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:app/app_localizations.dart';
-import 'package:app/comms/model/request/HostUpdateUserDefaultQr.dart';
+import 'package:app/comms/model/request/qr/HostUpdateUserDefaultQr.dart';
 import 'package:app/comms/model/request/qr/HostUpdateUserQrRequest.dart';
 
 import 'package:app/model/QrValue.dart';

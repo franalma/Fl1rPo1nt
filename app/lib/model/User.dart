@@ -1,5 +1,6 @@
 
 import 'package:app/comms/model/response/auth/HostLoginResponse.dart';
+import 'package:app/model/Gender.dart';
 import 'package:app/model/QrValue.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/UserInterest.dart';
@@ -26,6 +27,8 @@ class User {
   late int nScanned; 
   late int nScansPerformed; 
   late String qrDefaultId; 
+  late double radioVisibility; 
+  late Gender gender; 
 
   User(
       this.userId,
@@ -45,7 +48,9 @@ class User {
       this.userProfileImageId, 
       this.nScanned, 
       this.nScansPerformed,
-      this.qrDefaultId);
+      this.qrDefaultId,
+      this.radioVisibility, 
+      this.gender);
 
   User.empty();
   factory User.fromHost(HostLoginResponse response) {
@@ -56,6 +61,7 @@ class User {
       SexAlternative sexAlternatives;
       RelationShip relationShip;
       String userProfileImageId =""; 
+      
 
       if (response.networks.isNotEmpty) {
         networks = response.networks.map((e) => SocialNetwork.load(e)).toList();
@@ -100,7 +106,9 @@ class User {
           userProfileImageId,
           response.nScanned, 
           response.nScansPerformed,
-          response.qrDefaultId);
+          response.qrDefaultId,
+          response.radioVisibility, 
+          response.gender!);
     } catch (error) {
       Log.d(error.toString());
     }

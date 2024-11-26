@@ -10,7 +10,9 @@ import 'package:app/ui/flirts/FlirtsStatsPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/smart_points/SmartPointsPage.dart';
+import 'package:app/ui/user_profile/UserAudiosPage.dart';
 import 'package:app/ui/user_profile/UserDataPage.dart';
+import 'package:app/ui/user_profile/UserPhotosPage.dart';
 import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:flutter/material.dart';
 
@@ -116,17 +118,24 @@ class _UserProfilePage extends State<UserProfilePage> {
                 const Divider(),
                 ListTile(
                     title:
-                        Text("Mis Puntos", style: Styles.rowCellTitleTextStyle),
+                        Text("Mis puntos", style: Styles.rowCellTitleTextStyle),
                     trailing: const Icon(
                         Icons.arrow_forward_ios), // Add a left arrow icon
                     onTap: () => NavigatorApp.push(SmartPointsPage(), context)),
                 const Divider(),
                 ListTile(
-                    title: Text("Mis estadísticas",
+                    title: Text("Mis fotos",
                         style: Styles.rowCellTitleTextStyle),
                     trailing: const Icon(
                         Icons.arrow_forward_ios), // Add a left arrow icon
-                    onTap: () => NavigatorApp.push(FlirtsStatsPage(), context)),
+                    onTap: () => NavigatorApp.push(UserPhotosPage(), context)),
+                const Divider(),
+                ListTile(
+                    title: Text("Mis audios",
+                        style: Styles.rowCellTitleTextStyle),
+                    trailing: const Icon(
+                        Icons.arrow_forward_ios), // Add a left arrow icon
+                    onTap: () => NavigatorApp.push(UserAudiosPage(), context)),
                 const Divider(),
                 ListTile(
                     title: const Text(

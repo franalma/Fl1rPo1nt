@@ -6,7 +6,12 @@ import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
+import 'package:app/ui/utils/chat_storage/ChatMessage.dart';
+import 'package:app/ui/utils/chat_storage/HiveStorageHandler.dart';
+import 'package:app/ui/utils/chat_storage/UserChatRoom.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class ShowConversationPage extends StatefulWidget {
   UserMatch _userMatch;
@@ -22,10 +27,14 @@ class _ShowConversationPage extends State<ShowConversationPage> {
   final User _user = Session.user;
   final List<Map<String, String>> _messages = [];
   final TextEditingController _messageController = TextEditingController();
+  final Box<UserChatRoom> _box =
+      Session.socketSubscription!.chatStorage.database;
+  HiveStorageHandler _storageHandler = Session.socketSubscription!.chatStorage;
 
   @override
   void initState() {
-    Session.socketSubscription?.onNewChatMessage = _onReceivedMessage;
+    _loadMessages();
+    _listenDatabase();
     super.initState();
   }
 
@@ -91,6 +100,8 @@ class _ShowConversationPage extends State<ShowConversationPage> {
   Future<void> _sendMessage() async {
     Log.d("Starts _sendMessge");
     final text = _messageController.text;
+    await _storageHandler.put(_user.userId, text, 0, 1);
+
     if (text.isNotEmpty) {
       HostSendMessageToUserRequest()
           .run(widget._userMatch.matchId!, _user.userId,
@@ -105,11 +116,41 @@ class _ShowConversationPage extends State<ShowConversationPage> {
     }
   }
 
-  void _onReceivedMessage(String user, String data) {
-    Log.d("Starts _onReceivedMessage");
-    Map<String, dynamic> map = jsonDecode(data);
-    setState(() {
-      _messages.add({"text": map["message"], "sender": "bot"});
+  void _listenDatabase() {
+    Log.d("Starts _listenDatabase");
+    Stream<BoxEvent> stream = _box.watch();
+    stream.listen((event) {
+      if (!event.deleted) {
+        UserChatRoom room = event.value;
+
+        ChatMessage chatMessage = room.messages.last;
+        if (chatMessage.source == 0) {
+          _onReceivedMessage(chatMessage.message, chatMessage.time);
+        }
+      }
     });
+  }
+
+  void _onReceivedMessage(String message, int time) {
+    Log.d("Starts _onReceivedMessage");
+
+    setState(() {
+      _messages.add({"text": message, "sender": "bot"});
+    });
+  }
+
+  void _loadMessages() {
+    Log.d("Starts _loadMessages");
+    UserChatRoom? room =
+        _storageHandler.get(widget._userMatch.contactInfo!.userId);
+    if (room != null) {
+      for (var message in room.messages) {
+        _messages.add({
+          "text": message.message,
+          "sender": message.source == 0 ? "bot" : "user"
+        });
+      }
+    }
+    setState(() {});
   }
 }

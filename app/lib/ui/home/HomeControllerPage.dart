@@ -1,4 +1,4 @@
-import 'package:app/app_localizations.dart';
+
 import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ListContactsPage.dart';
@@ -6,8 +6,7 @@ import 'package:app/ui/elements/Gradient1.dart';
 import 'package:app/ui/home/home.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
-import 'package:app/ui/utils/location.dart';
-import 'package:app/ui/utils/toast_message.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 

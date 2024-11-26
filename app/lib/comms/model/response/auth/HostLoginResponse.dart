@@ -1,3 +1,4 @@
+import 'package:app/model/Gender.dart';
 import 'package:app/ui/utils/Log.dart';
 
 class HostLoginResponse {
@@ -17,6 +18,8 @@ class HostLoginResponse {
   int nScanned = 0;
   int nScansPerformed = 0;
   String qrDefaultId = "";
+  double radioVisibility = 0; 
+  Gender? gender; 
 
   HostLoginResponse(
       this.userId,
@@ -34,7 +37,9 @@ class HostLoginResponse {
       this.userProfileImageId,
       this.nScanned,
       this.nScansPerformed,
-      this.qrDefaultId);
+      this.qrDefaultId,
+      this.radioVisibility,
+      this.gender);
   HostLoginResponse.empty();
 
   factory HostLoginResponse.fromJson(Map<String, dynamic> json) {
@@ -55,10 +60,13 @@ class HostLoginResponse {
       int nScans = 0;
       int nScansPerformed = 0;
       String qrDefaultId = "";
+      double radioVisibility = (json["radio_visibility"] as num).toDouble();
+      Gender gender = Gender.empty(); 
 
       if (json.containsKey("phone")) {
         phone = json['phone'].toString();
       }
+
       if (json.containsKey("biography")) {
         biography = json['biography'].toString();
       }
@@ -83,6 +91,10 @@ class HostLoginResponse {
         qrDefaultId = json['default_qr_id'];
       }
 
+      if (json.containsKey("gender")){
+          gender = Gender.fromJson(json["gender"]);
+      }
+
       HostLoginResponse response = HostLoginResponse(
           userId,
           name,
@@ -99,7 +111,10 @@ class HostLoginResponse {
           userProfileImageId,
           nScans,
           nScansPerformed,
-          qrDefaultId);
+          qrDefaultId,
+          radioVisibility,
+          gender
+          );
       return response;
     } catch (error, stackTrace) {
       Log.d("$stackTrace error $error");

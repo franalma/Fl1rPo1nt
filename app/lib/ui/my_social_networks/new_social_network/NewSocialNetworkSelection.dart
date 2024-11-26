@@ -1,5 +1,6 @@
 import 'package:app/app_localizations.dart';
-import 'package:app/comms/model/request/HostGetAllSocialNetworksRequest.dart';
+import 'package:app/comms/model/request/fix_values/HostGetAllSocialNetworksRequest.dart';
+
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';

@@ -46,15 +46,16 @@ function sendMessageToUser(action, userId, scanned, message) {
     }
 }
 
-function sendChatMessage(action, userId, message) {
-    logger.info("Starts sendChatMessage userId: " + userId);
+function sendChatMessage(action, receiverId, senderId, message) {
+    logger.info("Starts sendChatMessage userId: " + receiverId);
     try {
-        const socket = mapSockets[userId]["socket"];
+        const socket = mapSockets[receiverId]["socket"];
         logger.info("socket id:" + socket.id)
         if (socket) {
             let payload = {
                 send_at: Date.now(),                
-                message: message
+                message: message, 
+                sender_id: senderId
             }
             payload = JSON.stringify(payload);
             socket.emit(action, payload);

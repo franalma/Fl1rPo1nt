@@ -1,6 +1,6 @@
 import 'package:app/app_localizations.dart';
-import 'package:app/comms/model/request/HostGetAllSexRelationshipRequest.dart';
-import 'package:app/comms/model/request/HostUpdateUserInterestRequest.dart';
+
+import 'package:app/comms/model/request/user/profile/HostUpdateUserInterestRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserInterest.dart';
@@ -12,6 +12,8 @@ import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
+
+import '../../comms/model/request/fix_values/HostGetAllSexRelationshipRequest.dart';
 
 class UserStatePage extends StatefulWidget {
   @override

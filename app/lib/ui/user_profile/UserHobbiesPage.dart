@@ -1,6 +1,6 @@
 import 'package:app/app_localizations.dart';
-import 'package:app/comms/model/request/HostGetAllHobbiesRequest.dart';
-import 'package:app/comms/model/request/HostUpdateHobbiesRequest.dart';
+import 'package:app/comms/model/request/user/profile/HostUpdateHobbiesRequest.dart';
+import 'package:app/comms/model/request/fix_values/HostGetAllHobbiesRequest.dart';
 import 'package:app/model/Hobby.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';

@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:app/comms/model/request/HostGetUserImagesRequest.dart';
-import 'package:app/comms/model/request/HostRemoveImageRequest.dart';
-import 'package:app/comms/model/request/HostUpdateUserImageProfileRequest.dart';
-import 'package:app/comms/model/request/HostUploadImageRequest.dart';
+
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -15,6 +12,11 @@ import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../comms/model/request/user/images/HostGetUserImagesRequest.dart';
+import '../../comms/model/request/user/images/HostRemoveImageRequest.dart';
+import '../../comms/model/request/user/images/HostUpdateUserImageProfileRequest.dart';
+import '../../comms/model/request/user/images/HostUploadImageRequest.dart';
 
 class LocalFile {
   Image? image;

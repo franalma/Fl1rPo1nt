@@ -149,6 +149,26 @@ const UPDATE_USER_DEFAULT_QR_BY_USER_ID_RULES = [
     body('input.qr_id').notEmpty().isString().withMessage("QR id is required"),    
 ];
 
+const GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY_RULES = [
+    body('input.flirt_id').notEmpty().isString().withMessage("Flirt id is required"),    
+    body('input.sex_alternative_id').notEmpty().isNumeric().withMessage("Sex alternative id is required"),  
+    body('input.longitude').notEmpty().isNumeric().withMessage("Longitude is required"),  
+    body('input.latitude').notEmpty().isNumeric().withMessage("Latitude is required"),  
+    body('input.radio').notEmpty().isNumeric().withMessage("Radio is required"),  
+
+];
+
+const UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.radio_visibility').notEmpty().isNumeric().withMessage("Radio is required"),  
+
+];
+
+const UPDATE_USER_GENDER_BY_USER_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.gender').notEmpty().isObject().withMessage("Gender is required"),  
+
+];
 
 
 
@@ -179,5 +199,8 @@ module.exports = {
     UPDATE_USER_HOBBIES_BY_USER_RULES,
     UPDATE_USER_NAME_BY_USER_RULES,
     UPDATE_USER_IMAGE_PROFILE_BY_USER_RULES,
-    UPDATE_USER_DEFAULT_QR_BY_USER_ID_RULES
+    UPDATE_USER_DEFAULT_QR_BY_USER_ID_RULES,
+    GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY_RULES,
+    UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID_RULES,
+    UPDATE_USER_GENDER_BY_USER_ID_RULES
 }

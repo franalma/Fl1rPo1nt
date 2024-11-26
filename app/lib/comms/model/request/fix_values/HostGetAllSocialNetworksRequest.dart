@@ -16,12 +16,8 @@ class HostGetAllSocialNetworksRequest extends BaseRequest{
       Uri url = Uri.parse(option.url);
 
       Map<String, dynamic> mapBody = {"action":option.action};
-
-    
       String jsonBody = json.encode(mapBody);      
-      var response = await http.post(url, headers: buildHeader(), body: jsonBody);
-      var value = jsonDecode(response.body);
-      Log.d ("--->$value");
+      var response = await http.post(url, headers: buildHeader(), body: jsonBody);      
       if (response.statusCode == 200) {
         List<dynamic> value = jsonDecode(response.body)["networks"];
         return value

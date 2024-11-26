@@ -3,6 +3,7 @@ const dbHandler = require("../../database/database_handler");
 const socialNetworksCollection = "social_networks";
 const typeRelationshipsCollection = "type_relationships";
 const sexOrientationCollection = "sex_orientations";
+const genderCollection = "gender_collection";
 
 function createSocialNetWork(item) {
     logger.info("Starts createSocialNetWork: "+JSON.stringify(item));
@@ -18,6 +19,15 @@ function createSocialNetworkExternal(item) {
     
     result = {
         social_network_id: item.id,
+        name: item.name
+    }
+    return result;
+}
+
+function createGenderExternal(item) {
+    
+    result = {
+        id: item.id,
         name: item.name
     }
     return result;
@@ -54,6 +64,24 @@ async function getAllSocialNetworks() {
         for (let network of dbResponse) {
             let item = createSocialNetworkExternal(network);
             result.networks.push(item);
+        }
+    }
+
+
+    return result;
+}
+
+async function getAllGenders() {
+    logger.info("Starts getAllGenders");
+    let result = {};
+    const dbResponse = await dbHandler.findAll(genderCollection);
+
+    if (dbResponse) {
+        result.status = 200;
+        result.genders = [];
+        for (let network of dbResponse) {
+            let item = createGenderExternal(network);
+            result.genders.push(item);
         }
     }
 
@@ -102,5 +130,6 @@ module.exports = {
     putAllSocialNetworks,
     getAllSocialNetworks,
     getAllSexualOrientationsRelationships,
+    getAllGenders
     
 }

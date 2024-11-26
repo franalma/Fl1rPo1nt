@@ -1,4 +1,3 @@
-import 'package:app/comms/model/request/HostPutUserContactRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
@@ -6,6 +5,8 @@ import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
+import '../../comms/model/request/matchs/HostPutUserContactRequest.dart';
 
 class QrCodeScannerPage extends StatefulWidget {
   @override

@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
-import 'package:app/comms/model/request/HostGetPeopleArroundRequest.dart';
+import 'package:app/comms/model/request/flirt/HostGetPeopleArroundRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';

@@ -1,4 +1,3 @@
-import 'package:app/comms/model/request/HostGetUserMacthsRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
@@ -7,6 +6,10 @@ import 'package:app/ui/contacts/ShowConversationPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import '../../comms/model/request/matchs/HostGetUserMacthsRequest.dart';
 
 class ListContactsPage extends StatefulWidget {
   @override
@@ -19,6 +22,9 @@ class _ListContactsPage extends State<ListContactsPage> {
   List<UserMatch> _matchs = [];
   bool _isLoading = true;
   final User _user = Session.user;
+
+  // Box <List<Map<String, dynamic>>> _box = Session.socketSubscription!.chatStorage.database;
+
   @override
   void initState() {
     super.initState();
@@ -30,8 +36,6 @@ class _ListContactsPage extends State<ListContactsPage> {
     return Scaffold(
         appBar: AppBar(
           flexibleSpace: FlexibleAppBar(),
-          
-          
         ),
         body: _isLoading ? AlertDialogs().buildLoading() : _buildBody());
   }
@@ -57,6 +61,25 @@ class _ListContactsPage extends State<ListContactsPage> {
           );
         });
   }
+
+  // Widget _buildBody() {
+  //   return ValueListenableBuilder(
+  //       valueListenable: _box.listenable(),
+  //       builder: (context, box, _) {
+  //         return ListView.builder(
+  //           itemCount: box.length,
+  //           itemBuilder: (context, index) {
+  //             var message = box.getAt(index);
+  //             return ListTile(
+  //               title: Text(message.toString())
+  //             );
+            
+  //         });
+  //       });
+  // }
+
+
+
 
   Future<void> _fetchFromHost() async {
     HostGetUserMacthsRequest().run(_user.userId).then((matches) {
