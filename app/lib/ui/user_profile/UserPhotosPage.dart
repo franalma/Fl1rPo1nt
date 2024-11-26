@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -45,7 +44,6 @@ class _UserPhotosPage extends State<UserPhotosPage> {
   void initState() {
     super.initState();
     _fechImagesFromServer();
-    
   }
 
   @override
@@ -217,24 +215,28 @@ class _UserPhotosPage extends State<UserPhotosPage> {
 
   Future<void> _onPop() async {
     Log.d("Starts _onPop");
-    LocalFile profileImage = _imageList[selectedUserProfileImage];
-    Log.d("Selected file id: ${profileImage.id}");
-    HostUpdateUserImageProfileRequest()
-        .run(user.userId, profileImage.id!)
-        .then((value) {
-      Log.d("setting user profile result $value");
-      if (value) {
-        if (user.userProfileImageId.isNotEmpty) {
-          SecureStorage().deleteSecureData(user.userProfileImageId);
+    if (_imageList.length > 0) {
+      LocalFile profileImage = _imageList[selectedUserProfileImage];
+      Log.d("Selected file id: ${profileImage.id}");
+      HostUpdateUserImageProfileRequest()
+          .run(user.userId, profileImage.id!)
+          .then((value) {
+        Log.d("setting user profile result $value");
+        if (value) {
+          if (user.userProfileImageId.isNotEmpty) {
+            SecureStorage().deleteSecureData(user.userProfileImageId);
+          }
+          SecureStorage().saveSecureData(
+              profileImage.id!, base64Encode(profileImage.buffer));
+          Session.user.userProfileImageId = profileImage.id!;
+          Session.loadProfileImage().then((value) => NavigatorApp.pop(context));
+        } else {
+          NavigatorApp.pop(context);
         }
-        SecureStorage().saveSecureData(
-            profileImage.id!, base64Encode(profileImage.buffer));
-        Session.user.userProfileImageId = profileImage.id!;
-        Session.loadProfileImage().then((value) => NavigatorApp.pop(context));
-      } else {
-        NavigatorApp.pop(context);
-      }
-    });
+      });
+    }else{
+      NavigatorApp.pop(context);
+    }
   }
 
   void _getSelectedImageIndex() {
@@ -248,6 +250,5 @@ class _UserPhotosPage extends State<UserPhotosPage> {
     }
 
     Log.d("init image index: $selectedUserProfileImage");
-    
   }
 }

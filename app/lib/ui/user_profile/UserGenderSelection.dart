@@ -46,17 +46,22 @@ class _UserGenderSelection extends State<UserGenderSelection> {
     return ListView.builder(
         itemCount: _genders.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(_genders[index].name!),
-            trailing: Radio(
-              groupValue: _selectedIndex,
-              value: index,
-              onChanged: (value) {
-                setState(() {
-                  _selectedIndex = value!;
-                });
-              },
-            ),
+          return Column(
+            children: [
+              ListTile(
+                title: Text(_genders[index].name!),
+                trailing: Radio(
+                  groupValue: _selectedIndex,
+                  value: index,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedIndex = value!;
+                    });
+                  },
+                ),
+              ),
+              const Divider()
+            ],
           );
         });
   }
