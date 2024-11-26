@@ -27,7 +27,7 @@ class _ListContactsPage extends State<ListContactsPage> {
   @override
   void initState() {
     Session.socketSubscription?.onReload = _onNewMessageReload;
-    
+
     super.initState();
     _fetchFromHost();
   }
@@ -54,11 +54,11 @@ class _ListContactsPage extends State<ListContactsPage> {
                 title: Text(_matchs[index].contactInfo!.name!),
                 trailing: _buildNewMessages(index),
                 onTap: () {
-                  Session.socketSubscription?.clearPendingMessages(_matchs[index].matchId!);
                   setState(() {
-                    
+                    Session.socketSubscription
+                        ?.clearPendingMessages(_matchs[index].matchId!);
                   });
-                  NavigatorApp.push(                    
+                  NavigatorApp.push(
                       ShowConversationPage(_matchs[index]), context);
                 },
               ),
@@ -73,7 +73,7 @@ class _ListContactsPage extends State<ListContactsPage> {
     var match = _matchs[index];
     int nMessages =
         Session.socketSubscription!.getPendingMessagesForMap(match.matchId!);
-        print("--nMessages: "+nMessages.toString());
+    print("--nMessages: " + nMessages.toString());
     if (nMessages > 0) {
       return Text(nMessages.toString());
     }
@@ -92,9 +92,7 @@ class _ListContactsPage extends State<ListContactsPage> {
     });
   }
 
-  void _onNewMessageReload(){
-    setState(() {
-      
-    });
+  void _onNewMessageReload() {
+    setState(() {});
   }
 }

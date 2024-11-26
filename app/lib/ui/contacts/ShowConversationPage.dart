@@ -28,7 +28,7 @@ class _ShowConversationPage extends State<ShowConversationPage> {
     _loadMessages();
     Session.socketSubscription!
         .setSocketCallback(_onNewChatMessage, widget._userMatch.matchId!);
-    
+
     super.initState();
   }
 
@@ -37,6 +37,10 @@ class _ShowConversationPage extends State<ShowConversationPage> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: FlexibleAppBar(),
+        actions: [
+          IconButton(icon: const Icon(Icons.heart_broken, size: 30,), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.delete_forever, size: 30,), onPressed: () {})
+        ],
       ),
       body: Column(
         children: [
@@ -133,9 +137,11 @@ class _ShowConversationPage extends State<ShowConversationPage> {
       });
     });
   }
+
   @override
   void dispose() {
-    Session.socketSubscription?.removeSocketCallback(widget._userMatch.matchId!);
+    Session.socketSubscription
+        ?.removeSocketCallback(widget._userMatch.matchId!);
     super.dispose();
   }
 }
