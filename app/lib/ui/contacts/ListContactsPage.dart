@@ -5,6 +5,7 @@ import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ShowConversationPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -23,10 +24,10 @@ class _ListContactsPage extends State<ListContactsPage> {
   bool _isLoading = true;
   final User _user = Session.user;
 
-  // Box <List<Map<String, dynamic>>> _box = Session.socketSubscription!.chatStorage.database;
-
   @override
   void initState() {
+    Session.socketSubscription?.onReload = _onNewMessageReload;
+    
     super.initState();
     _fetchFromHost();
   }
@@ -51,8 +52,13 @@ class _ListContactsPage extends State<ListContactsPage> {
                     child: const CircleAvatar(backgroundColor: Colors.amber),
                     onTap: () {}),
                 title: Text(_matchs[index].contactInfo!.name!),
+                trailing: _buildNewMessages(index),
                 onTap: () {
-                  NavigatorApp.push(
+                  Session.socketSubscription?.clearPendingMessages(_matchs[index].matchId!);
+                  setState(() {
+                    
+                  });
+                  NavigatorApp.push(                    
                       ShowConversationPage(_matchs[index]), context);
                 },
               ),
@@ -62,24 +68,17 @@ class _ListContactsPage extends State<ListContactsPage> {
         });
   }
 
-  // Widget _buildBody() {
-  //   return ValueListenableBuilder(
-  //       valueListenable: _box.listenable(),
-  //       builder: (context, box, _) {
-  //         return ListView.builder(
-  //           itemCount: box.length,
-  //           itemBuilder: (context, index) {
-  //             var message = box.getAt(index);
-  //             return ListTile(
-  //               title: Text(message.toString())
-  //             );
-            
-  //         });
-  //       });
-  // }
-
-
-
+  Widget _buildNewMessages(int index) {
+    Log.d("Starts _buildNewMessages");
+    var match = _matchs[index];
+    int nMessages =
+        Session.socketSubscription!.getPendingMessagesForMap(match.matchId!);
+        print("--nMessages: "+nMessages.toString());
+    if (nMessages > 0) {
+      return Text(nMessages.toString());
+    }
+    return SizedBox(width: 20, height: 20, child: Container());
+  }
 
   Future<void> _fetchFromHost() async {
     HostGetUserMacthsRequest().run(_user.userId).then((matches) {
@@ -90,6 +89,12 @@ class _ListContactsPage extends State<ListContactsPage> {
       setState(() {
         _isLoading = false;
       });
+    });
+  }
+
+  void _onNewMessageReload(){
+    setState(() {
+      
     });
   }
 }

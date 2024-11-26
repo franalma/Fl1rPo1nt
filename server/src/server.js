@@ -17,6 +17,7 @@ const fileHandler = require("./files/file_handler");
 const hobbiesHandler = require("./model/hobbies/hobbies_handler");
 const nodemailer = require("nodemailer");
 const mailHandler = require("./mail/mail_handler");
+const chatroomHandler = require("./chatroom/chatroom_handler");
 const app = express();
 app.use(express.json());
 const port = process.env.PORT;
@@ -172,14 +173,9 @@ async function processRequest(req, res) {
         }
 
         case hostActions.GET_ALL_GENDERS: {
-          result =
-            await generalValuesHandler.getAllGenders(
-              req.body.input
-            );
+          result = await generalValuesHandler.getAllGenders(req.body.input);
           break;
         }
-
-        
 
         case hostActions.UPDATE_USER_INTERESTS_BY_USER_ID: {
           result = await userHandler.updateUserInterestsByUserId(
@@ -277,39 +273,49 @@ async function processRequest(req, res) {
         }
 
         case hostActions.UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID: {
-          result = await userHandler.updateUserRadioVisibility(
-            req.body.input
-          );
+          result = await userHandler.updateUserRadioVisibility(req.body.input);
           break;
         }
 
         case hostActions.UPDATE_USER_GENDER_BY_USER_ID: {
-          result = await userHandler.updateUserGenderByUserId(
+          result = await userHandler.updateUserGenderByUserId(req.body.input);
+          break;
+        }
+
+        case hostActions.PUT_MESSAGE_TO_USER_WITH_USER_ID: {
+          const receiverId = req.body.input.receiver_id;
+          const senderId = req.body.input.sender_id;
+          const matchId = req.body.input.match_id;
+          const message = req.body.input.message;
+
+          logger.info(
+            "--message: " +
+              message +
+              " receiver: " +
+              receiverId +
+              " match_id:" +
+              matchId
+          );
+
+          await chatroomHandler.putMessageInChatroomByMatchId(req.body.input);
+
+          await socketHandler.sendChatMessage(
+            "chat_message",
+            receiverId,
+            senderId,
+            message,
+            matchId
+          );
+
+          break;
+        }
+
+        case hostActions.GET_CHATROOM_MESSAGES_BY_MATCH_ID: {
+          result = await chatroomHandler.getMessagesInChatroomByMatchId(
             req.body.input
           );
           break;
         }
-
-        
-
-
-        
-        case hostActions.PUT_MESSAGE_TO_USER_WITH_USER_ID: {
-          const receiverId = req.body.input.receiver_id;
-          const senderId = req.body.input.sender_id; 
-          const message = req.body.input.message;
-          
-          logger.info("--message: "+message+" receiver: "+receiverId);
-
-          await socketHandler.sendChatMessage(
-            "chat_message", receiverId, senderId, message
-          );
-
-          break;
-        }
-
-
-
       }
       if (result && result.status) {
         res.status(result.status).json(result);
@@ -424,12 +430,11 @@ app.post(
       html: mailHandler.genMailBody(),
       attachments: [
         {
-          filename: 'mail_logo.png', // Image file name
-          path: '/Users/sierra/Desktop/Projects/Personal/Fl1rPo1nt/server/src/mail/mail_logo.png', // Local path to the image
-          cid: 'unique-image-id', // Content ID (used in the HTML as `src="cid:unique-image-id"`)
+          filename: "mail_logo.png", // Image file name
+          path: "/Users/sierra/Desktop/Projects/Personal/Fl1rPo1nt/server/src/mail/mail_logo.png", // Local path to the image
+          cid: "unique-image-id", // Content ID (used in the HTML as `src="cid:unique-image-id"`)
         },
       ],
-
     };
 
     transporter.sendMail(mailOptions, (error, info) => {

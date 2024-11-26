@@ -2,7 +2,7 @@ const jsonHeaders = {
   'Content-Type': 'application/json', // Define el tipo de contenido como JSON
 };
 
-const String _DEV_HOST_IP = "192.168.2.206";
+const String _DEV_HOST_IP = "192.168.2.90";
 const String _DEV_HOST = "http://$_DEV_HOST_IP:3000";
 const String _HOST = _DEV_HOST;
 
@@ -68,6 +68,8 @@ enum HostActions {
       "UPDATE_USER_BIOGRAPHY_BY_USER_ID", SERVER_API),
   UPDATE_USER_HOBBIES_BY_USER_ID("UPDATE_USER_HOBBIES_BY_USER_ID", SERVER_API),
   GET_ALL_HOBBIES("GET_ALL_HOBBIES", SERVER_API),
+
+  GET_CHATROOM_MESSAGES_BY_MATCH_ID("GET_CHATROOM_MESSAGES_BY_MATCH_ID", SERVER_API),
 
   PUT_MESSAGE_TO_USER_WITH_USER_ID(
       "PUT_MESSAGE_TO_USER_WITH_USER_ID", SERVER_API),
