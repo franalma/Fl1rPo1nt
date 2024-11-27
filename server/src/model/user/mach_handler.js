@@ -8,6 +8,7 @@ const sockerHandler = require("../../sockets/socket_handler");
 const userHandler = require("./user_handler");
 const chatroomHandler = require("./../../chatroom/chatroom_handler");
 const { printJson } = require("../../utils/json_utils");
+const { sendMatchLost } = require("../../sockets/socket_handler");
 
 async function createMatchInternal(input) {
   logger.info("Starts createMatchInternal");
@@ -18,7 +19,7 @@ async function createMatchInternal(input) {
     flirt_id: input.flirt_id,
     location: input.location,
     created_at: Date.now(),
-    active: 1
+    active: 1,
   };
 
   const contactQrInfo = await userHandler.getUserInfoByUserIdQrId(
@@ -34,11 +35,11 @@ async function createMatchInternal(input) {
   doc.users = [
     {
       user_id: input.user_id,
-      contact_info: userQrInfo.contact_info
+      contact_info: userQrInfo.contact_info,
     },
     {
       user_id: input.contact_id,
-      contact_info: contactQrInfo.contact_info
+      contact_info: contactQrInfo.contact_info,
     },
   ];
 
@@ -53,30 +54,30 @@ function createMatchExternal(item, input) {
     if (item.users[0].user_id === input.user_id) {
       contactUser = {
         user_id: item.users[1].user_id,
-        contact_info: JSON.parse(item.users[1].contact_info)
-      }
+        contact_info: JSON.parse(item.users[1].contact_info),
+      };
     } else {
       contactUser = {
         user_id: item.users[0].user_id,
-        contact_info: JSON.parse(item.users[0].contact_info)
-      }
+        contact_info: JSON.parse(item.users[0].contact_info),
+      };
     }
 
-    let sharing = item.users[0].user_id === input.user_id ? JSON.parse(item.users[0].contact_info) : JSON.parse(item.users[1].contact_info);
+    let sharing =
+      item.users[0].user_id === input.user_id
+        ? JSON.parse(item.users[0].contact_info)
+        : JSON.parse(item.users[1].contact_info);
     const match = {
       match_id: item.id,
       flirt_id: item.flirt_id,
       contact: contactUser,
-      sharing: sharing
-
-    }
+      sharing: sharing,
+    };
     return match;
-
   } catch (error) {
     logger.info(error);
   }
   return {};
-
 }
 
 async function getMatchByMatchIdInternal(input) {
@@ -84,22 +85,22 @@ async function getMatchByMatchIdInternal(input) {
     logger.info("Starts getMatchByMatchIdInternal");
     const matchId = input.match_id;
     const filter = { id: matchId };
-    const dbResponse = await dbHandler.findWithFilters(filter, userContactCollection);
+    const dbResponse = await dbHandler.findWithFilters(
+      filter,
+      userContactCollection
+    );
 
-    if (dbResponse && (dbResponse.length > 0)) {
+    if (dbResponse && dbResponse.length > 0) {
       let result = dbResponse[0];
       result.status = 200;
-      logger.info("Match complete: "+JSON.stringify(result));
+      logger.info("Match complete: " + JSON.stringify(result));
       return result;
     }
-    
-  }
-  catch (error) {
+  } catch (error) {
     printJson(error);
   }
   return { status: 500 };
 }
-
 
 async function addUserContactByUserIdContactIdQrId(input) {
   logger.info("Starts addUserContactByUserIdContactIdQrId");
@@ -110,16 +111,17 @@ async function addUserContactByUserIdContactIdQrId(input) {
     let dbResponse = await dbHandler.addDocument(doc, userContactCollection);
 
     if (dbResponse) {
-      const updateUsersInfo = await userHandler.updateUserScansByUserIdContactId(
-        input.user_id,
-        input.contact_id
-      );
+      const updateUsersInfo =
+        await userHandler.updateUserScansByUserIdContactId(
+          input.user_id,
+          input.contact_id
+        );
 
       result = {
         status: 200,
         message: "Contact added sucessfully",
         contact_info: doc.contact_info,
-        scans_performed: updateUsersInfo.scans_performed
+        scans_performed: updateUsersInfo.scans_performed,
       };
       const message = {
         requested_user_id: input.user_id,
@@ -165,8 +167,14 @@ async function getAllUserMatchsByUserId(input) {
   logger.info("Starts getAllUserMatchsByUserId");
   let result = {};
   try {
-    const filters = { users: { $elemMatch: { user_id: input.user_id } }, active: 1 };
-    const dbResponse = await dbHandler.findWithFilters(filters, userContactCollection);
+    const filters = {
+      users: { $elemMatch: { user_id: input.user_id } },
+      active: 1,
+    };
+    const dbResponse = await dbHandler.findWithFilters(
+      filters,
+      userContactCollection
+    );
 
     if (dbResponse) {
       result.matchs = [];
@@ -183,7 +191,6 @@ async function getAllUserMatchsByUserId(input) {
 }
 
 async function diableMatchByMatchIdUserId(input) {
-
   try {
     logger.info("Starts disableMatchByMatchId: " + JSON.stringify(input));
     const requesterId = input.user_id;
@@ -192,15 +199,30 @@ async function diableMatchByMatchIdUserId(input) {
     const payload = {
       active: 0,
       requester_id: requesterId,
-      updated_at: Date.now()
+      updated_at: Date.now(),
     };
     logger.info(JSON.stringify(payload));
-    const dbResponse = await dbHandler.updateDocument(payload, filter, userContactCollection);
+    const dbResponse = await dbHandler.updateDocument(
+      payload,
+      filter,
+      userContactCollection
+    );
 
     if (dbResponse) {
       const matchInfo = await getMatchByMatchIdInternal(input);
-      const deletionResult = await chatroomHandler.removeChatroomForMatch(matchInfo); 
+      const deletionResult = await chatroomHandler.removeChatroomForMatch(
+        matchInfo
+      );
       logger.info("Deletion result: " + deletionResult);
+
+      let userToNotify = "";
+      if (matchInfo.users[0].user_id == requesterId) {
+        userToNotify = matchInfo.users[1].user_id;
+      } else {
+        userToNotify = matchInfo.users[0].user_id;
+      }
+      sendMatchLost("match_lost", userToNotify, matchId);
+
       return { status: 200 };
     }
   } catch (error) {
@@ -209,13 +231,9 @@ async function diableMatchByMatchIdUserId(input) {
   return { status: 500 };
 }
 
-
-
-
 module.exports = {
   addUserContactByUserIdContactIdQrId,
   getUserContactsByUserId,
   getAllUserMatchsByUserId,
   diableMatchByMatchIdUserId,
-  
 };

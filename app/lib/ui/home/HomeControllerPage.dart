@@ -8,6 +8,7 @@ import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Home2 extends StatefulWidget {
@@ -89,7 +90,7 @@ class _Home2 extends State<Home2> {
                     },
                   ),
                   IconButton(
-                      icon: Icon(Icons.message,
+                      icon: Icon(FontAwesomeIcons.heart,
                           size: 30,
                           color: _currentIndex == 3
                               ? Colors.white

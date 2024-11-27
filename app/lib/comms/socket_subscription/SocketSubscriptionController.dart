@@ -12,7 +12,9 @@ class SocketSubscriptionController {
   Map<String, Function(ChatMessageItem)?> chatroomGlobal = {};
   Map<String, int> newMessages = {};
   late Function(String) onNewContactRequested;
-  Function?  onReload; 
+  Function? onReload;
+  List<String> mapMatchLost = [];
+  Function(String)? onMatchLost;
 
   SocketSubscriptionController initializeSocketConnection() {
     socket = IO.io(HostActions.SOCKET_LISTEN.url, <String, dynamic>{
@@ -23,6 +25,18 @@ class SocketSubscriptionController {
 
     socket.on('new_contact_request', (data) {
       onNewContactRequested(data);
+    });
+
+    socket.on('match_lost', (input) async {
+      Log.d("match lost $input");
+      Map<String, dynamic> data = jsonDecode(input);
+      String matchId = data["match_id"];
+
+      if (onMatchLost != null) {
+        onMatchLost!(matchId);
+      } else {
+        mapMatchLost.add(matchId);
+      }
     });
 
     socket.on('chat_message', (input) async {
@@ -38,16 +52,13 @@ class SocketSubscriptionController {
 
       if (chatroomGlobal.containsKey(matchId)) {
         var callback = chatroomGlobal[matchId]!;
-        print("------>");
-        print(callback);
         callback(messageItem);
       } else {
-        print("addding");
         int? nMsg = newMessages[matchId] == null ? 0 : newMessages[matchId];
         nMsg = nMsg! + 1;
         newMessages[matchId] = nMsg;
-        if (onReload != null ){
-          onReload!(); 
+        if (onReload != null) {
+          onReload!();
         }
       }
     });
@@ -68,7 +79,8 @@ class SocketSubscriptionController {
     }
     return newMessages[matchId]!;
   }
-  void clearPendingMessages(String matchId){
+
+  void clearPendingMessages(String matchId) {
     newMessages[matchId] = 0;
   }
 }

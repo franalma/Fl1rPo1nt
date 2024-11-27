@@ -28,6 +28,7 @@ class _ListContactsPage extends State<ListContactsPage> {
   @override
   void initState() {
     Session.socketSubscription?.onReload = _onNewMessageReload;
+    Session.socketSubscription?.onMatchLost = _onNewBrokenMatchCallback;
 
     super.initState();
     _fetchFromHost();
@@ -49,26 +50,33 @@ class _ListContactsPage extends State<ListContactsPage> {
           return Column(
             children: [
               ListTile(
-                leading: GestureDetector(
-                    child: const CircleAvatar(backgroundColor: Colors.amber),
-                    onTap: () {
-                      NavigatorApp.push(ShowContactDetailsPage(_matchs[index]), context);
-                    }),
+                leading: const CircleAvatar(backgroundColor: Colors.amber),
                 title: Text(_matchs[index].contactInfo!.name!),
                 trailing: _buildNewMessages(index),
                 onTap: () async {
-                  setState(() {
-                    Session.socketSubscription
-                        ?.clearPendingMessages(_matchs[index].matchId!);
-                  });
-                  var matchId = await NavigatorApp.pushAndWait(
-                      ShowConversationPage(_matchs[index]), context);
-                  if (matchId.isNotEmpty) {
-                    for (var i = 0; i < _matchs.length; i++) {
-                      if (_matchs[i].matchId == matchId) {
-                        setState(() {
-                          _matchs.removeAt(i);
-                        });
+                  Session.socketSubscription?.onMatchLost = null; 
+                  var values = await NavigatorApp.pushAndWait(
+                      ShowContactDetailsPage(_matchs[index]), context);
+
+                  var matchId = values["match_id"];
+                  if (values["read"]) {
+                    setState(() {
+                      Session.socketSubscription
+                          ?.clearPendingMessages(_matchs[index].matchId!);
+                    });
+                  }
+                  Session.socketSubscription?.onMatchLost = _onNewBrokenMatchCallback; 
+
+                  _deleteBrokenMatchs();
+
+                  if (values["broken_match"]) {
+                    if (matchId.isNotEmpty) {
+                      for (var i = 0; i < _matchs.length; i++) {
+                        if (_matchs[i].matchId == matchId) {
+                          setState(() {
+                            _matchs.removeAt(i);
+                          });
+                        }
                       }
                     }
                   }
@@ -85,11 +93,42 @@ class _ListContactsPage extends State<ListContactsPage> {
     var match = _matchs[index];
     int nMessages =
         Session.socketSubscription!.getPendingMessagesForMap(match.matchId!);
-    print("--nMessages: " + nMessages.toString());
+
     if (nMessages > 0) {
       return Text(nMessages.toString());
     }
     return SizedBox(width: 20, height: 20, child: Container());
+  }
+
+  void _deleteBrokenMatchs() {
+    try {
+      var matchesLost = Session.socketSubscription?.mapMatchLost;
+      for (var item in matchesLost!) {
+        for (var i = 0; i < _matchs.length; i++) {
+          if (_matchs[i].matchId == item) {
+            setState(() {
+              _matchs.removeAt(i);
+            });
+          }
+        }
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  void _onNewBrokenMatchCallback(String matchId) {
+    try {
+      for (var i = 0; i < _matchs.length; i++) {
+        if (_matchs[i].matchId == matchId) {
+          setState(() {
+            _matchs.removeAt(i);
+          });
+        }
+      }
+    } catch (error) {
+      print(error);
+    }
   }
 
   Future<void> _fetchFromHost() async {
@@ -106,5 +145,11 @@ class _ListContactsPage extends State<ListContactsPage> {
 
   void _onNewMessageReload() {
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    Session.socketSubscription?.onMatchLost = null; 
+    super.dispose();
   }
 }

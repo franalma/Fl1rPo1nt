@@ -40,16 +40,13 @@ class _ShowConversationPage extends State<ShowConversationPage> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: FlexibleAppBar(),
-        leading: IconButton(icon:const Icon(Icons.arrow_back), onPressed: (){NavigatorApp.popWith(context, "");}),
+        // leading: IconButton(
+        //     icon: const Icon(Icons.arrow_back),
+        //     onPressed: () {
+        //       NavigatorApp.popWith(context, "");
+        //     }),
         actions: [
-          IconButton(
-              icon: const Icon(
-                Icons.heart_broken,
-                size: 30,
-              ),
-              onPressed: () async {
-                _breakMatch();
-              }),
+         
           IconButton(
               icon: const Icon(
                 Icons.delete_forever,
@@ -171,9 +168,5 @@ class _ShowConversationPage extends State<ShowConversationPage> {
     });
   }
 
-  Future<void> _breakMatch() async {
-    Log.d("Starts _breakMatch");
-    await HostDisableUserMatchRequest().run(widget._userMatch.matchId!, _user.userId);
-    NavigatorApp.popWith(context, widget._userMatch.matchId);
-  }
+
 }

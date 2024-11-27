@@ -8,4 +8,9 @@ class Gradient1 {
         startAngle: 0.0,
         endAngle: 3.14 * 2); // Full circle
   }
+
+  BoxDecoration getLinearGradient(){
+    return const BoxDecoration(
+          gradient: LinearGradient(colors: [Colors.blue, Colors.purple]));
+  }
 }

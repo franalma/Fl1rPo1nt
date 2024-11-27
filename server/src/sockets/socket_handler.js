@@ -45,6 +45,26 @@ function sendMessageToUser(action, userId, scanned, message) {
   }
 }
 
+function sendMatchLost(action, userId, matchId) {
+    logger.info("Starts sendMachLost userId: " + userId);
+    try {
+      const socket = mapSockets[userId]["socket"];
+      logger.info("socket id:" + socket.id);
+      if (socket) {
+        let payload = {
+          send_at: Date.now(),      
+          match_id: matchId    
+        };
+        payload = JSON.stringify(payload);
+        socket.emit(action, payload);        
+      }
+    } catch (error) {
+      logger.info(error);
+    }
+  }
+
+
+
 function sendChatMessage(action, receiverId, senderId, message, matchId) {
   logger.info("Starts sendChatMessage userId: " + receiverId);
   try {
@@ -71,4 +91,5 @@ module.exports = {
   socketInit,
   sendMessageToUser,
   sendChatMessage,
+  sendMatchLost
 };
