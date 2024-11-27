@@ -1,8 +1,8 @@
 const multer = require('multer');
 const path = require('path');
 const rootDir = process.env.MULTIMEDIA_PATH;;
-const rootDirImages = rootDir+"/server_user_images";
-const rootDirAudios = rootDir+"/server_user_audios";
+const rootDirImages = rootDir + "/server_user_images";
+const rootDirAudios = rootDir + "/server_user_audios";
 const fs = require('fs');
 const dbHandler = require("../database/database_handler");
 const userImageCollection = "user_images";
@@ -34,13 +34,13 @@ function configImages() {
 }
 
 function configAudios() {
-    
+
     const storage = multer.diskStorage({
         destination: (req, file, cb) => {
             cb(null, rootDirAudios);
         },
         filename: (req, file, cb) => {
-            cb(null, Date.now() + path.extname(file.originalname)); 
+            cb(null, Date.now() + path.extname(file.originalname));
         }
     });
 
@@ -104,6 +104,26 @@ async function doUploadAudioByUserId(req, userId) {
     return null;
 }
 
+async function getImageByUserIdImageId(input) {
+    logger.info("Starts getImageByUserIdImageId");
+    try {
+        const filters = { user_id: input.user_id, file_id: input.file_id };
+        const dbResponse = await dbHandler.findWithFilters(filters, userImageCollection);
+        if (dbResponse) {
+            const item = dbResponse[0];
+            let fileName = item.filename;
+            const filePath = path.join(rootDirImages, fileName);
+            const imageData = fs.readFileSync(filePath);
+            let result = { status: 200 };
+            result.image = imageData.toString('base64');
+            return result; 
+        }
+    } catch (error) {
+        logger.info(error);
+    }
+    return { status: 500 };
+}
+
 
 async function getUserImagesByUserId(input) {
     logger.info("Starts getUserImagesByUserId");
@@ -116,20 +136,20 @@ async function getUserImagesByUserId(input) {
         if (dbResponse) {
 
             for (var item of dbResponse) {
-                try{
+                try {
                     let fileName = item.filename;
                     const filePath = path.join(rootDirImages, fileName);
                     const imageData = fs.readFileSync(filePath);
-    
+
                     result.images.push({
                         file_id: item.file_id,
                         created_at: item.created_at,
                         file: imageData.toString('base64')
                     });
-                }catch(error){
+                } catch (error) {
                     logger.info(error);
                 }
-                
+
             }
         }
     } catch (error) {
@@ -187,7 +207,7 @@ async function removeUserImageByImageIdUserId(input) {
                 }
             });
             dbResponse = await dbHandler.deleteDocument(filters, userImageCollection);
-            
+
         };
     } catch (error) {
         logger.info(error);
@@ -215,7 +235,7 @@ async function removeUserAudioByAudioIdUserId(input) {
                 }
             });
             dbResponse = await dbHandler.deleteDocument(filters, userAudioCollection);
-            
+
         };
     } catch (error) {
         logger.info(error);
@@ -236,5 +256,6 @@ module.exports = {
     removeUserImageByImageIdUserId,
     doUploadAudioByUserId,
     getUserAudiosByUserId,
-    removeUserAudioByAudioIdUserId
+    removeUserAudioByAudioIdUserId,
+    getImageByUserIdImageId
 }

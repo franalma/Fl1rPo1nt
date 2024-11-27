@@ -316,6 +316,28 @@ async function processRequest(req, res) {
           );
           break;
         }
+
+        case hostActions.DELETE_CHATROOM_FROM_MATCH_ID_USER_ID: {
+          result = await chatroomHandler.deleteChatRoomByMatchIdUserId(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.DISABLE_MATCH_BY_MATCH_ID_USER_ID: {
+          result = await contactHandler.diableMatchByMatchIdUserId(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.GET_USER_PUBLIC_PROFILE_BY_USER_ID: {
+          result = await userHandler.getUserPublicProfileByUserId(
+            req.body.input
+          );
+          break;
+        }
+
       }
       if (result && result.status) {
         res.status(result.status).json(result);

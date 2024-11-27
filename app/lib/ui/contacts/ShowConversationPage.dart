@@ -1,9 +1,12 @@
 import 'package:app/comms/model/request/HostSendMessageToUserRequest.dart';
+import 'package:app/comms/model/request/chat/HostClearChatByUserId.dart';
 import 'package:app/comms/model/request/chat/HostGetChatroomMessagesRequest.dart';
+import 'package:app/comms/model/request/matchs/HostDisableUserMatchRequest.dart';
 import 'package:app/model/ChatMessage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
+import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
@@ -37,9 +40,24 @@ class _ShowConversationPage extends State<ShowConversationPage> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: FlexibleAppBar(),
+        leading: IconButton(icon:const Icon(Icons.arrow_back), onPressed: (){NavigatorApp.popWith(context, "");}),
         actions: [
-          IconButton(icon: const Icon(Icons.heart_broken, size: 30,), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.delete_forever, size: 30,), onPressed: () {})
+          IconButton(
+              icon: const Icon(
+                Icons.heart_broken,
+                size: 30,
+              ),
+              onPressed: () async {
+                _breakMatch();
+              }),
+          IconButton(
+              icon: const Icon(
+                Icons.delete_forever,
+                size: 30,
+              ),
+              onPressed: () async {
+                await _clearChat();
+              })
         ],
       ),
       body: Column(
@@ -116,7 +134,7 @@ class _ShowConversationPage extends State<ShowConversationPage> {
   Future<void> _loadMessages() async {
     Log.d("Starts _loadMessages");
     HostGetChatroomMessagesRequest()
-        .run(widget._userMatch.matchId!)
+        .run(widget._userMatch.matchId!, _user.userId)
         .then((response) {
       var messages = response.chatMessages!;
       for (var item in messages) {
@@ -143,5 +161,19 @@ class _ShowConversationPage extends State<ShowConversationPage> {
     Session.socketSubscription
         ?.removeSocketCallback(widget._userMatch.matchId!);
     super.dispose();
+  }
+
+  Future<void> _clearChat() async {
+    Log.d("Starts _clearChat");
+    await HostClearChatByUserId().run(widget._userMatch.matchId!, _user.userId);
+    setState(() {
+      _messages.clear();
+    });
+  }
+
+  Future<void> _breakMatch() async {
+    Log.d("Starts _breakMatch");
+    await HostDisableUserMatchRequest().run(widget._userMatch.matchId!, _user.userId);
+    NavigatorApp.popWith(context, widget._userMatch.matchId);
   }
 }

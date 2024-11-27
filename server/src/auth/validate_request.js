@@ -50,103 +50,118 @@ function requestFieldsValidation(req, res, next) {
         //     validationSet = validationRules.GET_QR_BY_USER_ID_RULES;
         //     break; 
         // }
-        case hostActions.PUT_ALL_SOCIAL_NETWORKS:{
+        case hostActions.PUT_ALL_SOCIAL_NETWORKS: {
             validationSet = validationRules.PUT_ALL_SOCIAL_NETWORKS_RULES;
-            break; 
+            break;
         }
-        case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID:{
+        case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID: {
             validationSet = validationRules.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID_RULES;
-            break; 
+            break;
         }
-        case hostActions.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID:{
+        case hostActions.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID: {
             validationSet = validationRules.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID_RULES;
-            break; 
-            
+            break;
+
         }
-        case hostActions.GET_USER_CONTACTS_BY_USER_ID:{
+        case hostActions.GET_USER_CONTACTS_BY_USER_ID: {
             validationSet = validationRules.GET_USER_CONTACTS_BY_USER_ID_RULES
-            break; 
+            break;
         }
-        case hostActions.GET_USER_BY_DISTANCE_FROM_POINT:{
+        case hostActions.GET_USER_BY_DISTANCE_FROM_POINT: {
             validationSet = validationRules.GET_USER_BY_DISTANCE_FROM_POINT_RULES
-            break; 
+            break;
         }
-        case hostActions.UPDATE_USER_NETWORK_BY_USER_ID:{
+        case hostActions.UPDATE_USER_NETWORK_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_NETWORK_BY_USER_ID_RULES
-            break; 
+            break;
         }
-        case hostActions.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID:{
+        case hostActions.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID_RULES
-            break; 
+            break;
         }
-        case hostActions.UPDATE_USER_INTERESTS_BY_USER_ID:{
+        case hostActions.UPDATE_USER_INTERESTS_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_INTERESTS_BY_USER_ID_RULES
-            break; 
+            break;
         }
-        case hostActions.UPDATE_USER_QRS_BY_USER_ID:{
+        case hostActions.UPDATE_USER_QRS_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_QRS_BY_USER_ID_RULES
-            break; 
+            break;
         }
-        case hostActions.PUT_USER_FLIRT_BY_USER_ID:{
+        case hostActions.PUT_USER_FLIRT_BY_USER_ID: {
             validationSet = validationRules.PUT_USER_FLIRT_BY_USER_ID_RULES
-            break; 
+            break;
         }
 
-        case hostActions.UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID:{
+        case hostActions.UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID: {
             validationSet = validationRules.UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID_RULES
-            break; 
+            break;
         }
 
-        case hostActions.GET_USER_FLIRTS:{
+        case hostActions.GET_USER_FLIRTS: {
             validationSet = validationRules.GET_USER_FLIRTS_RULES
-            break; 
+            break;
         }
-        case hostActions.GET_USER_IMAGES_BY_USER_ID:{
+        case hostActions.GET_USER_IMAGES_BY_USER_ID: {
             validationSet = validationRules.GET_USER_IMAGES_BY_USER_RULES
-            break; 
+            break;
         }
-        case hostActions.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID:{
+        case hostActions.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID: {
             validationSet = validationRules.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_RULES
-            break; 
+            break;
         }
-        case hostActions.UPDATE_USER_BIOGRAPHY_BY_USER_ID:{
+        case hostActions.UPDATE_USER_BIOGRAPHY_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_BIOGRAPHY_BY_USER_RULES
-            break; 
+            break;
         }
 
-        case hostActions.UPDATE_USER_HOBBIES_BY_USER_ID:{
+        case hostActions.UPDATE_USER_HOBBIES_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_HOBBIES_BY_USER_RULES
-            break; 
+            break;
         }
 
-        case hostActions.UPDATE_USER_IMAGE_PROFILE_BY_USER_ID:{
+        case hostActions.UPDATE_USER_IMAGE_PROFILE_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_IMAGE_PROFILE_BY_USER_RULES
-            break; 
+            break;
         }
 
-        case hostActions.UPDATE_USER_DEFAULT_QR_BY_USER_ID:{
+        case hostActions.UPDATE_USER_DEFAULT_QR_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_DEFAULT_QR_BY_USER_ID_RULES
-            break; 
+            break;
         }
-        case hostActions.GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY:{
+        case hostActions.GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY: {
             validationSet = validationRules.GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY_RULES
-            break; 
+            break;
         }
 
 
-        case hostActions.UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID:{
+        case hostActions.UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID_RULES
-            break; 
+            break;
         }
 
-        case hostActions.UPDATE_USER_GENDER_BY_USER_ID:{
+        case hostActions.UPDATE_USER_GENDER_BY_USER_ID: {
             validationSet = validationRules.UPDATE_USER_GENDER_BY_USER_ID_RULES
-            break; 
+            break;
+        }
+
+        case hostActions.DELETE_CHATROOM_FROM_MATCH_ID_USER_ID: {
+            validationSet = validationRules.DELETE_CHATROOM_FROM_MATCH_ID_USER_ID_RULES
+            break;
+        }
+
+        case hostActions.DISABLE_MATCH_BY_MATCH_ID_USER_ID: {
+            validationSet = validationRules.DISABLE_MATCH_BY_MATCH_ID_USER_ID_RULES
+            break;
+        }
+
+        case hostActions.GET_USER_PUBLIC_PROFILE_BY_USER_ID: {
+            validationSet = validationRules.GET_USER_PUBLIC_PROFILE_BY_USER_ID_RULES
+            break;
         }
 
     
-        default:{
-            logger.info("No request verification needed for "+action);
+        default: {
+            logger.info("No request verification needed for " + action);
             validationSet = [];
         }
 
@@ -168,6 +183,6 @@ function requestDoValidation(req) {
 
 module.exports = {
     requestAuthValidation,
-    requestFieldsValidation, 
+    requestFieldsValidation,
     requestDoValidation
 }

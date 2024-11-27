@@ -2,6 +2,7 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/contacts/ShowContactDetailsPage.dart';
 import 'package:app/ui/contacts/ShowConversationPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
@@ -50,16 +51,27 @@ class _ListContactsPage extends State<ListContactsPage> {
               ListTile(
                 leading: GestureDetector(
                     child: const CircleAvatar(backgroundColor: Colors.amber),
-                    onTap: () {}),
+                    onTap: () {
+                      NavigatorApp.push(ShowContactDetailsPage(_matchs[index]), context);
+                    }),
                 title: Text(_matchs[index].contactInfo!.name!),
                 trailing: _buildNewMessages(index),
-                onTap: () {
+                onTap: () async {
                   setState(() {
                     Session.socketSubscription
                         ?.clearPendingMessages(_matchs[index].matchId!);
                   });
-                  NavigatorApp.push(
+                  var matchId = await NavigatorApp.pushAndWait(
                       ShowConversationPage(_matchs[index]), context);
+                  if (matchId.isNotEmpty) {
+                    for (var i = 0; i < _matchs.length; i++) {
+                      if (_matchs[i].matchId == matchId) {
+                        setState(() {
+                          _matchs.removeAt(i);
+                        });
+                      }
+                    }
+                  }
                 },
               ),
               const Divider()

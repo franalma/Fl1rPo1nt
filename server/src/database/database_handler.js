@@ -36,7 +36,7 @@ async function addDocument(document, path) {
     try {
         await client.connect();
         const db = client.db(database);
-        const collection = db.collection(path);
+        const collection = db.collection(path);        
         result = await collection.insertOne(document);
         console.log(`Document added with id= ${result.insertedId}`);
     } catch (error) {
@@ -46,9 +46,9 @@ async function addDocument(document, path) {
     finally{
         await client.close(); 
     }
-
     return result;
 }
+
 
 async function addManyDocuments(document, path) {
     logger.info("Starts addDocument: " + JSON.stringify(document));
@@ -110,10 +110,28 @@ async function deleteDocument(filter, path) {
     } finally {
         await client.close();
     }
-
-
     return result;
 }
+
+
+async function deleteCollection(path) {
+    let result = null;
+    try {
+        await client.connect();
+        const db = client.db(database);
+        result = await db.collection(path).drop(); 
+        console.log(`Collection deleted with id= ${result}`);
+        json.printJson(result);
+    } catch (error) {
+        logger.info("error found searching: " + error)
+    } finally {
+        await client.close();
+    }
+    return result;
+}
+
+
+
 
 async function findWithFilters(filters, path) {
     logger.info("Starts findWithFilters: "+ JSON.stringify(filters));
@@ -164,5 +182,6 @@ module.exports = {
     deleteDocument,
     findWithFilters,
     addManyDocuments,
-    findAll
+    findAll,
+    deleteCollection
 }

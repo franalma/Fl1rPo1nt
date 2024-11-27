@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const tokenHandler = require("../../auth/token_generator");
 const { printJson } = require("../../utils/json_utils");
 const { getUserQrByUserId } = require("../qr/qr_handler");
+const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/file_handler");
 
 const userColletion = "users";
 const locationCollection = "user_coordinates";
@@ -45,6 +46,33 @@ async function creatInternalUser(input) {
   };
   user.password = await hashPassword(input.password);
   user.surname = input.surname ? input.surname : "";
+  return user;
+}
+
+async function createPublicProfileUser(input) {
+  logger.info("Starts createPublicProfileUser");
+  let user = {};
+  try {
+
+    user = {
+      id: input.id,
+      user_interest: input.user_interests,
+      biography: input.biography,
+      hobbies: input.hobbies,
+      gender: input.gender,
+    };
+
+    if (input.profile_image_id) {
+      const imageData = await getImageByUserIdImageId({ user_id: input.id, file_id: input.profile_image_id });
+      if (imageData.status == 200) {
+        user.profile_image = imageData.image;
+      }
+    }
+
+  } catch (error) {
+    logger.info(error);
+  }
+
   return user;
 }
 
@@ -135,7 +163,7 @@ async function doLogin(input) {
           scanned_count: user.scanned_count ? user.scanned_count : 0,
           scans_performed: user.scans_performed ? user.scans_performed : 0,
           default_qr_id: user.default_qr_id ? user.default_qr_id : "",
-          radio_visibility: user.radio_visibility ? user.radio_visibility: 10.0,
+          radio_visibility: user.radio_visibility ? user.radio_visibility : 10.0,
           gender: user.gender
         },
       };
@@ -297,7 +325,7 @@ async function updateUserQrsByUserId(input) {
 async function getUserInfoByUserIdQrId(userId, qrId) {
   logger.info("Starts getUserInfoByUserIdQrId. user_id: " + userId + " qr_id: " + qrId);
   const filter = { id: userId, qr_values: { $elemMatch: { qr_id: qrId } } };
-  let dbResponse = await dbHandler.findWithFilters(filter, userColletion);  
+  let dbResponse = await dbHandler.findWithFilters(filter, userColletion);
   let result = {};
   if (dbResponse) {
     logger.info("checking...");
@@ -416,9 +444,6 @@ async function updateUserGenderByUserId(input) {
   return result;
 }
 
-
-
-
 async function updateUserImageProfileByUserId(input) {
   logger.info("Starts updateUserImageProfileByUserId");
   let result = { status: 200, message: "User image profile updated" };
@@ -525,6 +550,27 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
   return result;
 }
 
+async function getUserPublicProfileByUserId(input) {
+  let result = {};
+  try {
+    logger.info("Starts getUserPublicProfileByUserId:" + JSON.stringify(input));
+    const filter = { id: input.user_id };
+    const dbResponse = await dbHandler.findWithFilters(filter, userColletion);
+    if (dbResponse) {
+      const userDB = dbResponse[0];
+      result = await createPublicProfileUser(userDB);      
+      result.status = 200;
+    }
+
+    return result;
+  } catch (error) {
+    logger.info(error);
+  }
+
+  return { status: 500 };
+
+}
+
 module.exports = {
   registerUser,
   doLogin,
@@ -540,6 +586,7 @@ module.exports = {
   updateUserImageProfileByUserId,
   updateUserScansByUserIdContactId,
   updateUserDefaultQrByUserId,
-  updateUserRadioVisibility, 
-  updateUserGenderByUserId
+  updateUserRadioVisibility,
+  updateUserGenderByUserId,
+  getUserPublicProfileByUserId
 };

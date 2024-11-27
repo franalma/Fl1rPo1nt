@@ -1,9 +1,12 @@
+const userContactCollection = "users_matchs";
+
 const logger = require("../../logger/log");
 const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
-const userContactCollection = "users_matchs";
+
 const sockerHandler = require("../../sockets/socket_handler");
 const userHandler = require("./user_handler");
+const chatroomHandler = require("./../../chatroom/chatroom_handler");
 const { printJson } = require("../../utils/json_utils");
 
 async function createMatchInternal(input) {
@@ -15,6 +18,7 @@ async function createMatchInternal(input) {
     flirt_id: input.flirt_id,
     location: input.location,
     created_at: Date.now(),
+    active: 1
   };
 
   const contactQrInfo = await userHandler.getUserInfoByUserIdQrId(
@@ -41,6 +45,61 @@ async function createMatchInternal(input) {
   printJson(doc);
   return doc;
 }
+
+function createMatchExternal(item, input) {
+  logger.info("createMatchExternal " + JSON.stringify(item));
+  try {
+    let contactUser = {};
+    if (item.users[0].user_id === input.user_id) {
+      contactUser = {
+        user_id: item.users[1].user_id,
+        contact_info: JSON.parse(item.users[1].contact_info)
+      }
+    } else {
+      contactUser = {
+        user_id: item.users[0].user_id,
+        contact_info: JSON.parse(item.users[0].contact_info)
+      }
+    }
+
+    let sharing = item.users[0].user_id === input.user_id ? JSON.parse(item.users[0].contact_info) : JSON.parse(item.users[1].contact_info);
+    const match = {
+      match_id: item.id,
+      flirt_id: item.flirt_id,
+      contact: contactUser,
+      sharing: sharing
+
+    }
+    return match;
+
+  } catch (error) {
+    logger.info(error);
+  }
+  return {};
+
+}
+
+async function getMatchByMatchIdInternal(input) {
+  try {
+    logger.info("Starts getMatchByMatchIdInternal");
+    const matchId = input.match_id;
+    const filter = { id: matchId };
+    const dbResponse = await dbHandler.findWithFilters(filter, userContactCollection);
+
+    if (dbResponse && (dbResponse.length > 0)) {
+      let result = dbResponse[0];
+      result.status = 200;
+      logger.info("Match complete: "+JSON.stringify(result));
+      return result;
+    }
+    
+  }
+  catch (error) {
+    printJson(error);
+  }
+  return { status: 500 };
+}
+
 
 async function addUserContactByUserIdContactIdQrId(input) {
   logger.info("Starts addUserContactByUserIdContactIdQrId");
@@ -79,10 +138,6 @@ async function addUserContactByUserIdContactIdQrId(input) {
   return result;
 }
 
-async function removeUserContactByUserIdContactId(input) {
-  logger.info("Starts removeUserContactByUserIdContactId");
-}
-
 async function getUserContactsByUserId(input) {
   logger.info("Starts getUserContactsByUserId");
   const filter = { user_id: input.user_id };
@@ -110,52 +165,57 @@ async function getAllUserMatchsByUserId(input) {
   logger.info("Starts getAllUserMatchsByUserId");
   let result = {};
   try {
-    const filters = { users: { $elemMatch: { user_id: input.user_id } } };
+    const filters = { users: { $elemMatch: { user_id: input.user_id } }, active: 1 };
     const dbResponse = await dbHandler.findWithFilters(filters, userContactCollection);
 
     if (dbResponse) {
       result.matchs = [];
       for (let item of dbResponse) {
-        let contactUser = {};
-        if (item.users[0].user_id === input.user_id) {
-          contactUser = {
-            user_id: item.users[1].user_id,
-            contact_info: JSON.parse(item.users[1].contact_info)
-          }
-
-        } else {
-          contactUser = {
-            user_id: item.users[0].user_id,
-            contact_info: JSON.parse(item.users[0].contact_info)
-          }
-        }
-
-
-        let sharing = item.users[0].user_id === input.user_id ? JSON.parse(item.users[0].contact_info) : JSON.parse(item.users[1].contact_info);
-        result.status = 200;
-        result.matchs.push(
-          {
-            match_id: item.id,
-            flirt_id: item.flirt_id,
-            contact: contactUser,
-            sharing: sharing
-
-          }
-        )
+        const match = createMatchExternal(item, input);
+        result.matchs.push(match);
       }
+      result.status = 200;
     }
   } catch (error) {
     logger.info(error);
   }
   return result;
-
-
-
 }
+
+async function diableMatchByMatchIdUserId(input) {
+
+  try {
+    logger.info("Starts disableMatchByMatchId: " + JSON.stringify(input));
+    const requesterId = input.user_id;
+    const matchId = input.match_id;
+    const filter = { id: matchId };
+    const payload = {
+      active: 0,
+      requester_id: requesterId,
+      updated_at: Date.now()
+    };
+    logger.info(JSON.stringify(payload));
+    const dbResponse = await dbHandler.updateDocument(payload, filter, userContactCollection);
+
+    if (dbResponse) {
+      const matchInfo = await getMatchByMatchIdInternal(input);
+      const deletionResult = await chatroomHandler.removeChatroomForMatch(matchInfo); 
+      logger.info("Deletion result: " + deletionResult);
+      return { status: 200 };
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+  return { status: 500 };
+}
+
+
+
 
 module.exports = {
   addUserContactByUserIdContactIdQrId,
-  removeUserContactByUserIdContactId,
   getUserContactsByUserId,
-  getAllUserMatchsByUserId
+  getAllUserMatchsByUserId,
+  diableMatchByMatchIdUserId,
+  
 };
