@@ -140,7 +140,7 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
 
               // Phone and Email
               Text(
-                contact['phone'] ?? "No tenemos el teléfono",
+                widget._match.contactInfo?.phone ?? "No tenemos el teléfono",
                 style: const TextStyle(fontSize: 16, color: Colors.teal),
               ),
 
