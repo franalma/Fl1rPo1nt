@@ -56,6 +56,7 @@ function configAudios() {
 }
 
 function generateSignedUrl(filename, expiresIn = 300) { // expiresIn is in seconds
+    logger.info("Starts generateSignedUrl")
     const expirationTime = Math.floor(Date.now() / 1000) + expiresIn;
     const signature = crypto
         .createHmac('sha256', secImageKey)
@@ -174,7 +175,8 @@ async function getSecureSharedImagesUrlByUserId(input) {
         if (dbFiles) {
             for (let file of dbFiles) {
                 try {
-                    const secureUrl = generateSignedUrl(file.filename)
+                    const secureUrl = generateSignedUrl(file.filename); 
+                    logger.info("Secure url: "+secureUrl);
                     result.files.push({ file_id: file.file_id, url: secureUrl, created_at: 0, filename: "" });
                 } catch (error) {
                     logger.info(error);

@@ -1,5 +1,3 @@
-
-
 import 'package:app/comms/model/request/matchs/HostDisableUserMatchRequest.dart';
 import 'package:app/comms/model/request/user/profile/HostGetUserPublicProfile.dart';
 import 'package:app/model/Session.dart';
@@ -12,8 +10,10 @@ import 'package:app/ui/contacts/ShowConversationPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Gradient1.dart';
+import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactDetailsPage extends StatefulWidget {
   UserMatch _match;
@@ -26,15 +26,13 @@ class ContactDetailsPage extends StatefulWidget {
   }
 }
 
-
 class _ContactDetailsPage extends State<ContactDetailsPage> {
   bool _readMessages = false;
   bool _brokenMatch = false;
   final User _user = Session.user;
-  bool _isLoading = true; 
+  bool _isLoading = true;
   UserPublicProfile? _userPublicProfile;
 
-  
   final Map<String, dynamic> contact = {
     "name": "Mi ligue",
     "email": "alice@example.com",
@@ -55,198 +53,273 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
     _fetchFromHost();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
+          appBar: AppBar(
+            actions: [
+              IconButton(
                 onPressed: () {
-                  NavigatorApp.push(ShowContactPictures(widget._match), context);
+                  NavigatorApp.push(
+                      ShowContactPictures(widget._match), context);
                 },
                 icon: const Icon(Icons.image),
-                iconSize: 30),
-            IconButton(
-                onPressed: () async {
-                  await NavigatorApp.pushAndWait(
-                      ShowConversationPage(widget._match), context);
-                  _readMessages = true;
-                },
-                icon: const Icon(Icons.message),
-                iconSize: 30),
-            IconButton(
-                icon: const Icon(
-                  Icons.heart_broken,
-                  size: 30,
-                ),
-                onPressed: () async {
-                  _brokenMatch = true;
-                  _breakMatch();
+                iconSize: 30,
+                color: Colors.white,
+              ),
+              IconButton(
+                  onPressed: () async {
+                    await NavigatorApp.pushAndWait(
+                        ShowConversationPage(widget._match), context);
+                    _readMessages = true;
+                  },
+                  icon: const Icon(Icons.message),
+                  iconSize: 30,
+                  color: Colors.white),
+              IconButton(
+                  icon: const Icon(Icons.heart_broken,
+                      size: 30, color: Colors.white),
+                  onPressed: () async {
+                    _brokenMatch = true;
+                    _breakMatch();
+                  }),
+            ],
+            flexibleSpace: FlexibleAppBar(),
+            leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  _pop();
                 }),
-          ],
-          flexibleSpace: FlexibleAppBar(),
-          leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                // _pop();
-              }),
-        ),
-        body: _isLoading ? AlertDialogs().buildLoading():_buildBody()
+          ),
+          body: _isLoading ? AlertDialogs().buildLoading() : _buildBody()),
+    );
+  }
+
+  Widget _buildBody() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _buildProfile(),
+          const SizedBox(height: 5),
+          _buildNameTitle(),
+          const SizedBox(height: 5),
+          _buildPhone(),
+          const SizedBox(height: 5),
+          _buildSexInterest(),
+          const SizedBox(height: 5),
+          _buildBiography(),
+          const SizedBox(height: 5),
+          _buildHobbies(),
+          const SizedBox(height: 5),
+          _buildSocialNetworks(),
+          const SizedBox(height: 5),
+        ],
       ),
     );
   }
-  Widget _buildBody(){
-    return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Profile Picture
-              SizedBox(
-                height: 150,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  decoration: Gradient1().getLinearGradient(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              "${widget._match.profileImage!}&width=100&height=100&quality=60"),
-                          fit: BoxFit.fill, // Customize fit here
-                        ),
-                      ),
-                    ),
-                  ),
+
+  Widget _buildSexInterest() {
+    return Card(
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 5, left: 20.0, right: 4.0, bottom: 10),
+        child: Column(
+          children: [
+            _buildSectionTitle("Mis preferencias..."),
+            SizedBox(
+              height: 30,
+              child: ListTile(              
+                leading: Icon(
+                  Icons.link,
+                  color: Color(CommonUtils.colorToInt(
+                      _userPublicProfile!.sexAlternative!.color)),
                 ),
+                title: Text("Me identifico como ${_userPublicProfile!.gender!.name?.toLowerCase()}"),
               ),
-              const SizedBox(height: 15),
-
-              // Name and Title
-              Text(
-              widget._match.contactInfo?.name?? "Desconocid@",
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+            ),
+            SizedBox(
+              height: 30,
+              child: ListTile(
+                leading: Icon(
+                  Icons.link,
+                  color: Color(CommonUtils.colorToInt(
+                      _userPublicProfile!.sexAlternative!.color)),
                 ),
-                textAlign: TextAlign.center,
+                title: Text(_userPublicProfile!.sexAlternative!.name),
               ),
-              const SizedBox(height: 5),
-
-              // Phone and Email
-              Text(
-                widget._match.contactInfo?.phone ?? "No tenemos el teléfono",
-                style: const TextStyle(fontSize: 16, color: Colors.teal),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Biography Section
-
-              Card(
-                elevation: 2,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 5, left: 20.0, right: 20.0, bottom: 10),
-                  child: Column(
-                    children: [
-                      _buildSectionTitle("Sobre mí..."),
-                      Text(
-                        _userPublicProfile?.biography??"No sabemos mucho",
-                        style: const TextStyle(fontSize: 14),
-                        textAlign: TextAlign.justify,
-                      ),
-                    ],
-                  ),
+            ),
+            SizedBox(
+              height: 30,
+              child: ListTile(
+                leading: Icon(
+                  Icons.link,
+                  color: Color(CommonUtils.colorToInt(
+                      _userPublicProfile!.relationShip!.color)),
                 ),
+                title: Text(_userPublicProfile!.relationShip!.value),
               ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
-              const SizedBox(height: 20),
+  Widget _buildNameTitle() {
+    return Text(
+      widget._match.contactInfo?.name ?? "Desconocid@",
+      style: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
 
-              // Hobbies Section
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 5, left: 20.0, right: 20.0, bottom: 10),
-                  child: Column(
-                    children: [
-                      _buildSectionTitle("Me interesa..."),
-                      if (_userPublicProfile?.hobbies != null &&
-                          _userPublicProfile?.hobbies is List)
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children:
-                              List<Widget>.from(contact['hobbies'].map((hobby) {
-                            return Chip(
-                              label: Text(hobby),
-                              backgroundColor: Colors.teal.withOpacity(0.2),
-                            );
-                          })),
-                        )
-                      else
-                        const Text("De momento no lo tengo claro"),
-                    ],
-                  ),
-                ),
+  Widget _buildProfile() {
+    return SizedBox(
+      height: 150,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+        decoration: Gradient1().getLinearGradient(),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(
+                    "${widget._match.profileImage!}&width=100&height=100&quality=60"),
+                fit: BoxFit.fill, // Customize fit here
               ),
-
-              const SizedBox(height: 20),
-
-              // Social Networks Section
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 5, left: 20.0, right: 20.0, bottom: 10),
-                  child: Column(
-                    children: [
-                      _buildSectionTitle("Redes Sociales"),
-                      if (contact['networks'] != null &&
-                          contact['networks'] is Map)
-                        Column(
-                          children:
-                              List<Widget>.from(contact['networks'].entries.map(
-                            (entry) {
-                              return ListTile(
-                                leading: const Icon(
-                                  Icons.link,
-                                  color: Colors.blueAccent,
-                                ),
-                                title: Text(entry.key),
-                                subtitle: Text(entry.value),
-                                onTap: () {
-                                  // Add your logic to open the URL
-                                  print("Open ${entry.value}");
-                                },
-                              );
-                            },
-                          )),
-                        )
-                      else
-                        const Text("No te han compatido las redes sociales"),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
-        );
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSocialNetworks() {
+    var networks = widget._match.sharing?.networks; 
+    return Card(
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 5, left: 20.0, right: 20.0, bottom: 10),
+        child: Column(
+          children: [
+            _buildSectionTitle("Redes Sociales"),
+            
+            if (networks != null && networks.isNotEmpty)
+              Column(
+                children: List<Widget>.from(networks.map(
+                  (entry) {
+                    return ListTile(
+                      leading: 
+                        _buildIconForNetwork(entry.networkId),
+                        
+                      
+                      title: Text(entry.name),
+                      subtitle: Text(entry.value),
+                      onTap: () {
+                        // Add your logic to open the URL
+                        print("Open ${entry.value}");
+                      },
+                    );
+                  },
+                )),
+              )
+            else
+              const Text("No te han compatido las redes sociales"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHobbies() {
+    return Card(
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 5, left: 20.0, right: 20.0, bottom: 10),
+        child: Column(
+          children: [
+            _buildSectionTitle("Me interesa..."),
+            if (_userPublicProfile?.hobbies != null &&
+                _userPublicProfile!.hobbies!.isNotEmpty)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children:
+                    List<Widget>.from(_userPublicProfile!.hobbies!.map((hobby) {
+                  return Chip(
+                    label: Text(hobby.toString()),
+                    backgroundColor: Colors.teal.withOpacity(0.2),
+                  );
+                })),
+              )
+            else
+              const Text("De momento no lo tengo claro"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBiography() {
+    String biography = "No sabemos mucho";
+
+    if (_userPublicProfile?.biography != null &&
+        _userPublicProfile!.biography!.isNotEmpty) {
+      biography = _userPublicProfile!.biography!;
+    }
+
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 5, left: 20.0, right: 20.0, bottom: 10),
+        child: Column(
+          children: [
+            _buildSectionTitle("Sobre mí..."),
+            Text(
+              biography,
+              style: const TextStyle(fontSize: 14),
+              textAlign: TextAlign.justify,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhone() {
+    String text = "No tienes su teléfono";
+
+    if (widget._match.contactInfo?.phone != null &&
+        widget._match.contactInfo!.phone!.isNotEmpty) {
+      text = widget._match.contactInfo!.phone!;
+    }
+
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 16, color: Colors.teal),
+    );
   }
 
   Future<void> _breakMatch() async {
     Log.d("Starts _breakMatch");
-    await HostDisableUserMatchRequest().run(widget._match.matchId!, _user.userId);
-    _pop(context);
+    await HostDisableUserMatchRequest()
+        .run(widget._match.matchId!, _user.userId);
+    _pop();
   }
 
-  void _pop(BuildContext context) {
+  void _pop() {
     NavigatorApp.popWith(context, {
       "broken_match": _brokenMatch,
       "read": _readMessages,
@@ -254,6 +327,12 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
     });
   }
 
+  Widget _buildIconForNetwork(String id){
+    switch(id){
+      case "Facebook": return const Icon(FontAwesomeIcons.facebook,color: Colors.blue,);
+      default: return const Icon(Icons.link);
+    }
+  }
   // Helper to build section titles
   Widget _buildSectionTitle(String title) {
     return Align(
@@ -270,15 +349,17 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
 
   Future<void> _fetchFromHost() async {
     Log.d("Starts _fetchFromHost");
-    
+
     try {
-      HostGetUserPublicProfile().run(_user.userId).then((response) {
+      HostGetUserPublicProfile()
+          .run(widget._match.contactInfo!.userId)
+          .then((response) {
         if (response.profile != null) {
           setState(() {
             _userPublicProfile = response.profile;
-            _isLoading = false; 
+            _isLoading = false;
           });
-        }else{
+        } else {
           NavigatorApp.pop(context);
         }
       });

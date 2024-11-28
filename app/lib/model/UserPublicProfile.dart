@@ -32,10 +32,10 @@ class UserPublicProfile {
       var hobbies = json["hobbies"];
       dynamic profileImage = Uint8List(0);
 
-      if (json.containsKey("profile_image")) {
-        Uint8List buffer = base64Decode(json["profile_image"]);
-        profileImage = MemoryImage(buffer);
-      }
+      // if (json.containsKey("profile_image")) {
+      //   Uint8List buffer = base64Decode(json["profile_image"]);
+      //   profileImage = MemoryImage(buffer);
+      // }
       return UserPublicProfile(id, relationShip, sexAlternative, gender, hobbies, biography, profileImage);
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");

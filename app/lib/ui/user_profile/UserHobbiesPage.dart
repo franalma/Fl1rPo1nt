@@ -57,7 +57,7 @@ class _UserHobbiesPage extends State<UserHobbiesPage> {
             children: [
               ListTile(
                   title: CheckboxListTile(
-                      value: _selectedHobbie.contains(_allHobbies[index].id),
+                      value: _selectedHobbie.contains(_allHobbies[index].name),
                       onChanged: (value) => {_onItemChange(index, value)},
                       title: Text(_allHobbies[index].name))),
                       Divider()
@@ -99,9 +99,9 @@ class _UserHobbiesPage extends State<UserHobbiesPage> {
     Log.d("Starts _onItemChange");
     setState(() {
       if (value!) {
-        _selectedHobbie.add(_allHobbies[index].id);
+        _selectedHobbie.add(_allHobbies[index].name);
       } else {
-        _selectedHobbie.remove(_allHobbies[index].id);
+        _selectedHobbie.remove(_allHobbies[index].name);
       }
     });
   }
