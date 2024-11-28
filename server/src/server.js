@@ -18,6 +18,8 @@ const hobbiesHandler = require("./model/hobbies/hobbies_handler");
 const nodemailer = require("nodemailer");
 const mailHandler = require("./mail/mail_handler");
 const chatroomHandler = require("./chatroom/chatroom_handler");
+const path = require('path');
+const { printJson } = require("./utils/json_utils");
 const app = express();
 app.use(express.json());
 const port = process.env.PORT;
@@ -95,6 +97,29 @@ async function procesBulkRequest(req, res) {
     res.status(200).json({});
   } else {
     res.status(500).json({});
+  }
+}
+
+async function processGettingImage(req, res) {
+  logger.info(`Starts processGettingImage`)
+  try {
+    const { filename } = req.params;
+    const { expires, signature, width, height, quality } = req.query;
+
+
+    //TODO restore signature validation
+    if (fileHandler.validateSignedSignedUrl(filename, expires, signature)) {
+
+      const filePath = path.join(process.env.MULTIMEDIA_PATH, process.env.IMAGE_DIR_PATH, filename);
+      logger.info(filePath);
+      res.set('Content-Type', 'image/jpeg');
+      fileHandler.resizeImage({ filepath: filePath, width: width, height: height, quality: quality }, res);
+    } else {
+      return res.status(403).send('Invalid signature');
+    }
+
+  } catch (error) {
+    logger.info(error);
   }
 }
 
@@ -282,6 +307,11 @@ async function processRequest(req, res) {
           break;
         }
 
+        case hostActions.GET_PROTECTED_IMAGES_URLS_BY_USER_ID: {
+          result = await fileHandler.getSecureSharedImagesUrlByUserId(req.body.input);
+          break;
+        }
+
         case hostActions.PUT_MESSAGE_TO_USER_WITH_USER_ID: {
           const receiverId = req.body.input.receiver_id;
           const senderId = req.body.input.sender_id;
@@ -290,11 +320,11 @@ async function processRequest(req, res) {
 
           logger.info(
             "--message: " +
-              message +
-              " receiver: " +
-              receiverId +
-              " match_id:" +
-              matchId
+            message +
+            " receiver: " +
+            receiverId +
+            " match_id:" +
+            matchId
           );
 
           await chatroomHandler.putMessageInChatroomByMatchId(req.body.input);
@@ -331,6 +361,13 @@ async function processRequest(req, res) {
           break;
         }
 
+        case hostActions.GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID: {
+          result = await fileHandler.getImageByUserIdImageId(
+            req.body.input
+          );
+          break;
+        }
+
         case hostActions.GET_USER_PUBLIC_PROFILE_BY_USER_ID: {
           result = await userHandler.getUserPublicProfileByUserId(
             req.body.input
@@ -358,8 +395,7 @@ app.post("/auth", requestValidator.requestFieldsValidation, (req, res) => {
   }
 });
 
-app.post(
-  "/api",
+app.post("/api",
   requestValidator.requestAuthValidation,
   requestValidator.requestFieldsValidation,
   (req, res) => {
@@ -429,6 +465,27 @@ app.post(
 //         }
 //     });
 // });
+
+
+// app.post('/protected-image', requestValidator.requestAuthValidation, (req, res) => {
+
+//   result = fileHandler.getSecureSharedImagesUrlByUserId(req.body).then((result) => {
+//     logger.info(JSON.stringify(result));
+//     if (result != null) {
+//       res.status(200).json(result);
+//     } else {
+//       res.status(500);
+//     }
+//   });
+// });
+
+
+// Serve secure images
+app.get('/secure-images/:filename', (req, res) => {
+  logger.info("Secure image getting: " + req.url);
+
+  processGettingImage(req, res);
+});
 
 app.post(
   "/mail",

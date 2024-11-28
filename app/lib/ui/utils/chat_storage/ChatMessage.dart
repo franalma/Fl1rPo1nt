@@ -4,7 +4,6 @@ part 'ChatMessage.g.dart'; // Required for code generation
 //flutter packages pub run build_runner build
 
 @HiveType(typeId: 0) // Assign a unique type ID
-
 class ChatMessage {
   @HiveField(0) // Field ID
   final int time;

@@ -1,17 +1,20 @@
 const multer = require('multer');
 const path = require('path');
-const rootDir = process.env.MULTIMEDIA_PATH;;
-const rootDirImages = rootDir + "/server_user_images";
-const rootDirAudios = rootDir + "/server_user_audios";
 const fs = require('fs');
+const sharp = require('sharp');
 const dbHandler = require("../database/database_handler");
-const userImageCollection = "user_images";
-const userAudioCollection = "user_audios";
 const logger = require("../logger/log");
 const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
+
+const rootDir = process.env.MULTIMEDIA_PATH;
+const secImageKey = process.env.SEC_IMAGE_KEY;
+const rootDirImages = rootDir + process.env.IMAGE_DIR_PATH;
+const rootDirAudios = rootDir + process.env.AUDIO_DIR_PATH;
+const userImageCollection = process.env.DB_IMAGE_COLLECTION;
+const userAudioCollection = process.env.DB_AUDIO_COLLECTION;
 let uploadAudios;
 let uploadImages;
-
 
 
 function configImages() {
@@ -51,6 +54,63 @@ function configAudios() {
     uploadAudios = multer({ storage: storage });
     return uploadAudios;
 }
+
+function generateSignedUrl(filename, expiresIn = 300) { // expiresIn is in seconds
+    const expirationTime = Math.floor(Date.now() / 1000) + expiresIn;
+    const signature = crypto
+        .createHmac('sha256', secImageKey)
+        .update(`${filename}:${expirationTime}`)
+        .digest('hex');
+
+    return `${process.env.HOST_PATH}/secure-images/${filename}?expires=${expirationTime}&signature=${signature}`;
+}
+
+
+function validateSignedSignedUrl(value, expires, signature) {
+    logger.info(`Starts validateSignedSignedUrl value:${value} expires: ${expires}, signature: ${signature}`);
+    if (Math.floor(Date.now() / 1000) > parseInt(expires, 10)) {
+        logger.info("time")
+        return false;
+    }
+
+    // Verify signature
+    const expectedSignature = crypto
+        .createHmac('sha256', secImageKey)
+        .update(`${value}:${expires}`)
+        .digest('hex');
+
+    if (signature !== expectedSignature) {
+        logger.info("wron signature")
+        return false;
+    }
+
+    return true;
+}
+
+
+function resizeImage(input, response) {
+    logger.info("Starts resizeImage");
+    try {
+        const width = input.width;
+        const height = input.height;
+        const filepath = input.filepath;
+        const quality = input.quality;
+
+        if (fs.existsSync(filepath)) {
+            const transformer = sharp(filepath)
+                .resize(
+                    width ? parseInt(width) : null,
+                    height ? parseInt(height) : null
+                )
+                .jpeg({ quality: quality ? parseInt(quality) : 100 }); // Default quality 80%
+
+            transformer.pipe(response);
+        }
+    } catch (error) {
+        logger.info(error);
+    }
+}
+
 
 async function doUploadImageByUserId(req, userId) {
     console.log("Starts doUploadImageByUserId: " + userId);
@@ -104,19 +164,48 @@ async function doUploadAudioByUserId(req, userId) {
     return null;
 }
 
-async function getImageByUserIdImageId(input) {
-    logger.info("Starts getImageByUserIdImageId");
+
+async function getSecureSharedImagesUrlByUserId(input) {
+    logger.info("Starts getSecureSharedImagesUrlByUserId");
     try {
-        const filters = { user_id: input.user_id, file_id: input.file_id };
-        const dbResponse = await dbHandler.findWithFilters(filters, userImageCollection);
-        if (dbResponse) {
-            const item = dbResponse[0];
-            let fileName = item.filename;
-            const filePath = path.join(rootDirImages, fileName);
-            const imageData = fs.readFileSync(filePath);
-            let result = { status: 200 };
-            result.image = imageData.toString('base64');
-            return result; 
+        const filters = { user_id: input.user_id };
+        const dbFiles = await dbHandler.findWithFilters(filters, userImageCollection);
+        let result = { status: 200, files: [] };
+        if (dbFiles) {
+            for (let file of dbFiles) {
+                try {
+                    const secureUrl = generateSignedUrl(file.filename)
+                    result.files.push({ file_id: file.file_id, url: secureUrl, created_at: 0, filename: "" });
+                } catch (error) {
+                    logger.info(error);
+                }
+            }
+            return result;
+        }
+    } catch (error) {
+        logger.info(error);
+    }
+    return { status: 500 };
+}
+
+
+async function getImageByUserIdImageId(input) {
+    logger.info("Starts getImageByUserIdImageId:"+JSON.stringify(input));
+    try {
+        const filters = { $or: input.values };
+        logger.info(JSON.stringify(filters));
+        const dbFiles = await dbHandler.findWithFilters(filters, userImageCollection);
+        if (dbFiles) {
+            let result = { status: 200,files:[]};
+            for (let file of dbFiles) {
+                try {
+                    const secureUrl = generateSignedUrl(file.filename)
+                    result.files.push({ file_id: file.file_id, url: secureUrl, created_at: 0, filename: "" });
+                } catch (error) {
+                    logger.info(error);
+                }
+            }
+            return result;
         }
     } catch (error) {
         logger.info(error);
@@ -130,28 +219,28 @@ async function getUserImagesByUserId(input) {
     let result = { status: 200 };
     result.images = [];
     try {
-        const filters = { user_id: input.user_id };
-        const dbResponse = await dbHandler.findWithFilters(filters, userImageCollection);
+        // const filters = { user_id: input.user_id };
+        // const dbResponse = await dbHandler.findWithFilters(filters, userImageCollection);
 
-        if (dbResponse) {
+        // if (dbResponse) {
 
-            for (var item of dbResponse) {
-                try {
-                    let fileName = item.filename;
-                    const filePath = path.join(rootDirImages, fileName);
-                    const imageData = fs.readFileSync(filePath);
+        //     for (var item of dbResponse) {
+        //         try {
+        //             let fileName = item.filename;
+        //             const filePath = path.join(rootDirImages, fileName);
+        //             const imageData = fs.readFileSync(filePath);
 
-                    result.images.push({
-                        file_id: item.file_id,
-                        created_at: item.created_at,
-                        file: imageData.toString('base64')
-                    });
-                } catch (error) {
-                    logger.info(error);
-                }
+        //             result.images.push({
+        //                 file_id: item.file_id,
+        //                 created_at: item.created_at,
+        //                 file: imageData.toString('base64')
+        //             });
+        //         } catch (error) {
+        //             logger.info(error);
+        //         }
 
-            }
-        }
+        //     }
+        // }
     } catch (error) {
         logger.info(error);
         result.status = 500;
@@ -257,5 +346,9 @@ module.exports = {
     doUploadAudioByUserId,
     getUserAudiosByUserId,
     removeUserAudioByAudioIdUserId,
-    getImageByUserIdImageId
+    getImageByUserIdImageId,
+    getSecureSharedImagesUrlByUserId,
+    validateSignedSignedUrl,
+    resizeImage
+
 }

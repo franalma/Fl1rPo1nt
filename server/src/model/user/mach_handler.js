@@ -47,7 +47,7 @@ async function createMatchInternal(input) {
   return doc;
 }
 
-function createMatchExternal(item, input) {
+async function createMatchExternal(item, input)  {
   logger.info("createMatchExternal " + JSON.stringify(item));
   try {
     let contactUser = {};
@@ -67,12 +67,20 @@ function createMatchExternal(item, input) {
       item.users[0].user_id === input.user_id
         ? JSON.parse(item.users[0].contact_info)
         : JSON.parse(item.users[1].contact_info);
-    const match = {
+    let match = {
       match_id: item.id,
       flirt_id: item.flirt_id,
       contact: contactUser,
       sharing: sharing,
     };
+
+    logger.info("contactUser: "+JSON.stringify(contactUser));
+    const userInfo = await userHandler.getUserPublicProfileByUserId(contactUser); 
+    printJson(userInfo);
+    match.profile_image = userInfo.profile_image; 
+
+
+
     return match;
   } catch (error) {
     logger.info(error);
@@ -179,7 +187,7 @@ async function getAllUserMatchsByUserId(input) {
     if (dbResponse) {
       result.matchs = [];
       for (let item of dbResponse) {
-        const match = createMatchExternal(item, input);
+        const match = await createMatchExternal(item, input);
         result.matchs.push(match);
       }
       result.status = 200;

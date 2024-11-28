@@ -6,16 +6,16 @@ import 'package:app/comms/model/response/HostGetUserImagesResponse.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
 
-class HostGetUserImagesRequest extends BaseRequest {
-  Future<HostGetUserImagesResponse> run(String userId) async {
+class HostGetUserImgeUrlByIdRequest extends BaseRequest {
+  Future<HostGetUserImagesResponse> run(List<dynamic> values) async {
     try {
-      Log.d("Start HostGetUserImagesResponse");
-      HostActions option = HostActions.GET_PROTECTED_IMAGES_URLS_BY_USER_ID;
+      Log.d("Start HostGetUserImgeUrlByIdRequest");
+      HostActions option = HostActions.GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID;
       Uri url = Uri.parse(option.url);
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
-        "input": {"user_id": userId}
+        "input": {"values": values}
       };
 
       String jsonBody = json.encode(mapBody);

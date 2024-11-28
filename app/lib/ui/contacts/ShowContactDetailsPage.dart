@@ -5,6 +5,7 @@ import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
 import 'package:app/model/UserPublicProfile.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/contacts/ShowContactPictures.dart';
 import 'package:app/ui/contacts/ShowConversationPage.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Gradient1.dart';
@@ -45,7 +46,11 @@ class _ShowContactDetailsPage extends State<ShowContactDetailsPage> {
             }),
         actions: [
           IconButton(
-              onPressed: () {}, icon: const Icon(Icons.image), iconSize: 30),
+              onPressed: () {
+                NavigatorApp.push(ShowContactPictures(widget._match), context);
+              },
+              icon: const Icon(Icons.image),
+              iconSize: 30),
           IconButton(
               onPressed: () async {
                 await NavigatorApp.pushAndWait(
@@ -128,7 +133,12 @@ class _ShowContactDetailsPage extends State<ShowContactDetailsPage> {
   }
 
   Widget _buildBiography() {
-    var biography = _userPublicProfile!.biography;
+    Log.d("Starts _buildBiography");
+    var biography = "";
+    if (_userPublicProfile != null) {
+      biography = _userPublicProfile!.biography!;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -139,10 +149,7 @@ class _ShowContactDetailsPage extends State<ShowContactDetailsPage> {
             "Sobre tu contacto..",
             style: TextStyle(fontSize: 30),
           ),
-          Text(
-            biography!,
-          ),
-          Divider(),
+          Text(biography),
         ],
       )),
     );
@@ -157,14 +164,19 @@ class _ShowContactDetailsPage extends State<ShowContactDetailsPage> {
   }
 
   Widget _buildHobbies() {
-    var hobbies = _userPublicProfile!.hobbies;
+    Log.d("Starts _buildHobbies");
+
+    var hobbies = [];
+    if (_userPublicProfile != null) {
+      hobbies = _userPublicProfile!.hobbies!;
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
           child: Column(
         children: [
           Text("Aficiones..", style: TextStyle(fontSize: 20)),
-          for (var item in hobbies!)
+          for (var item in hobbies)
             Text(
               item.toString(),
               style: TextStyle(fontSize: 15),
@@ -176,10 +188,12 @@ class _ShowContactDetailsPage extends State<ShowContactDetailsPage> {
   }
 
   Widget _buildLookingFor() {
+    Log.d("Starts _buildLookingFor");
     return Container();
   }
 
   Widget _buildSource() {
+    Log.d("Starts _buildSource");
     return Container();
   }
 
@@ -204,12 +218,12 @@ class _ShowContactDetailsPage extends State<ShowContactDetailsPage> {
     return Column(
       children: [
         _buildHeader(),
-        // _buildNameBlock(),
-        // _buildHowToContactInfo(),
-        // _buildBiography(),
-        // _buildHobbies(),
-        // _buildLookingFor(),
-        // _buildSource()
+        _buildNameBlock(),
+        _buildHowToContactInfo(),
+        _buildBiography(),
+        _buildHobbies(),
+        _buildLookingFor(),
+        _buildSource()
       ],
     );
   }

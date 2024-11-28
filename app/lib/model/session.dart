@@ -25,7 +25,7 @@ class Session {
       if (imageStr64 != null) {
         print(imageStr64);
         var buffer = base64Decode(imageStr64);
-        profileImage = MemoryImage(buffer);
+        profileImage = (buffer);
       } else {
         profileImage = const NetworkImage(
             'https://images.ctfassets.net/denf86kkcx7r/4IPlg4Qazd4sFRuCUHIJ1T/f6c71da7eec727babcd554d843a528b8/gatocomuneuropeo-97?fm=webp&w=913');

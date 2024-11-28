@@ -188,6 +188,18 @@ const GET_USER_PUBLIC_PROFILE_BY_USER_ID_RULES = [
 
 ];
 
+const GET_PROTECTED_IMAGES_URLS_BY_USER_ID_RULES = [
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+
+];
+
+const GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES = [    
+    body('input.values').notEmpty().isArray().withMessage("values are required"),    
+
+];
+
+
+
 
 
 
@@ -223,5 +235,7 @@ module.exports = {
     UPDATE_USER_GENDER_BY_USER_ID_RULES,
     DELETE_CHATROOM_FROM_MATCH_ID_USER_ID_RULES,
     DISABLE_MATCH_BY_MATCH_ID_USER_ID_RULES,
-    GET_USER_PUBLIC_PROFILE_BY_USER_ID_RULES
+    GET_USER_PUBLIC_PROFILE_BY_USER_ID_RULES,
+    GET_PROTECTED_IMAGES_URLS_BY_USER_ID_RULES,
+    GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES
 }

@@ -206,7 +206,7 @@ class _UserAudiosPage extends State<UserAudiosPage> {
       if (fileId.isEmpty) {
         FlutterToast().showToast("No ha sido posible guardar tu audio");
       } else {
-        _audioList.add(FileData(fileId, -1, base64Encode(bytes)));
+        _audioList.add(FileData(fileId, -1, base64Encode(bytes),""));
       }
       setState(() {
         _isLoading = false;

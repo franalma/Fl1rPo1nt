@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:app/model/FileData.dart';
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -18,11 +19,11 @@ import '../../comms/model/request/user/images/HostUpdateUserImageProfileRequest.
 import '../../comms/model/request/user/images/HostUploadImageRequest.dart';
 
 class LocalFile {
-  Image? image;
+  String url;
   String? id;
   Uint8List buffer;
 
-  LocalFile(this.image, this.id, this.buffer);
+  LocalFile(this.url, this.id, this.buffer);
 }
 
 class UserPhotosPage extends StatefulWidget {
@@ -78,7 +79,11 @@ class _UserPhotosPage extends State<UserPhotosPage> {
           return Stack(
             children: [
               // Image
-              Positioned.fill(child: _imageList[index].image!),
+              // Positioned.fill(child: _imageList[index].image!),
+              if (_imageList[index].url.isNotEmpty)
+                Positioned.fill(child: Image.network(_imageList[index].url))
+              else
+                Positioned.fill(child: Image.memory(_imageList[index].buffer,fit:BoxFit.cover)),
               Positioned(
                 top: 8,
                 right: 8,
@@ -153,8 +158,7 @@ class _UserPhotosPage extends State<UserPhotosPage> {
           File image = File(pickedImage.path);
           image.readAsBytes().then((buffer) {
             setState(() {
-              _imageList.add(LocalFile(
-                  Image.file(image, fit: BoxFit.cover), fileId, buffer));
+              _imageList.add(LocalFile("", fileId, buffer));
             });
           });
         } else {
@@ -168,18 +172,21 @@ class _UserPhotosPage extends State<UserPhotosPage> {
     return const Center(child: CircularProgressIndicator());
   }
 
+  String _customizeImage(String url) {
+    return "$url&width=200&height=200&quality=40";
+  }
+
   Future<void> _fechImagesFromServer() async {
     Log.d("Starts _fechImagesFromServer");
     setState(() {
       _isLoading = true;
     });
     HostGetUserImagesRequest().run(user.userId).then((response) {
-      if (response.fileList != null) {
-        response.fileList!.map((e) {
-          var content = base64Decode(e.file!);
+      if (response.fileData != null) {
+        response.fileData!.map((e) {
           setState(() {
-            _imageList.add(LocalFile(
-                Image.memory(content, fit: BoxFit.cover), e.id, content));
+            String url = _customizeImage(e.url!);
+            _imageList.add(LocalFile(url, e.id, Uint8List(0)));
           });
         }).toList();
         _getSelectedImageIndex();
@@ -222,19 +229,11 @@ class _UserPhotosPage extends State<UserPhotosPage> {
           .run(user.userId, profileImage.id!)
           .then((value) {
         Log.d("setting user profile result $value");
-        if (value) {
-          if (user.userProfileImageId.isNotEmpty) {
-            SecureStorage().deleteSecureData(user.userProfileImageId);
-          }
-          SecureStorage().saveSecureData(
-              profileImage.id!, base64Encode(profileImage.buffer));
-          Session.user.userProfileImageId = profileImage.id!;
-          Session.loadProfileImage().then((value) => NavigatorApp.pop(context));
-        } else {
-          NavigatorApp.pop(context);
-        }
+        Session.user.userProfileImageId = profileImage.id!;
+       
+         NavigatorApp.pop(context);
       });
-    }else{
+    } else {
       NavigatorApp.pop(context);
     }
   }

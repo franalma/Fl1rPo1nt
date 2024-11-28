@@ -159,6 +159,10 @@ function requestFieldsValidation(req, res, next) {
             break;
         }
 
+        case hostActions.GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID: {
+            validationSet = validationRules.GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES
+            break;
+        }
     
         default: {
             logger.info("No request verification needed for " + action);

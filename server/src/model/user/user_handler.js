@@ -50,7 +50,7 @@ async function creatInternalUser(input) {
 }
 
 async function createPublicProfileUser(input) {
-  logger.info("Starts createPublicProfileUser");
+  logger.info("Starts createPublicProfileUser:" + JSON.stringify(input));
   let user = {};
   try {
 
@@ -63,9 +63,22 @@ async function createPublicProfileUser(input) {
     };
 
     if (input.profile_image_id) {
-      const imageData = await getImageByUserIdImageId({ user_id: input.id, file_id: input.profile_image_id });
+      const query = {
+        values: [
+          {
+            user_id: input.id,
+            file_id: input.profile_image_id
+          }
+        ]
+
+      };
+
+      const imageData = await getImageByUserIdImageId(query);
+      logger.info("----imagedata: ");
+      printJson(imageData);
+
       if (imageData.status == 200) {
-        user.profile_image = imageData.image;
+        user.profile_image = imageData.files.length > 0 ? imageData.files[0] : "";
       }
     }
 
@@ -558,10 +571,10 @@ async function getUserPublicProfileByUserId(input) {
     const dbResponse = await dbHandler.findWithFilters(filter, userColletion);
     if (dbResponse) {
       const userDB = dbResponse[0];
-      result = await createPublicProfileUser(userDB);      
+      result = await createPublicProfileUser(userDB);
       result.status = 200;
     }
-
+    printJson(result);
     return result;
   } catch (error) {
     logger.info(error);
