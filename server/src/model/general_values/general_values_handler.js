@@ -28,7 +28,8 @@ function createGenderExternal(item) {
     
     result = {
         id: item.id,
-        name: item.name
+        name: item.name,
+        color: item.color
     }
     return result;
 }

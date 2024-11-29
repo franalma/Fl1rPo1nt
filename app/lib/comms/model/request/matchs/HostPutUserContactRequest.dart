@@ -10,7 +10,7 @@ class HostPutUserContactRequest extends BaseRequest {
   Future<bool> run(String userId, String userQrId, String contactId, String contactQrId,
       String userFlirtId, Location location) async {
     try {
-      Log.d("Start doRegister");
+      Log.d("Start HostPutUserContactRequest");
       HostActions option =
           HostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID;
       Uri url = Uri.parse(option.url);

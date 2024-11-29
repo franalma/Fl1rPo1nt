@@ -49,10 +49,15 @@ class _HomeState extends State<Home> {
 
   void _handleNewContactRequest(String data) {
     Log.d("data received: $data");
-    var map = jsonDecode(data);
-    var contactRequested = map["message"]["requested_user_id"];
-
-    AlertDialogs().showAlertNewContactAdded(context, contactRequested);
+    try {
+      var map = jsonDecode(data);
+      Map<String, dynamic> message = map["message"]["requested_user"];
+      String name = message["name"] ?? "Desconocid@";
+      String urlImage = message["profile_image"] is Map ?  message["profile_image"]["url"] :"";  
+      AlertDialogs().showCustomModalDialog(context, name, urlImage);
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
   }
 
   Widget _buildBanner() {
@@ -99,7 +104,6 @@ class _HomeState extends State<Home> {
       _isAdaptativeAdLoaded = value;
     });
     return Scaffold(
-        
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56.0), // Height of the AppBarP
           child: AppBar(
@@ -196,8 +200,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
-
 
   Widget _buildEnabledFlirtPanelPoint() {
     return Padding(

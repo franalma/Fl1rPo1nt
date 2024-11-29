@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-part 'ChatMessage.g.dart'; // Required for code generation
+
 //flutter packages pub run build_runner build
 
 @HiveType(typeId: 0) // Assign a unique type ID

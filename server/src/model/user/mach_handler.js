@@ -47,7 +47,7 @@ async function createMatchInternal(input) {
   return doc;
 }
 
-async function createMatchExternal(item, input)  {
+async function createMatchExternal(item, input) {
   logger.info("createMatchExternal " + JSON.stringify(item));
   try {
     let contactUser = {};
@@ -74,10 +74,10 @@ async function createMatchExternal(item, input)  {
       sharing: sharing,
     };
 
-    logger.info("contactUser: "+JSON.stringify(contactUser));
-    const userInfo = await userHandler.getUserPublicProfileByUserId(contactUser); 
+    logger.info("contactUser: " + JSON.stringify(contactUser));
+    const userInfo = await userHandler.getUserPublicProfileByUserId(contactUser);
     printJson(userInfo);
-    match.profile_image = userInfo.profile_image; 
+    match.profile_image = userInfo.profile_image;
 
 
 
@@ -131,9 +131,13 @@ async function addUserContactByUserIdContactIdQrId(input) {
         contact_info: doc.contact_info,
         scans_performed: updateUsersInfo.scans_performed,
       };
+
+      const requestedUserInfo = await userHandler.getUserPublicProfileByUserId(input);
+
       const message = {
-        requested_user_id: input.user_id,
+        requested_user: requestedUserInfo
       };
+
       sockerHandler.sendMessageToUser(
         "new_contact_request",
         input.contact_id,

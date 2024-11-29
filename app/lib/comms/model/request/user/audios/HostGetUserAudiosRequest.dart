@@ -24,7 +24,7 @@ class HostGetUserAudiosRequest extends BaseRequest {
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
       if (response.statusCode == 200) {
-        return HostGetUserAudiosResponse.fromJson(jsonDecode(response.body)["audios"]);
+        return HostGetUserAudiosResponse.fromJson(jsonDecode(response.body)["files"]);
       }
     } catch (error) {
       Log.d(error.toString());

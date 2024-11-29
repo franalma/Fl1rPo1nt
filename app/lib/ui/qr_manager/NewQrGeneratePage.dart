@@ -40,7 +40,7 @@ class _QrGeneratePage extends State<QrGeneratePage> {
     return Column(
       children: [
         ListTile(
-          title: Text(
+          title: const Text(
             "Nombre de tu QR",
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
@@ -56,12 +56,12 @@ class _QrGeneratePage extends State<QrGeneratePage> {
             });
           }),
         ),
-        Divider(),
+        const Divider(),
         ListTile(
           title: const Text("Valores a compartir",
               style: TextStyle(fontWeight: FontWeight.w600)),
           subtitle: Text(""),
-          trailing: Icon(Icons.arrow_forward_ios),
+          trailing: const Icon(Icons.arrow_forward_ios),
           onTap: () async {
             dataToSave = null;
             var result =

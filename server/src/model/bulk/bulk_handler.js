@@ -117,7 +117,8 @@ async function addGenderIdentity(input){
         for (let item of input.genders) {
             let value = {
                 id: item.id,
-                name: item.name,                
+                name: item.name,   
+                color: item.color,             
                 created_ad: Date.now()
             };
             docs.push(value);         

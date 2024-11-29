@@ -8,10 +8,6 @@ class HiveStorageHandler {
 
   Future<void> init() async {
     Log.d("Starts init");
-    await Hive.initFlutter();
-    Hive.registerAdapter(UserChatRoomAdapter());
-    Hive.registerAdapter(ChatMessageAdapter());
-    database = await Hive.openBox<UserChatRoom>('myBox');
   }
 
   Future<void> put(String sender, String message, int time, int source) async {

@@ -5,11 +5,13 @@ import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
 import 'package:app/model/UserPublicProfile.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/contacts/ShowContactAudiosPage.dart';
 import 'package:app/ui/contacts/ShowContactPictures.dart';
 import 'package:app/ui/contacts/ShowConversationPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Gradient1.dart';
+import 'package:app/ui/elements/SocialNetworkIcon.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
@@ -33,21 +35,6 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
   bool _isLoading = true;
   UserPublicProfile? _userPublicProfile;
 
-  final Map<String, dynamic> contact = {
-    "name": "Mi ligue",
-    "email": "alice@example.com",
-    "phone": "+1234567890",
-    "avatar": "https://via.placeholder.com/150",
-    "bio":
-        "Alice is a software developer with over 5 years of experience in building mobile and web applications. She loves exploring new technologies and mentoring aspiring developers.",
-    "hobbies": ["Photography", "Traveling", "Reading", "Perros", "Gatos"],
-    "networks": {
-      "Twitter": "https://twitter.com/alice",
-      "LinkedIn": "https://linkedin.com/in/alice",
-      "GitHub": "https://github.com/alice"
-    }
-  };
-
   @override
   void initState() {
     _fetchFromHost();
@@ -61,6 +48,15 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
       home: Scaffold(
           appBar: AppBar(
             actions: [
+              IconButton(
+                onPressed: () {
+                  NavigatorApp.push(
+                      ShowContactAudiosPage(widget._match.contactInfo!.userId), context);
+                },
+                icon: const Icon(Icons.voice_chat),
+                iconSize: 30,
+                color: Colors.white,
+              ),
               IconButton(
                 onPressed: () {
                   NavigatorApp.push(
@@ -132,13 +128,14 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
             _buildSectionTitle("Mis preferencias..."),
             SizedBox(
               height: 30,
-              child: ListTile(              
+              child: ListTile(
                 leading: Icon(
                   Icons.link,
                   color: Color(CommonUtils.colorToInt(
                       _userPublicProfile!.sexAlternative!.color)),
                 ),
-                title: Text("Me identifico como ${_userPublicProfile!.gender!.name?.toLowerCase()}"),
+                title: Text(
+                    "Me identifico como ${_userPublicProfile!.gender!.name?.toLowerCase()}"),
               ),
             ),
             SizedBox(
@@ -206,7 +203,7 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
   }
 
   Widget _buildSocialNetworks() {
-    var networks = widget._match.sharing?.networks; 
+    var networks = widget._match.sharing?.networks;
     return Card(
       child: Padding(
         padding:
@@ -214,16 +211,12 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
         child: Column(
           children: [
             _buildSectionTitle("Redes Sociales"),
-            
             if (networks != null && networks.isNotEmpty)
               Column(
                 children: List<Widget>.from(networks.map(
                   (entry) {
                     return ListTile(
-                      leading: 
-                        _buildIconForNetwork(entry.networkId),
-                        
-                      
+                      leading: SocialNetworkIcon().resolveIconForNetWorkId(entry.networkId),
                       title: Text(entry.name),
                       subtitle: Text(entry.value),
                       onTap: () {
@@ -327,12 +320,8 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
     });
   }
 
-  Widget _buildIconForNetwork(String id){
-    switch(id){
-      case "Facebook": return const Icon(FontAwesomeIcons.facebook,color: Colors.blue,);
-      default: return const Icon(Icons.link);
-    }
-  }
+  
+
   // Helper to build section titles
   Widget _buildSectionTitle(String title) {
     return Align(

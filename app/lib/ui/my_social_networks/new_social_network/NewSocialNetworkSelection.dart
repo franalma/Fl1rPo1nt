@@ -4,6 +4,7 @@ import 'package:app/comms/model/request/fix_values/HostGetAllSocialNetworksReque
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/elements/SocialNetworkIcon.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,7 @@ class _NewSocialNetworkSelection extends State<NewSocialNetworkSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // drawer: AppDrawerMenu().getDrawer(context),
+      
         appBar: AppBar(flexibleSpace: FlexibleAppBar()),
         body: _isLoading ? _buildLoading() : _buildEditOptions());
   }
@@ -47,7 +48,7 @@ class _NewSocialNetworkSelection extends State<NewSocialNetworkSelection> {
             children: [
               ListTile(
                 title: Text(networks[index].name),
-                leading: const Icon(Icons.access_alarm),
+                leading: SocialNetworkIcon().resolveIconForNetWorkId(networks[index].name),
                 onTap: () {
                   widget.onSelected(networks[index]);
                   NavigatorApp.pop(context);

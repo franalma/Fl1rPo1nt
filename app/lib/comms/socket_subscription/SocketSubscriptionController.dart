@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+
 import 'package:app/model/ChatMessage.dart';
+import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -12,7 +14,7 @@ class SocketSubscriptionController {
   Map<String, Function(ChatMessageItem)?> chatroomGlobal = {};
   Map<String, int> newMessages = {};
   late Function(String) onNewContactRequested;
-  Function? onReload;
+  Function(String)? onReload;
   List<String> mapMatchLost = [];
   Function(String)? onMatchLost;
 
@@ -54,15 +56,39 @@ class SocketSubscriptionController {
         var callback = chatroomGlobal[matchId]!;
         callback(messageItem);
       } else {
-        int? nMsg = newMessages[matchId] == null ? 0 : newMessages[matchId];
-        nMsg = nMsg! + 1;
-        newMessages[matchId] = nMsg;
+        // int nMsg = newMessages[matchId] ?? 0;
+        // nMsg = nMsg + 1;
+        // newMessages[matchId] = nMsg;
+        await saveNewChatMessages(matchId);
+
         if (onReload != null) {
-          onReload!();
+          onReload!(matchId);
         }
       }
     });
     return this;
+  }
+
+  Future<void> saveNewChatMessages(String matchId) async {
+    Log.d("Starts saveNewChatMessages:$matchId");
+    var storage = SecureStorage();
+    String value = await storage.getSecureData(matchId) ?? "0";
+    int cont = int.parse(value);
+    cont = cont + 1;
+    await storage.saveSecureData(matchId, cont.toString());
+  }
+
+  Future<int> getPendingMessagesForMatchId(String matchId) async {
+    Log.d("Starts saveNewChatMessages:$matchId");
+    var storage = SecureStorage();
+    String value = await storage.getSecureData(matchId) ?? "0";
+    return int.parse(value);
+  }
+
+  Future<void> clearPendingMessageForMacthId(String matchId)async {
+     Log.d("Starts saveNewChatMessages:$matchId");
+    var storage = SecureStorage();
+    await storage.deleteSecureData(matchId);
   }
 
   void setSocketCallback(Function(ChatMessageItem) callback, String matchId) {
@@ -73,14 +99,17 @@ class SocketSubscriptionController {
     chatroomGlobal.remove(matchId);
   }
 
-  int getPendingMessagesForMap(String matchId) {
-    if (!newMessages.containsKey(matchId)) {
-      return 0;
-    }
-    return newMessages[matchId]!;
+  Future<int> getPendingMessagesForMap(String matchId) async {
+    // if (!newMessages.containsKey(matchId)) {
+    //   return 0;
+    // }
+    // return newMessages[matchId]!;
+    return await getPendingMessagesForMatchId(matchId);
   }
 
-  void clearPendingMessages(String matchId) {
-    newMessages[matchId] = 0;
+  Future<void> clearPendingMessages(String matchId) async{
+    // newMessages[matchId] = 0;
+    await clearPendingMessageForMacthId(matchId);
+
   }
 }

@@ -43,6 +43,21 @@ async function creatInternalUser(input) {
     updated_at: currentTime,
     scanned_count: 0,
     scans_performed: 0,
+    networks: [],
+    qr_values: [],
+    hobbies: [],
+    gender: {},
+    user_interests:
+    {
+      relationship: {},
+      sex_alternative: {},
+      gender_preference: {}
+    },
+    biography: "",
+    profile_image_file_id: "",
+    default_qr_id: "",
+    radio_visibility: 10
+
   };
   user.password = await hashPassword(input.password);
   user.surname = input.surname ? input.surname : "";
@@ -56,6 +71,7 @@ async function createPublicProfileUser(input) {
 
     user = {
       id: input.id,
+      name:input.name,
       user_interest: input.user_interests,
       biography: input.biography,
       hobbies: input.hobbies,
@@ -166,9 +182,9 @@ async function doLogin(input) {
           token: currentToken,
           refresh_token: currentRefreshToken,
           networks: user.networks ? user.networks : [],
-          user_interests: user.user_interests
-            ? user.user_interests
-            : { relationship: {}, sex_alternative: {} },
+          user_interests: user.user_interests,
+            // ? user.user_interests
+            // : { relationship: {}, sex_alternative: {} },
           qr_values: user.qr_values ? user.qr_values : [],
           biography: user.biography,
           hobbies: user.hobbies,
@@ -279,7 +295,7 @@ async function updateUserSearchingRangeByUserId(input) {
 }
 
 async function updateUserInterestsByUserId(input) {
-  logger.info("Starts updateUserInterestsByUserId");
+  logger.info("Starts updateUserInterestsByUserId :"+JSON.stringify(input));
   let result = {};
   const filters = { id: input.user_id };
   const newValues = {

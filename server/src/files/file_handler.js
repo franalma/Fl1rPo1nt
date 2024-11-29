@@ -6,6 +6,7 @@ const dbHandler = require("../database/database_handler");
 const logger = require("../logger/log");
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
+const { printJson } = require('../utils/json_utils');
 
 const rootDir = process.env.MULTIMEDIA_PATH;
 const secImageKey = process.env.SEC_IMAGE_KEY;
@@ -55,7 +56,7 @@ function configAudios() {
     return uploadAudios;
 }
 
-function generateSignedUrl(filename, expiresIn = 300) { // expiresIn is in seconds
+function generateSignedImageUrl(filename, expiresIn = 300) { // expiresIn is in seconds
     logger.info("Starts generateSignedUrl")
     const expirationTime = Math.floor(Date.now() / 1000) + expiresIn;
     const signature = crypto
@@ -66,6 +67,16 @@ function generateSignedUrl(filename, expiresIn = 300) { // expiresIn is in secon
     return `${process.env.HOST_PATH}/secure-images/${filename}?expires=${expirationTime}&signature=${signature}`;
 }
 
+function generateSignedAudiosUrl(filename, expiresIn = 300) { // expiresIn is in seconds
+    logger.info("Starts generateSignedUrl")
+    const expirationTime = Math.floor(Date.now() / 1000) + expiresIn;
+    const signature = crypto
+        .createHmac('sha256', secImageKey)
+        .update(`${filename}:${expirationTime}`)
+        .digest('hex');
+
+    return `${process.env.HOST_PATH}/secure-audios/${filename}?expires=${expirationTime}&signature=${signature}`;
+}
 
 function validateSignedSignedUrl(value, expires, signature) {
     logger.info(`Starts validateSignedSignedUrl value:${value} expires: ${expires}, signature: ${signature}`);
@@ -175,8 +186,8 @@ async function getSecureSharedImagesUrlByUserId(input) {
         if (dbFiles) {
             for (let file of dbFiles) {
                 try {
-                    const secureUrl = generateSignedUrl(file.filename); 
-                    logger.info("Secure url: "+secureUrl);
+                    const secureUrl = generateSignedImageUrl(file.filename);
+                    logger.info("Secure url: " + secureUrl);
                     result.files.push({ file_id: file.file_id, url: secureUrl, created_at: 0, filename: "" });
                 } catch (error) {
                     logger.info(error);
@@ -192,16 +203,16 @@ async function getSecureSharedImagesUrlByUserId(input) {
 
 
 async function getImageByUserIdImageId(input) {
-    logger.info("Starts getImageByUserIdImageId:"+JSON.stringify(input));
+    logger.info("Starts getImageByUserIdImageId:" + JSON.stringify(input));
     try {
         const filters = { $or: input.values };
         logger.info(JSON.stringify(filters));
         const dbFiles = await dbHandler.findWithFilters(filters, userImageCollection);
         if (dbFiles) {
-            let result = { status: 200,files:[]};
+            let result = { status: 200, files: [] };
             for (let file of dbFiles) {
                 try {
-                    const secureUrl = generateSignedUrl(file.filename)
+                    const secureUrl = generateSignedImageUrl(file.filename)
                     result.files.push({ file_id: file.file_id, url: secureUrl, created_at: 0, filename: "" });
                 } catch (error) {
                     logger.info(error);
@@ -257,21 +268,33 @@ async function getUserAudiosByUserId(input) {
     result.audios = [];
     try {
         const filters = { user_id: input.user_id };
-        const dbResponse = await dbHandler.findWithFilters(filters, userAudioCollection);
+        const dbFiles = await dbHandler.findWithFilters(filters, userAudioCollection);
 
-        if (dbResponse) {
+        if (dbFiles) {
 
-            for (var item of dbResponse) {
-                let fileName = item.filename;
-                const filePath = path.join(rootDirAudios, fileName);
-                const audioData = fs.readFileSync(filePath);
+            // for (var item of dbResponse) {
+            //     let fileName = item.filename;
+            //     const filePath = path.join(rootDirAudios, fileName);
+            //     const audioData = fs.readFileSync(filePath);
 
-                result.audios.push({
-                    file_id: item.file_id,
-                    created_at: item.created_at,
-                    file: audioData.toString('base64')
-                });
+            //     result.audios.push({
+            //         file_id: item.file_id,
+            //         created_at: item.created_at,
+            //         file: audioData.toString('base64')
+            //     });
+            // }
+
+            let result = { status: 200, files: [] };
+            for (let file of dbFiles) {
+                try {
+                    const secureUrl = generateSignedAudiosUrl(file.filename)
+                    result.files.push({ file_id: file.file_id, url: secureUrl, created_at: 0, filename: "" });
+                } catch (error) {
+                    logger.info(error);
+                }
             }
+            printJson(result);
+            return result;
         }
     } catch (error) {
         logger.info(error);

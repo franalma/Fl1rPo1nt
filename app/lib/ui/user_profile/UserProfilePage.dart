@@ -119,7 +119,7 @@ class _UserProfilePage extends State<UserProfilePage> {
       children: [
         _buildProfileInfo(),
         SizedBox(
-          height: 420,
+          height: MediaQuery.of(context).size.height-280,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: ListView(

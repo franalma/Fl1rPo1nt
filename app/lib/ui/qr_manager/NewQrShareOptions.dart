@@ -83,6 +83,26 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
               },
             ),
             const Divider(),
+            CheckboxListTile(
+              title: const Text("Tus fotos"),              
+              value: _isNameSelected,
+              onChanged: (value) {
+                setState(() {
+                  _isNameSelected = value!;
+                });
+              },
+            ),
+            const Divider(),
+            CheckboxListTile(
+              title: const Text("Tus audios"),              
+              value: _isNameSelected,
+              onChanged: (value) {
+                setState(() {
+                  _isNameSelected = value!;
+                });
+              },
+            ),
+            const Divider(),
             user.phone.isNotEmpty
                 ? CheckboxListTile(
                     title: const Text("Teléfono"),

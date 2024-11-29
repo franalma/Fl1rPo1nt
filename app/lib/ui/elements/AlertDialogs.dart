@@ -59,6 +59,58 @@ class AlertDialogs {
     );
   }
 
+  void showCustomModalDialog(
+      BuildContext context, String name, String urlImage) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Circle Image
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(
+                  urlImage, // Replace with your image URL
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Title
+              const Text(
+                '¡Nuevo contacto!',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Subtitle
+               Text(
+                "Ahora $name forma parte de tus contatos",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              const SizedBox(height: 20),
+              // Close Button
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cerrar'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void showImageDialog(BuildContext context, String imageUrl) {
     showDialog(
       context: context,

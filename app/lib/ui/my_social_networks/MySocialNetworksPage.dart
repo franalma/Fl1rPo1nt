@@ -34,7 +34,7 @@ class _MySocialNetworksPage extends State<MySocialNetworksPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // drawer: AppDrawerMenu().getDrawer(context),
+     
         appBar: AppBar(flexibleSpace: FlexibleAppBar(), actions: [
           IconButton(
             icon: const Icon(Icons.add),

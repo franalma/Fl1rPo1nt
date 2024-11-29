@@ -20,6 +20,7 @@ const mailHandler = require("./mail/mail_handler");
 const chatroomHandler = require("./chatroom/chatroom_handler");
 const path = require('path');
 const { printJson } = require("./utils/json_utils");
+const { header } = require("express-validator");
 const app = express();
 app.use(express.json());
 const port = process.env.PORT;
@@ -114,6 +115,35 @@ async function processGettingImage(req, res) {
       logger.info(filePath);
       res.set('Content-Type', 'image/jpeg');
       fileHandler.resizeImage({ filepath: filePath, width: width, height: height, quality: quality }, res);
+    } else {
+      return res.status(403).send('Invalid signature');
+    }
+
+  } catch (error) {
+    logger.info(error);
+  }
+}
+
+async function processGettingAudios(req, res) {
+  logger.info(`Starts processGettingAudios`)
+  try {
+    const { filename } = req.params;
+    const { expires, signature } = req.query;
+
+    if (fileHandler.validateSignedSignedUrl(filename, expires, signature)) {
+
+      const filePath = path.join(process.env.MULTIMEDIA_PATH, process.env.AUDIO_DIR_PATH, filename);
+      logger.info(filePath);
+      res.set('Content-Type', '	audio/aac');
+
+
+      res.status(200).sendFile(filePath, {
+        headers: {
+          'Content-Type': 'audio/aac',
+        },
+      }
+
+      );
     } else {
       return res.status(403).send('Invalid signature');
     }
@@ -481,11 +511,22 @@ app.post(
 
 
 // Serve secure images
-app.get('/secure-images/:filename', (req, res) => {
-  logger.info("Secure image getting: " + req.url);
+app.get('/secure-images/:filename',
+  // requestValidator.requestAuthValidation, 
+  (req, res) => {
+    logger.info("Secure image getting: " + req.url);
 
-  processGettingImage(req, res);
-});
+    processGettingImage(req, res);
+  });
+
+app.get('/secure-audios/:filename',
+  // requestValidator.requestAuthValidation, 
+  (req, res) => {
+    logger.info("Secure image getting: " + req.url);
+
+    processGettingAudios(req, res);
+  });
+
 
 app.post(
   "/mail",

@@ -2,7 +2,7 @@ const jsonHeaders = {
   'Content-Type': 'application/json', // Define el tipo de contenido como JSON
 };
 
-const String _DEV_HOST_IP = "192.168.2.90";
+const String _DEV_HOST_IP = "192.168.2.206";
 const String _DEV_HOST = "http://$_DEV_HOST_IP:3000";
 const String _HOST = _DEV_HOST;
 
@@ -84,7 +84,7 @@ enum HostActions {
 
  GET_PROTECTED_IMAGES_URLS_BY_USER_ID("GET_PROTECTED_IMAGES_URLS_BY_USER_ID",SERVER_API),     
  GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID("GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID", SERVER_API),
- 
+
 
   SOCKET_LISTEN("", _HOST),
   ;

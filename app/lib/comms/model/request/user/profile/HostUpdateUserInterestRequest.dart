@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
+import 'package:app/model/Gender.dart';
 import 'package:app/model/UserInterest.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
 
 class HostUpdateUserInterestRequest extends BaseRequest {
   Future<bool> run(String userId, RelationShip relationship,
-      SexAlternative sexAlternative) async {
+      SexAlternative sexAlternative, Gender gender) async {
     try {
       Log.d("Start HostUpdateUserInterestRequest");
       HostActions option = HostActions.UPDATE_USER_INTERESTS_BY_USER_ID;
@@ -29,7 +30,13 @@ class HostUpdateUserInterestRequest extends BaseRequest {
                 "id": sexAlternative.id,
                 "name": sexAlternative.name,
                 "color":sexAlternative.color
+              },
+               "gender_preference": {
+                "id": gender.id,
+                "name": gender.name,
+                "color":gender.color
               }
+
             }
           }
         }

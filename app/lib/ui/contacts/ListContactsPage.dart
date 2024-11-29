@@ -4,16 +4,10 @@ import 'package:app/model/UserMatch.dart';
 import 'package:app/ui/NavigatorApp.dart';
 
 import 'package:app/ui/contacts/ContactDetailsPage.dart';
-import 'package:app/ui/contacts/ShowContactDetailsPage.dart';
-import 'package:app/ui/contacts/ShowConversationPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-
 import '../../comms/model/request/matchs/HostGetUserMacthsRequest.dart';
 
 class ListContactsPage extends StatefulWidget {
@@ -27,6 +21,7 @@ class _ListContactsPage extends State<ListContactsPage> {
   List<UserMatch> _matchs = [];
   bool _isLoading = true;
   final User _user = Session.user;
+  final Map<String, int> _pendingMessages = {};
 
   @override
   void initState() {
@@ -79,7 +74,7 @@ class _ListContactsPage extends State<ListContactsPage> {
                       width: 100,
                       child: Text(
                         _matchs[index].contactInfo!.name!,
-                        style: TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 20),
                       )),
                 ),
                 trailing: _buildNewMessages(index),
@@ -87,11 +82,13 @@ class _ListContactsPage extends State<ListContactsPage> {
                   Session.socketSubscription?.onMatchLost = null;
                   var values = await NavigatorApp.pushAndWait(
                       // ShowContactDetailsPage(_matchs[index]), context);
-                      ContactDetailsPage(_matchs[index]), context);
+                      ContactDetailsPage(_matchs[index]),
+                      context);
 
                   var matchId = values["match_id"];
                   if (values["read"]) {
                     setState(() {
+                      _pendingMessages[matchId] = 0;
                       Session.socketSubscription
                           ?.clearPendingMessages(_matchs[index].matchId!);
                     });
@@ -122,15 +119,26 @@ class _ListContactsPage extends State<ListContactsPage> {
 
   Widget _buildNewMessages(int index) {
     Log.d("Starts _buildNewMessages");
+    // var match = _matchs[index];
+    // Session.socketSubscription!
+    //     .getPendingMessagesForMap(match.matchId!)
+    //     .then((nMessages) {
+    //   Log.d("n messages $nMessages");
+    //   if (nMessages > 0) {
+    //     return CircleAvatar(
+    //         radius: 15,
+    //         child: Text(nMessages.toString(), style: TextStyle(fontSize: 15)),
+    //         backgroundColor: Colors.green);
+    //   }
+    //   return SizedBox(width: 20, height: 20, child: Container());
     var match = _matchs[index];
-    int nMessages =
-        Session.socketSubscription!.getPendingMessagesForMap(match.matchId!);
-    Log.d("n messages $nMessages");
+    int nMessages = _pendingMessages[match.matchId!] ?? 0;
     if (nMessages > 0) {
       return CircleAvatar(
           radius: 15,
-          child: Text(nMessages.toString(), style: TextStyle(fontSize: 15)),
-          backgroundColor: Colors.green);
+          backgroundColor: Colors.green,
+          child:
+              Text(nMessages.toString(), style: const TextStyle(fontSize: 15)));
     }
     return SizedBox(width: 20, height: 20, child: Container());
   }
@@ -148,7 +156,7 @@ class _ListContactsPage extends State<ListContactsPage> {
         }
       }
     } catch (error) {
-      print(error);
+      Log.d(error.toString());
     }
   }
 
@@ -162,24 +170,34 @@ class _ListContactsPage extends State<ListContactsPage> {
         }
       }
     } catch (error) {
-      print(error);
+      Log.d(error.toString());
     }
   }
 
   Future<void> _fetchFromHost() async {
-    HostGetUserMacthsRequest().run(_user.userId).then((matches) {
+    HostGetUserMacthsRequest().run(_user.userId).then((matches) async {
       if (matches.matchs != null) {
         _matchs = matches.matchs!;
       }
-
+      for (int i = 0; i < _matchs.length; i++) {
+        var match = _matchs[i];
+        int? nMsgs = await Session.socketSubscription
+            ?.getPendingMessagesForMap(match.matchId!);
+        _pendingMessages[match.matchId!] = nMsgs ?? 0;
+      }
       setState(() {
         _isLoading = false;
       });
     });
   }
 
-  void _onNewMessageReload() {
-    setState(() {});
+  void _onNewMessageReload(String matchId) {
+    Log.d("Starts _onNewMessageReload");
+
+    setState(() {
+      var nMessage = _pendingMessages[matchId];
+      _pendingMessages[matchId] = nMessage! + 1;
+    });
   }
 
   @override

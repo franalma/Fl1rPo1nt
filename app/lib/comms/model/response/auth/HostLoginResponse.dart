@@ -20,6 +20,7 @@ class HostLoginResponse {
   String qrDefaultId = "";
   double radioVisibility = 0; 
   Gender? gender; 
+  Gender? genderInterest; 
 
   HostLoginResponse(
       this.userId,
@@ -39,7 +40,8 @@ class HostLoginResponse {
       this.nScansPerformed,
       this.qrDefaultId,
       this.radioVisibility,
-      this.gender);
+      this.gender,
+      this.genderInterest);
   HostLoginResponse.empty();
 
   factory HostLoginResponse.fromJson(Map<String, dynamic> json) {
@@ -62,6 +64,8 @@ class HostLoginResponse {
       String qrDefaultId = "";
       double radioVisibility = (json["radio_visibility"] as num).toDouble();
       Gender gender = Gender.empty(); 
+      Gender genderInterest = Gender.fromJson(json["user_interests"]["gender_preference"]);
+       
 
       if (json.containsKey("phone")) {
         phone = json['phone'].toString();
@@ -94,6 +98,7 @@ class HostLoginResponse {
       if (json.containsKey("gender")){
           gender = Gender.fromJson(json["gender"]);
       }
+      
 
       HostLoginResponse response = HostLoginResponse(
           userId,
@@ -113,7 +118,8 @@ class HostLoginResponse {
           nScansPerformed,
           qrDefaultId,
           radioVisibility,
-          gender
+          gender,
+          genderInterest
           );
       return response;
     } catch (error, stackTrace) {

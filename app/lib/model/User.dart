@@ -29,6 +29,7 @@ class User {
   late String qrDefaultId; 
   late double radioVisibility; 
   late Gender gender; 
+  late Gender genderInterest; 
 
   User(
       this.userId,
@@ -50,7 +51,8 @@ class User {
       this.nScansPerformed,
       this.qrDefaultId,
       this.radioVisibility, 
-      this.gender);
+      this.gender,
+      this.genderInterest);
 
   User.empty();
   factory User.fromHost(HostLoginResponse response) {
@@ -83,6 +85,12 @@ class User {
         sexAlternatives = SexAlternative.empty();
       }
 
+       if (response.sexAlternatives.isNotEmpty) {
+        sexAlternatives = SexAlternative.load(response.sexAlternatives);
+      } else {
+        sexAlternatives = SexAlternative.empty();
+      }
+
       if (response.userProfileImageId.isNotEmpty) {
         userProfileImageId = response.userProfileImageId;
       } 
@@ -108,7 +116,9 @@ class User {
           response.nScansPerformed,
           response.qrDefaultId,
           response.radioVisibility, 
-          response.gender!);
+          response.gender!,
+          response.genderInterest!
+          );
     } catch (error) {
       Log.d(error.toString());
     }

@@ -5,6 +5,7 @@ import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 
@@ -46,9 +47,15 @@ class _UserGenderSelection extends State<UserGenderSelection> {
     return ListView.builder(
         itemCount: _genders.length,
         itemBuilder: (context, index) {
+          var color = CommonUtils.colorToInt(_genders[index].color!);
           return Column(
             children: [
               ListTile(
+                leading: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: Container(color: Color(color)),
+                ),
                 title: Text(_genders[index].name!),
                 trailing: Radio(
                   groupValue: _selectedIndex,

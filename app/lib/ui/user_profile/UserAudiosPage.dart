@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:app/comms/model/request/user/audios/HostUploadAudioRequest.dart';
+import 'package:app/model/BufferAudioSource.dart';
 import 'package:app/model/FileData.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -11,9 +12,10 @@ import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/SlideRowLeft.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:just_audio/just_audio.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -32,7 +34,8 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   bool _isRecording = false;
   int? _currentlyPlayingIndex;
   User user = Session.user;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  // final AudioPlayer _audioPlayer = AudioPlayer();
+  late AudioPlayer _audioPlayer;
   bool _isLoading = false;
 
   // List of audio files or URLs
@@ -45,12 +48,16 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   void initState() {
     super.initState();
     _audioRecorder = FlutterSoundRecorder();
+    _audioPlayer = AudioPlayer();
     _initializeRecorder();
     _fetchAudiosFromHost();
   }
 
   Future<void> _startRecording() async {
-    await _audioRecorder!.startRecorder(toFile: 'audio_record.aac');
+    await _audioRecorder!.startRecorder(
+      toFile: 'recorded_audio.aac',
+      codec: Codec.aacADTS,
+    );
     setState(() {
       _isRecording = true;
     });
@@ -106,6 +113,7 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   }
 
   Widget _buildBody() {
+    Log.d("_buildBody: nAudios-> ${_audioList.length}");
     return ListView.builder(
       itemCount: _audioList.length,
       itemBuilder: (context, index) {
@@ -139,14 +147,29 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   }
 
   Future<void> _playAudio(int index) async {
-    Uint8List bytes = base64Decode(_audioList[index].file!);
-    try {
-      await _audioPlayer.play(BytesSource(bytes));
-      setState(() {
-        _currentlyPlayingIndex = index;
-      });
-    } catch (error) {
-      Log.d(error.toString());
+    if (_audioList[index].file != null) {
+      Uint8List bytes = base64Decode(_audioList[index].file!);
+      try {
+        setState(() {
+          _currentlyPlayingIndex = index;
+        });
+        final bufferAudioSource = BufferAudioSource(bytes);
+         await _audioPlayer.setAudioSource(bufferAudioSource);
+         await _audioPlayer.play();
+      } catch (error) {
+        Log.d(error.toString());
+      }
+    } else {
+      try {
+        Log.d("-->url: ${_audioList[index].url}");
+        setState(() {
+          _currentlyPlayingIndex = index;
+        });
+        await _audioPlayer.setUrl(_audioList[index].url!);
+        await _audioPlayer.play();        
+      } catch (error) {
+        Log.d(error.toString());
+      }
     }
   }
 
@@ -206,7 +229,7 @@ class _UserAudiosPage extends State<UserAudiosPage> {
       if (fileId.isEmpty) {
         FlutterToast().showToast("No ha sido posible guardar tu audio");
       } else {
-        _audioList.add(FileData(fileId, -1, base64Encode(bytes),""));
+        _audioList.add(FileData(fileId, -1, base64Encode(bytes), ""));
       }
       setState(() {
         _isLoading = false;
