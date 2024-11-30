@@ -6,7 +6,7 @@ const hostActions = require("../constants/host_actions");
 let validationSet = [];
 
 function requestAuthValidation(req, res, next) {
-    logger.info("Init");
+    logger.info("Starts requestAuthValidation");
     const authHeader = req.headers['authorization'];
 
     logger.info(JSON.stringify(req.headers));

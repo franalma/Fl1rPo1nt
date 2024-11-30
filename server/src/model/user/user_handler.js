@@ -9,6 +9,8 @@ const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/
 
 const userColletion = "users";
 const locationCollection = "user_coordinates";
+const databases = require("../../database/databases");
+const apiDatabase = databases.DB_INSTANCES.DB_API;
 
 async function hashPassword(plainPassword) {
   try {
@@ -36,11 +38,11 @@ async function creatInternalUser(input) {
   let user = {
     id: uuidv4(),
     name: input.name,
+    surname: input.surname ? input.surname : "",
     email: input.email,
     phone: input.phone,
     zip_code: input.zip_code,
-    created_at: currentTime,
-    updated_at: currentTime,
+    updated_at: input.created_at,
     scanned_count: 0,
     scans_performed: 0,
     networks: [],
@@ -56,11 +58,11 @@ async function creatInternalUser(input) {
     biography: "",
     profile_image_file_id: "",
     default_qr_id: "",
-    radio_visibility: 10
+    radio_visibility: 10,
+
 
   };
-  user.password = await hashPassword(input.password);
-  user.surname = input.surname ? input.surname : "";
+
   return user;
 }
 
@@ -71,7 +73,7 @@ async function createPublicProfileUser(input) {
 
     user = {
       id: input.id,
-      name:input.name,
+      name: input.name,
       user_interest: input.user_interests,
       biography: input.biography,
       hobbies: input.hobbies,
@@ -120,27 +122,19 @@ function createUserLocationExternal(value) {
 
 async function registerUser(input) {
   logger.info("Start registerUser");
-  let checkExist = await dbHandler.findWithFilters(
-    { email: input.email },
-    userColletion
-  );
+
   let result = {};
-  if (checkExist.length > 0) {
-    result.status = 500;
-    result.message = "User already exists";
-  } else {
-    let user = await creatInternalUser(input);
-    let dbResponse = await dbHandler.addDocument(user, userColletion);
-    if (dbResponse) {
-      result = {
-        status: 200,
-        message: "User created successfully",
-        response: {
-          user_id: user.id,
-          create_at: user.created_at,
-        },
-      };
-    }
+  let user = await creatInternalUser(input);
+  let dbResponse = await dbHandler.addDocumentWithClient(apiDatabase.client, user, apiDatabase.collections.user_collection);
+  if (dbResponse) {
+    result = {
+      status: 200,
+      message: "User created successfully",
+      response: {
+        user_id: user.id,
+        create_at: user.created_at,
+      },
+    };
   }
   return result;
 }
@@ -183,8 +177,8 @@ async function doLogin(input) {
           refresh_token: currentRefreshToken,
           networks: user.networks ? user.networks : [],
           user_interests: user.user_interests,
-            // ? user.user_interests
-            // : { relationship: {}, sex_alternative: {} },
+          // ? user.user_interests
+          // : { relationship: {}, sex_alternative: {} },
           qr_values: user.qr_values ? user.qr_values : [],
           biography: user.biography,
           hobbies: user.hobbies,
@@ -295,7 +289,7 @@ async function updateUserSearchingRangeByUserId(input) {
 }
 
 async function updateUserInterestsByUserId(input) {
-  logger.info("Starts updateUserInterestsByUserId :"+JSON.stringify(input));
+  logger.info("Starts updateUserInterestsByUserId :" + JSON.stringify(input));
   let result = {};
   const filters = { id: input.user_id };
   const newValues = {

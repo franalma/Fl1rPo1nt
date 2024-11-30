@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    container_name: floiint_chat_db
+    ports:
+      - "20200:27017"
+    volumes:
+      - /Volumes/Public/Floiint/databases/chats:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: securepassword

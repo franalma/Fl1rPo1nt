@@ -23,7 +23,7 @@ const { printJson } = require("./utils/json_utils");
 const { header } = require("express-validator");
 const app = express();
 app.use(express.json());
-const port = process.env.PORT;
+const port = process.env.SERVER_PORT_API;
 const server = http.createServer(app);
 socketHandler.socketInit(server);
 
