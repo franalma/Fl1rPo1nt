@@ -18,10 +18,10 @@ const hobbiesHandler = require("./model/hobbies/hobbies_handler");
 // const nodemailer = require("nodemailer");
 // const mailHandler = require("./mail/mail_handler");
 const chatroomHandler = require("./chatroom/chatroom_handler");
-const path = require('path');
+const path = require("path");
 const { printJson } = require("./utils/json_utils");
 const { header } = require("express-validator");
-
+const { DB_INSTANCES } = require("./database/databases");
 
 //Init
 const app = express();
@@ -29,9 +29,6 @@ app.use(express.json());
 const port = process.env.SERVER_PORT_API;
 const server = http.createServer(app);
 // socketHandler.socketInit(server);
-
-
-
 
 async function processRequest(req, res) {
   logger.info("processRequest");
@@ -66,18 +63,24 @@ async function processRequest(req, res) {
           );
           break;
         }
+        case hostActions.UPDATE_USER_IMAGE_PROFILE_BY_USER_ID: {
+          result = await userHandler.updateUserImageProfileByUserId(
+            req.body.input
+          );
+          break;
+        }
         case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID: {
           result = await contactHandler.addUserContactByUserIdContactIdQrId(
             req.body.input
           );
           break;
         }
-        case hostActions.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID: {
-          result = await contactHandler.removeUserContactByUserIdContactId(
-            req.body.input
-          );
-          break;
-        }
+        // case hostActions.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID: {
+        //   result = await contactHandler.removeUserContactByUserIdContactId(
+        //     req.body.input
+        //   );
+        //   break;
+        // }
         case hostActions.GET_USER_CONTACTS_BY_USER_ID: {
           result = await contactHandler.getUserContactsByUserId(req.body.input);
           break;
@@ -92,12 +95,13 @@ async function processRequest(req, res) {
           result = await userHandler.updateUserNetworksByUserId(req.body.input);
           break;
         }
-        case hostActions.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID: {
-          result = await userHandler.updateUserSearchingRangeByUserId(
-            req.body.input
-          );
-          break;
-        }
+
+        // case hostActions.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID: {
+        //   result = await userHandler.updateUserSearchingRangeByUserId(
+        //     req.body.input
+        //   );
+        //   break;
+        // }
 
         case hostActions.GET_ALL_SEXUAL_ORIENTATIONS_RELATIONSHIPS: {
           result =
@@ -137,10 +141,10 @@ async function processRequest(req, res) {
           result = await flirtHandler.getUserFlirts(req.body.input);
           break;
         }
-        case hostActions.GET_USER_IMAGES_BY_USER_ID: {
-          result = await fileHandler.getUserImagesByUserId(req.body.input);
-          break;
-        }
+        // case hostActions.GET_USER_IMAGES_BY_USER_ID: {
+        //   result = await fileHandler.getUserImagesByUserId(req.body.input);
+        //   break;
+        // }
         case hostActions.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID: {
           result = await fileHandler.removeUserImageByImageIdUserId(
             req.body.input
@@ -165,13 +169,6 @@ async function processRequest(req, res) {
 
         case hostActions.UPDATE_USER_NAME_BY_USER_ID: {
           result = await userHandler.updateUserNameByUserId(req.body.input);
-          break;
-        }
-
-        case hostActions.UPDATE_USER_IMAGE_PROFILE_BY_USER_ID: {
-          result = await userHandler.updateUserImageProfileByUserId(
-            req.body.input
-          );
           break;
         }
 
@@ -218,11 +215,11 @@ async function processRequest(req, res) {
         }
 
         case hostActions.GET_PROTECTED_IMAGES_URLS_BY_USER_ID: {
-          result = await fileHandler.getSecureSharedImagesUrlByUserId(req.body.input);
+          result = await fileHandler.getSecureSharedImagesUrlByUserId(
+            req.body.input
+          );
           break;
         }
-
-       
 
         case hostActions.DISABLE_MATCH_BY_MATCH_ID_USER_ID: {
           result = await contactHandler.diableMatchByMatchIdUserId(
@@ -232,9 +229,7 @@ async function processRequest(req, res) {
         }
 
         case hostActions.GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID: {
-          result = await fileHandler.getImageByUserIdImageId(
-            req.body.input
-          );
+          result = await fileHandler.getImageByUserIdImageId(req.body.input);
           break;
         }
 
@@ -244,7 +239,6 @@ async function processRequest(req, res) {
           );
           break;
         }
-
       }
       if (result && result.status) {
         res.status(result.status).json(result);
@@ -257,8 +251,8 @@ async function processRequest(req, res) {
   }
 }
 
-
-app.post("/api",
+app.post(
+  "/api",
   requestValidator.requestAuthValidation,
   requestValidator.requestFieldsValidation,
   (req, res) => {
@@ -266,9 +260,8 @@ app.post("/api",
   }
 );
 
-
 server.listen(port, () => {
-  dbHandler.connectToDatabase().then((result) => {
+  dbHandler.connectToDatabase(DB_INSTANCES.DB_API).then((result) => {
     if (result == null) {
       throw "Db connection error";
     } else {

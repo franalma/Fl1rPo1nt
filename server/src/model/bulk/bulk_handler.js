@@ -1,13 +1,6 @@
 const dbHandler = require("../../database/database_handler");
 const {DB_INSTANCES} = require("../../database/databases");
 const logger = require("../../logger/log");
-// const user_coordinates_collection = "user_coordinates";
-// const sex_orientations_collection = "sex_orientations";
-// const type_relationships_collection = "type_relationships";
-// const social_networks_collection = "social_networks";
-// const hobbies_collection = "hobbies_collection";
-// const gender_collection = "gender_collection";
-
 
 async function addBulkCoordinates(input) {
     try {

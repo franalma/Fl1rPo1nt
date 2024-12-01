@@ -45,10 +45,14 @@ const DB_INSTANCES = {
             user_collection: "users",
             genders_collection: "genders",
             hobbies_collection:"hobbies",
+            user_contact_collection: "user_matchs",
             social_networks_collection:"social_networks",
             user_coordinates_collection:"user_coordinates",
             type_relationships_collection:"types_relationships",
-            sex_orientations_collection: "sex_orientations"
+            sex_orientations_collection: "sex_orientations",
+            user_audios_collection: "user_audios",
+            user_images_collection: "user_images",
+            flirts_collection:"flirts"
         }
     },
     DB_AUTH: {

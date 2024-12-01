@@ -1,14 +1,12 @@
-const userContactCollection = "users_matchs";
-
 const logger = require("../../logger/log");
 const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
-
 const sockerHandler = require("../../sockets/socket_handler");
 const userHandler = require("./user_handler");
 const chatroomHandler = require("./../../chatroom/chatroom_handler");
 const { printJson } = require("../../utils/json_utils");
 const { sendMatchLost } = require("../../sockets/socket_handler");
+const { DB_INSTANCES } = require("../../database/databases");
 
 async function createMatchInternal(input) {
   logger.info("Starts createMatchInternal");
@@ -75,11 +73,11 @@ async function createMatchExternal(item, input) {
     };
 
     logger.info("contactUser: " + JSON.stringify(contactUser));
-    const userInfo = await userHandler.getUserPublicProfileByUserId(contactUser);
+    const userInfo = await userHandler.getUserPublicProfileByUserId(
+      contactUser
+    );
     printJson(userInfo);
     match.profile_image = userInfo.profile_image;
-
-
 
     return match;
   } catch (error) {
@@ -91,11 +89,13 @@ async function createMatchExternal(item, input) {
 async function getMatchByMatchIdInternal(input) {
   try {
     logger.info("Starts getMatchByMatchIdInternal");
+    const db = DB_INSTANCES.DB_API;
     const matchId = input.match_id;
     const filter = { id: matchId };
-    const dbResponse = await dbHandler.findWithFilters(
+    const dbResponse = await dbHandler.findWithFiltersAndClient(
+      db.client,
       filter,
-      userContactCollection
+      db.collections.user_contact_collection
     );
 
     if (dbResponse && dbResponse.length > 0) {
@@ -115,8 +115,13 @@ async function addUserContactByUserIdContactIdQrId(input) {
   let result = { status: 500 };
 
   try {
+    const db = DB_INSTANCES.DB_API;
     let doc = await createMatchInternal(input);
-    let dbResponse = await dbHandler.addDocument(doc, userContactCollection);
+    let dbResponse = await dbHandler.addDocumentWithClient(
+      db.client,
+      doc,
+      db.user_contact_collection
+    );
 
     if (dbResponse) {
       const updateUsersInfo =
@@ -132,10 +137,12 @@ async function addUserContactByUserIdContactIdQrId(input) {
         scans_performed: updateUsersInfo.scans_performed,
       };
 
-      const requestedUserInfo = await userHandler.getUserPublicProfileByUserId(input);
+      const requestedUserInfo = await userHandler.getUserPublicProfileByUserId(
+        input
+      );
 
       const message = {
-        requested_user: requestedUserInfo
+        requested_user: requestedUserInfo,
       };
 
       sockerHandler.sendMessageToUser(
@@ -154,22 +161,28 @@ async function addUserContactByUserIdContactIdQrId(input) {
 
 async function getUserContactsByUserId(input) {
   logger.info("Starts getUserContactsByUserId");
-  const filter = { user_id: input.user_id };
-  let dbResponse = await dbHandler.findWithFilters(
-    filter,
-    userContactCollection
-  );
   let result = {};
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filter = { user_id: input.user_id };
+    let dbResponse = await dbHandler.findWithFiltersAndClient(
+      db.client,
+      filter,
+      db.collections.user_contact_collection
+    );
 
-  if (dbResponse) {
-    result.status = 200;
-    result.contacts = [];
-    for (var item of dbResponse) {
-      result.contacts.push({
-        user_id: item.user_id,
-        contact_info: item.contact_info,
-      });
+    if (dbResponse) {
+      result.status = 200;
+      result.contacts = [];
+      for (var item of dbResponse) {
+        result.contacts.push({
+          user_id: item.user_id,
+          contact_info: item.contact_info,
+        });
+      }
     }
+  } catch (error) {
+    logger.info(error);
   }
 
   return result;
@@ -179,13 +192,15 @@ async function getAllUserMatchsByUserId(input) {
   logger.info("Starts getAllUserMatchsByUserId");
   let result = {};
   try {
+    const db = DB_INSTANCES.DB_API;
     const filters = {
       users: { $elemMatch: { user_id: input.user_id } },
       active: 1,
     };
-    const dbResponse = await dbHandler.findWithFilters(
+    const dbResponse = await dbHandler.findWithFiltersAndClient(
+      db.client,
       filters,
-      userContactCollection
+      db.collections.user_contact_collection
     );
 
     if (dbResponse) {
@@ -205,6 +220,7 @@ async function getAllUserMatchsByUserId(input) {
 async function diableMatchByMatchIdUserId(input) {
   try {
     logger.info("Starts disableMatchByMatchId: " + JSON.stringify(input));
+    const db = DB_INSTANCES.DB_API;
     const requesterId = input.user_id;
     const matchId = input.match_id;
     const filter = { id: matchId };
@@ -214,10 +230,11 @@ async function diableMatchByMatchIdUserId(input) {
       updated_at: Date.now(),
     };
     logger.info(JSON.stringify(payload));
-    const dbResponse = await dbHandler.updateDocument(
+    const dbResponse = await dbHandler.updateDocumentWithClient(
+      db.client,
       payload,
       filter,
-      userContactCollection
+      db.collections.user_contact_collection
     );
 
     if (dbResponse) {

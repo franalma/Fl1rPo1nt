@@ -209,8 +209,8 @@ async function deleteCollectionWithClient(client,path) {
     return result;
 }
 
-async function findWithFilters(filters, path) {
-    logger.info("Starts findWithFilters: " + JSON.stringify(filters));
+async function findWithFilters(client, filters, path) {
+    logger.info("Starts findWithFilters");
     let result = null;
     try {
         await client.connect();
