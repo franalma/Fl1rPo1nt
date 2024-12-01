@@ -15,143 +15,23 @@ const socketHandler = require("./sockets/socket_handler");
 const http = require("http");
 const fileHandler = require("./files/file_handler");
 const hobbiesHandler = require("./model/hobbies/hobbies_handler");
-const nodemailer = require("nodemailer");
-const mailHandler = require("./mail/mail_handler");
+// const nodemailer = require("nodemailer");
+// const mailHandler = require("./mail/mail_handler");
 const chatroomHandler = require("./chatroom/chatroom_handler");
 const path = require('path');
 const { printJson } = require("./utils/json_utils");
 const { header } = require("express-validator");
+
+
+//Init
 const app = express();
 app.use(express.json());
 const port = process.env.SERVER_PORT_API;
 const server = http.createServer(app);
-socketHandler.socketInit(server);
-
-const uploadImages = fileHandler.configImages();
-const uploadAudios = fileHandler.configAudios();
-
-async function processAuthRequest(req, res) {
-  logger.info("starts processAuthRequest");
-
-  try {
-    let result = requestValidator.requestDoValidation(req);
-    if (result) {
-      res.status(400).json(result);
-    } else {
-      const { action } = req.body;
-      logger.info(action);
-      switch (action) {
-        case hostActions.PUT_USER: {
-          result = await userHandler.registerUser(req.body.input);
-          break;
-        }
-        case hostActions.DO_LOGIN: {
-          result = await userHandler.doLogin(req.body.input);
-          break;
-        }
-        case hostActions.TOKEN_LOGIN: {
-          break;
-        }
-      }
-      if (result && result.status) {
-        res.status(result.status).json(result);
-      } else {
-        res.status(500).json({ message: "Error processing the request" });
-      }
-    }
-  } catch (error) {
-    logger.info("processAuthRequest:" + error);
-  }
-}
-
-async function procesBulkRequest(req, res) {
-  const { action } = req.body;
-  let result = -1;
-  switch (action) {
-    case bulkHostActions.BULK_TEST_COORDINATE: {
-      result = await bulkHandler.addBulkCoordinates(req.body.input);
-      break;
-    }
-    case bulkHostActions.BULK_LOAD_SEX_ORIENTATIONS: {
-      result = await bulkHandler.addSexOrientation(req.body.input);
-      break;
-    }
-    case bulkHostActions.BULK_LOAD_TYPE_RELATIONSHIPS: {
-      result = await bulkHandler.addTypeRelationships(req.body.input);
-      break;
-    }
-    case bulkHostActions.BUKL_PUT_ALL_SOCIAL_NETWORKS: {
-      result = await bulkHandler.addBaseNetworks(req.body.input);
-      break;
-    }
-    case bulkHostActions.BULK_PUT_ALL_HOBBIES: {
-      result = await bulkHandler.addHobbies(req.body.input);
-      break;
-    }
-    case bulkHostActions.BULK_PUT_ALL_GENDERS: {
-      result = await bulkHandler.addGenderIdentity(req.body.input);
-      break;
-    }
-  }
-
-  if (result == 0) {
-    res.status(200).json({});
-  } else {
-    res.status(500).json({});
-  }
-}
-
-async function processGettingImage(req, res) {
-  logger.info(`Starts processGettingImage`)
-  try {
-    const { filename } = req.params;
-    const { expires, signature, width, height, quality } = req.query;
+// socketHandler.socketInit(server);
 
 
-    //TODO restore signature validation
-    if (fileHandler.validateSignedSignedUrl(filename, expires, signature)) {
 
-      const filePath = path.join(process.env.MULTIMEDIA_PATH, process.env.IMAGE_DIR_PATH, filename);
-      logger.info(filePath);
-      res.set('Content-Type', 'image/jpeg');
-      fileHandler.resizeImage({ filepath: filePath, width: width, height: height, quality: quality }, res);
-    } else {
-      return res.status(403).send('Invalid signature');
-    }
-
-  } catch (error) {
-    logger.info(error);
-  }
-}
-
-async function processGettingAudios(req, res) {
-  logger.info(`Starts processGettingAudios`)
-  try {
-    const { filename } = req.params;
-    const { expires, signature } = req.query;
-
-    if (fileHandler.validateSignedSignedUrl(filename, expires, signature)) {
-
-      const filePath = path.join(process.env.MULTIMEDIA_PATH, process.env.AUDIO_DIR_PATH, filename);
-      logger.info(filePath);
-      res.set('Content-Type', '	audio/aac');
-
-
-      res.status(200).sendFile(filePath, {
-        headers: {
-          'Content-Type': 'audio/aac',
-        },
-      }
-
-      );
-    } else {
-      return res.status(403).send('Invalid signature');
-    }
-
-  } catch (error) {
-    logger.info(error);
-  }
-}
 
 async function processRequest(req, res) {
   logger.info("processRequest");
@@ -342,47 +222,7 @@ async function processRequest(req, res) {
           break;
         }
 
-        case hostActions.PUT_MESSAGE_TO_USER_WITH_USER_ID: {
-          const receiverId = req.body.input.receiver_id;
-          const senderId = req.body.input.sender_id;
-          const matchId = req.body.input.match_id;
-          const message = req.body.input.message;
-
-          logger.info(
-            "--message: " +
-            message +
-            " receiver: " +
-            receiverId +
-            " match_id:" +
-            matchId
-          );
-
-          await chatroomHandler.putMessageInChatroomByMatchId(req.body.input);
-
-          await socketHandler.sendChatMessage(
-            "chat_message",
-            receiverId,
-            senderId,
-            message,
-            matchId
-          );
-
-          break;
-        }
-
-        case hostActions.GET_CHATROOM_MESSAGES_BY_MATCH_ID: {
-          result = await chatroomHandler.getMessagesInChatroomByMatchId(
-            req.body.input
-          );
-          break;
-        }
-
-        case hostActions.DELETE_CHATROOM_FROM_MATCH_ID_USER_ID: {
-          result = await chatroomHandler.deleteChatRoomByMatchIdUserId(
-            req.body.input
-          );
-          break;
-        }
+       
 
         case hostActions.DISABLE_MATCH_BY_MATCH_ID_USER_ID: {
           result = await contactHandler.diableMatchByMatchIdUserId(
@@ -417,13 +257,6 @@ async function processRequest(req, res) {
   }
 }
 
-app.post("/auth", requestValidator.requestFieldsValidation, (req, res) => {
-  try {
-    processAuthRequest(req, res);
-  } catch (error) {
-    logger.info(error);
-  }
-});
 
 app.post("/api",
   requestValidator.requestAuthValidation,
@@ -433,145 +266,13 @@ app.post("/api",
   }
 );
 
-app.post("/bulk", (req, res) => {
-  procesBulkRequest(req, res);
-});
-
-app.post(
-  "/upload/image",
-  requestValidator.requestAuthValidation,
-  uploadImages.single("image"),
-  (req, res) => {
-    if (!req.file) {
-      return res.status(400).send("No file uploaded.");
-    }
-    const userId = req.body.user_id;
-
-    fileHandler.doUploadImageByUserId(req, userId).then((result) => {
-      console.log("---result: " + result);
-      if (result) {
-        res.status(200).json(result);
-      } else {
-        res.status(501).json({
-          message: "Not possible to add image",
-        });
-      }
-    });
-  }
-);
-
-app.post(
-  "/upload/audio",
-  requestValidator.requestAuthValidation,
-  uploadAudios.single("audio"),
-  (req, res) => {
-    if (!req.file) {
-      logger.info("no audio file");
-      return res.status(400).send("No file uploaded.");
-    }
-    const userId = req.body.user_id;
-
-    fileHandler.doUploadAudioByUserId(req, userId).then((result) => {
-      console.log("---result: " + result);
-      if (result) {
-        res.status(200).json(result);
-      } else {
-        res.status(501).json({
-          message: "Not possible to add audio",
-        });
-      }
-    });
-  }
-);
-
-// app.get('/protected-image/:file_id', requestValidator.requestAuthValidation, (req, res) => {
-//     const fileId = req.params.file_id;
-//     fileHandler.getImageByUrl(fileId).then((result)=>{
-//         console.log(result);
-//         if (result!=null){
-//             res.status(200).sendFile(result.filepath);
-//         }else{
-//             res.status(404);
-//         }
-//     });
-// });
-
-
-// app.post('/protected-image', requestValidator.requestAuthValidation, (req, res) => {
-
-//   result = fileHandler.getSecureSharedImagesUrlByUserId(req.body).then((result) => {
-//     logger.info(JSON.stringify(result));
-//     if (result != null) {
-//       res.status(200).json(result);
-//     } else {
-//       res.status(500);
-//     }
-//   });
-// });
-
-
-// Serve secure images
-app.get('/secure-images/:filename',
-  // requestValidator.requestAuthValidation, 
-  (req, res) => {
-    logger.info("Secure image getting: " + req.url);
-
-    processGettingImage(req, res);
-  });
-
-app.get('/secure-audios/:filename',
-  // requestValidator.requestAuthValidation, 
-  (req, res) => {
-    logger.info("Secure image getting: " + req.url);
-
-    processGettingAudios(req, res);
-  });
-
-
-app.post(
-  "/mail",
-
-  (req, res) => {
-    const transporter = nodemailer.createTransport({
-      host: "mail.privateemail.com",
-      port: 465, // Use 465 for SSL or 587 for TLS
-      secure: true, // Set to true for port 465, false for 587
-      auth: {
-        user: "noreplay@floiint.com", // Your Namecheap Private Email address
-        pass: "", // Your email account password
-      },
-    });
-
-    const mailOptions = {
-      from: "noreplay@floiint.com", // Sender address
-      to: "martahdelahiguera@gmail.com", // List of recipients
-      subject: "Bienvenid@ a Floiint", // Subject line
-      //   text: "Hello, this is a test email sent using Nodemailer and Namecheap Private Email.", // Plain text body
-      html: mailHandler.genMailBody(),
-      attachments: [
-        {
-          filename: "mail_logo.png", // Image file name
-          path: "/Users/sierra/Desktop/Projects/Personal/Fl1rPo1nt/server/src/mail/mail_logo.png", // Local path to the image
-          cid: "unique-image-id", // Content ID (used in the HTML as `src="cid:unique-image-id"`)
-        },
-      ],
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        return console.log("Error occurred:", error);
-      }
-      console.log("Email sent:", info.response);
-    });
-  }
-);
 
 server.listen(port, () => {
   dbHandler.connectToDatabase().then((result) => {
     if (result == null) {
       throw "Db connection error";
     } else {
-      console.log(`El servidor está corriendo en el puerto ${port}`);
+      console.log(`El servidor API está corriendo en el puerto ${port}`);
     }
   });
 });

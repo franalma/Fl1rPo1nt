@@ -110,6 +110,74 @@ async function genHtmlAccountVerified() {
 
 
 
+async function gentAccountNotVerified(){
+  const base64 = fileToBase64(image);
+  const image64 = `data:image/png;base64,${base64}`;
+
+  return `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Floiint</title>
+          <style>
+          
+            .logo {
+              width: 100px;
+              height: auto;
+              margin-bottom: 20px;
+            }
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              background-color: #f4f4f9;
+            }
+            .container {
+              text-align: center;
+              background: #fff;
+              padding: 20px 30px;
+              border-radius: 8px;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+              color: #eb0527;
+              margin-bottom: 20px;
+            }
+            p {
+              color: #555;
+            }
+            a {
+              text-decoration: none;
+              color: #fff;
+              background: #eb0527;
+              padding: 10px 20px;
+              border-radius: 5px;
+              font-weight: bold;
+              margin-top: 15px;
+              display: inline-block;
+            }
+            a:hover {
+              background: #45a049;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+          <img src="${image64}" alt="Logo" class="logo">
+            <h1>¡No ha sido posible verificar tu cuenta, el enlace de verificación ha caducado!</h1>
+            <p>Lo sentimos, inténtalo de nuevo.</p>            
+          </div>
+        </body>
+      </html>
+    `;
+}
+
 
 
 
@@ -151,5 +219,6 @@ async function sendMailToUser(eMail, token, userId) {
 module.exports = {
   genMailBody,
   sendMailToUser,
-  genHtmlAccountVerified
+  genHtmlAccountVerified,
+  gentAccountNotVerified
 };

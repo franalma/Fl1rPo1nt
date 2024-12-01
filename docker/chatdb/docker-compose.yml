@@ -5,6 +5,7 @@ services:
     container_name: floiint_chat_db
     ports:
       - "20200:27017"
+    user: "999:999"
     volumes:
       - /Volumes/Public/Floiint/databases/chats:/data/db
     environment:

@@ -58,7 +58,8 @@ async function doRegisterUser(input) {
 
             if (isCreated && isCreated.status == 200) {
                 result.user_id = user.id;
-                const token = tokenHandler.generateToken(user);
+                const tokenLife = process.env.TOKEN_ACTIVATION_LIFE;
+                const token = tokenHandler.generateToken(user, tokenLife);
                 const newValues = {
                     token: token
                 };
@@ -86,25 +87,107 @@ async function doRegisterUser(input) {
 async function activateAccount(token, userId) {
     logger.info("Starts activateAccount");
     try {
-        const filters = { token: token, id: userId };
-        const newValues = {
-            activated: 1,
-            enabled: 1
-        };
-        const dbResult = await dbHandler.updateDocumentWithClient(authDatabase.client, newValues, filters, authDatabase.collections.user_collection);
-        if (dbResult != null){
-            return true; 
+        let result = tokenHandler.verifyToken(token);
+        if (result == true) {
+            const filters = { token: token, id: userId, activated: 0 };
+            const newValues = {
+                activated: 1,
+                enabled: 1
+            };
+            const dbResult = await dbHandler.updateDocumentWithClient(authDatabase.client, newValues, filters, authDatabase.collections.user_collection);
+            if (dbResult != null) {
+
+                return true;
+            }
         }
-        
+
     } catch (error) {
         logger.info(error);
     }
-    return false; 
+    return false;
 }
 
+async function doLogin(input) {
+    logger.info("Start doLogin: " + JSON.stringify(input));
+    let result = {};
+    try {
+        const dbAuth = databases.DB_INSTANCES.DB_AUTH;
+        // const hashPass = await authUtils.hashPassword(input.password);        
+        let filters = {
+            email: input.email,
+        };
+
+        let users = await dbHandler.findWithFiltersAndClient(dbAuth.client, filters, dbAuth.collections.user_collection);
+        logger.info("users: " + JSON.stringify(users));
+        if (users && users.length == 1 && users[0].id) {
+            let user = users[0];
+            if (user.activated == 1) {
+                logger.info("user is activated");
+                if (user.enabled == 1) {
+                    logger.info("User is unlocked");
+                    const passCheck = await authUtils.verifyPassword(input.password, user.password);
+                    logger.info("check pass: " + passCheck);
+
+                    if (passCheck) {
+                        const currentToken = tokenHandler.generateToken({
+                            id: user.id,
+                            email: user.email,
+                        });
+                        const currentRefreshToken = tokenHandler.generateRefreshToken({
+                            id: user.id,
+                            email: user.email,
+                        });
+                        user.token = currentToken;
+                        user.currentRefreshToken = currentRefreshToken;
+                        result = await userHandler.getUserInfoByUserId(user);
+
+                        const updatedInfo = {
+                            last_login: Date.now(),
+                        }
+                        //update last login
+                        await dbHandler.updateDocumentWithClient(dbAuth.client, updatedInfo, { id: user.id }, dbAuth.collections.user_collection);
+
+                    } else {
+                        result = {
+                            status: 500,
+                            message: "Wrong user or password",
+                        };
+                    }
+
+
+                } else {
+                    logger.info("User is blocked");
+                    result = {
+                        status: 403,
+                        message: "User blocked",
+                    };
+                }
+
+            } else {
+                logger.info("user is not activated");
+                result = {
+                    status: 402,
+                    message: "Account not verified",
+                };
+            }
+
+        } else {
+            result = {
+                status: 500,
+                message: "Wrong user or password",
+            };
+        }
+    } catch (error) {
+        logger.info(error);
+    }
+
+
+    return result;
+}
 
 module.exports = {
     doRegisterUser,
-    activateAccount
+    activateAccount,
+    doLogin
 }
 

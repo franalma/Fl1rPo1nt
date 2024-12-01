@@ -7,15 +7,16 @@ const { body, validationResult } = require('express-validator');
 const authHandler = require("./auth/auth_handler");
 const { DB_INSTANCES } = require("./database/databases");
 const mailHandler = require("./mail/mail_handler");
+const { printJson } = require("./utils/json_utils");
 
 
-
+//Init
 const app = express();
 app.use(express.json());
 const port = process.env.SERVER_PORT_AUTH;
 const server = http.createServer(app);
 
-const validatitionRules = {
+const validationRules = {
   REGISTER_USER_RULES: [
     body('input.name').notEmpty().withMessage("Name cant be empty"),
     body('input.surname').optional(),
@@ -28,6 +29,11 @@ const validatitionRules = {
       .matches(/\d/).withMessage('La contraseña debe contener al menos un número')
       .matches(/[@$!%*?&]/).withMessage('La contraseña debe contener al menos un carácter especial (@, $, !, %, *, ?, &)'),
     body("input.zip_code").isNumeric().withMessage("Zip code must be a number"),
+  ],
+
+  LOGIN_USER_RULES: [
+    body('input.email').notEmpty().isEmail().withMessage("eMail cant be empty"),
+    body('input.password').notEmpty().withMessage("Password cant be empty")
   ]
 }
 
@@ -42,7 +48,7 @@ function requestDoValidation(req) {
 function requestRegistrationValidation(req, res, next) {
   logger.info("custom requestRegistrationValidation");
   try {
-    const validationSet = validatitionRules.REGISTER_USER_RULES;
+    const validationSet = validationRules.REGISTER_USER_RULES;
     Promise.all(validationSet.map(validation => validation.run(req)))
       .then(() => next())
       .catch(next);
@@ -55,16 +61,7 @@ function requestRegistrationValidation(req, res, next) {
 function requestLoginValidation(req, res, next) {
   logger.info("custom requestLoginValidation");
   try {
-    switch (action) {
-      case hostActions.PUT_USER: {
-        validationSet = validationRules.NEW_USER_VALIDATION_RULES;
-        break;
-      }
-      case hostActions.DO_LOGIN: {
-
-        break;
-      }
-    }
+    const validationSet = validationRules.LOGIN_USER_RULES;
     Promise.all(validationSet.map(validation => validation.run(req)))
       .then(() => next())
       .catch(next);
@@ -73,45 +70,11 @@ function requestLoginValidation(req, res, next) {
     res.status(500).json({ message: "Error processing the request" });
   }
 
-
 }
-
-
-// async function processAuthRequest(action, req, res) {
-//   logger.info("starts processAuthRequest");
-//   let result = {};
-//   try {
-
-//     logger.info(action);
-//     switch (action) {
-//       case HOST_AUTH_ACTIONS.REGISTER: {
-//         result = await userHandler.registerUser(req.body.input);
-//         break;
-//       }
-//       case HOST_AUTH_ACTIONS.REGISTER: {
-//         result = await userHandler.doLogin(req.body.input);
-//         break;
-//       }
-//       // case hostActions.TOKEN_LOGIN: {
-//       //   break;
-//       // }
-//     }
-
-
-
-//   } catch (error) {
-//     logger.info("processAuthRequest:" + error);
-//   } finally {
-//     if (result && result.status) {
-//       res.status(result.status).json(result);
-//     } else {
-//       res.status(500).json({ message: "Error processing the request" });
-//     }
-//   }
-// }
 
 async function sendResult(req, res, result) {
   logger.info("Starts processResult");
+  printJson(result);
   try {
     res.status(result.status).json(result);
   } catch (error) {
@@ -119,6 +82,26 @@ async function sendResult(req, res, result) {
     res.status(500).json(error);
   }
 }
+
+app.post("/login", requestLoginValidation, (req, res) => {
+  try {
+    const result = requestDoValidation(req);
+    if (result) {
+      res.status(400).json(result);
+    } else {
+      authHandler.doLogin(req.body.input).then((result) => {
+        sendResult(req, res, result)
+      });
+    }
+
+  } catch (error) {
+    logger.info(error);
+    res.status(500).json({ message: "Error processing the request" });
+  }
+});
+
+
+
 
 app.post("/register", requestRegistrationValidation, (req, res) => {
   try {
@@ -129,8 +112,6 @@ app.post("/register", requestRegistrationValidation, (req, res) => {
       authHandler.doRegisterUser(req.body.input).then((result) => {
         sendResult(req, res, result)
       });
-      // userHandler.registerUser();
-      // processAuthRequest(req, res);
     }
 
   } catch (error) {
@@ -140,13 +121,18 @@ app.post("/register", requestRegistrationValidation, (req, res) => {
 });
 
 app.get("/register/validation/:token/:id", (req, res) => {
-  const  token = req.params.token;
-  const  id = req.params.id;
-  logger.info("Validation token: "+token);
-  logger.info("Validation id: "+id);
-  authHandler.activateAccount(token, id).then((result)=>{
-    if (result){
-      mailHandler.genHtmlAccountVerified().then((html) => {    
+  const token = req.params.token;
+  const id = req.params.id;
+  logger.info("Validation token: " + token);
+  logger.info("Validation id: " + id);
+  authHandler.activateAccount(token, id).then((result) => {
+    if (result) {
+      mailHandler.genHtmlAccountVerified().then((html) => {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(html);
+      });
+    } else {
+      mailHandler.gentAccountNotVerified().then((html) => {
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(html);
       });
@@ -156,12 +142,14 @@ app.get("/register/validation/:token/:id", (req, res) => {
 });
 
 
+
+
 server.listen(port, () => {
   dbHandler.connectToDatabase(DB_INSTANCES.DB_AUTH).then((result) => {
     if (result == null) {
       throw "Db connection error";
     } else {
-      console.log(`El servidor está corriendo en el puerto ${port}`);
+      console.log(`El servidor AUTH está corriendo en el puerto ${port}`);
     }
   });
 

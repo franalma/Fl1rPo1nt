@@ -6,7 +6,7 @@ services:
     ports:
       - "20300:27017"
     volumes:
-      - /Volumes/Public/Floiint/databases/multimedia:/data/db
+      - /Volumes/Public/Floiint/databases/mult:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: securepassword

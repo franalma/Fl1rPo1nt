@@ -1,14 +1,19 @@
 const dbHandler = require("../../database/database_handler");
-const user_coordinates_collection = "user_coordinates";
-const sex_orientations_collection = "sex_orientations";
-const type_relationships_collection = "type_relationships";
-const social_networks_collection = "social_networks";
-const hobbies_collection = "hobbies_collection";
-const gender_collection = "gender_collection";
+const {DB_INSTANCES} = require("../../database/databases");
+const logger = require("../../logger/log");
+// const user_coordinates_collection = "user_coordinates";
+// const sex_orientations_collection = "sex_orientations";
+// const type_relationships_collection = "type_relationships";
+// const social_networks_collection = "social_networks";
+// const hobbies_collection = "hobbies_collection";
+// const gender_collection = "gender_collection";
+
 
 async function addBulkCoordinates(input) {
     try {
+        const dbInfo = DB_INSTANCES.DB_API;
         let userId = 1;
+        
         for (let item of input.coordinates) {
             let value = {
                 user_id: userId,
@@ -18,7 +23,8 @@ async function addBulkCoordinates(input) {
                     coordinates: [item.longitude, item.latitude]
                 }
             };
-            await dbHandler.addDocument(value, user_coordinates_collection);
+            await dbHandler.addManyDocumentsWithClient(dbInfo.client, 
+                value, dbInfo.collections.user_coordinates_collection);
             userId++;
         }
         return 0;
@@ -31,6 +37,7 @@ async function addBulkCoordinates(input) {
 
 async function addSexOrientation(input) {
     try {
+        const dbInfo = DB_INSTANCES.DB_API;
         let docs = [];
         for (let item of input.orientations) {
             let value = {
@@ -42,7 +49,7 @@ async function addSexOrientation(input) {
             };
             docs.push(value);         
         }
-        await dbHandler.addManyDocuments(docs, sex_orientations_collection);
+        await dbHandler.addManyDocumentsWithClient(dbInfo.client,docs, dbInfo.collections.sex_orientations_collection);
         return 0;
     } catch (error) {
         console.log(error);
@@ -53,6 +60,7 @@ async function addSexOrientation(input) {
 
 async function addTypeRelationships(input) {
     try {
+        const dbInfo = DB_INSTANCES.DB_API;
         let docs = [];
         for (let item of input.orientations) {
             let value = {
@@ -64,7 +72,7 @@ async function addTypeRelationships(input) {
             };
             docs.push(value);         
         }
-        await dbHandler.addManyDocuments(docs, type_relationships_collection);
+        await dbHandler.addManyDocumentsWithClient(dbInfo.client, docs, dbInfo.collections.type_relationships_collection);
         return 0;
     } catch (error) {
         console.log(error);
@@ -75,6 +83,7 @@ async function addTypeRelationships(input) {
 
 async function addBaseNetworks(input) {
     try {
+        const dbInfo = DB_INSTANCES.DB_API;
         let docs = [];
         for (let item of input.networks) {
             let value = {
@@ -84,7 +93,7 @@ async function addBaseNetworks(input) {
             };
             docs.push(value);         
         }
-        await dbHandler.addManyDocuments(docs, social_networks_collection);
+        await dbHandler.addManyDocumentsWithClient(dbInfo.client, docs, dbInfo.collections.social_networks_collection);
         return 0;
     } catch (error) {
         console.log(error);
@@ -94,6 +103,7 @@ async function addBaseNetworks(input) {
 
 async function addHobbies(input){
     try {
+        const dbInfo = DB_INSTANCES.DB_API;
         let docs = [];
         for (let item of input.hobbies) {
             let value = {
@@ -103,7 +113,7 @@ async function addHobbies(input){
             };
             docs.push(value);         
         }
-        await dbHandler.addManyDocuments(docs, hobbies_collection);
+        await dbHandler.addManyDocumentsWithClient(dbInfo.client,docs, dbInfo.collections.hobbies_collection);
         return 0;
     } catch (error) {
         console.log(error);
@@ -112,7 +122,9 @@ async function addHobbies(input){
 }
 
 async function addGenderIdentity(input){
+    logger.info("Starts addGenderIdentity");
     try {
+        const dbInfo = DB_INSTANCES.DB_API;
         let docs = [];
         for (let item of input.genders) {
             let value = {
@@ -123,7 +135,7 @@ async function addGenderIdentity(input){
             };
             docs.push(value);         
         }
-        await dbHandler.addManyDocuments(docs, gender_collection);
+        await dbHandler.addManyDocumentsWithClient(dbInfo.client, docs, dbInfo.collections.genders_collection);
         return 0;
     } catch (error) {
         console.log(error);

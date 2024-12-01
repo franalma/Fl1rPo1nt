@@ -1,14 +1,15 @@
 const jwt = require('jsonwebtoken');
 
 
-function generateToken(user) {
+function generateToken(user, tokenLife = process.env.TOKEN_LIFE) {
+    console.log("Token life: "+tokenLife);
     const payload = {
         id: user.id,
         email: user.email
     };
 
     const secretKey = process.env.SECRET_TOKEN;
-    const tokenLife = process.env.TOKEN_LIFE;
+    // const tokenLife = process.env.TOKEN_LIFE;
 
     const options = {
         expiresIn: tokenLife
@@ -37,19 +38,19 @@ function generateRefreshToken(user) {
 
 
 function verifyToken(token) {
-    console.log("verifyToken: "+token);
+    console.log("verifyToken: " + token);
     const secretKey = process.env.SECRET_TOKEN;
-    
-    let ret = true; 
+
+    let ret = true;
 
     try {
         // Verificar el token
         const decoded = jwt.verify(token, secretKey);
         console.log('Token válido:', decoded);
-    } catch (error) {        
-        ret = false; 
+    } catch (error) {
+        ret = false;
     }
-    return ret; 
+    return ret;
 
 }
 

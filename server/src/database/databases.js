@@ -1,5 +1,8 @@
 // db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintAuth" } ]});
 // db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintApi" } ]});
+// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintChat" } ]});
+// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "MultimediaDb" } ]});
+
 
 
 const { MongoClient } = require('mongodb');
@@ -19,12 +22,33 @@ const dbApiUri = 'mongodb://' +
     process.env.DATABASE_API_NAME;
 
 
+const dbChatUri = 'mongodb://' +
+process.env.DATABASE_CHAT_USER + ":" +
+process.env.DATABASE_CHAT_PASS + "@" +
+process.env.DABATASE_CHAT_SERVER + ":" +
+process.env.DATABASE_CHAT_PORT + "/" +
+process.env.DATABASE_CHAT_NAME;
+
+const dbMultUri = 'mongodb://' +
+process.env.DATABASE_MULT_USER + ":" +
+process.env.DATABASE_MULT_PASS + "@" +
+process.env.DABATASE_MULT_SERVER + ":" +
+process.env.DATABASE_MULT_PORT + "/" +
+process.env.DATABASE_MULT_NAME;
+
+
 const DB_INSTANCES = {
     DB_API: {
         database_name: process.env.DATABASE_API_NAME,
         client: new MongoClient(dbApiUri, { useNewUrlParser: true, useUnifiedTopology: true }),
         collections: {
-            user_collection: "users"
+            user_collection: "users",
+            genders_collection: "genders",
+            hobbies_collection:"hobbies",
+            social_networks_collection:"social_networks",
+            user_coordinates_collection:"user_coordinates",
+            type_relationships_collection:"types_relationships",
+            sex_orientations_collection: "sex_orientations"
         }
     },
     DB_AUTH: {
@@ -33,7 +57,23 @@ const DB_INSTANCES = {
         collections: {
             user_collection: "users"
         }
-    }
+    },
+    DB_CHAT: {
+        database_name: process.env.DATABASE_CHAT_NAME,
+        client: new MongoClient(dbChatUri, { useNewUrlParser: true, useUnifiedTopology: true }),
+        // collections: {
+        //     chat_collection: "users",    
+        // }
+    },
+    DB_MULT: {
+        database_name: process.env.DATABASE_MULT_NAME,
+        client: new MongoClient(dbMultUri, { useNewUrlParser: true, useUnifiedTopology: true }),
+        collections: {
+            user_images:"user_images",
+            user_audios:"user_audios"
+        }
+    },
+    
 }
 
 module.exports = {

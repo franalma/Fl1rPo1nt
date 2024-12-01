@@ -3,21 +3,7 @@ const { MongoClient } = require('mongodb');
 const logger = require("../logger/log");
 const database = process.env.DATABASE_NAME;
 const json = require("../utils/json_utils");
-const { DB_INSTANCES } = require("./databases")
-
-
-
-// const uri = 'mongodb://' +
-//     process.env.DATABASE_USER + ":" +
-//     process.env.DATABASE_PASS + "@" +
-//     process.env.DABATASE_SERVER + ":" +
-//     process.env.DATABASE_PORT + "/" +
-//     process.env.DATABASE_NAME
-
-
-// const clientDbApi = new MongoClient(DB_INSTANCES.DB_API.uri, { useNewUrlParser: true, useUnifiedTopology: true });
-// const clientDbAuth = new MongoClient(DB_INSTANCES.DB_AUTH.uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
+// const { DB_INSTANCES } = require("./databases")
 
 async function connectToDatabase(input) {
     logger.info("Starts connectToDatabase:" + input.database_name);
@@ -34,24 +20,6 @@ async function connectToDatabase(input) {
     }
     return null;
 }
-
-
-// async function connectToAuthDatabase() {
-//     logger.info("starts connection:" + DB_INSTANCES.DB_AUTH.uri);
-
-//     try {
-//         await clientDbAuth.connect();
-//         const db = clientDbAuth.db(DB_INSTANCES.DB_AUTH.database_name);
-//         return clientDbAuth;
-
-//     } catch (error) {
-//         console.error('Error loading document:', error);
-//     } finally {
-//         await clientDbAuth.close();
-//     }
-//     return null;
-// }
-
 
 async function addDocument(document, path) {
     logger.info("Starts addDocument: " + printJson(document));
@@ -73,7 +41,7 @@ async function addDocument(document, path) {
 }
 
 async function addDocumentWithClient(client,document, path) {
-    logger.info("Starts addDocument: " + JSON.stringify(document));
+    logger.info("Starts addDocumentWithClient: " + JSON.stringify(document));
     let result = {};
     try {
         await client.connect();
@@ -92,9 +60,27 @@ async function addDocumentWithClient(client,document, path) {
     return result;
 }
 
-
 async function addManyDocuments(document, path) {
     logger.info("Starts addDocument: " + JSON.stringify(document));
+    let result = {};
+    try {
+        await client.connect();
+        const db = client.db(database);
+        const collection = db.collection(path);
+        result = await collection.insertMany(document);
+        console.log(`Document added with id= ${result.insertedId}`);
+    } catch (error) {
+        logger.info(error);
+    }
+    finally {
+        await client.close();
+    }
+
+    return result;
+}
+
+async function addManyDocumentsWithClient(client, document, path) {
+    logger.info("Starts addManyDocumentsWithClient: " + JSON.stringify(document));
     let result = {};
     try {
         await client.connect();
@@ -119,9 +105,7 @@ async function updateDocument(newDocument, filter, path) {
         await client.connect();
         const db = client.db(database);
         const collection = db.collection(path);
-        const update = { $set: newDocument }
-        // logger.info("--> update info: "+ JSON.stringify(update));
-        // logger.info("--> filter info: "+ JSON.stringify(filter));
+        const update = { $set: newDocument }        
         result = await collection.updateOne(filter, update);
         console.log(`Num. documents updated= ${result.modifiedCount}`);
 
@@ -193,7 +177,6 @@ async function deleteDocumentWithClient(client, filter, path) {
     return result;
 }
 
-
 async function deleteCollection(path) {
     let result = null;
     try {
@@ -210,11 +193,43 @@ async function deleteCollection(path) {
     return result;
 }
 
-
-
+async function deleteCollectionWithClient(client,path) {
+    let result = null;
+    try {
+        await client.connect();
+        const db = client.db(database);
+        result = await db.collection(path).drop();
+        console.log(`Collection deleted with id= ${result}`);
+        json.printJson(result);
+    } catch (error) {
+        logger.info("error found searching: " + error)
+    } finally {
+        await client.close();
+    }
+    return result;
+}
 
 async function findWithFilters(filters, path) {
     logger.info("Starts findWithFilters: " + JSON.stringify(filters));
+    let result = null;
+    try {
+        await client.connect();
+        const db = client.db(database);
+        const collection = db.collection(path);
+        const cursor = await collection.find(filters);
+        result = await cursor.toArray();
+        json.printJson(result);
+    } catch (error) {
+        logger.info(error);
+    } finally {
+        await client.close();
+    }
+
+    return result;
+}
+
+async function findWithFiltersAndClient(client, filters, path) {
+    logger.info("Starts findWithFiltersAndClient: " + JSON.stringify(filters));
     let result = null;
     try {
         await client.connect();
@@ -252,6 +267,25 @@ async function findAll(path) {
     return result;
 }
 
+async function findAllWithClient(client, path) {
+    logger.info("Starts findAllWithClient")
+    let result = null;
+    try {
+        await client.connect();
+        const db = client.db(database);
+        const collection = db.collection(path);
+        logger.info("No filters detected");
+        const cursor = await collection.find();
+        result = await cursor.toArray();
+
+    } catch (error) {
+        logger.info(error);
+    } finally {
+        await client.close();
+    }
+
+    return result;
+}
 
 
 
@@ -266,6 +300,10 @@ module.exports = {
     deleteCollection,
     addDocumentWithClient,
     deleteDocumentWithClient,
-    updateDocumentWithClient
+    updateDocumentWithClient,
+    addManyDocumentsWithClient,
+    findWithFiltersAndClient,
+    findAllWithClient,
+    deleteCollectionWithClient
     // connectToAuthDatabase
 }

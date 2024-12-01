@@ -156,11 +156,7 @@ const UPDATE_USER_GENDER_BY_USER_ID_RULES = [
 ];
 
 
-const DELETE_CHATROOM_FROM_MATCH_ID_USER_ID_RULES = [
-    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
-    body('input.match_id').notEmpty().isString().withMessage("match_id is required"),  
 
-];
 
 const DISABLE_MATCH_BY_MATCH_ID_USER_ID_RULES = [
     body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
@@ -191,7 +187,7 @@ const GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES = [
 
 
 module.exports = {
-    NEW_USER_VALIDATION_RULES,
+    // NEW_USER_VALIDATION_RULES,
     DO_LOGIN_RULES,
     PUT_QR_BY_USER_ID_RULES,
     REMOVE_QR_BY_USER_ID_QR_ID_RULES,
@@ -218,7 +214,7 @@ module.exports = {
     GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY_RULES,
     UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID_RULES,
     UPDATE_USER_GENDER_BY_USER_ID_RULES,
-    DELETE_CHATROOM_FROM_MATCH_ID_USER_ID_RULES,
+    // DELETE_CHATROOM_FROM_MATCH_ID_USER_ID_RULES,
     DISABLE_MATCH_BY_MATCH_ID_USER_ID_RULES,
     GET_USER_PUBLIC_PROFILE_BY_USER_ID_RULES,
     GET_PROTECTED_IMAGES_URLS_BY_USER_ID_RULES,

@@ -12,27 +12,6 @@ const locationCollection = "user_coordinates";
 const databases = require("../../database/databases");
 const apiDatabase = databases.DB_INSTANCES.DB_API;
 
-async function hashPassword(plainPassword) {
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(plainPassword, salt);
-    return hashedPassword;
-  } catch (error) {
-    console.error("Error al hashear la contraseña:", error);
-  }
-  return null;
-}
-
-async function verifyPassword(plainPassword, hashedPassword) {
-  try {
-    const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
-    return isMatch;
-  } catch (error) {
-    console.error("Error al verificar la contraseña:", error);
-  }
-  return false;
-}
-
 async function creatInternalUser(input) {
   const currentTime = Date.now();
   let user = {
@@ -139,70 +118,45 @@ async function registerUser(input) {
   return result;
 }
 
-async function doLogin(input) {
-  logger.info("Start doLogin: " + JSON.stringify(input));
-  const hashPass = await hashPassword(input.password);
-
-  logger.info("pass: " + hashPass);
+async function getUserInfoByUserId(input) {
+  logger.info("Starts getUserInfoByUserId");
   let result = {};
-  const filters = {
-    email: input.email,
+  try {
+    const dbApi = databases.DB_INSTANCES.DB_API;
+    let filters = {
+      id: input.id
   };
+    let user = await dbHandler.findWithFiltersAndClient(dbApi.client, filters, dbApi.collections.user_collection);
+    
 
-  let users = await dbHandler.findWithFilters(filters, userColletion);
-  logger.info("users: " + JSON.stringify(users));
-  if (users && users.length == 1 && users[0].id) {
-    const user = users[0];
-    const passCheck = await verifyPassword(input.password, user.password);
-    logger.info("check pass: " + passCheck);
-
-    if (passCheck) {
-      const currentToken = await tokenHandler.generateToken({
-        id: user.id,
-        email: user.email,
-      });
-      const currentRefreshToken = await tokenHandler.generateRefreshToken({
-        id: user.id,
-        email: user.email,
-      });
-      result = {
-        status: 200,
-        message: "Login ok",
-        response: {
-          user_id: user.id,
-          name: user.name,
-          surname: user.surname,
-          email: user.email,
-          token: currentToken,
-          refresh_token: currentRefreshToken,
-          networks: user.networks ? user.networks : [],
-          user_interests: user.user_interests,
-          // ? user.user_interests
-          // : { relationship: {}, sex_alternative: {} },
-          qr_values: user.qr_values ? user.qr_values : [],
-          biography: user.biography,
-          hobbies: user.hobbies,
-          profile_image_file_id: user.profile_image_id,
-          scanned_count: user.scanned_count ? user.scanned_count : 0,
-          scans_performed: user.scans_performed ? user.scans_performed : 0,
-          default_qr_id: user.default_qr_id ? user.default_qr_id : "",
-          radio_visibility: user.radio_visibility ? user.radio_visibility : 10.0,
-          gender: user.gender
-        },
-      };
-    } else {
-      result = {
-        status: 500,
-        message: "Wrong user or password",
-      };
-    }
-  } else {
     result = {
-      status: 500,
-      message: "Wrong user or password",
+      status: 200,
+      message: "Login ok",
+      response: {
+        user_id: input.id,
+        name: input.name,
+        surname: input.surname,
+        email: input.email,
+        token: input.token,
+        refresh_token: input.currentRefreshToken,
+        networks: user.networks ? user.networks : [],
+        user_interests: user.user_interests,
+        qr_values: user.qr_values ? user.qr_values : [],
+        biography: user.biography,
+        hobbies: user.hobbies,
+        profile_image_file_id: user.profile_image_id,
+        scanned_count: user.scanned_count ? user.scanned_count : 0,
+        scans_performed: user.scans_performed ? user.scans_performed : 0,
+        default_qr_id: user.default_qr_id ? user.default_qr_id : "",
+        radio_visibility: user.radio_visibility ? user.radio_visibility : 10.0,
+        gender: user.gender
+      }
     };
+    printJson(result);
+    return result; 
+  } catch (error) {
+    logger.info(error);
   }
-  printJson(result);
   return result;
 }
 
@@ -596,7 +550,7 @@ async function getUserPublicProfileByUserId(input) {
 
 module.exports = {
   registerUser,
-  doLogin,
+  // doLogin,
   getUsersByDistanceFromPoint,
   updateUserNetworksByUserId,
   updateUserSearchingRangeByUserId,
@@ -611,5 +565,6 @@ module.exports = {
   updateUserDefaultQrByUserId,
   updateUserRadioVisibility,
   updateUserGenderByUserId,
-  getUserPublicProfileByUserId
+  getUserPublicProfileByUserId,
+  getUserInfoByUserId
 };
