@@ -1,5 +1,7 @@
 import 'package:app/app_localizations.dart';
+import 'package:app/ui/NavigatorApp.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AlertDialogs {
   void showAlertNewContactAdded(BuildContext context, String message) {
@@ -91,7 +93,7 @@ class AlertDialogs {
               ),
               const SizedBox(height: 10),
               // Subtitle
-               Text(
+              Text(
                 "Ahora $name forma parte de tus contatos",
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 14, color: Colors.grey),
@@ -237,5 +239,64 @@ class AlertDialogs {
 
   Widget buildLoading() {
     return const Center(child: CircularProgressIndicator());
+  }
+
+  void buildLoadingModal(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevents closing by tapping outside
+      builder: (BuildContext context) {
+        return const Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Center(
+            child: CircularProgressIndicator(), // Spinner
+          ),
+        );
+      },
+    );
+  }
+
+  void showModalDialogMessage(
+      BuildContext context,
+      double heightSize,
+      IconData icon,
+      double iconSize,
+      Color color,
+      String message,
+      TextStyle textStyle,
+      String buttonText,
+      [dynamic screen]) {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return Wrap(children: [
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              height: heightSize,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(icon, size: iconSize, color: color),
+                  Text(
+                    message,
+                    style: textStyle,
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (screen == null) {
+                        Navigator.of(context).pop(); // Close the bottom sheet
+                      } else {
+                        NavigatorApp.pushAndRemoveUntil(context, screen);
+                      }
+                    },
+                    child: Text(buttonText),
+                  ),
+                ],
+              ),
+            ),
+          ]);
+        });
   }
 }

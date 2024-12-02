@@ -7,7 +7,7 @@ const userHandler = require("../model/user/user_handler");
 const { printJson } = require("../utils/json_utils");
 const mailHandler = require("../mail/mail_handler");
 const tokenHandler = require("./token_generator");
-
+const { genError, HOST_ERROR_CODES } = require("./../constants/host_error_codes")
 const authDatabase = databases.DB_INSTANCES.DB_AUTH;
 
 async function createUserAuthInternal(input) {
@@ -65,21 +65,20 @@ async function doRegisterUser(input) {
                 };
                 await dbHandler.updateDocumentWithClient(authDatabase.client, newValues, { id: user.id }, authDatabase.collections.user_collection);
                 await mailHandler.sendMailToUser(user.email, token, user.id);
+                result = genError(HOST_ERROR_CODES.NO_ERROR);
             } else {
                 await dbHandler.deleteDocumentWithClient(authDatabase.client, { id: user.id }, authDatabase.collections.user_collection);
-                result.description = "Not possible to create user";
-                result.status = 500;
+                result = genError(HOST_ERROR_CODES.NOT_POSSIBLE_TO_REGISTER_USER);
             }
 
 
         } else {
-            result.description = "User exists";
-            result.status = 302;
+            result = genError(HOST_ERROR_CODES.USER_EXIST);
         }
 
     } catch (error) {
         logger.info(error);
-        result = { status: 500, info: error };
+        result = genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR);
     }
     return result;
 }
@@ -148,34 +147,22 @@ async function doLogin(input) {
                         await dbHandler.updateDocumentWithClient(dbAuth.client, updatedInfo, { id: user.id }, dbAuth.collections.user_collection);
 
                     } else {
-                        result = {
-                            status: 500,
-                            message: "Wrong user or password",
-                        };
+                        result = genError(HOST_ERROR_CODES.WRONG_USER_PASS);
                     }
 
 
                 } else {
                     logger.info("User is blocked");
-                    result = {
-                        status: 403,
-                        message: "User blocked",
-                    };
+                    result = genError(HOST_ERROR_CODES.USER_BLOCKED);                    
                 }
 
             } else {
                 logger.info("user is not activated");
-                result = {
-                    status: 402,
-                    message: "Account not verified",
-                };
+                result = genError(HOST_ERROR_CODES.USER_NOT_ACTIVATED);
             }
 
         } else {
-            result = {
-                status: 500,
-                message: "Wrong user or password",
-            };
+            result = genError(HOST_ERROR_CODES.WRONG_USER_PASS);
         }
     } catch (error) {
         logger.info(error);

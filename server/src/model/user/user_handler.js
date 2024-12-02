@@ -1,16 +1,13 @@
 const logger = require("../../logger/log");
 const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
-const bcrypt = require("bcrypt");
-const tokenHandler = require("../../auth/token_generator");
 const { printJson } = require("../../utils/json_utils");
 const { getUserQrByUserId } = require("../qr/qr_handler");
 const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/file_handler");
 
 const userColletion = "users";
-const locationCollection = "user_coordinates";
 const databases = require("../../database/databases");
-const apiDatabase = databases.DB_INSTANCES.DB_API;
+const { DB_INSTANCES } = require("../../database/databases");
 
 async function creatInternalUser(input) {
   const currentTime = Date.now();
@@ -101,19 +98,24 @@ function createUserLocationExternal(value) {
 
 async function registerUser(input) {
   logger.info("Start registerUser");
-
   let result = {};
-  let user = await creatInternalUser(input);
-  let dbResponse = await dbHandler.addDocumentWithClient(apiDatabase.client, user, apiDatabase.collections.user_collection);
-  if (dbResponse) {
-    result = {
-      status: 200,
-      message: "User created successfully",
-      response: {
-        user_id: user.id,
-        create_at: user.created_at,
-      },
-    };
+  try {
+    const db = DB_INSTANCES.DB_API;
+
+    let user = await creatInternalUser(input);
+    let dbResponse = await dbHandler.addDocumentWithClient(db.client, user, db.collections.user_collection);
+    if (dbResponse) {
+      result = {
+        status: 200,
+        message: "User created successfully",
+        response: {
+          user_id: user.id,
+          create_at: user.created_at,
+        },
+      };
+    }
+  } catch (error) {
+    logger.info(error);
   }
   return result;
 }
@@ -125,9 +127,9 @@ async function getUserInfoByUserId(input) {
     const dbApi = databases.DB_INSTANCES.DB_API;
     let filters = {
       id: input.id
-  };
+    };
     let user = await dbHandler.findWithFiltersAndClient(dbApi.client, filters, dbApi.collections.user_collection);
-    
+
 
     result = {
       status: 200,
@@ -153,7 +155,7 @@ async function getUserInfoByUserId(input) {
       }
     };
     printJson(result);
-    return result; 
+    return result;
   } catch (error) {
     logger.info(error);
   }
@@ -162,157 +164,196 @@ async function getUserInfoByUserId(input) {
 
 async function getUsersByDistanceFromPoint(input) {
   logger.info("Starts getUsersByDistanceFromPoint: ");
-  // const distanceInRadians = input.radio / 6378.1; // 6378.1 es el radio de la Tierra en km
   let result = {};
-  const filters = {
-    location: {
-      $near: {
-        $geometry: {
-          type: "Point",
-          coordinates: [input.longitude, input.latitude],
+
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filters = {
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [input.longitude, input.latitude],
+          },
+          $maxDistance: input.radio,
         },
-        $maxDistance: input.radio,
       },
-    },
-  };
+    };
 
-  logger.info("---> filters: " + JSON.stringify(filters));
-
-  const dbResponse = await dbHandler.findWithFilters(
-    filters,
-    locationCollection
-  );
-  if (dbResponse) {
-    result.status = 200;
-    result.flirts = [];
-    logger.info("items: " + JSON.stringify(dbResponse));
-    for (let item of dbResponse) {
-      result.flirts.push(createUserLocationExternal(item));
+    const dbResponse = await dbHandler.findWithFiltersAndClient(
+      db.client,
+      filters,
+      db.collections.user_coordinates_collection
+    );
+    if (dbResponse) {
+      result.status = 200;
+      result.flirts = [];
+      logger.info("items: " + JSON.stringify(dbResponse));
+      for (let item of dbResponse) {
+        result.flirts.push(createUserLocationExternal(item));
+      }
+    } else {
+      result.status = 500;
     }
-  } else {
-    result.status = 500;
+
+  } catch (error) {
+    logger.info(error);
   }
   return result;
 }
 
 async function updateUserNetworksByUserId(input) {
   logger.info("Start update");
-
   let result = {};
-  const filters = { id: input.user_id };
-  const newValues = { networks: input.values.networks, updated_at: Date.now() };
-  logger.info("--> new values: " + JSON.stringify(newValues));
-  const dbResponse = await dbHandler.updateDocument(
-    newValues,
-    filters,
-    userColletion
-  );
-  logger.info("-> db result: " + dbResponse);
-  if (dbResponse) {
-    result.status = 200;
-    result.message = "Networks updated";
-    result.networks = input.values.networks;
-  } else {
-    result.status = 500;
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filters = { id: input.user_id };
+    const newValues = { networks: input.values.networks, updated_at: Date.now() };
+    const dbResponse = await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
+    if (dbResponse) {
+      result.status = 200;
+      result.message = "Networks updated";
+      result.networks = input.values.networks;
+    } else {
+      result.status = 500;
+    }
+  } catch (error) {
+    logger.info(error);
   }
+
   return result;
 }
 
 async function updateUserSearchingRangeByUserId(input) {
   logger.info("Starts updateUserSearchingRangeByUserId");
   let result = {};
-  const filters = { id: input.user_id };
-  const newValues = {
-    exploring_max_radio: input.distance,
-    updated_at: Date.now(),
-  };
-  const dbResponse = await dbHandler.updateDocument(
-    newValues,
-    filters,
-    userColletion
-  );
-  logger.info("-> db result: " + dbResponse);
-  if (dbResponse) {
-    result.status = 200;
-    result.message = "Exploring radio updated";
-    result.distance = input.distance;
-  } else {
-    result.status = 500;
+
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filters = { id: input.user_id };
+    const newValues = {
+      exploring_max_radio: input.distance,
+      updated_at: Date.now(),
+    };
+    const dbResponse = await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
+    if (dbResponse) {
+      result.status = 200;
+      result.message = "Exploring radio updated";
+      result.distance = input.distance;
+    } else {
+      result.status = 500;
+    }
+
+  } catch (error) {
+    logger.info(error);
   }
+
+
+
   return result;
 }
 
 async function updateUserInterestsByUserId(input) {
   logger.info("Starts updateUserInterestsByUserId :" + JSON.stringify(input));
   let result = {};
-  const filters = { id: input.user_id };
-  const newValues = {
-    user_interests: input.values.user_interests,
-    updated_at: Date.now(),
-  };
-  const dbResponse = await dbHandler.updateDocument(
-    newValues,
-    filters,
-    userColletion
-  );
-  logger.info("-> db result: " + dbResponse);
-  if (dbResponse) {
-    result.status = 200;
-    result.message = "User interests updated";
-  } else {
-    result.status = 500;
+
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filters = { id: input.user_id };
+    const newValues = {
+      user_interests: input.values.user_interests,
+      updated_at: Date.now(),
+    };
+    const dbResponse = await dbHandler.updateDocument(
+      newValues,
+      filters,
+      userColletion
+    );
+    logger.info("-> db result: " + dbResponse);
+    if (dbResponse) {
+      result.status = 200;
+      result.message = "User interests updated";
+    } else {
+      result.status = 500;
+    }
+  } catch (error) {
+    logger.info(error);
   }
+
   return result;
 }
 
 async function updateUserQrsByUserId(input) {
   logger.info("Starts updateUserInterestsByUserId");
   let result = {};
-  const filters = { id: input.user_id };
-  let qrValues = [];
-  for (let item of input.qr_values) {
-    let qr = {
-      user_id: input.user_id,
-      qr_id: uuidv4(),
-      name: item.name,
-      content: item.content,
+
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filters = { id: input.user_id };
+    let qrValues = [];
+    for (let item of input.qr_values) {
+      let qr = {
+        user_id: input.user_id,
+        qr_id: uuidv4(),
+        name: item.name,
+        content: item.content,
+      };
+      qrValues.push(qr);
+    }
+    const newValues = {
+      qr_values: qrValues,
+      updated_at: Date.now(),
     };
-    qrValues.push(qr);
-  }
-  const newValues = {
-    qr_values: qrValues,
-    updated_at: Date.now(),
-  };
-  const dbResponse = await dbHandler.updateDocument(
-    newValues,
-    filters,
-    userColletion
-  );
-  logger.info("-> db result: " + dbResponse);
-  if (dbResponse) {
-    result.status = 200;
-    result.message = "User QR values updated";
-    result.qr_values = qrValues;
-  } else {
-    result.status = 500;
+    const dbResponse = await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
+    if (dbResponse) {
+      result.status = 200;
+      result.message = "User QR values updated";
+      result.qr_values = qrValues;
+    } else {
+      result.status = 500;
+    }
+  } catch (error) {
+    logger.info(error);
   }
   return result;
 }
 
 async function getUserInfoByUserIdQrId(userId, qrId) {
   logger.info("Starts getUserInfoByUserIdQrId. user_id: " + userId + " qr_id: " + qrId);
-  const filter = { id: userId, qr_values: { $elemMatch: { qr_id: qrId } } };
-  let dbResponse = await dbHandler.findWithFilters(filter, userColletion);
   let result = {};
-  if (dbResponse) {
-    logger.info("checking...");
-    for (let item of dbResponse[0].qr_values) {
-      if (item.qr_id === qrId) {
-        result.contact_info = item.content;
-        break;
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filter = { id: userId, qr_values: { $elemMatch: { qr_id: qrId } } };
+    let dbResponse = await dbHandler.findWithFiltersAndClient(db.client, filter, db.collections.user_collection);
+
+    if (dbResponse) {
+      for (let item of dbResponse[0].qr_values) {
+        if (item.qr_id === qrId) {
+          result.contact_info = item.content;
+          break;
+        }
       }
     }
+  } catch (error) {
+    logger.info(error);
   }
+
+
   return result;
 }
 
@@ -320,13 +361,13 @@ async function updateUserBiographyByUserId(input) {
   logger.info("Starts updateUserBiographyByUserId");
   let result = { status: 200, message: "Biography updated" };
   try {
+    const db = DB_INSTANCES.DB_API;
     const filters = { id: input.user_id };
-
     const newValues = {
       biography: input.biography,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocument(newValues, filters, userColletion);
+    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
   } catch (error) {
     logger.info(error);
     result = {
@@ -341,13 +382,13 @@ async function updateUserHobbiesByUserId(input) {
   logger.info("Starts updateUserHobbiesByUserId");
   let result = { status: 200, message: "Hobbies updated" };
   try {
+    const db = DB_INSTANCES.DB_API;
     const filters = { id: input.user_id };
-
     const newValues = {
       hobbies: input.hobbies,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocument(newValues, filters, userColletion);
+    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
   } catch (error) {
     logger.info(error);
     result = {
@@ -362,13 +403,13 @@ async function updateUserNameByUserId(input) {
   logger.info("Starts updateUserNameByUserId");
   let result = { status: 200, message: "User name updated" };
   try {
+    const db = DB_INSTANCES.DB_API;
     const filters = { id: input.user_id };
-
     const newValues = {
       name: input.user_name,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocument(newValues, filters, userColletion);
+    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
   } catch (error) {
     logger.info(error);
     result = {
@@ -383,13 +424,13 @@ async function updateUserRadioVisibility(input) {
   logger.info("Starts updateUserRadioVisibility");
   let result = { status: 200, message: "User visibility updated" };
   try {
+    const db = DB_INSTANCES.DB_API;
     const filters = { id: input.user_id };
-
     const newValues = {
       radio_visibility: input.radio_visibility,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocument(newValues, filters, userColletion);
+    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
   } catch (error) {
     logger.info(error);
     result = {
@@ -404,13 +445,13 @@ async function updateUserGenderByUserId(input) {
   logger.info("Starts updateUserGenderByUserId");
   let result = { status: 200, message: "User gender updated" };
   try {
+    const db = DB_INSTANCES.DB_API;
     const filters = { id: input.user_id };
-
     const newValues = {
       gender: input.gender,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocument(newValues, filters, userColletion);
+    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
   } catch (error) {
     logger.info(error);
     result = {
@@ -425,13 +466,13 @@ async function updateUserImageProfileByUserId(input) {
   logger.info("Starts updateUserImageProfileByUserId");
   let result = { status: 200, message: "User image profile updated" };
   try {
+    const db = DB_INSTANCES.DB_API;
     const filters = { id: input.user_id };
-
     const newValues = {
       profile_image_id: input.image_id,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocument(newValues, filters, userColletion);
+    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
   } catch (error) {
     logger.info(error);
     result = {
@@ -446,6 +487,7 @@ async function updateUserDefaultQrByUserId(input) {
   logger.info("Starts updateUserDefaultQrByUserId:" + JSON.stringify(input));
   let result = { status: 200, message: "Use default qr id updated" };
   try {
+    const db = DB_INSTANCES.DB_API;
     let found = false;
     let values = await getUserQrByUserId(input);
     if (values) {
@@ -465,7 +507,7 @@ async function updateUserDefaultQrByUserId(input) {
       default_qr_id: input.qr_id,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocument(newValues, filters, userColletion);
+    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
   } catch (error) {
     logger.info(error);
     result = {
@@ -480,13 +522,16 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
   logger.info("Starts updateUserScansPerformedByUserId");
   let result = { status: 200, message: "User scans performed updated" };
   try {
-    const userScanner = await dbHandler.findWithFilters(
+    const db = DB_INSTANCES.DB_API;
+    const userScanner = await dbHandler.findWithFiltersAndClient(
+      db.client,
       { id: userId },
-      userColletion
+      db.collections.user_collection
     );
-    const userScanned = await dbHandler.findWithFilters(
+    const userScanned = await dbHandler.findWithFiltersAndClient(
+      db.client, 
       { id: contactId },
-      userColletion
+      db.collections.user_collection
     );
     let scansPerformed = 1;
     if (userScanner[0].scans_performed) {
@@ -509,11 +554,12 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
     };
 
 
-    await dbHandler.updateDocument(newValues1, { id: userId }, userColletion);
-    await dbHandler.updateDocument(
+    await dbHandler.updateDocumentWithClient(db.client, newValues1, { id: userId }, db.collections.user_collection);
+    await dbHandler.updateDocumentWithClient(
+      db.client, 
       newValues2,
       { id: contactId },
-      userColletion
+      db.collections.user_collection
     );
     result.scanned = scanned;
     result.scans_performed = scansPerformed;
@@ -531,8 +577,9 @@ async function getUserPublicProfileByUserId(input) {
   let result = {};
   try {
     logger.info("Starts getUserPublicProfileByUserId:" + JSON.stringify(input));
+    const db = DB_INSTANCES.DB_API;
     const filter = { id: input.user_id };
-    const dbResponse = await dbHandler.findWithFilters(filter, userColletion);
+    const dbResponse = await dbHandler.findWithFiltersAndClient(db.client, filter, db.collections.user_collection);
     if (dbResponse) {
       const userDB = dbResponse[0];
       result = await createPublicProfileUser(userDB);
@@ -549,8 +596,7 @@ async function getUserPublicProfileByUserId(input) {
 }
 
 module.exports = {
-  registerUser,
-  // doLogin,
+  registerUser,  
   getUsersByDistanceFromPoint,
   updateUserNetworksByUserId,
   updateUserSearchingRangeByUserId,

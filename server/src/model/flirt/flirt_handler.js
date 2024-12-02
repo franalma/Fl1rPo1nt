@@ -97,7 +97,7 @@ async function udpateUserFlirts(input) {
     );
 
     if (!checkExist) {
-      //   const error = getError(HOST_ERROR_CODES.USER_NOT_EXIST);
+      
       result = {
         status: 500,
         message: "User does not exists",

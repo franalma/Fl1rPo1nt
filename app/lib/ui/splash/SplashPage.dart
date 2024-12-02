@@ -1,5 +1,5 @@
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/login/LoginPage.dart';
+import 'package:app/ui/login/LoginPage2.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {
@@ -18,8 +18,9 @@ class _SplashPage extends State<SplashPage> {
   Future<void> _performActionWithDelay() async {
   
     // Wait for 2 seconds
-    await Future.delayed(Duration(seconds: 2));
-    NavigatorApp.pushAndRemoveUntil(context, LoginPage());
+    await Future.delayed(const Duration(seconds: 2));
+    // ignore: use_build_context_synchronously
+    NavigatorApp.pushAndRemoveUntil(context, LoginPage2());
   }
 
   Widget build(BuildContext context) {

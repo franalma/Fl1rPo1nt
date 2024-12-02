@@ -5,6 +5,7 @@ services:
     container_name: floiint_multi_db
     ports:
       - "20300:27017"
+    user: "999:999"
     volumes:
       - /Volumes/Public/Floiint/databases/mult:/data/db
     environment:

@@ -1,7 +1,10 @@
+import 'package:app/comms/model/response/BaseCustomResponse.dart';
 import 'package:app/model/Gender.dart';
+import 'package:app/model/HostErrorCode.dart';
 import 'package:app/ui/utils/Log.dart';
+import 'package:http/http.dart';
 
-class HostLoginResponse {
+class HostLoginResponse extends BaseCustomResponse{
   String userId = "";
   String name = "";
   String mail = "";
@@ -18,9 +21,10 @@ class HostLoginResponse {
   int nScanned = 0;
   int nScansPerformed = 0;
   String qrDefaultId = "";
-  double radioVisibility = 0; 
-  Gender? gender; 
-  Gender? genderInterest; 
+  double radioVisibility = 0;
+  Gender? gender;
+  Gender? genderInterest;
+  
 
   HostLoginResponse(
       this.userId,
@@ -41,10 +45,11 @@ class HostLoginResponse {
       this.qrDefaultId,
       this.radioVisibility,
       this.gender,
-      this.genderInterest);
-  HostLoginResponse.empty();
+      this.genderInterest,
+      ):super(null);
+  HostLoginResponse.empty(super.hostErrorCode);
 
-  factory HostLoginResponse.fromJson(Map<String, dynamic> json) {
+  factory HostLoginResponse.fromJson(Map<String, dynamic> json, HostErrorCode hostErrorCode) {
     try {
       var userId = json['user_id'];
       var name = json['name'];
@@ -63,9 +68,9 @@ class HostLoginResponse {
       int nScansPerformed = 0;
       String qrDefaultId = "";
       double radioVisibility = (json["radio_visibility"] as num).toDouble();
-      Gender gender = Gender.empty(); 
-      Gender genderInterest = Gender.fromJson(json["user_interests"]["gender_preference"]);
-       
+      Gender gender = Gender.empty();
+      Gender genderInterest =
+          Gender.fromJson(json["user_interests"]["gender_preference"]);
 
       if (json.containsKey("phone")) {
         phone = json['phone'].toString();
@@ -95,10 +100,9 @@ class HostLoginResponse {
         qrDefaultId = json['default_qr_id'];
       }
 
-      if (json.containsKey("gender")){
-          gender = Gender.fromJson(json["gender"]);
+      if (json.containsKey("gender")) {
+        gender = Gender.fromJson(json["gender"]);
       }
-      
 
       HostLoginResponse response = HostLoginResponse(
           userId,
@@ -119,12 +123,11 @@ class HostLoginResponse {
           qrDefaultId,
           radioVisibility,
           gender,
-          genderInterest
-          );
+          genderInterest);
       return response;
     } catch (error, stackTrace) {
       Log.d("$stackTrace error $error");
     }
-    return HostLoginResponse.empty();
+    return HostLoginResponse.empty(hostErrorCode);
   }
 }

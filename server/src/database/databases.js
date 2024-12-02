@@ -52,7 +52,8 @@ const DB_INSTANCES = {
             sex_orientations_collection: "sex_orientations",
             user_audios_collection: "user_audios",
             user_images_collection: "user_images",
-            flirts_collection:"flirts"
+            flirts_collection:"flirts",
+            user_coordinates_collection: "user_coordinates"
         }
     },
     DB_AUTH: {
