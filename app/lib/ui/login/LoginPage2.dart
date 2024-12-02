@@ -162,7 +162,6 @@ class _LoginPageState extends State<LoginPage2> {
       switch (hostErrorCodesValue) {
         case HostErrorCodesValue.NoError:
           {
-            
             _onLoginSuccess(response);
             break;
           }
@@ -220,16 +219,20 @@ class _LoginPageState extends State<LoginPage2> {
   }
 
   void _onLoginSuccess(var response) {
-    Session.user = User.fromHost(response);
-    Session.loadProfileImage().then((value) {
-      Session.socketSubscription =
-          SocketSubscriptionController().initializeSocketConnection();
-      SecureStorage().saveSecureData("token", Session.user.token);
-      SecureStorage()
-          .saveSecureData("refresh_token", Session.user.refreshToken);
-      SecureStorage().saveSecureData("user_id", Session.user.userId);
+    try {
+      Session.user = User.fromHost(response);
+      Session.loadProfileImage().then((value) {
+        Session.socketSubscription =
+            SocketSubscriptionController().initializeSocketConnection();
+        SecureStorage().saveSecureData("token", Session.user.token);
+        SecureStorage()
+            .saveSecureData("refresh_token", Session.user.refreshToken);
+        SecureStorage().saveSecureData("user_id", Session.user.userId);
 
-      NavigatorApp.pushAndRemoveUntil(context, Home2());
-    });
+        NavigatorApp.pushAndRemoveUntil(context, Home2());
+      });
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
   }
 }

@@ -4,7 +4,7 @@ const dbHandler = require("../../database/database_handler");
 const { printJson } = require("../../utils/json_utils");
 const { getUserQrByUserId } = require("../qr/qr_handler");
 const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/file_handler");
-
+const { genError, HOST_ERROR_CODES } = require("./../../constants/host_error_codes")
 const userColletion = "users";
 const databases = require("../../database/databases");
 const { DB_INSTANCES } = require("../../database/databases");
@@ -25,6 +25,8 @@ async function creatInternalUser(input) {
     qr_values: [],
     hobbies: [],
     gender: {},
+    created_at: currentTime, 
+    updated_at: currentTime, 
     user_interests:
     {
       relationship: {},
@@ -132,8 +134,7 @@ async function getUserInfoByUserId(input) {
 
 
     result = {
-      status: 200,
-      message: "Login ok",
+      ...genError(HOST_ERROR_CODES.NO_ERROR),
       response: {
         user_id: input.id,
         name: input.name,
@@ -151,6 +152,7 @@ async function getUserInfoByUserId(input) {
         scans_performed: user.scans_performed ? user.scans_performed : 0,
         default_qr_id: user.default_qr_id ? user.default_qr_id : "",
         radio_visibility: user.radio_visibility ? user.radio_visibility : 10.0,
+        
         gender: user.gender
       }
     };
