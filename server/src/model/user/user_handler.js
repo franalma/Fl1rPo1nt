@@ -13,8 +13,7 @@ async function creatInternalUser(input) {
   const currentTime = Date.now();
   let user = {
     id: uuidv4(),
-    name: input.name,
-    surname: input.surname ? input.surname : "",
+    name: input.name,  
     email: input.email,
     phone: input.phone,
     zip_code: input.zip_code,
@@ -25,8 +24,8 @@ async function creatInternalUser(input) {
     qr_values: [],
     hobbies: [],
     gender: {},
-    created_at: currentTime, 
-    updated_at: currentTime, 
+    created_at: currentTime,
+    updated_at: currentTime,
     user_interests:
     {
       relationship: {},
@@ -130,30 +129,29 @@ async function getUserInfoByUserId(input) {
     let filters = {
       id: input.id
     };
+    logger.info("-->filter: " + JSON.stringify(filters));
     let user = await dbHandler.findWithFiltersAndClient(dbApi.client, filters, dbApi.collections.user_collection);
 
-
+    printJson(user);
     result = {
-      ...genError(HOST_ERROR_CODES.NO_ERROR),
       response: {
         user_id: input.id,
         name: input.name,
-        surname: input.surname,
+        phone: user.phone,
         email: input.email,
         token: input.token,
         refresh_token: input.currentRefreshToken,
         networks: user.networks ? user.networks : [],
-        user_interests: user.user_interests,
+        user_interests: user.user_interests ? user.user_interest : [],
         qr_values: user.qr_values ? user.qr_values : [],
-        biography: user.biography,
-        hobbies: user.hobbies,
-        profile_image_file_id: user.profile_image_id,
+        biography: user.biography ? user.biography : "",
+        hobbies: user.hobbies ? user.biography : [],
+        profile_image_file_id: user.profile_image_file_id ? user.profile_image_file_id : "",
         scanned_count: user.scanned_count ? user.scanned_count : 0,
         scans_performed: user.scans_performed ? user.scans_performed : 0,
         default_qr_id: user.default_qr_id ? user.default_qr_id : "",
         radio_visibility: user.radio_visibility ? user.radio_visibility : 10.0,
-        
-        gender: user.gender
+        gender: user.gender ? user.gender : ""
       }
     };
     printJson(result);
@@ -531,7 +529,7 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
       db.collections.user_collection
     );
     const userScanned = await dbHandler.findWithFiltersAndClient(
-      db.client, 
+      db.client,
       { id: contactId },
       db.collections.user_collection
     );
@@ -558,7 +556,7 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
 
     await dbHandler.updateDocumentWithClient(db.client, newValues1, { id: userId }, db.collections.user_collection);
     await dbHandler.updateDocumentWithClient(
-      db.client, 
+      db.client,
       newValues2,
       { id: contactId },
       db.collections.user_collection
@@ -598,7 +596,7 @@ async function getUserPublicProfileByUserId(input) {
 }
 
 module.exports = {
-  registerUser,  
+  registerUser,
   getUsersByDistanceFromPoint,
   updateUserNetworksByUserId,
   updateUserSearchingRangeByUserId,

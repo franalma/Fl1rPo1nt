@@ -139,7 +139,7 @@ async function doLogin(input) {
                         user.token = currentToken;
                         user.currentRefreshToken = currentRefreshToken;
                         result = await userHandler.getUserInfoByUserId(user);
-
+                        result = { ...genError(HOST_ERROR_CODES.NO_ERROR), ...result };
                         const updatedInfo = {
                             last_login: Date.now(),
                         }
@@ -153,7 +153,7 @@ async function doLogin(input) {
 
                 } else {
                     logger.info("User is blocked");
-                    result = genError(HOST_ERROR_CODES.USER_BLOCKED);                    
+                    result = genError(HOST_ERROR_CODES.USER_BLOCKED);
                 }
 
             } else {
