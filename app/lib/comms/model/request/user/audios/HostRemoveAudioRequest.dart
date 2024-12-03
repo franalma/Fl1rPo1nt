@@ -9,8 +9,9 @@ class HostRemoveAudioRequest extends BaseRequest {
   Future<bool> run(String userId, String fileId) async {
     try {
       Log.d("Start HostRemoveAudioRequest");
-      HostActions option = HostActions.REMOVE_USER_AUDIO_BY_USER_ID_AUDIO_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.removeUserAudioByUserIdAudioId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

@@ -1,5 +1,6 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/auth/HostLoginRequest.dart';
+import 'package:app/comms/model/response/auth/HostLoginResponse.dart';
 import 'package:app/comms/socket_subscription/SocketSubscriptionController.dart';
 import 'package:app/model/HostErrorCode.dart';
 import 'package:app/model/SecureStorage.dart';
@@ -25,7 +26,8 @@ class _LoginPageState extends State<LoginPage2> {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
-
+  TextStyle styleMessages =
+      const TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
   @override
   void initState() {
     NavigatorApp(context);
@@ -156,8 +158,6 @@ class _LoginPageState extends State<LoginPage2> {
       HostErrorCodesValue hostErrorCodesValue =
           HostErrorCodesValue.parse(response.hostErrorCode!.code);
 
-      const TextStyle styleMessages =
-          TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
       Log.d("Loging status ${hostErrorCodesValue.code}");
       switch (hostErrorCodesValue) {
         case HostErrorCodesValue.NoError:
@@ -218,19 +218,32 @@ class _LoginPageState extends State<LoginPage2> {
     });
   }
 
-  void _onLoginSuccess(var response) {
+  void _onLoginSuccess(HostLoginResponse response) {
     try {
-      Session.user = User.fromHost(response);
-      Session.loadProfileImage().then((value) {
-        Session.socketSubscription =
-            SocketSubscriptionController().initializeSocketConnection();
-        SecureStorage().saveSecureData("token", Session.user.token);
-        SecureStorage()
-            .saveSecureData("refresh_token", Session.user.refreshToken);
-        SecureStorage().saveSecureData("user_id", Session.user.userId);
+      if (response.user != null) {
+        Session.user = response.user!;
+        Session.loadProfileImage().then((value) {
+          Session.socketSubscription =
+              SocketSubscriptionController().initializeSocketConnection();
+          SecureStorage().saveSecureData("token", Session.user.token);
+          SecureStorage()
+              .saveSecureData("refresh_token", Session.user.refreshToken);
+          SecureStorage().saveSecureData("user_id", Session.user.userId);
 
-        NavigatorApp.pushAndRemoveUntil(context, Home2());
-      });
+          NavigatorApp.pushAndRemoveUntil(context, Home2());
+        });
+      } else {
+        NavigatorApp.pop(context);
+        AlertDialogs().showModalDialogMessage(
+            context,
+            200,
+            FontAwesomeIcons.exclamation,
+            40,
+            Colors.red,
+            "Error inesperado",
+            styleMessages,
+            "Cerrar");
+      }
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }

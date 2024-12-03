@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:app/model/ChatMessage.dart';
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
@@ -19,7 +18,7 @@ class SocketSubscriptionController {
   Function(String)? onMatchLost;
 
   SocketSubscriptionController initializeSocketConnection() {
-    socket = IO.io(HostActions.SOCKET_LISTEN.url, <String, dynamic>{
+    socket = IO.io(HostChatActions.socketListen.build(), <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
       'query': {'user_id': Session.user.userId},
@@ -85,8 +84,8 @@ class SocketSubscriptionController {
     return int.parse(value);
   }
 
-  Future<void> clearPendingMessageForMacthId(String matchId)async {
-     Log.d("Starts saveNewChatMessages:$matchId");
+  Future<void> clearPendingMessageForMacthId(String matchId) async {
+    Log.d("Starts saveNewChatMessages:$matchId");
     var storage = SecureStorage();
     await storage.deleteSecureData(matchId);
   }
@@ -107,9 +106,8 @@ class SocketSubscriptionController {
     return await getPendingMessagesForMatchId(matchId);
   }
 
-  Future<void> clearPendingMessages(String matchId) async{
+  Future<void> clearPendingMessages(String matchId) async {
     // newMessages[matchId] = 0;
     await clearPendingMessageForMacthId(matchId);
-
   }
 }

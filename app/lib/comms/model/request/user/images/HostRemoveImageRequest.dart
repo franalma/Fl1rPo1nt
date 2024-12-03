@@ -9,8 +9,9 @@ class HostRemoveImageRequest extends BaseRequest {
   Future<bool> run(String userId, String fileId) async {
     try {
       Log.d("Start HostRemoveImageRequest");
-      HostActions option = HostActions.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.removeUserImagesByUuserIdImageId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

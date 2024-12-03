@@ -11,8 +11,8 @@ class HostGetChatroomMessagesRequest extends BaseRequest {
       String matchId, String userId) async {
     try {
       Log.d("Start HostGetChatroomMessagesRequest");
-      HostActions option = HostActions.GET_CHATROOM_MESSAGES_BY_MATCH_ID;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostChatActions.getChatRoomMessagesByMatchId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

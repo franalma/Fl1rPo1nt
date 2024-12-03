@@ -11,8 +11,10 @@ class HostRequestTemplate extends BaseRequest {
   Future<HostResponseTemplate> run(String name) async {
     try {
       Log.d("Start doRegister");
-      HostActions option = HostActions.PUT_USER_FLIRT_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+     
+      HostActionsItem option = HostApiActions.putUserFlirtByUserId;
+      Uri url = Uri.parse(option.build());
+
 
       Map<String, dynamic> mapBody = {"action": option.action, "input": {}};
 

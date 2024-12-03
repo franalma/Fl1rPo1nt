@@ -12,8 +12,8 @@ class HostGetAllSocialNetworksRequest extends BaseRequest{
   Future<List<HostGetAllSocialNetworksResponse>> run() async {
     try {
       Log.d("Start HostGetAllSocialNetworksRequest");
-      HostActions option = HostActions.GET_ALL_SOCIAL_NETWORKS;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.getAllSocialNetworks;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {"action":option.action};
       String jsonBody = json.encode(mapBody);      

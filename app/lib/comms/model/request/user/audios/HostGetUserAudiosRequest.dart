@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
 import 'package:app/comms/model/response/HostGetUserAudiosResponse.dart';
@@ -11,8 +10,9 @@ class HostGetUserAudiosRequest extends BaseRequest {
   Future<HostGetUserAudiosResponse> run(String userId) async {
     try {
       Log.d("Start HostGetUserAudiosRequest");
-      HostActions option = HostActions.GET_USER_AUDIOS_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.getUserAudiosByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
@@ -24,12 +24,12 @@ class HostGetUserAudiosRequest extends BaseRequest {
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
       if (response.statusCode == 200) {
-        return HostGetUserAudiosResponse.fromJson(jsonDecode(response.body)["files"]);
+        return HostGetUserAudiosResponse.fromJson(
+            jsonDecode(response.body)["files"]);
       }
     } catch (error) {
       Log.d(error.toString());
     }
-    return HostGetUserAudiosResponse
-    .empty();
+    return HostGetUserAudiosResponse.empty();
   }
 }

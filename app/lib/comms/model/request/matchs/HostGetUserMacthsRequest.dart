@@ -11,8 +11,9 @@ class HostGetUserMacthsRequest extends BaseRequest {
   Future<HostGetMatchsResponse> run(String userId) async {
     try {
       Log.d("Start HostGetUserMacthsRequest");
-      HostActions option = HostActions.GET_ALL_USER_MATCHS_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.getAllUserMatchsByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

@@ -10,8 +10,9 @@ class HostUpdateUserNameRequest extends BaseRequest {
   Future<bool> run(String userId, String userName) async {
     try {
       Log.d("Start HostUpdateUserNameRequest");
-      HostActions option = HostActions.UPDATE_USER_NAME_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.updateUserNameByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

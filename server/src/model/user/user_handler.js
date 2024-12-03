@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
 const { printJson } = require("../../utils/json_utils");
 const { getUserQrByUserId } = require("../qr/qr_handler");
-const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/file_handler");
+// const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/file_handler");
 const { genError, HOST_ERROR_CODES } = require("./../../constants/host_error_codes")
 const userColletion = "users";
 const databases = require("../../database/databases");
@@ -12,7 +12,7 @@ const { DB_INSTANCES } = require("../../database/databases");
 async function creatInternalUser(input) {
   const currentTime = Date.now();
   let user = {
-    id: uuidv4(),
+    id: input.id,
     name: input.name,  
     email: input.email,
     phone: input.phone,
@@ -98,7 +98,7 @@ function createUserLocationExternal(value) {
 }
 
 async function registerUser(input) {
-  logger.info("Start registerUser");
+  logger.info("Start registerUser: "+JSON.stringify(input));
   let result = {};
   try {
     const db = DB_INSTANCES.DB_API;
@@ -142,16 +142,16 @@ async function getUserInfoByUserId(input) {
         token: input.token,
         refresh_token: input.currentRefreshToken,
         networks: user.networks ? user.networks : [],
-        user_interests: user.user_interests ? user.user_interest : [],
+        user_interests: user.user_interests ? user.user_interest : {},
         qr_values: user.qr_values ? user.qr_values : [],
         biography: user.biography ? user.biography : "",
-        hobbies: user.hobbies ? user.biography : [],
+        hobbies: user.hobbies ? user.hobbies : [],
         profile_image_file_id: user.profile_image_file_id ? user.profile_image_file_id : "",
         scanned_count: user.scanned_count ? user.scanned_count : 0,
         scans_performed: user.scans_performed ? user.scans_performed : 0,
         default_qr_id: user.default_qr_id ? user.default_qr_id : "",
         radio_visibility: user.radio_visibility ? user.radio_visibility : 10.0,
-        gender: user.gender ? user.gender : ""
+        gender: user.gender ? user.gender : {}
       }
     };
     printJson(result);
@@ -400,7 +400,7 @@ async function updateUserHobbiesByUserId(input) {
 }
 
 async function updateUserNameByUserId(input) {
-  logger.info("Starts updateUserNameByUserId");
+  logger.info("Starts updateUserNameByUserId:"+JSON.stringify(input));
   let result = { status: 200, message: "User name updated" };
   try {
     const db = DB_INSTANCES.DB_API;
@@ -409,6 +409,7 @@ async function updateUserNameByUserId(input) {
       name: input.user_name,
       updated_at: Date.now(),
     };
+    logger.info(`filters: ${JSON.stringify(filters)}`);
     await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
   } catch (error) {
     logger.info(error);

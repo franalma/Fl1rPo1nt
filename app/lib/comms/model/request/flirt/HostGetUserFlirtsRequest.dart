@@ -9,8 +9,8 @@ class HostGetUserFlirtsRequest extends BaseRequest {
   Future<HostGetUserFlirtsResponse> run(String userId, int status) async {
     try {
       Log.d("Start HostGetUserFlirtsRequest run");
-      HostActions option = HostActions.GET_USER_FLIRTS;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.getUserFlirts;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
@@ -36,8 +36,8 @@ class HostGetUserFlirtsRequest extends BaseRequest {
   Future<HostGetUserFlirtsResponse> all(String userId) async {
     try {
       Log.d("Start HostGetUserFlirtsRequest all");
-      HostActions option = HostActions.GET_USER_FLIRTS;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.getUserFlirts;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

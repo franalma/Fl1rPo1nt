@@ -12,7 +12,7 @@ class HostLoginRequest {
     Log.d("Start doLogin: $user:$pass");
     var hostErrorCode = HostErrorCode.undefined(); 
     try {
-      HostActionsItem option = HostActionV2.login;
+      HostActionsItem option = HostAuthActions.login;
       Uri url = Uri.parse(option.build());
       Map<String, dynamic> mapBody = {
         "action": option.action,

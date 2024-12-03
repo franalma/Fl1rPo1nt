@@ -10,8 +10,9 @@ class HostUpdateHobbiesRequest extends BaseRequest {
   Future<bool> run(String userId, List<dynamic> hobbies) async {
     try {
       Log.d("Start HostUpdateHobbiesRequest");
-      HostActions option = HostActions.UPDATE_USER_HOBBIES_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.updateUserHobbiesByUserId;
+      Uri url = Uri.parse(option.build());
+
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

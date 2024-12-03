@@ -10,8 +10,9 @@ class HostUploadAudioRequest extends BaseRequest {
   Future<String> run(String userId, String path) async {
     try {
       Log.d("Start HostUploadAudioRequest: ");
-      HostActions option = HostActions.UPLOAD_AUDIO_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostMultActions.uploadAudioByUserId;
+      Uri url = Uri.parse(option.build());
 
       final request = http.MultipartRequest('POST', url);
       request.files.add(

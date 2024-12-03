@@ -10,8 +10,8 @@ class HostGetPeopleArroundRequest extends BaseRequest {
       double latitude, double longitude, int radio) async {
     Log.d("Starts HostGetPeopleArroundRequest.run");
     try {
-      HostActions option = HostActions.GET_USER_BY_DISTANCE_FROM_POINT;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.getUserByDistanceFromPoint;
+      Uri url = Uri.parse(option.build());
       Map<String, dynamic> mapBody = {
         "action": option.action,
         "input": {"longitude": longitude, "latitude": latitude, "radio": radio}

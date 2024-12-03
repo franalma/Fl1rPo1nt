@@ -10,8 +10,8 @@ class HostDisableUserMatchRequest extends BaseRequest {
   Future<bool> run(String matchId, String userId) async {
     try {
       Log.d("Start HostDisableUserMatchRequest");
-      HostActions option = HostActions.DISABLE_MATCH_BY_MATCH_ID_USER_ID;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.disableMatchByMatchIdUserId;       
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

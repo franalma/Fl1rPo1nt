@@ -10,8 +10,8 @@ class HostUpdateUserImageProfileRequest extends BaseRequest {
   Future<bool> run(String userId, String fileId) async {
     try {
       Log.d("Start HostUpdateUserNameRequest");
-      HostActions option = HostActions.UPDATE_USER_IMAGE_PROFILE_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.updateUserImageProfileByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

@@ -12,8 +12,9 @@ class HostUpdateUserInterestRequest extends BaseRequest {
       SexAlternative sexAlternative, Gender gender) async {
     try {
       Log.d("Start HostUpdateUserInterestRequest");
-      HostActions option = HostActions.UPDATE_USER_INTERESTS_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.updateUserInterestsByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
@@ -24,19 +25,18 @@ class HostUpdateUserInterestRequest extends BaseRequest {
               "relationship": {
                 "id": relationship.id,
                 "name": relationship.value,
-                "color":relationship.color
+                "color": relationship.color
               },
               "sex_alternative": {
                 "id": sexAlternative.id,
                 "name": sexAlternative.name,
-                "color":sexAlternative.color
+                "color": sexAlternative.color
               },
-               "gender_preference": {
+              "gender_preference": {
                 "id": gender.id,
                 "name": gender.name,
-                "color":gender.color
+                "color": gender.color
               }
-
             }
           }
         }

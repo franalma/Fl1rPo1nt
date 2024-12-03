@@ -10,9 +10,9 @@ class HostGetUserImgeUrlByIdRequest extends BaseRequest {
   Future<HostGetUserImagesResponse> run(List<dynamic> values) async {
     try {
       Log.d("Start HostGetUserImgeUrlByIdRequest");
-      HostActions option = HostActions.GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID;
-      Uri url = Uri.parse(option.url);
 
+      HostActionsItem option = HostMultActions.getProtectedImagesUrlsByUserId;
+      Uri url = Uri.parse(option.build());
       Map<String, dynamic> mapBody = {
         "action": option.action,
         "input": {"values": values}
@@ -23,7 +23,8 @@ class HostGetUserImgeUrlByIdRequest extends BaseRequest {
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
       if (response.statusCode == 200) {
-        return HostGetUserImagesResponse.fromJson(jsonDecode(response.body)["files"]);
+        return HostGetUserImagesResponse.fromJson(
+            jsonDecode(response.body)["files"]);
       }
     } catch (error) {
       Log.d(error.toString());

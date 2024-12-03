@@ -12,8 +12,8 @@ class HostDisableFlirtByFlirtIdUserId extends BaseRequest {
       User user, Flirt flirt) async {
     try {
       Log.d("Start HostDisableFlirtByFlirtIdUserId");
-      HostActions option = HostActions.UPDATE_USER_FLIRT_BY_USER_ID_FLIRT_ID;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.updateUserFlirtByUserIdFlirtId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

@@ -10,8 +10,9 @@ class HostUpdateUserRadioVisibilityRequest extends BaseRequest {
   Future<bool> run(String userId, double radio) async {
     try {
       Log.d("Start HostUpdateUserRadioVisibilityRequest");
-      HostActions option = HostActions.UPDATE_USER_RADIO_VISIBILITY;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.updateUserRadioVisibility;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

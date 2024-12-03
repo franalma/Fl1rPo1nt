@@ -12,9 +12,9 @@ class HostUpdateUserQrRequest extends BaseRequest {
       String userId, List<QrValue> qrList) async {
     try {
       Log.d("Start HostUpdateUserQrRequest");
-      HostActions option = HostActions.UPDATE_USER_QRS_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
 
+      HostActionsItem option = HostApiActions.updateUserQrsByUserId;
+      Uri url = Uri.parse(option.build());
       Map<String, dynamic> mapBody = {
         "action": option.action,
         "input": {

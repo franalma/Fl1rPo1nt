@@ -10,9 +10,9 @@ class HostGetAllSexRelationshipRequest extends BaseRequest {
   Future<HostGetAllSexRelationshipResponse> run() async {
     try {
       Log.d("Start HostGetAllSexRelationshipRequest");
-      HostActions option =
-          HostActions.GET_ALL_SEXUAL_ORIENTATIONS_RELATIONSHIPS;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.getAllSexualOrientationsRelationships;
+          
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {"action": option.action};
 

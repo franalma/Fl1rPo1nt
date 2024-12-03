@@ -12,8 +12,8 @@ class HostGetAllGendersRequest extends BaseRequest{
   Future<HostGetAllGenderResponse> run() async {
     try {
       Log.d("Start HostGetAllGendersRequest");
-      HostActions option = HostActions.GET_ALL_GENDERS;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.getllGenders;       
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {"action":option.action};
       String jsonBody = json.encode(mapBody);      

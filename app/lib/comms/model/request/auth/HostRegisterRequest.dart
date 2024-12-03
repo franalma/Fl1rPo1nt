@@ -14,7 +14,7 @@ class HostRegisterRequest {
     try {
       Log.d("Start doRegisterV2");
 
-      HostActionsItem option = HostActionV2.register;
+      HostActionsItem option = HostAuthActions.register;
       Uri url = Uri.parse(option.build());
       print(url);
       Map<String, dynamic> mapBody = {

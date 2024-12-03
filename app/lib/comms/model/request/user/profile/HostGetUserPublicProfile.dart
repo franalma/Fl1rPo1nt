@@ -10,8 +10,8 @@ class HostGetUserPublicProfile extends BaseRequest {
   Future<HostGetUserPublicProfileResponse> run(String userId) async {
     try {
       Log.d("Start HostGetUserPublicProfile");
-      HostActions option = HostActions.GET_USER_PUBLIC_PROFILE_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.getUserPublicProfileByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

@@ -11,8 +11,9 @@ class HostUpdateUserGenderRequest extends BaseRequest {
   Future<bool> run(String userId, Gender gender) async {
     try {
       Log.d("Start HostUpdateUserGenderRequest");
-      HostActions option = HostActions.UPDATE_USER_GENDER_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.updateUserGenderByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

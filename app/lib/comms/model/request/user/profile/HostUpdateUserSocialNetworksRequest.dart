@@ -12,8 +12,9 @@ class HostUpdateUserSocialNetworksRequest extends BaseRequest {
       String userId, List<SocialNetwork> networks) async {
     try {
       Log.d("Start HostUpdateUserSocialNetworksRequest");
-      HostActions option = HostActions.UPDATE_USER_NETWORK_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.updateUserNetworkByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

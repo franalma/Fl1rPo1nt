@@ -11,9 +11,8 @@ class HostSendMessageToUserRequest extends BaseRequest {
       String message) async {
     try {
       Log.d("Start HostSendMessageToUserRequest");
-      HostActions option = HostActions.PUT_MESSAGE_TO_USER_WITH_USER_ID;
-      Uri url = Uri.parse(option.url);
-
+      HostActionsItem option = HostChatActions.putMessageToUserWithUserId;
+      Uri url = Uri.parse(option.build());
       Map<String, dynamic> mapBody = {
         "action": option.action,
         "input": {

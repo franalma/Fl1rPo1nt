@@ -4,6 +4,7 @@ const userContactCollection = "users_matchs";
 
 const dbHandler = require("../database/database_handler");
 const logger = require("../logger/log");
+const { HOST_ERROR_CODES, genError } = require("../constants/host_error_codes");
 
 async function getMatchByMatchIdInternal(input) {
   try {
@@ -13,20 +14,22 @@ async function getMatchByMatchIdInternal(input) {
     const dbResponse = await dbHandler.findWithFilters(filter, userContactCollection);
 
     if (dbResponse && (dbResponse.length > 0)) {
-      let result = dbResponse[0];
+      let info = dbResponse[0];
+      result = {
+        ...genError(HOST_ERROR_CODES.NO_ERROR),
+        ...info
+      }
       result.status = 200;
-      logger.info("Match complete: "+JSON.stringify(result));
+      logger.info("Match complete: " + JSON.stringify(result));
       return result;
     }
-    
+
   }
   catch (error) {
     printJson(error);
   }
-  return { status: 500 };
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
 }
-
-
 
 async function putMessageInChatroomByMatchId(input) {
   logger.info("Starts putMessageInChatroomByMatchId");
@@ -51,15 +54,15 @@ async function putMessageInChatroomByMatchId(input) {
 
       await dbHandler.addDocument(payload, currentCollectionSender);
       await dbHandler.addDocument(payload, currentCollectionReceiver);
-      return { status: 200 };
+      return { ...genError(HOST_ERROR_CODES.NO_ERROR) };
     } else {
-      return { status: 403 };
+      return { ...genError(HOST_ERROR_CODES.NOT_AUTHORIZED) };
     }
 
   } catch (error) {
     logger.info(error);
   }
-  return { status: 500 };
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
 }
 
 async function getMessagesInChatroomByMatchId(input) {
@@ -69,10 +72,10 @@ async function getMessagesInChatroomByMatchId(input) {
     const userId = input.user_id;
     const currentCollection = chatroomCollection + "-" + matchId + "-" + userId.substring(0, 5);
     const dbMessages = await dbHandler.findAll(currentCollection);
-    let result = { status: 200, messages: [] };
 
     for (let item of dbMessages) {
-      result.messages.push({
+      let values = [];
+      values.push({
         match_id: item.match_id,
         sender_id: item.sender_id,
         receiver_id: item.receiver_id,
@@ -80,11 +83,12 @@ async function getMessagesInChatroomByMatchId(input) {
         sent_at: item.sent_at,
       });
     }
+    const result = { ...genError(HOST_ERROR_CODES.NO_ERROR), messages: values }
     return result;
   } catch (error) {
     logger.info(error);
   }
-  return { status: 500 };
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
 }
 
 async function deleteChatRoomByMatchIdUserId(input) {
@@ -95,11 +99,11 @@ async function deleteChatRoomByMatchIdUserId(input) {
     const currentCollection = chatroomCollection + "-" + matchId + "-" + userId.substring(0, 5);
     await dbHandler.deleteCollection(currentCollection);
 
-    return { status: 200, messages: [] };
+    return { ...genError(HOST_ERROR_CODES.NO_ERROR) };
   } catch (error) {
     logger.info(error);
   }
-  return { status: 500 };
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };  
 }
 
 

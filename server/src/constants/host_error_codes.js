@@ -48,6 +48,11 @@ const HOST_ERROR_CODES = {
 
 
   
+  NOT_AUTHORIZED:{
+    error_code: -404,
+    status: 403,
+    description: "Not authorized",
+  },
 
   INTERNAL_SERVER_ERROR:{
     error_code: -500,

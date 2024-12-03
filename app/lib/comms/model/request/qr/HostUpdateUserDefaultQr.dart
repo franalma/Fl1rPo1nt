@@ -10,8 +10,9 @@ class HostUpdateUserDefaultQr extends BaseRequest {
   Future<bool> run(String userId, String qrId) async {
     try {
       Log.d("Start HostUpdateUserDefaultQr");
-      HostActions option = HostActions.UPDATE_USER_DEFAULT_QR_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option = HostApiActions.updateUserDefaultQrByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

@@ -7,13 +7,14 @@ import 'package:app/ui/utils/location.dart';
 import 'package:http/http.dart' as http;
 
 class HostPutUserContactRequest extends BaseRequest {
-  Future<bool> run(String userId, String userQrId, String contactId, String contactQrId,
-      String userFlirtId, Location location) async {
+  Future<bool> run(String userId, String userQrId, String contactId,
+      String contactQrId, String userFlirtId, Location location) async {
     try {
       Log.d("Start HostPutUserContactRequest");
-      HostActions option =
-          HostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID;
-      Uri url = Uri.parse(option.url);
+
+      HostActionsItem option =
+          HostApiActions.putUserContactByUserIDContactIdQrId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

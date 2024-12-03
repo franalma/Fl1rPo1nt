@@ -10,8 +10,8 @@ class HostUpdateUserBiography extends BaseRequest {
   Future<bool> run(String userId, String biography) async {
     try {
       Log.d("Start doRegister");
-      HostActions option = HostActions.UPDATE_USER_BIOGRAPHY_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.updateUserQrsByUserId;
+      Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,

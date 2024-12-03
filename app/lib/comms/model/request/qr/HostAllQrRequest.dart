@@ -9,8 +9,8 @@ class HostAllQrRequest extends BaseRequest {
   Future<List<HostAllQrResponse>> run(String userId) async {
     Log.d("Starts HostAllQrResponse.run");
     try {
-      HostActions option = HostActions.GET_USER_QR_BY_USER_ID;
-      Uri url = Uri.parse(option.url);
+      HostActionsItem option = HostApiActions.getUserQrByUserId;
+      Uri url = Uri.parse(option.build());
       Map<String, dynamic> mapBody = {
         "action": option.action,
         "input": {"user_id": userId}
