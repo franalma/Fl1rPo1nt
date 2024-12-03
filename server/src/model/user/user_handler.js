@@ -130,31 +130,32 @@ async function getUserInfoByUserId(input) {
       id: input.id
     };
     logger.info("-->filter: " + JSON.stringify(filters));
-    let user = await dbHandler.findWithFiltersAndClient(dbApi.client, filters, dbApi.collections.user_collection);
+    let dbRes = await dbHandler.findWithFiltersAndClient(dbApi.client, filters, dbApi.collections.user_collection);
 
-    printJson(user);
+    const user = dbRes[0];
+
     result = {
       response: {
         user_id: input.id,
-        name: input.name,
+        name: user.name,
         phone: user.phone,
         email: input.email,
         token: input.token,
         refresh_token: input.currentRefreshToken,
-        networks: user.networks ? user.networks : [],
-        user_interests: user.user_interests ? user.user_interest : {},
-        qr_values: user.qr_values ? user.qr_values : [],
-        biography: user.biography ? user.biography : "",
-        hobbies: user.hobbies ? user.hobbies : [],
-        profile_image_file_id: user.profile_image_file_id ? user.profile_image_file_id : "",
-        scanned_count: user.scanned_count ? user.scanned_count : 0,
-        scans_performed: user.scans_performed ? user.scans_performed : 0,
-        default_qr_id: user.default_qr_id ? user.default_qr_id : "",
-        radio_visibility: user.radio_visibility ? user.radio_visibility : 10.0,
+        networks: user.networks,
+        user_interests: user.user_interests,
+        qr_values: user.qr_values,
+        biography: user.biography,
+        hobbies: user.hobbies,
+        profile_image_file_id: user.profile_image_file_id, 
+        scanned_count: user.scanned_count ,
+        scans_performed: user.scans_performed ,
+        default_qr_id: user.default_qr_id,
+        radio_visibility: user.radio_visibility,
         gender: user.gender ? user.gender : {}
       }
     };
-    printJson(result);
+ 
     return result;
   } catch (error) {
     logger.info(error);
@@ -422,7 +423,7 @@ async function updateUserNameByUserId(input) {
 }
 
 async function updateUserRadioVisibility(input) {
-  logger.info("Starts updateUserRadioVisibility");
+  logger.info("Starts updateUserRadioVisibility:"+JSON.stringify(input));
   let result = { status: 200, message: "User visibility updated" };
   try {
     const db = DB_INSTANCES.DB_API;
@@ -443,7 +444,7 @@ async function updateUserRadioVisibility(input) {
 }
 
 async function updateUserGenderByUserId(input) {
-  logger.info("Starts updateUserGenderByUserId");
+  logger.info("Starts updateUserGenderByUserId: "+JSON.stringify(input));
   let result = { status: 200, message: "User gender updated" };
   try {
     const db = DB_INSTANCES.DB_API;

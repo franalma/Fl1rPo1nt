@@ -92,7 +92,7 @@ class HostApiActions {
       HOST_API["endpoint_api"].toString());
 
   static final HostActionsItem getllGenders = HostActionsItem(
-      "GET_ALL_GENDERSP", BASE_API_URL, HOST_API["endpoint_api"].toString());
+      "GET_ALL_GENDERS", BASE_API_URL, HOST_API["endpoint_api"].toString());
 
   static final HostActionsItem updateUserNetworkByUserId = HostActionsItem(
       "UPDATE_USER_NETWORK_BY_USER_ID",
@@ -128,7 +128,7 @@ class HostApiActions {
       HOST_API["endpoint_api"].toString());
 
   static final HostActionsItem updateUserRadioVisibility = HostActionsItem(
-      "UPDATE_USER_RADIO_VISIBILITY",
+      "UPDATE_USER_RADIO_VISIBILITY_BY_USER_ID",
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 

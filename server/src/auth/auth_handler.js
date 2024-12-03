@@ -111,7 +111,7 @@ async function doLogin(input) {
     let result = {};
     try {
         const dbAuth = databases.DB_INSTANCES.DB_AUTH;
-        // const hashPass = await authUtils.hashPassword(input.password);        
+           
         let filters = {
             email: input.email,
         };
@@ -138,8 +138,9 @@ async function doLogin(input) {
                         });
                         user.token = currentToken;
                         user.currentRefreshToken = currentRefreshToken;
-                        result = await userHandler.getUserInfoByUserId(user);
-                        result = { ...genError(HOST_ERROR_CODES.NO_ERROR), ...result };
+                        let userInfo = await userHandler.getUserInfoByUserId(user);
+                        logger.info("----->name: "+userInfo.name);
+                        result = { ...genError(HOST_ERROR_CODES.NO_ERROR), ...userInfo };
                         const updatedInfo = {
                             last_login: Date.now(),
                         }
