@@ -1,6 +1,7 @@
 const logger = require("../../logger/log");
 const dbHandler = require("../../database/database_handler");
 const { DB_INSTANCES } = require("../../database/databases");
+const { HOST_ERROR_CODES, genError } = require("../../constants/host_error_codes");
 
 function createSocialNetWork(item) {
   logger.info("Starts createSocialNetWork: " + JSON.stringify(item));
@@ -30,7 +31,7 @@ function createGenderExternal(item) {
 }
 
 async function putAllSocialNetworks(input) {
-  let result = {};
+
   try {
     logger.info(
       "Starts putAllSocialNetworks: " + JSON.stringify(input.networks)
@@ -47,42 +48,46 @@ async function putAllSocialNetworks(input) {
         db.collections.social_networks_collection
       );
       if (dbResponse) {
-        result = {
-          status: 200,
-          message: "Social networks created successfully",
-        };
+        return { ...genError(HOST_ERROR_CODES.NO_ERROR) };
       }
     }
   } catch (error) {
     logger.info(error);
   }
 
-  return result;
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };;
 }
 
 async function getAllSocialNetworks() {
   logger.info("Starts getAllSocialNetworks");
-  let result = {};
+
   try {
     const db = DB_INSTANCES.DB_API;
     const dbResponse = await dbHandler.findAllWithClient(
       db.client,
-      db.social_networks_collection
+      db.collections.social_networks_collection
     );
 
     if (dbResponse) {
-      result.status = 200;
-      result.networks = [];
+
+      let networksValues = [];
       for (let network of dbResponse) {
         let item = createSocialNetworkExternal(network);
-        result.networks.push(item);
+        networksValues.push(item);
+      }
+      return {
+        ...genError(HOST_ERROR_CODES.NO_ERROR),
+        networks: networksValues
       }
     }
   } catch (error) {
     logger.info(error);
   }
 
-  return result;
+  return {
+    ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR),
+    networks: []
+  };
 }
 
 async function getAllGenders() {
@@ -133,7 +138,8 @@ async function getAllSexualOrientationsRelationships() {
         };
         result.sex_orientation.push(value);
       }
-      let dbResponse2 = await dbHandler.findAll(typeRelationshipsCollection);
+      let dbResponse2 = await dbHandler.findAllWithClient(db.client,
+        db.collections.type_relationships_collection);
       for (let item of dbResponse2) {
         let value = {
           id: item.id,
@@ -143,13 +149,20 @@ async function getAllSexualOrientationsRelationships() {
         };
         result.type_relationships.push(value);
       }
-      result.status = 200;
+
+      return {
+        ...genError(HOST_ERROR_CODES.NO_ERROR),
+        ...result
+      }
     }
   } catch (error) {
     logger.info(error);
   }
 
-  return result;
+  return {
+    ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR),
+    ...result
+  };
 }
 
 module.exports = {

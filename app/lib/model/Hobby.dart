@@ -8,4 +8,8 @@ class Hobby {
   factory Hobby.fromHost(Map<String, dynamic> json) {
     return Hobby(json["id"], json["name"]);
   }
+
+  Map<String, dynamic> toMap() {
+    return {"id": id, "name": name};
+  }
 }

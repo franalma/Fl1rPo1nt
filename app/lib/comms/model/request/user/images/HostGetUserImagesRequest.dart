@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class HostGetUserImagesRequest extends BaseRequest {
   Future<HostGetUserImagesResponse> run(String userId) async {
     try {
-      Log.d("Start HostGetUserImagesResponse");
+      Log.d("Start HostGetUserImagesRequest");
 
       HostActionsItem option = HostMultActions.getProtectedImagesUrlsByUserId;
       Uri url = Uri.parse(option.build());

@@ -11,7 +11,7 @@ class HostGetUserAudiosRequest extends BaseRequest {
     try {
       Log.d("Start HostGetUserAudiosRequest");
 
-      HostActionsItem option = HostApiActions.getUserAudiosByUserId;
+      HostActionsItem option = HostMultActions.getUserAudiosByUserId;
       Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {

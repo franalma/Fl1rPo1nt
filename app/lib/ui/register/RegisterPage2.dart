@@ -330,14 +330,23 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Image.asset("assets/img/splash_icon.png")),
               ),
               const SizedBox(height: 30),
-              const Text(
-                'Regístrate',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              GestureDetector(
+                onDoubleTap: (){
+                   _nameController.text = "Fran2";
+                  _emailController.text = "test2@floiint.com";
+                  _phoneController.text = "676404766";
+                  _passwordController.text = "Aa123456\$";
+                  _confirmPasswordController.text = "Aa123456\$";
+                },
+                child: const Text(
+                  'Regístrate',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
               MyTextField(

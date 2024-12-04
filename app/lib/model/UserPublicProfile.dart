@@ -1,9 +1,9 @@
-import 'dart:convert';
+
 
 import 'package:app/model/Gender.dart';
 import 'package:app/model/UserInterest.dart';
 import 'package:app/ui/utils/Log.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 
 class UserPublicProfile {
@@ -12,7 +12,7 @@ class UserPublicProfile {
   SexAlternative? sexAlternative;
   Gender? gender;
   String? biography;
-  dynamic profileImage;
+  String? profileImage;
   List<dynamic>? hobbies;
 
   UserPublicProfile(this.id, this.relationShip, this.sexAlternative,
@@ -30,7 +30,7 @@ class UserPublicProfile {
       var gender = Gender.fromJson(json["gender"]);
       var biography = json["biography"];
       var hobbies = json["hobbies"];
-      dynamic profileImage = Uint8List(0);
+      var profileImage= json["profile_image_file_id"];
 
       // if (json.containsKey("profile_image")) {
       //   Uint8List buffer = base64Decode(json["profile_image"]);

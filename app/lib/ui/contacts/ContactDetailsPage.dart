@@ -251,7 +251,7 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
                 children:
                     List<Widget>.from(_userPublicProfile!.hobbies!.map((hobby) {
                   return Chip(
-                    label: Text(hobby.toString()),
+                    label: Text(hobby["name"]),
                     backgroundColor: Colors.teal.withOpacity(0.2),
                   );
                 })),

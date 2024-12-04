@@ -3,9 +3,13 @@ import 'package:app/model/SocialNetwork.dart';
 class DataToSave {
   String userName;
   String userPhone;
+  bool pictures;
+  bool audios;
   List<SocialNetwork> networks;
 
-  DataToSave(this.userName, this.userPhone, this.networks);
+  DataToSave(
+      this.userName, this.userPhone, this.networks, this.pictures, this.audios);
+
   Map<String, dynamic> toJson() {
     Map<String, dynamic> values = {};
 
@@ -15,6 +19,10 @@ class DataToSave {
     if (userName.isNotEmpty) {
       values["phone"] = userPhone;
     }
+
+    values["audios"] = audios;
+    values["pictures"] = pictures;
+
     List<dynamic> networksToSend = [];
 
     networks.map((e) => networksToSend.add(e.toHost())).toList();
@@ -30,6 +38,8 @@ class DataToSave {
     }).toList();
     String name = json.containsKey("name") ? json["name"] : "";
     String phone = json.containsKey("phone") ? json["phone"] : "";
-    return DataToSave(name, phone, list);
+    bool audios = json["audios"];
+    bool pictures = json["pictures"];
+    return DataToSave(name, phone, list, pictures, audios);
   }
 }

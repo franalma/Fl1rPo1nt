@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:app/model/FileData.dart';
-import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
@@ -124,7 +121,7 @@ class _UserPhotosPage extends State<UserPhotosPage> {
                         onTap: () => _onSetProfilePicture(index),
                         child: CircleAvatar(
                           backgroundColor:
-                              Color.fromARGB(255, 5, 20, 242).withOpacity(0.6),
+                              const Color.fromARGB(255, 5, 20, 242).withOpacity(0.6),
                           radius: 16,
                           child: const Icon(
                             Icons.person_2_rounded,

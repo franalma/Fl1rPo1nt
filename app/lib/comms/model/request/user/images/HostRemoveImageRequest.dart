@@ -10,7 +10,7 @@ class HostRemoveImageRequest extends BaseRequest {
     try {
       Log.d("Start HostRemoveImageRequest");
 
-      HostActionsItem option = HostApiActions.removeUserImagesByUuserIdImageId;
+      HostActionsItem option = HostMultActions.removeUserImagesByUuserIdImageId;
       Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
@@ -22,6 +22,7 @@ class HostRemoveImageRequest extends BaseRequest {
       var response =
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
+      Log.d("delete picture response: ${response.statusCode}");
       if (response.statusCode == 200) {
         return true;
       }

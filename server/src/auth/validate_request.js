@@ -163,13 +163,16 @@ function requestFieldsValidation(req, res, next) {
             validationSet = validationRules.GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES
             break;
         }
+
+        case hostActions.GET_PROTECTED_IMAGES_URLS_BY_USER_ID:{
+            validationSet = validationRules.GET_PROTECTED_IMAGES_URLS_BY_USER_ID_RULES
+            break; 
+        }
     
         default: {
             logger.info("No request verification needed for " + action);
             validationSet = [];
         }
-
-
     }
 
     Promise.all(validationSet.map(validation => validation.run(req)))
@@ -178,6 +181,7 @@ function requestFieldsValidation(req, res, next) {
 }
 
 function requestDoValidation(req) {
+    logger.info("Starts requestDoValidation");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return { errors: errors.array() };

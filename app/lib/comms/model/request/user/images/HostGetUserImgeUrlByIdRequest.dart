@@ -7,18 +7,20 @@ import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
 
 class HostGetUserImgeUrlByIdRequest extends BaseRequest {
-  Future<HostGetUserImagesResponse> run(List<dynamic> values) async {
+  Future<HostGetUserImagesResponse> run(dynamic values) async {
     try {
-      Log.d("Start HostGetUserImgeUrlByIdRequest");
+      Log.d("Start HostGetUserImgeUrlByIdRequest: ${jsonEncode(values)}");
 
       HostActionsItem option = HostMultActions.getProtectedImagesUrlsByUserId;
       Uri url = Uri.parse(option.build());
       Map<String, dynamic> mapBody = {
         "action": option.action,
-        "input": {"values": values}
+        // "input": {"values": values}
+        "input":values
       };
 
       String jsonBody = json.encode(mapBody);
+      
       var response =
           await http.post(url, headers: buildHeader(), body: jsonBody);
 

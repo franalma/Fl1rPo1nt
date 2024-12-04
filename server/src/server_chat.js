@@ -3,8 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const logger = require("./logger/log");
 const hostActions = require("./constants/host_actions");
-const userHandler = require("./model/user/user_handler");
-const contactHandler = require("./model/user/mach_handler");
 const socketHandler = require("./sockets/socket_handler");
 const http = require("http");
 const chatroomHandler = require("./chatroom/chatroom_handler");
@@ -12,6 +10,8 @@ const { header } = require("express-validator");
 const requestValidator = require("./auth/validate_request");
 const { body } = require('express-validator');
 const { DB_INSTANCES } = require("./database/databases");
+const sockerHandler = require("./sockets/socket_handler");
+
 
 //Init
 const app = express();
@@ -104,6 +104,10 @@ async function processRequest(req, res) {
                     );
                     break;
                 }
+
+                case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID: {
+
+                }
             }
         }
 
@@ -127,6 +131,28 @@ app.post("/",
     }
 );
 
+app.post("/new-contact",
+    // requestValidator.requestAuthValidation,
+    // requestFieldsValidation,
+    (req, res) => {
+        try {
+            const input = req.body;
+            logger.info("new-contact: " + JSON.stringify(input));
+
+            sockerHandler.sendMessageToUser(
+                "new_contact_request",
+                input.contact_id,
+                input.scanned,
+                input
+            );
+            res.status(200).json({});
+            return;
+        } catch (error) {
+            logger.info(error);
+        }
+        res.status(500).json({});
+    }
+);
 
 
 

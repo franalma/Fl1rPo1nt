@@ -145,12 +145,7 @@ async function processRequest(req, res) {
         //   result = await fileHandler.getUserImagesByUserId(req.body.input);
         //   break;
         // }
-        case hostActions.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID: {
-          result = await fileHandler.removeUserImageByImageIdUserId(
-            req.body.input
-          );
-          break;
-        }
+    
         case hostActions.UPDATE_USER_BIOGRAPHY_BY_USER_ID: {
           result = await userHandler.updateUserBiographyByUserId(
             req.body.input
@@ -172,16 +167,7 @@ async function processRequest(req, res) {
           break;
         }
 
-        case hostActions.GET_USER_AUDIOS_BY_USER_ID: {
-          result = await fileHandler.getUserAudiosByUserId(req.body.input);
-          break;
-        }
-        case hostActions.REMOVE_USER_AUDIO_BY_USER_ID_AUDIO_ID: {
-          result = await fileHandler.removeUserAudioByAudioIdUserId(
-            req.body.input
-          );
-          break;
-        }
+       
 
         case hostActions.UPDATE_USER_DEFAULT_QR_BY_USER_ID: {
           result = await userHandler.updateUserDefaultQrByUserId(
@@ -214,12 +200,7 @@ async function processRequest(req, res) {
           break;
         }
 
-        case hostActions.GET_PROTECTED_IMAGES_URLS_BY_USER_ID: {
-          result = await fileHandler.getSecureSharedImagesUrlByUserId(
-            req.body.input
-          );
-          break;
-        }
+       
 
         case hostActions.DISABLE_MATCH_BY_MATCH_ID_USER_ID: {
           result = await contactHandler.diableMatchByMatchIdUserId(

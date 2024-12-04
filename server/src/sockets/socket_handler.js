@@ -28,6 +28,7 @@ function socketInit(server) {
 function sendMessageToUser(action, userId, scanned, message) {
   logger.info("Starts sendMessageToUser userId: " + userId);
   try {
+    jsonUtils.printJson(mapSockets);
     const socket = mapSockets[userId]["socket"];
     logger.info("socket id:" + socket.id);
     if (socket) {

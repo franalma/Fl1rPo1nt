@@ -22,7 +22,7 @@ class User {
   bool isFlirting = false;
   late String biography;
   late String refreshToken;
-  late List<dynamic> hobbies = [];
+  late List<Hobby> hobbies = [];
   late String userProfileImageId;
   late int nScanned;
   late int nScansPerformed;
@@ -119,8 +119,8 @@ class User {
         biography = json['biography'].toString();
       }
 
-      if (json.containsKey("profile_image_file_id")) {
-        userProfileImageId = json['profile_image_file_id'];
+      if (json.containsKey("profile_image_id")) {
+        userProfileImageId = json['profile_image_id'];
       }
 
       if (json.containsKey("scanned_count")) {

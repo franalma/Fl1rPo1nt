@@ -10,7 +10,7 @@ class HostRemoveAudioRequest extends BaseRequest {
     try {
       Log.d("Start HostRemoveAudioRequest");
 
-      HostActionsItem option = HostApiActions.removeUserAudioByUserIdAudioId;
+      HostActionsItem option = HostMultActions.removeUserAudioByUserIdAudioId;
       Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {

@@ -1,4 +1,3 @@
-import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/user/profile/HostUpdateHobbiesRequest.dart';
 import 'package:app/comms/model/request/fix_values/HostGetAllHobbiesRequest.dart';
 import 'package:app/model/Hobby.dart';
@@ -20,7 +19,7 @@ class UserHobbiesPage extends StatefulWidget {
 class _UserHobbiesPage extends State<UserHobbiesPage> {
   bool _isLoading = true;
   List<Hobby> _allHobbies = [];
-  List<dynamic> _selectedHobbie = [];
+  List<String> _selectedHobbies = [];
   User user = Session.user;
   @override
   void initState() {
@@ -33,15 +32,14 @@ class _UserHobbiesPage extends State<UserHobbiesPage> {
     return Scaffold(
         // drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
-            flexibleSpace: FlexibleAppBar(),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  _onSaveValues();
-                },
-              ),
-            ]),
+          flexibleSpace: FlexibleAppBar(),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              _onSaveValues();
+            },
+          ),
+        ),
         body: _isLoading ? _buildLoading() : _buildList());
   }
 
@@ -57,10 +55,10 @@ class _UserHobbiesPage extends State<UserHobbiesPage> {
             children: [
               ListTile(
                   title: CheckboxListTile(
-                      value: _selectedHobbie.contains(_allHobbies[index].name),
+                      value: _selectedHobbies.contains(_allHobbies[index].name),
                       onChanged: (value) => {_onItemChange(index, value)},
                       title: Text(_allHobbies[index].name))),
-                      Divider()
+              const Divider()
             ],
           );
         });
@@ -71,7 +69,7 @@ class _UserHobbiesPage extends State<UserHobbiesPage> {
     HostGetAllHobbiesRequest().run().then((value) {
       _allHobbies = value;
       setState(() {
-        _selectedHobbie = user.hobbies;
+        _selectedHobbies = user.hobbies.map((e) => e.name).toList();
         _isLoading = false;
       });
     });
@@ -79,12 +77,21 @@ class _UserHobbiesPage extends State<UserHobbiesPage> {
 
   Future<void> _onSaveValues() async {
     Log.d("Starts _onSaveValues");
+
+    List<Hobby> values = [];
+    _selectedHobbies.map((e) => print(e)).toList();
+    for (var item in _allHobbies) {
+      if (_selectedHobbies.contains(item.name)) {
+        values.add(item);
+      }
+    }
+
     setState(() {
       _isLoading = true;
     });
-    HostUpdateHobbiesRequest().run(user.userId, _selectedHobbie).then((value) {
+    HostUpdateHobbiesRequest().run(user.userId, values).then((value) {
       if (value) {
-        user.hobbies = _selectedHobbie;
+        user.hobbies = values;
         NavigatorApp.pop(context);
       } else {
         FlutterToast().showToast("No ha sido posible actualzar tus hobbies");
@@ -99,9 +106,9 @@ class _UserHobbiesPage extends State<UserHobbiesPage> {
     Log.d("Starts _onItemChange");
     setState(() {
       if (value!) {
-        _selectedHobbie.add(_allHobbies[index].name);
+        _selectedHobbies.add(_allHobbies[index].name);
       } else {
-        _selectedHobbie.remove(_allHobbies[index].name);
+        _selectedHobbies.remove(_allHobbies[index].name);
       }
     });
   }

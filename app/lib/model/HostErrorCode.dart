@@ -23,15 +23,14 @@ enum HostErrorCodesValue {
   NoError(0, "0"),
   UserNotActivated(-100, "Account not activated"),
   UserExist(-101, "User exists"),
-  NotPossibleToRegiserUser (-102, "Not possible to register user"),
-  WrongUserPass (-103, "Wrong user/pass"),
-  UserNotExist (-104, "User not exists"),
-  UserBlocked (-105, "User blocked"),
-  
-  
-  
+  NotPossibleToRegiserUser(-102, "Not possible to register user"),
+  WrongUserPass(-103, "Wrong user/pass"),
+  UserNotExist(-104, "User not exists"),
+  UserBlocked(-105, "User blocked"),
 
-  InternalServerError (-500, "Server error"),
+  UserInYourContacts(-401, "User in your contacts"),
+
+  InternalServerError(-500, "Server error"),
 
   Unknown(999999, "");
 

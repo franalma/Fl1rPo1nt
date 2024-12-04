@@ -80,10 +80,10 @@ class _QrGeneratePage extends State<QrGeneratePage> {
   }
 
   void onQrInfoSelected(
-      String name, String phone, List<SocialNetwork> networks) {
+      String name, String phone, List<SocialNetwork> networks, bool pictures, bool audios) {
     Log.d("Starts onQrInfoSelected");
 
-    dataToSave = DataToSave(name, phone, networks);
+    dataToSave = DataToSave(name, phone, networks, pictures, audios);
   }
 
   Widget _buildQrPreview() {

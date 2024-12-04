@@ -5,7 +5,7 @@ const { printJson } = require("../../utils/json_utils");
 const { getUserQrByUserId } = require("../qr/qr_handler");
 // const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/file_handler");
 const { genError, HOST_ERROR_CODES } = require("./../../constants/host_error_codes")
-const userColletion = "users";
+
 const databases = require("../../database/databases");
 const { DB_INSTANCES } = require("../../database/databases");
 
@@ -13,7 +13,7 @@ async function creatInternalUser(input) {
   const currentTime = Date.now();
   let user = {
     id: input.id,
-    name: input.name,  
+    name: input.name,
     email: input.email,
     phone: input.phone,
     zip_code: input.zip_code,
@@ -33,7 +33,7 @@ async function creatInternalUser(input) {
       gender_preference: {}
     },
     biography: "",
-    profile_image_file_id: "",
+    profile_image_id: "",
     default_qr_id: "",
     radio_visibility: 10,
 
@@ -98,7 +98,7 @@ function createUserLocationExternal(value) {
 }
 
 async function registerUser(input) {
-  logger.info("Start registerUser: "+JSON.stringify(input));
+  logger.info("Start registerUser: " + JSON.stringify(input));
   let result = {};
   try {
     const db = DB_INSTANCES.DB_API;
@@ -147,15 +147,15 @@ async function getUserInfoByUserId(input) {
         qr_values: user.qr_values,
         biography: user.biography,
         hobbies: user.hobbies,
-        profile_image_file_id: user.profile_image_file_id, 
-        scanned_count: user.scanned_count ,
-        scans_performed: user.scans_performed ,
+        profile_image_id: user.profile_image_id,
+        scanned_count: user.scanned_count,
+        scans_performed: user.scans_performed,
         default_qr_id: user.default_qr_id,
         radio_visibility: user.radio_visibility,
         gender: user.gender ? user.gender : {}
       }
     };
- 
+
     return result;
   } catch (error) {
     logger.info(error);
@@ -266,8 +266,7 @@ async function updateUserSearchingRangeByUserId(input) {
 
 async function updateUserInterestsByUserId(input) {
   logger.info("Starts updateUserInterestsByUserId :" + JSON.stringify(input));
-  let result = {};
-
+  
   try {
     const db = DB_INSTANCES.DB_API;
     const filters = { id: input.user_id };
@@ -275,23 +274,25 @@ async function updateUserInterestsByUserId(input) {
       user_interests: input.values.user_interests,
       updated_at: Date.now(),
     };
-    const dbResponse = await dbHandler.updateDocument(
+    const dbResponse = await dbHandler.updateDocumentWithClient(
+      db.client,
       newValues,
       filters,
-      userColletion
+      db.collections.user_collection
     );
     logger.info("-> db result: " + dbResponse);
     if (dbResponse) {
-      result.status = 200;
-      result.message = "User interests updated";
-    } else {
-      result.status = 500;
+      return {
+        ...genError(HOST_ERROR_CODES.NO_ERROR)
+      }
     }
   } catch (error) {
     logger.info(error);
   }
 
-  return result;
+  return {
+    ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR)
+  }
 }
 
 async function updateUserQrsByUserId(input) {
@@ -401,7 +402,7 @@ async function updateUserHobbiesByUserId(input) {
 }
 
 async function updateUserNameByUserId(input) {
-  logger.info("Starts updateUserNameByUserId:"+JSON.stringify(input));
+  logger.info("Starts updateUserNameByUserId:" + JSON.stringify(input));
   let result = { status: 200, message: "User name updated" };
   try {
     const db = DB_INSTANCES.DB_API;
@@ -423,7 +424,7 @@ async function updateUserNameByUserId(input) {
 }
 
 async function updateUserRadioVisibility(input) {
-  logger.info("Starts updateUserRadioVisibility:"+JSON.stringify(input));
+  logger.info("Starts updateUserRadioVisibility:" + JSON.stringify(input));
   let result = { status: 200, message: "User visibility updated" };
   try {
     const db = DB_INSTANCES.DB_API;
@@ -444,7 +445,7 @@ async function updateUserRadioVisibility(input) {
 }
 
 async function updateUserGenderByUserId(input) {
-  logger.info("Starts updateUserGenderByUserId: "+JSON.stringify(input));
+  logger.info("Starts updateUserGenderByUserId: " + JSON.stringify(input));
   let result = { status: 200, message: "User gender updated" };
   try {
     const db = DB_INSTANCES.DB_API;

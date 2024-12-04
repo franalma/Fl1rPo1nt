@@ -25,6 +25,8 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
   User user = Session.user;
   bool _isNameSelected = false;
   bool _isPhoneSelected = false;
+  bool _isAudioSelected = false; 
+  bool _isPictureSelected = false; 
   @override
   void initState() {
     networks = user.networks;
@@ -85,20 +87,20 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
             const Divider(),
             CheckboxListTile(
               title: const Text("Tus fotos"),              
-              value: _isNameSelected,
+              value: _isPictureSelected,
               onChanged: (value) {
                 setState(() {
-                  _isNameSelected = value!;
+                  _isPictureSelected = value!;
                 });
               },
             ),
             const Divider(),
             CheckboxListTile(
               title: const Text("Tus audios"),              
-              value: _isNameSelected,
+              value: _isAudioSelected,
               onChanged: (value) {
                 setState(() {
-                  _isNameSelected = value!;
+                  _isAudioSelected = value!;
                 });
               },
             ),
@@ -106,7 +108,7 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
             user.phone.isNotEmpty
                 ? CheckboxListTile(
                     title: const Text("Teléfono"),
-                    subtitle: Text(user.name),
+                    subtitle: Text(user.phone),
                     value: _isPhoneSelected,
                     onChanged: (value) {
                       setState(() {
@@ -127,7 +129,7 @@ class _NewQrShareOptions extends State<NewQrShareOptions> {
       socialNetWorksSelected.add(networks[item]);
     }
     DataToSave dataToSave = DataToSave(_isNameSelected ? user.name : "",
-        _isPhoneSelected ? user.phone : "", socialNetWorksSelected);
+        _isPhoneSelected ? user.phone : "", socialNetWorksSelected, _isPictureSelected, _isAudioSelected);
 
     NavigatorApp.popWith(context, dataToSave);
   }

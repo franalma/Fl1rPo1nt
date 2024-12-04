@@ -44,9 +44,9 @@ class _UserProfilePage extends State<UserProfilePage> {
   }
 
   Future<void> _loadImageProfile() async {
-    var values = [
-      {"user_id": user.userId, "file_id": user.userProfileImageId}
-    ];
+    var values = 
+      {"user_id": user.userId, "file_id": user.userProfileImageId};
+    
     HostGetUserImgeUrlByIdRequest().run(values).then((response) {
       if (response.fileData != null && response.fileData!.isNotEmpty) {
         setState(() {

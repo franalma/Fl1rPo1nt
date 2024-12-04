@@ -140,7 +140,7 @@ async function doLogin(input) {
                         user.currentRefreshToken = currentRefreshToken;
                         let userInfo = await userHandler.getUserInfoByUserId(user);
                         logger.info("----->name: "+userInfo.name);
-                        result = { ...genError(HOST_ERROR_CODES.NO_ERROR), ...userInfo };
+                        result = { ...genError(HOST_ERROR_CODES.NO_ERROR) , ...userInfo };
                         const updatedInfo = {
                             last_login: Date.now(),
                         }

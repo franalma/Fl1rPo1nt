@@ -35,6 +35,7 @@ const HOST_MULT = {
   "endpoint_up_audio": "/upload/audio",
   "endpoint_sec_images": "/secure-images",
   "endpoint_sec_audios": "/secure-audios",
+  "endpoint_root": "/",
 };
 
 String BASE_AUTH_URL = "http://${HOST_AUTH["dev_ip"]}:${HOST_AUTH["dev_port"]}";
@@ -169,24 +170,10 @@ class HostApiActions {
       HostActionsItem("PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID",
           BASE_API_URL, HOST_API["endpoint_api"].toString());
 
-  static final HostActionsItem getUserImagesByUserId = HostActionsItem(
-      "GET_USER_IMAGES_BY_USER_ID",
-      BASE_API_URL,
-      HOST_API["endpoint_api"].toString());
-
-  static final HostActionsItem getUserAudiosByUserId = HostActionsItem(
-      "GET_USER_AUDIOS_BY_USER_ID",
-      BASE_API_URL,
-      HOST_API["endpoint_api"].toString());
-
-  static final HostActionsItem removeUserImagesByUuserIdImageId =
-      HostActionsItem("REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID", BASE_API_URL,
-          HOST_API["endpoint_api"].toString());
-
-  static final HostActionsItem removeUserAudioByUserIdAudioId = HostActionsItem(
-      "REMOVE_USER_AUDIO_BY_USER_ID_AUDIO_ID",
-      BASE_API_URL,
-      HOST_API["endpoint_api"].toString());
+  // static final HostActionsItem getUserImagesByUserId = HostActionsItem(
+  //     "GET_USER_IMAGES_BY_USER_ID",
+  //     BASE_API_URL,
+  //     HOST_API["endpoint_api"].toString());
 
   static final HostActionsItem updateBiographyByUserId = HostActionsItem(
       "UPDATE_USER_BIOGRAPHY_BY_USER_ID",
@@ -222,7 +209,21 @@ class HostMultActions {
   static final HostActionsItem getProtectedImagesUrlsByUserId = HostActionsItem(
       "GET_PROTECTED_IMAGES_URLS_BY_USER_ID",
       BASE_MULT_URL,
-      HOST_MULT["endpoint_sec_images"].toString());
+      HOST_MULT["endpoint_root"].toString());
+
+  static final HostActionsItem removeUserImagesByUuserIdImageId =
+      HostActionsItem("REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID", BASE_MULT_URL,
+          HOST_MULT["endpoint_root"].toString());
+
+  static final HostActionsItem getUserAudiosByUserId = HostActionsItem(
+      "GET_USER_AUDIOS_BY_USER_ID",
+      BASE_MULT_URL,
+      HOST_MULT["endpoint_root"].toString());
+
+  static final HostActionsItem removeUserAudioByUserIdAudioId = HostActionsItem(
+      "REMOVE_USER_AUDIO_BY_USER_ID_AUDIO_ID",
+      BASE_MULT_URL,
+      HOST_MULT["endpoint_root"].toString());
 
   //  static final HostActionsItem getProtectedImagesUrlsByUserId = HostActionsItem(
   // "GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID", BASE_MULT_URL, HOST_MULT["endpoint_sec_images"].toString());
@@ -247,20 +248,3 @@ class HostChatActions {
   static final HostActionsItem socketListen =
       HostActionsItem("", BASE_CHAT_URL, "");
 }
-
-// enum HostActions {
-  
-
-
-
-//   GET_PROTECTED_IMAGES_URLS_BY_USER_ID(
-//       "GET_PROTECTED_IMAGES_URLS_BY_USER_ID", "SERVER_API"),
-//   GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID(
-//       "GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID", "SERVER_API"),
-//   ;
-
-//   final String action;
-//   final String url;
-
-//   const HostActions(this.action, this.url);
-// }

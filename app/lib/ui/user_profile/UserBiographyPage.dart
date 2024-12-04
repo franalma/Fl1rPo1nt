@@ -1,6 +1,7 @@
 import 'package:app/comms/model/request/user/profile/HostUpdateUserBiography.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
@@ -27,12 +28,10 @@ class _UserBiographyPage extends State<UserBiographyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          flexibleSpace: FlexibleAppBar(),
-          actions: [
-            IconButton(
-                onPressed: () => _onSaveData(), icon: const Icon(Icons.save))
-          ],
-        ),
+            flexibleSpace: FlexibleAppBar(),
+            leading: IconButton(
+                onPressed: () => _onSaveData(),
+                icon: const Icon(Icons.arrow_back))),
         body: _isLoading ? _buildLoading() : _buildBody());
   }
 
@@ -66,18 +65,16 @@ class _UserBiographyPage extends State<UserBiographyPage> {
     Log.d("Starts _onSaveData ");
     var biography = _controller.text;
     setState(() {
-      _isLoading = true; 
+      _isLoading = true;
     });
     HostUpdateUserBiography().run(user.userId, biography).then((value) {
       setState(() {
-      _isLoading = false; 
-    });
+        _isLoading = false;
+      });
       if (value) {
         user.biography = biography;
-        FlutterToast().showToast("Se ha actualizado tu biografía");
-      } else {
-        FlutterToast().showToast("No ha sido posible actualizar tu biografía");
       }
+      NavigatorApp.pop(context);
     });
   }
 }

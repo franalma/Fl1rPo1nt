@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const { header } = require("express-validator");
 const logger = require("./logger/log");
 const http = require("http");
 const fileHandler = require("./files/file_handler");
@@ -7,7 +8,7 @@ const path = require("path");
 const { DB_INSTANCES } = require("./database/databases");
 const requestValidator = require("./auth/validate_request");
 const dbHandler = require("./database/database_handler");
-const userHandler = require("./model/user/user_handler");
+const hostActions = require("./constants/host_actions");
 
 //Init
 const app = express();
@@ -18,20 +19,24 @@ const server = http.createServer(app);
 const uploadImages = fileHandler.configImages();
 const uploadAudios = fileHandler.configAudios();
 
+
+
+
+
 async function processGettingImage(req, res) {
   logger.info(`Starts processGettingImage`);
   try {
     const { filename } = req.params;
     const { expires, signature, width, height, quality } = req.query;
 
-    //TODO restore signature validation
+
     if (fileHandler.validateSignedSignedUrl(filename, expires, signature)) {
       const filePath = path.join(
         process.env.MULTIMEDIA_PATH,
         process.env.IMAGE_DIR_PATH,
         filename
       );
-      logger.info(filePath);
+      logger.info(`Filepath=${filePath}`);
       res.set("Content-Type", "image/jpeg");
       fileHandler.resizeImage(
         { filepath: filePath, width: width, height: height, quality: quality },
@@ -74,16 +79,37 @@ async function processGettingAudios(req, res) {
 }
 
 async function processRequest(req, res) {
-  logger.info("processRequest");
+  const { action } = req.body;
+  logger.info("processRequest: " + action);
+  logger.info("processRequest payload: " + JSON.stringify(req.body));
   let result = requestValidator.requestDoValidation(req);
   try {
     if (result) {
       res.status(400).json(result);
     } else {
-      const { action } = req.body;
-      logger.info(action);
       switch (action) {
-        
+        case hostActions.GET_PROTECTED_IMAGES_URLS_BY_USER_ID: {
+          result = await fileHandler.getSecureSharedImagesUrlByUserId(
+            req.body.input
+          );
+          break;
+        }
+        case hostActions.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID: {
+          result = await fileHandler.removeUserImageByImageIdUserId(
+            req.body.input
+          );
+          break;
+        }
+        case hostActions.GET_USER_AUDIOS_BY_USER_ID: {
+          result = await fileHandler.getUserAudiosByUserId(req.body.input);
+          break;
+        }
+        case hostActions.REMOVE_USER_AUDIO_BY_USER_ID_AUDIO_ID: {
+          result = await fileHandler.removeUserAudioByAudioIdUserId(
+            req.body.input
+          );
+          break;
+        }
       }
     }
 
@@ -97,9 +123,10 @@ async function processRequest(req, res) {
   }
 }
 
-app.post("/", (req, res) => {
-  processRequest();
-});
+app.post("/", requestValidator.requestAuthValidation,
+  requestValidator.requestFieldsValidation, (req, res) => {
+    processRequest(req, res);
+  });
 
 app.post(
   "/upload/image",

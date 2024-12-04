@@ -27,7 +27,7 @@
   "map_start_required":"Debes comenzar a ligar para ver el mapa",
   "unknown_error":"Error desconocido",
   "social_network":"Red social", 
-  "network_value":"Valor de tu red",
+  "network_value":"Nombre para compartir esta red",
   "input_value":"Introduce un valor",
   "network_url":"Url de tu red social",
   "network_added_error":"No se ha podido añadir la red",

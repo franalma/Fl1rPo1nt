@@ -74,8 +74,8 @@ const DB_INSTANCES = {
         database_name: process.env.DATABASE_MULT_NAME,
         client: new MongoClient(dbMultUri, { useNewUrlParser: true, useUnifiedTopology: true }),
         collections: {
-            user_images:"user_images",
-            user_audios:"user_audios"
+            user_images_collection:"user_images",
+            user_audios_collection:"user_audios"
         }
     },
     

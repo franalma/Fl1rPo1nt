@@ -32,8 +32,8 @@ class _LoginPageState extends State<LoginPage2> {
   void initState() {
     NavigatorApp(context);
     super.initState();
-    _emailController.text = "t1@g.com";
-    _passwordController.text = "Aa123456\$";
+    // _emailController.text = "t1@g.com";
+    // _passwordController.text = "Aa123456\$";
 
     _tryLoginWithStoredInfo().then((value) {
       Log.d("stored info: $value");
@@ -75,14 +75,20 @@ class _LoginPageState extends State<LoginPage2> {
                     child: Image.asset("assets/img/splash_icon.png")),
               ),
               const SizedBox(height: 50),
-              Text(
-                AppLocalizations.of(context)!.translate("do_login"),
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              GestureDetector(
+                onDoubleTap: () {
+                  _emailController.text = "test2@floiint.com";
+                  _passwordController.text = "Aa123456\$";
+                },
+                child: Text(
+                  AppLocalizations.of(context)!.translate("do_login"),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 25),
               MyTextField(

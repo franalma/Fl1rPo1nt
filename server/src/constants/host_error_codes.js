@@ -46,6 +46,13 @@ const HOST_ERROR_CODES = {
     description: "User blocked",
   },
 
+  USER_ALREADY_IN_YOUR_CONTACTS: {
+    error_code: -401,
+    status: 200,
+    description: "User already in your contatcs",
+  },
+
+
 
   
   NOT_AUTHORIZED:{

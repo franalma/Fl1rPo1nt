@@ -1,12 +1,14 @@
 const logger = require("../../logger/log");
 const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
-const sockerHandler = require("../../sockets/socket_handler");
+
 const userHandler = require("./user_handler");
 const chatroomHandler = require("./../../chatroom/chatroom_handler");
 const { printJson } = require("../../utils/json_utils");
 const { sendMatchLost } = require("../../sockets/socket_handler");
 const { DB_INSTANCES } = require("../../database/databases");
+const { genError, HOST_ERROR_CODES } = require("../../constants/host_error_codes");
+const axios = require('axios');
 
 async function createMatchInternal(input) {
   logger.info("Starts createMatchInternal");
@@ -120,7 +122,7 @@ async function addUserContactByUserIdContactIdQrId(input) {
     let dbResponse = await dbHandler.addDocumentWithClient(
       db.client,
       doc,
-      db.user_contact_collection
+      db.collections.user_contact_collection
     );
 
     if (dbResponse) {
@@ -130,9 +132,9 @@ async function addUserContactByUserIdContactIdQrId(input) {
           input.contact_id
         );
 
+
       result = {
-        status: 200,
-        message: "Contact added sucessfully",
+        ...genError(HOST_ERROR_CODES.NO_ERROR),
         contact_info: doc.contact_info,
         scans_performed: updateUsersInfo.scans_performed,
       };
@@ -141,22 +143,27 @@ async function addUserContactByUserIdContactIdQrId(input) {
         input
       );
 
-      const message = {
+      const payload = {
+        action: "new_contact_request",
+        contact_id: input.contact_id,
+        scanned: updateUsersInfo.scanned,
         requested_user: requestedUserInfo,
+
       };
 
-      sockerHandler.sendMessageToUser(
-        "new_contact_request",
-        input.contact_id,
-        updateUsersInfo.scanned,
-        message
-      );
+      const urlRealTimeHost = `${process.env.CHAT_HOST_PATH}:${process.env.SERVER_PORT_CHAT}${process.env.NEW_CONTACT_ENDPOINT}`;
+      logger.info(`real time url: ${urlRealTimeHost}`);
+      const resNewContact = await axios.post(urlRealTimeHost, payload);
+      printJson(resNewContact);
+      if (resNewContact.status == 200) {
+        return result;
+      }
     }
   } catch (error) {
     logger.info(error);
   }
 
-  return result;
+  return { ...genError(HOST_ERROR_CODES.USER_ALREADY_IN_YOUR_CONTACTS), }
 }
 
 async function getUserContactsByUserId(input) {

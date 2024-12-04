@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
+import 'package:app/model/HostErrorCode.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:http/http.dart' as http;
 
 class HostPutUserContactRequest extends BaseRequest {
-  Future<bool> run(String userId, String userQrId, String contactId,
+  Future<HostErrorCode> run(String userId, String userQrId, String contactId,
       String contactQrId, String userFlirtId, Location location) async {
     try {
       Log.d("Start HostPutUserContactRequest");
@@ -32,12 +33,10 @@ class HostPutUserContactRequest extends BaseRequest {
       var response =
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
-      if (response.statusCode == 200) {
-        return true;
-      }
+      return HostErrorCode.fromJson(jsonDecode(response.body));
     } catch (error) {
       Log.d(error.toString());
     }
-    return false;
+    return HostErrorCode.undefined();
   }
 }
