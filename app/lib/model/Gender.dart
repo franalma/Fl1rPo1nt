@@ -16,4 +16,8 @@ class Gender{
     }
     return Gender.empty(); 
   }
+
+  Map<String, dynamic> toJson() {
+    return {"id": id, "value": name, "color": color};
+  }
 }

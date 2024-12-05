@@ -10,7 +10,7 @@ class HostGetUserPublicProfileResponse {
   HostGetUserPublicProfileResponse.empty();
 
   factory HostGetUserPublicProfileResponse.fromJson(Map<String, dynamic> json) {
-    Log.d("HostGetUserPublicProfileResponse.fromJson "+ jsonEncode(json));
+    Log.d("HostGetUserPublicProfileResponse.fromJson ${jsonEncode(json)}");
     var userProfile = UserPublicProfile.fromJson(json);
     return HostGetUserPublicProfileResponse(userProfile);
   }

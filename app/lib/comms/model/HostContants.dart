@@ -82,8 +82,8 @@ class HostApiActions {
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 
-  static final HostActionsItem getUserByDistanceFromPoint = HostActionsItem(
-      "GET_USER_BY_DISTANCE_FROM_POINT",
+  static final HostActionsItem getActiveFlirtsFromPointAndTendency = HostActionsItem(
+      "GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY",
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 

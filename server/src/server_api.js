@@ -8,15 +8,10 @@ const userHandler = require("./model/user/user_handler");
 const contactHandler = require("./model/user/mach_handler");
 const qrHandler = require("./model/qr/qr_handler");
 const generalValuesHandler = require("./model/general_values/general_values_handler");
-const bulkHandler = require("./model/bulk/bulk_handler");
-const bulkHostActions = require("./constants/bulk_host_actions");
 const flirtHandler = require("./model/flirt/flirt_handler");
-const socketHandler = require("./sockets/socket_handler");
 const http = require("http");
 const fileHandler = require("./files/file_handler");
 const hobbiesHandler = require("./model/hobbies/hobbies_handler");
-// const nodemailer = require("nodemailer");
-// const mailHandler = require("./mail/mail_handler");
 const chatroomHandler = require("./chatroom/chatroom_handler");
 const path = require("path");
 const { printJson } = require("./utils/json_utils");
@@ -28,10 +23,9 @@ const app = express();
 app.use(express.json());
 const port = process.env.SERVER_PORT_API;
 const server = http.createServer(app);
-// socketHandler.socketInit(server);
 
 async function processRequest(req, res) {
-  logger.info("processRequest");
+  logger.info("processRequest:"+JSON.stringify(req.body));
 
   try {
     let result = requestValidator.requestDoValidation(req);
@@ -41,14 +35,14 @@ async function processRequest(req, res) {
       const { action } = req.body;
       logger.info(action);
       switch (action) {
-        case hostActions.PUT_USER_QR_BY_USER_ID: {
-          result = await qrHandler.addUserQrByUserId(req.body.input);
-          break;
-        }
-        case hostActions.DELETE_USER_QR_BY_USER_ID_QR_ID: {
-          result = await qrHandler.removeUserQrByUserIdQrId(req.body.input);
-          break;
-        }
+        // case hostActions.PUT_USER_QR_BY_USER_ID: {
+        //   result = await qrHandler.addUserQrByUserId(req.body.input);
+        //   break;
+        // }
+        // case hostActions.DELETE_USER_QR_BY_USER_ID_QR_ID: {
+        //   result = await qrHandler.removeUserQrByUserIdQrId(req.body.input);
+        //   break;
+        // }
         case hostActions.GET_USER_QR_BY_USER_ID: {
           result = await qrHandler.getUserQrByUserId(req.body.input);
           break;
@@ -75,33 +69,21 @@ async function processRequest(req, res) {
           );
           break;
         }
-        // case hostActions.REMOVE_USER_CONTACT_BY_USER_ID_CONTACT_ID: {
-        //   result = await contactHandler.removeUserContactByUserIdContactId(
-        //     req.body.input
-        //   );
-        //   break;
-        // }
+      
         case hostActions.GET_USER_CONTACTS_BY_USER_ID: {
           result = await contactHandler.getUserContactsByUserId(req.body.input);
           break;
         }
-        case hostActions.GET_USER_BY_DISTANCE_FROM_POINT: {
-          result = await userHandler.getUsersByDistanceFromPoint(
-            req.body.input
-          );
-          break;
-        }
-        case hostActions.UPDATE_USER_NETWORK_BY_USER_ID: {
-          result = await userHandler.updateUserNetworksByUserId(req.body.input);
-          break;
-        }
-
-        // case hostActions.UPDATE_USER_SEARCHING_RANGE_BY_USER_ID: {
-        //   result = await userHandler.updateUserSearchingRangeByUserId(
+        // case hostActions.GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY: {
+        //   result = await userHandler.getUsersByDistanceFromPoint(
         //     req.body.input
         //   );
         //   break;
         // }
+        case hostActions.UPDATE_USER_NETWORK_BY_USER_ID: {
+          result = await userHandler.updateUserNetworksByUserId(req.body.input);
+          break;
+        }
 
         case hostActions.GET_ALL_SEXUAL_ORIENTATIONS_RELATIONSHIPS: {
           result =
@@ -145,7 +127,7 @@ async function processRequest(req, res) {
         //   result = await fileHandler.getUserImagesByUserId(req.body.input);
         //   break;
         // }
-    
+
         case hostActions.UPDATE_USER_BIOGRAPHY_BY_USER_ID: {
           result = await userHandler.updateUserBiographyByUserId(
             req.body.input
@@ -167,7 +149,7 @@ async function processRequest(req, res) {
           break;
         }
 
-       
+
 
         case hostActions.UPDATE_USER_DEFAULT_QR_BY_USER_ID: {
           result = await userHandler.updateUserDefaultQrByUserId(
@@ -200,7 +182,7 @@ async function processRequest(req, res) {
           break;
         }
 
-       
+
 
         case hostActions.DISABLE_MATCH_BY_MATCH_ID_USER_ID: {
           result = await contactHandler.diableMatchByMatchIdUserId(

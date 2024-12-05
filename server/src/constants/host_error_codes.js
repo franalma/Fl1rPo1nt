@@ -40,6 +40,13 @@ const HOST_ERROR_CODES = {
     description: "User does not exist",
   },
 
+  FLIRT_ACTIVE_ISSUE: {
+    error_code: -105,
+    status: 200,
+    description: "There is one active flirt already",
+  },
+
+
   USER_BLOCKED: {
     error_code: -105,
     status: 200,
@@ -51,6 +58,8 @@ const HOST_ERROR_CODES = {
     status: 200,
     description: "User already in your contatcs",
   },
+
+
 
 
 

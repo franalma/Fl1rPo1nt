@@ -5,11 +5,30 @@ const { DB_INSTANCES } = require("../../database/databases");
 const {
   HOST_ERROR_CODES,
   getError,
+  genError,
 } = require("../../constants/host_error_codes");
+const { printJson } = require("../../utils/json_utils");
 const FLIRT_ACTIVE = 1;
 const FLIRT_INACTIVE = 0;
-// const flirtsCollection = "user_flirts";
-// const userColletion = "users";
+
+
+function createInternalUserCoordinates(input) {
+  logger.info("Starts createInternalUserCoordinates");
+  try {
+    const doc = {
+      id: uuidv4(),
+      user_id: input.user_id,
+      flirt_id: input.flirt_id,
+      created_at: Date.now(),
+      location: input.location
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+  return null;
+}
+
+
 
 async function putUserFlirts(input) {
   logger.info("Starts putUserFlirts");
@@ -39,10 +58,7 @@ async function putUserFlirts(input) {
         let flirt = {
           flirt_id: uuidv4(),
           user_id: input.user_id,
-          relationship_id: input.relationship_id,
-          relationship_name: input.relationship_name,
-          sex_alternative_id: input.orientation_id,
-          sex_alternative_name: input.orientation_name,
+          user_interests: input.user_interests,
           location: {
             type: "Point",
             coordinates: [input.location.longitude, input.location.latitude],
@@ -59,8 +75,14 @@ async function putUserFlirts(input) {
           db.collections.flirts_collection
         );
         if (dbResponse) {
+          const userCoordinates = createInternalUserCoordinates();
+
+          if (userCoordinates) {
+            await dbHandler.addDocumentWithClient(db.client, userCoordinates, db.collections.user_coordinates_collection)
+          }
+
           result = {
-            status: 200,
+            ...genError(HOST_ERROR_CODES.NO_ERROR),
             message: "Flirt registered successfully",
             response: {
               flirt_id: flirt.flirt_id,
@@ -72,8 +94,8 @@ async function putUserFlirts(input) {
         }
       } else {
         result = {
-          status: 501,
-          message: "There is another flirt active",
+          ...genError(HOST_ERROR_CODES.FLIRT_ACTIVE_ISSUE),
+          ...checkExist[0].id
         };
       }
     }
@@ -97,10 +119,9 @@ async function udpateUserFlirts(input) {
     );
 
     if (!checkExist) {
-      
+
       result = {
-        status: 500,
-        message: "User does not exists",
+        ...genError(HOST_ERROR_CODES.USER_NOT_EXIST)
       };
     } else {
       let filters = {
@@ -127,8 +148,7 @@ async function udpateUserFlirts(input) {
       );
       if (dbResponse) {
         result = {
-          status: 200,
-          message: "Flirt updated successfully",
+          ...genError(HOST_ERROR_CODES.NO_ERROR),
           response: {
             flirt_id: newDoc.flirt_id,
             updated_at: newDoc.updated_at,
@@ -136,8 +156,7 @@ async function udpateUserFlirts(input) {
         };
       } else {
         result = {
-          status: 501,
-          message: "Flirt update failed",
+          ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR)
         };
       }
     }
@@ -211,9 +230,15 @@ async function getActiveFlirtsFromPointAndTendency(input) {
           $maxDistance: input.radio,
         },
       },
-      status: 1,
-      sex_alternative_id: input.sex_alternative_id,
+      status: FLIRT_ACTIVE,
+
     };
+
+    if (input.filters_status == 1) {
+      filters.sex_alternative_id = input.sex_alternative_id;
+      filters.relationship_id = input.relationship_id;
+      filters.gender_preference_id = input.gender_preference_id;
+    }
 
     let dbResponse = await dbHandler.findWithFiltersAndClient(
       db.client,
@@ -221,27 +246,29 @@ async function getActiveFlirtsFromPointAndTendency(input) {
       db.collections.flirts_collection
     );
 
-    result.flirts = [];
+    let flirts = [];
+    let filtersUsers = [];
 
     if (dbResponse) {
-      result.status = 200;
-
       for (var item of dbResponse) {
         let flirt = {
           user_id: item.user_id,
           flirt_id: item.flirt_id,
-          location: item.location,
+          location: [item.location.coordinates[1], item.location.coordinates[0]],
           relationship_name: item.relationship_name,
           orientation_name: item.orientation_name,
         };
-        result.flirts.push(flirt);
+        flirts.push(flirt);
       }
+      result = { ...genError(HOST_ERROR_CODES.NO_ERROR), flirts };
+      printJson(result);
+      return result;
     }
   } catch (error) {
     logger.info(error);
   }
 
-  return result;
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
 }
 
 module.exports = {

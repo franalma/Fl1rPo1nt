@@ -1,13 +1,23 @@
-class HostGetPeopleArroundResponse {
-  int userId = -1;
-  double latitude = -1;
-  double longitude = -1;
+import 'package:app/model/HostErrorCode.dart';
+import 'package:app/model/NearByFlirt.dart';
+import 'package:app/ui/utils/Log.dart';
 
-  HostGetPeopleArroundResponse(this.userId, this.latitude, this.longitude);
+class HostGetPeopleArroundResponse {
+  HostErrorCode? errorCode;
+  List<NearByFlirt>? flirts;
+
+  HostGetPeopleArroundResponse(this.errorCode, this.flirts);
   HostGetPeopleArroundResponse.empty();
 
   factory HostGetPeopleArroundResponse.fromJson(Map<String, dynamic> json) {
-    return HostGetPeopleArroundResponse(
-        json["user_id"], json["location"][0], json["location"][1]);
+    try {
+      var errorCode = HostErrorCode.fromJson(json);
+      var values =
+          (json["flirts"] as List).map((e) => NearByFlirt.fromJson(e)).toList();
+      return HostGetPeopleArroundResponse(errorCode, values);
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
+    return HostGetPeopleArroundResponse.empty();
   }
 }

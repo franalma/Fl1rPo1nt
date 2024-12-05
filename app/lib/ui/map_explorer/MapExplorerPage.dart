@@ -3,7 +3,11 @@ import 'dart:ui' as ui;
 import 'dart:ui';
 
 import 'package:app/comms/model/request/flirt/HostGetPeopleArroundRequest.dart';
+import 'package:app/comms/model/request/user/profile/HostGetUserPublicProfile.dart';
+import 'package:app/model/HostErrorCode.dart';
+import 'package:app/model/NearByFlirt.dart';
 import 'package:app/model/Session.dart';
+import 'package:app/model/User.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
@@ -27,6 +31,10 @@ class _MapExplorerController extends State<MapExplorerController> {
   final Set<Marker> _markers = {};
   BitmapDescriptor? bitmapDescriptor;
   bool _isShowInfoWindow = false;
+  final User _user = Session.user;
+  bool _filtersEnabled = true;
+  late String _imageUrl;
+  late String _userName;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -46,13 +54,30 @@ class _MapExplorerController extends State<MapExplorerController> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: FlexibleAppBar(),
+        actions: [
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_filtersEnabled) {
+                        _filtersEnabled = false;
+                      } else {
+                        _filtersEnabled = true;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.filter_alt))
+            ],
+          )
+        ],
       ),
       body: Stack(children: [
         GoogleMap(
           onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
             target: widget._location,
-            zoom: 11.0,
+            zoom: 18.0,
           ),
           myLocationEnabled: true,
           markers: _markers,
@@ -75,11 +100,11 @@ class _MapExplorerController extends State<MapExplorerController> {
         children: [
           Container(
             width: 200,
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
                   blurRadius: 5,
@@ -89,16 +114,41 @@ class _MapExplorerController extends State<MapExplorerController> {
             child: Column(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://images.ctfassets.net/denf86kkcx7r/4IPlg4Qazd4sFRuCUHIJ1T/f6c71da7eec727babcd554d843a528b8/gatocomuneuropeo-97?fm=webp&w=913'),
+                  backgroundImage: NetworkImage(_imageUrl),
                   radius: 40,
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  'San Francisco',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  _userName,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                Text('A beautiful city!'),
+                Container(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: 200,
+                    
+                    child: Row(
+                      children: [
+                        Text(
+                          "40",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          ",Madrid",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(FontAwesomeIcons.heartCircleBolt),
+                  color: Colors.red,
+                  iconSize: 30,
+                )
+                // Text('A beautiful city!'),
               ],
             ),
           ),
@@ -139,15 +189,14 @@ class _MapExplorerController extends State<MapExplorerController> {
     const Size size = Size(100, 100); // Define the icon size
 
     // Create a Paint for background (optional, for visibility)
-    final Paint paint = Paint()..color = const ui.Color.fromARGB(0, 207, 11, 11);
+    final Paint paint = Paint()
+      ..color = const ui.Color.fromARGB(0, 207, 11, 11);
     canvas.drawRect(Rect.fromLTWH(0.0, 0.0, size.width, size.height), paint);
 
     // Draw the FontAwesomeIcon widget
     const Icon icon = Icon(
       FontAwesomeIcons.solidCircle,
       size: 80.0, // Icon size
-      
-      
     );
     // var stack = twoColorsIcon();
     // Use a painter to draw the icon
@@ -159,7 +208,6 @@ class _MapExplorerController extends State<MapExplorerController> {
           fontSize: icon.size,
           fontFamily: icon.icon!.fontFamily,
           package: icon.icon!.fontPackage,
-          
           color: ui.Color.fromARGB(255, 62, 77, 247),
         ),
       ),
@@ -179,72 +227,43 @@ class _MapExplorerController extends State<MapExplorerController> {
     return BitmapDescriptor.fromBytes(byteData!.buffer.asUint8List());
   }
 
-  void _addMarker(LatLng position, String markerId) {
+  Future<void> _addMarker(LatLng position, NearByFlirt flirtNearBy) async {
     final marker = Marker(
-        markerId: MarkerId(markerId),
+        markerId: MarkerId(flirtNearBy.flirtId!),
         position: position,
-        onTap: () {
-          setState(() {
-            _isShowInfoWindow = true;
+        onTap: () async {
+          HostGetUserPublicProfile().run(flirtNearBy.userId!).then((value) {
+            _userName = value.profile!.name!;
+            _imageUrl = value.profile!.profileImage!;
+            setState(() {
+              _isShowInfoWindow = true;
+            });
           });
         },
-        // icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
         icon: bitmapDescriptor!);
     setState(() {
       _markers.add(marker);
     });
   }
 
-  Widget showInfoWindowWithPicture() {
-    return Positioned(
-      top: MediaQuery.of(context).size.height * 0.4, // Adjust the position
-      left: MediaQuery.of(context).size.width * 0.3, // Adjust the position
-      child: Column(
-        children: [
-          Container(
-            width: 200,
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 5,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Image.network(
-                  'https://upload.wikimedia.org/wikipedia/commons/6/66/San_Francisco_skyline.jpg',
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'San Francisco',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text('A beautiful city!'),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _fetchFromHost() async {
     Log.d("Starts");
     Location location = Session.location!;
     HostGetPeopleArroundRequest()
-        .run(location.lat, location.lon, 5000)
+        .run(
+            Session.currentFlirt!.id,
+            _user.sexAlternatives,
+            _user.relationShip,
+            _user.genderInterest,
+            location.lat,
+            location.lon,
+            _user.radioVisibility,
+            _filtersEnabled)
         .then((value) {
-      for (var item in value) {
-        Log.d("lat: ${item.latitude}  lon:${item.longitude}");
-        _addMarker(
-            LatLng(item.latitude, item.longitude), item.userId.toString());
+      if (value.errorCode!.code == HostErrorCodesValue.NoError.code) {
+        for (var item in value.flirts!) {
+          _addMarker(item.latLng!, item);
+        }
       }
     });
   }

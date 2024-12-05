@@ -17,6 +17,10 @@ class RelationShip {
     }
     return RelationShip.empty();
   }
+
+  Map<String, dynamic> toJson() {
+    return {"id": id, "value": value, "color": color};
+  }
 }
 
 class SexAlternative {
@@ -26,6 +30,9 @@ class SexAlternative {
 
   SexAlternative(this.id, this.name, this.color);
   SexAlternative.empty();
+  Map<String, dynamic> toJson() {
+    return {"id": id, "value": name, "color": color};
+  }
 
   factory SexAlternative.load(Map<String, dynamic> values) {
     try {
@@ -36,6 +43,4 @@ class SexAlternative {
     }
     return SexAlternative.empty();
   }
-
-  
 }

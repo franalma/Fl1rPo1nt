@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
 const { printJson } = require("../../utils/json_utils");
 const { getUserQrByUserId } = require("../qr/qr_handler");
-// const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/file_handler");
+const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/file_handler");
 const { genError, HOST_ERROR_CODES } = require("./../../constants/host_error_codes")
 
 const databases = require("../../database/databases");
@@ -163,45 +163,45 @@ async function getUserInfoByUserId(input) {
   return result;
 }
 
-async function getUsersByDistanceFromPoint(input) {
-  logger.info("Starts getUsersByDistanceFromPoint: ");
-  let result = {};
+// async function getUsersByDistanceFromPoint(input) {
+//   logger.info("Starts getUsersByDistanceFromPoint: ");
+//   let result = {};
 
-  try {
-    const db = DB_INSTANCES.DB_API;
-    const filters = {
-      location: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [input.longitude, input.latitude],
-          },
-          $maxDistance: input.radio,
-        },
-      },
-    };
+//   try {
+//     const db = DB_INSTANCES.DB_API;
+//     const filters = {
+//       location: {
+//         $near: {
+//           $geometry: {
+//             type: "Point",
+//             coordinates: [input.longitude, input.latitude],
+//           },
+//           $maxDistance: input.radio,
+//         },
+//       },
+//     };
 
-    const dbResponse = await dbHandler.findWithFiltersAndClient(
-      db.client,
-      filters,
-      db.collections.user_coordinates_collection
-    );
-    if (dbResponse) {
-      result.status = 200;
-      result.flirts = [];
-      logger.info("items: " + JSON.stringify(dbResponse));
-      for (let item of dbResponse) {
-        result.flirts.push(createUserLocationExternal(item));
-      }
-    } else {
-      result.status = 500;
-    }
+//     const dbResponse = await dbHandler.findWithFiltersAndClient(
+//       db.client,
+//       filters,
+//       db.collections.user_coordinates_collection
+//     );
+//     if (dbResponse) {
+//       result.status = 200;
+//       result.flirts = [];
+//       logger.info("items: " + JSON.stringify(dbResponse));
+//       for (let item of dbResponse) {
+//         result.flirts.push(createUserLocationExternal(item));
+//       }
+//     } else {
+//       result.status = 500;
+//     }
 
-  } catch (error) {
-    logger.info(error);
-  }
-  return result;
-}
+//   } catch (error) {
+//     logger.info(error);
+//   }
+//   return result;
+// }
 
 async function updateUserNetworksByUserId(input) {
   logger.info("Start update");
@@ -600,7 +600,7 @@ async function getUserPublicProfileByUserId(input) {
 
 module.exports = {
   registerUser,
-  getUsersByDistanceFromPoint,
+  // getUsersByDistanceFromPoint,
   updateUserNetworksByUserId,
   updateUserSearchingRangeByUserId,
   updateUserInterestsByUserId,

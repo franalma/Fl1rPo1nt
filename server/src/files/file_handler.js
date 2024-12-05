@@ -224,10 +224,10 @@ async function getSecureSharedImagesUrlByUserId(input) {
 async function getImageByUserIdImageId(input) {
   logger.info("Starts getImageByUserIdImageId:" + JSON.stringify(input));
   try {
-    const db = DB_INSTANCES.DB_API;
+    const db = DB_INSTANCES.DB_MULT;
     const filters = { $or: input.values };
     logger.info(JSON.stringify(filters));
-    const dbFiles = await dbHandler.findAllWithClient(
+    const dbFiles = await dbHandler.findWithFiltersAndClient(
       db.client,
       filters,
       db.collections.user_images_collection

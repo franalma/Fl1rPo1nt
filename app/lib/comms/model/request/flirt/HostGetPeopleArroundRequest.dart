@@ -3,31 +3,49 @@ import 'dart:convert';
 import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
 import 'package:app/comms/model/response/HostGetPeopleArroundResponse.dart';
+import 'package:app/model/Gender.dart';
+import 'package:app/model/UserInterest.dart';
 import 'package:app/ui/utils/Log.dart';
 
 class HostGetPeopleArroundRequest extends BaseRequest {
-  Future<List<HostGetPeopleArroundResponse>> run(
-      double latitude, double longitude, int radio) async {
+  Future<HostGetPeopleArroundResponse> run(
+      String flirtId,
+      SexAlternative sexAlternative,
+      RelationShip relationShip,
+      Gender genderInterest,
+      double latitude,
+      double longitude,
+      double radio,
+      bool enableFilters) async {
     Log.d("Starts HostGetPeopleArroundRequest.run");
     try {
-      HostActionsItem option = HostApiActions.getUserByDistanceFromPoint;
+      HostActionsItem option =
+          HostApiActions.getActiveFlirtsFromPointAndTendency;
       Uri url = Uri.parse(option.build());
       Map<String, dynamic> mapBody = {
         "action": option.action,
-        "input": {"longitude": longitude, "latitude": latitude, "radio": radio}
+        "input": {
+          "flirt_id":flirtId,
+          "longitude": longitude,
+          "latitude": latitude,
+          "sex_alternative": sexAlternative.toJson(),
+          "relationship": relationShip.toJson(),
+          "gender_interest": genderInterest.toJson(),
+          "radio": radio,
+          "filters_enabled": false
+        }
       };
 
       var response = await send(mapBody, url);
+      
       if (response.statusCode == 200) {
-        List<dynamic> value = jsonDecode(response.body)["flirts"];
+        var value = jsonDecode(response.body);
         Log.d(value.toString());
-        return value
-            .map((qrInfo) => HostGetPeopleArroundResponse.fromJson(qrInfo))
-            .toList();
+        return HostGetPeopleArroundResponse.fromJson(value); 
       }
     } catch (error) {
       Log.d(error.toString());
     }
-    return [];
+    return HostGetPeopleArroundResponse.empty();
   }
 }
