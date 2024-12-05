@@ -39,7 +39,7 @@ class _UserStatePage extends State<UserStatePage> {
   void initState() {
     _sexAlternativeSelected = user.sexAlternatives;
     _relationshipSelected = user.relationShip;
-     _genderSelected = user.genderInterest;
+    _genderSelected = user.genderInterest;
 
     _fetchFromHost();
     super.initState();
@@ -50,10 +50,12 @@ class _UserStatePage extends State<UserStatePage> {
     return Scaffold(
         appBar: AppBar(
           flexibleSpace: FlexibleAppBar(),
-          actions: [
-            IconButton(
-                onPressed: () => _onSaveData(), icon: const Icon(Icons.save))
-          ],
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_outlined),
+            onPressed: () {
+              _onSaveData();
+            },
+          ),
         ),
         body: _isLoading ? _buildLoading() : _buildBody());
   }
@@ -134,7 +136,7 @@ class _UserStatePage extends State<UserStatePage> {
         ),
         trailing: const Icon(Icons.arrow_forward_ios_sharp),
         title: const Text("Género que buscas"),
-        subtitle: Text(_genderSelected.name?? ""),
+        subtitle: Text(_genderSelected.name ?? ""),
         onTap: () async {
           var selected =
               await NavigatorApp.pushAndWait(UserGenderSelection(), context)
@@ -172,7 +174,8 @@ class _UserStatePage extends State<UserStatePage> {
 
   Future<void> _onSaveData() async {
     HostUpdateUserInterestRequest()
-        .run(user.userId, _relationshipSelected, _sexAlternativeSelected, _genderSelected)
+        .run(user.userId, _relationshipSelected, _sexAlternativeSelected,
+            _genderSelected)
         .then((value) {
       if (!value) {
         FlutterToast()
@@ -180,10 +183,9 @@ class _UserStatePage extends State<UserStatePage> {
       } else {
         user.relationShip = _relationshipSelected;
         user.sexAlternatives = _sexAlternativeSelected;
-        user.genderInterest = _genderSelected; 
-        
-        FlutterToast().showToast("Datos actualizados");
+        user.genderInterest = _genderSelected;
       }
+      NavigatorApp.pop(context);
     });
   }
 }

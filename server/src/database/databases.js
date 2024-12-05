@@ -66,9 +66,9 @@ const DB_INSTANCES = {
     DB_CHAT: {
         database_name: process.env.DATABASE_CHAT_NAME,
         client: new MongoClient(dbChatUri, { useNewUrlParser: true, useUnifiedTopology: true }),
-        // collections: {
-        //     chat_collection: "users",    
-        // }
+        collections: {
+            chatroom_collection: "chatrooms",    
+        }
     },
     DB_MULT: {
         database_name: process.env.DATABASE_MULT_NAME,

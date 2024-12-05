@@ -68,6 +68,7 @@ class _LoginPageState extends State<LoginPage2> {
               GestureDetector(
                 onDoubleTap: () {
                   _emailController.text = "test@floiint.com";
+                  _passwordController.text = "Aa123456\$";
                 },
                 child: SizedBox(
                     height: 150,

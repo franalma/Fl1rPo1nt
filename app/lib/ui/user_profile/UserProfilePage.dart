@@ -133,7 +133,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                 const Divider(),
                 ListTile(
                     title:
-                        Text("Mi estado", style: Styles.rowCellTitleTextStyle),
+                        Text("Mis gustos", style: Styles.rowCellTitleTextStyle),
                     trailing: const Icon(
                         Icons.arrow_forward_ios), // Add a left arrow icon
                     onTap: () => NavigatorApp.push(UserStatePage(), context)),

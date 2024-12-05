@@ -39,7 +39,12 @@ class _HomeState extends State<Home> {
     super.initState();
     Session.socketSubscription?.onNewContactRequested =
         _handleNewContactRequest;
-    _fetchFlirtStateFromHost();
+
+    if (!Session.flirtAlreadyLoaded) {
+      _fetchFlirtStateFromHost();
+    } else {
+      _loadLocalFlirt();
+    }
 
     _googleAds = GoogleAds();
     _googleAds!.loadBanner((value) {
@@ -53,7 +58,9 @@ class _HomeState extends State<Home> {
       var map = jsonDecode(data);
       Map<String, dynamic> message = map["message"]["requested_user"];
       String name = message["name"] ?? "Desconocid@";
-      String urlImage = message["profile_image"] is Map ?  message["profile_image"]["url"] :"";  
+      String urlImage = message["profile_image"] is Map
+          ? message["profile_image"]["url"]
+          : "";
       AlertDialogs().showCustomModalDialog(context, name, urlImage);
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
@@ -245,20 +252,18 @@ class _HomeState extends State<Home> {
     LocationHandler handler = LocationHandler(onErrorLocationHandler);
     Location location = await handler.getCurrentLocation();
 
-    HostGetUserFlirtsRequest().run(Session.user.userId, 1).then((value) {
-      if (value.flirts != null && value.flirts!.isNotEmpty) {
-        Session.user.isFlirting = true;
-        _sexAltColor =
-            Color(CommonUtils.colorToInt(user.sexAlternatives.color));
-        _relAltColor = Color(CommonUtils.colorToInt(user.relationShip.color));
-
-        if (location.lat == 0 && location.lon == 0) {
-          FlutterToast()
-              .showToast("No ha sido posible obtener la localización");
-          setState(() {
-            _isLoading = false;
-          });
-        } else {
+    if (location.lat == 0 && location.lon == 0) {
+      FlutterToast().showToast("No ha sido posible obtener la localización");
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      HostGetUserFlirtsRequest().run(Session.user.userId, 1).then((value) {
+        if (value.flirts != null && value.flirts!.isNotEmpty) {
+          Session.user.isFlirting = true;
+          _sexAltColor =
+              Color(CommonUtils.colorToInt(user.sexAlternatives.color));
+          _relAltColor = Color(CommonUtils.colorToInt(user.relationShip.color));
           Session.location = location;
           var flirt = value.flirts?[0];
           Session.currentFlirt = flirt;
@@ -266,19 +271,34 @@ class _HomeState extends State<Home> {
             _isEnabled = true;
             _isLoading = false;
           });
+        } else {
+          setState(() {
+            _isLoading = false;
+            _isEnabled = false;
+          });
         }
-      } else {
-        setState(() {
-          _isLoading = false;
-          _isEnabled = false;
-        });
-      }
+        Session.flirtAlreadyLoaded = true;
+      });
+    }
+  }
+
+  void _loadLocalFlirt() async {
+    Log.d("Starts _loadLocalFlirt");
+    if (Session.user.isFlirting) {
+      _isEnabled = true;
+      _sexAltColor = Color(CommonUtils.colorToInt(user.sexAlternatives.color));
+      _relAltColor = Color(CommonUtils.colorToInt(user.relationShip.color));
+    } else {
+      _isEnabled = false;
+    }
+    setState(() {
+      _isLoading = false;
     });
   }
 
   void _onStartFlirt() async {
-    if (user.sexAlternatives.color == null ||
-        user.sexAlternatives.color == null) {
+    if (user.sexAlternatives.color.isEmpty ||
+        user.sexAlternatives.color.isEmpty) {
       FlutterToast()
           .showToast("Debes indicar tus preferencias antes de comenzar");
       return;

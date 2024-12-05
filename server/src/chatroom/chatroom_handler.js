@@ -1,17 +1,15 @@
-const chatroomCollection = "chatroom_collection";
-const userContactCollection = "users_matchs";
-
-
 const dbHandler = require("../database/database_handler");
 const logger = require("../logger/log");
 const { HOST_ERROR_CODES, genError } = require("../constants/host_error_codes");
+const { DB_INSTANCES } = require("../database/databases");
 
 async function getMatchByMatchIdInternal(input) {
   try {
     logger.info("Starts getMatchByMatchIdInternal");
     const matchId = input.match_id;
     const filter = { id: matchId };
-    const dbResponse = await dbHandler.findWithFilters(filter, userContactCollection);
+    const db = DB_INSTANCES.DB_API;
+    const dbResponse = await dbHandler.findWithFiltersAndClient(db.client, filter, db.collections.user_contact_collection);
 
     if (dbResponse && (dbResponse.length > 0)) {
       let info = dbResponse[0];
@@ -19,11 +17,9 @@ async function getMatchByMatchIdInternal(input) {
         ...genError(HOST_ERROR_CODES.NO_ERROR),
         ...info
       }
-      result.status = 200;
       logger.info("Match complete: " + JSON.stringify(result));
       return result;
     }
-
   }
   catch (error) {
     printJson(error);
@@ -39,8 +35,11 @@ async function putMessageInChatroomByMatchId(input) {
     const receiverId = input.receiver_id;
     const message = input.message;
     const send_at = input.sent_at;
-    const currentCollectionSender = chatroomCollection + "-" + matchId + "-" + senderId.substring(0, 5);
-    const currentCollectionReceiver = chatroomCollection + "-" + matchId + "-" + receiverId.substring(0, 5);
+    const db = DB_INSTANCES.DB_CHAT;
+
+
+    const currentCollectionSender = db.collections.chatroom_collection + "-" + matchId + "-" + senderId.substring(0, 5);
+    const currentCollectionReceiver = db.collections.chatroom_collection + "-" + matchId + "-" + receiverId.substring(0, 5);
     const matchInfo = await getMatchByMatchIdInternal(input);
     if (matchInfo.active == 1) {
       const payload = {
@@ -52,8 +51,8 @@ async function putMessageInChatroomByMatchId(input) {
 
       };
 
-      await dbHandler.addDocument(payload, currentCollectionSender);
-      await dbHandler.addDocument(payload, currentCollectionReceiver);
+      await dbHandler.addDocumentWithClient(db.client, payload, currentCollectionSender);
+      await dbHandler.addDocumentWithClient(db.client, payload, currentCollectionReceiver);
       return { ...genError(HOST_ERROR_CODES.NO_ERROR) };
     } else {
       return { ...genError(HOST_ERROR_CODES.NOT_AUTHORIZED) };
@@ -70,11 +69,12 @@ async function getMessagesInChatroomByMatchId(input) {
   try {
     const matchId = input.match_id;
     const userId = input.user_id;
-    const currentCollection = chatroomCollection + "-" + matchId + "-" + userId.substring(0, 5);
-    const dbMessages = await dbHandler.findAll(currentCollection);
-
+    const db = DB_INSTANCES.DB_CHAT;
+    const currentCollection = db.collections.chatroom_collection + "-" + matchId + "-" + userId.substring(0, 5);
+    const dbMessages = await dbHandler.findAllWithClient(db.client, currentCollection);
+    let values = [];
     for (let item of dbMessages) {
-      let values = [];
+      
       values.push({
         match_id: item.match_id,
         sender_id: item.sender_id,
@@ -96,14 +96,15 @@ async function deleteChatRoomByMatchIdUserId(input) {
   try {
     const matchId = input.match_id;
     const userId = input.user_id;
-    const currentCollection = chatroomCollection + "-" + matchId + "-" + userId.substring(0, 5);
-    await dbHandler.deleteCollection(currentCollection);
+    const db = DB_INSTANCES.DB_CHAT;
+    const currentCollection = db.collections.chatroom_collection + "-" + matchId + "-" + userId.substring(0, 5);
+    await dbHandler.deleteCollectionWithClient(db.client, currentCollection);
 
     return { ...genError(HOST_ERROR_CODES.NO_ERROR) };
   } catch (error) {
     logger.info(error);
   }
-  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };  
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
 }
 
 
@@ -113,17 +114,18 @@ async function removeChatroomForMatch(match) {
     const matchId = match.id;
     const user1 = match.users[0].user_id;
     const user2 = match.users[1].user_id;
-    const currentCollectionUser1 = chatroomCollection + "-" + matchId + "-" + user1.substring(0, 5);
-    const currentCollectionUser2 = chatroomCollection + "-" + matchId + "-" + user2.substring(0, 5);
+    const db = DB_INSTANCES.DB_CHAT;
+    const currentCollectionUser1 = db.collections.chatroom_collection + "-" + matchId + "-" + user1.substring(0, 5);
+    const currentCollectionUser2 = db.collections.chatroom_collection + "-" + matchId + "-" + user2.substring(0, 5);
 
-    await dbHandler.deleteCollection(currentCollectionUser1);
-    await dbHandler.deleteCollection(currentCollectionUser2);
-    return 0;
+    await dbHandler.deleteCollectionWithClient(db.client, currentCollectionUser1);
+    await dbHandler.deleteCollectionWithClient(db.client, currentCollectionUser2);
+    return { ...genError(HOST_ERROR_CODES.NO_ERROR) };
 
   } catch (error) {
     logger.info(error);
   }
-  return -1;
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
 }
 
 

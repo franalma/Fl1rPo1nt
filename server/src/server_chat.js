@@ -32,6 +32,8 @@ const validationRules = {
 
 function requestFieldsValidation(req, res, next) {
     logger.info("custom requestFieldsValidation");
+
+    let validationSet = [];
     const { action } = req.body;
     switch (action) {
         case hostActions.PUT_MESSAGE_TO_USER_WITH_USER_ID: {
@@ -45,6 +47,7 @@ function requestFieldsValidation(req, res, next) {
         }
         case hostActions.DELETE_CHATROOM_FROM_MATCH_ID_USER_ID: {
             validationSet = validationRules.DELETE_CHATROOM_FROM_MATCH_ID_USER_ID_RULES
+
             break;
         }
     }

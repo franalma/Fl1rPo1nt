@@ -16,7 +16,7 @@ async function addBulkCoordinates(input) {
                     coordinates: [item.longitude, item.latitude]
                 }
             };
-            await dbHandler.addManyDocumentsWithClient(dbInfo.client, 
+            await dbHandler.addDocumentWithClient(dbInfo.client, 
                 value, dbInfo.collections.user_coordinates_collection);
             userId++;
         }

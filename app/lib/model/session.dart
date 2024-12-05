@@ -14,6 +14,7 @@ class Session {
   static SocketSubscriptionController? socketSubscription;
   static Flirt? currentFlirt;
   static dynamic profileImage;
+  static bool flirtAlreadyLoaded = false; 
   
 
 
