@@ -25,9 +25,9 @@ class LocalFile {
 }
 
 class ShowContactPictures extends StatefulWidget {
-  UserMatch _match;
+  String userId; 
 
-  ShowContactPictures(this._match);
+  ShowContactPictures(this.userId);
 
   @override
   State<ShowContactPictures> createState() {
@@ -98,8 +98,8 @@ class _ShowContactPictures extends State<ShowContactPictures> {
     setState(() {
       _isLoading = true;
     });
-    var contactId = widget._match.contactInfo?.userId;
-    HostGetUserImagesRequest().run(contactId!).then((response) {
+    
+    HostGetUserImagesRequest().run(widget.userId).then((response) {
       if (response.fileData != null) {
         response.fileData!.map((e) {
           setState(() {

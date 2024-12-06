@@ -1,4 +1,3 @@
-import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/user/profile/HostUpdateUserSocialNetworksRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/SocialNetwork.dart';

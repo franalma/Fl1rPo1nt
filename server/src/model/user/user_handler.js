@@ -69,18 +69,17 @@ async function createPublicProfileUser(input) {
       };
 
       const imageData = await getImageByUserIdImageId(query);
-      logger.info("----imagedata: ");
-      printJson(imageData);
-
+  
       if (imageData.status == 200) {
         user.profile_image = imageData.files.length > 0 ? imageData.files[0] : "";
       }
     }
-
+    logger.info("--public profile: "+JSON.stringify(user));
   } catch (error) {
     logger.info(error);
   }
-
+  
+  
   return user;
 }
 

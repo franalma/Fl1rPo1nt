@@ -32,7 +32,7 @@ class HostGetPeopleArroundRequest extends BaseRequest {
           "relationship": relationShip.toJson(),
           "gender_interest": genderInterest.toJson(),
           "radio": radio,
-          "filters_enabled": false
+          "filters_enabled": enableFilters
         }
       };
 

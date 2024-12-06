@@ -1,44 +1,30 @@
-import 'package:app/comms/model/request/matchs/HostDisableUserMatchRequest.dart';
-import 'package:app/comms/model/request/user/profile/HostGetUserPublicProfile.dart';
-import 'package:app/model/Flirt.dart';
-import 'package:app/model/Session.dart';
-import 'package:app/model/User.dart';
-import 'package:app/model/UserMatch.dart';
 import 'package:app/model/UserPublicProfile.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ShowContactAudiosPage.dart';
 import 'package:app/ui/contacts/ShowContactPictures.dart';
-import 'package:app/ui/contacts/ShowConversationPage.dart';
-import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Gradient1.dart';
-import 'package:app/ui/elements/SocialNetworkIcon.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class ContactDetailsPage extends StatefulWidget {
-  UserMatch _match;
+class ContactDetailsPageFromMap extends StatefulWidget {
+  UserPublicProfile _profile;
 
-  ContactDetailsPage(this._match);
-
+  ContactDetailsPageFromMap(this._profile);
 
   @override
-  State<ContactDetailsPage> createState() {
-    return _ContactDetailsPage();
+  State<ContactDetailsPageFromMap> createState() {
+    return _ContactDetailsPageForMap();
   }
 }
 
-class _ContactDetailsPage extends State<ContactDetailsPage> {
-  bool _readMessages = false;
-  bool _brokenMatch = false;
-  final User _user = Session.user;
-  bool _isLoading = true;
-  UserPublicProfile? _userPublicProfile;
-
+class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
+  
   @override
   void initState() {
-    _fetchFromHost();
+    Log.d("Starts _ContactDetailsPageForMap::initState");
     super.initState();
   }
 
@@ -52,7 +38,7 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
               IconButton(
                 onPressed: () {
                   NavigatorApp.push(
-                      ShowContactAudiosPage(widget._match.contactInfo!.userId), context);
+                      ShowContactAudiosPage(widget._profile.id!), context);
                 },
                 icon: const Icon(Icons.voice_chat),
                 iconSize: 30,
@@ -61,27 +47,18 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
               IconButton(
                 onPressed: () {
                   NavigatorApp.push(
-                      ShowContactPictures(widget._match.contactInfo!.userId), context);
+                      ShowContactPictures(widget._profile.id!), context);
                 },
                 icon: const Icon(Icons.image),
                 iconSize: 30,
                 color: Colors.white,
               ),
+           
               IconButton(
-                  onPressed: () async {
-                    await NavigatorApp.pushAndWait(
-                        ShowConversationPage(widget._match), context);
-                    _readMessages = true;
-                  },
-                  icon: const Icon(Icons.message),
-                  iconSize: 30,
-                  color: Colors.white),
-              IconButton(
-                  icon: const Icon(Icons.heart_broken,
+                  icon: const Icon(FontAwesomeIcons.add,
                       size: 30, color: Colors.white),
                   onPressed: () async {
-                    _brokenMatch = true;
-                    _breakMatch();
+
                   }),
             ],
             flexibleSpace: FlexibleAppBar(),
@@ -91,7 +68,7 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
                   _pop();
                 }),
           ),
-          body: _isLoading ? AlertDialogs().buildLoading() : _buildBody()),
+          body: _buildBody()),
     );
   }
 
@@ -103,16 +80,14 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
           _buildProfile(),
           const SizedBox(height: 5),
           _buildNameTitle(),
-          const SizedBox(height: 5),
-          _buildPhone(),
+          
           const SizedBox(height: 5),
           _buildSexInterest(),
           const SizedBox(height: 5),
           _buildBiography(),
           const SizedBox(height: 5),
           _buildHobbies(),
-          const SizedBox(height: 5),
-          _buildSocialNetworks(),
+
           const SizedBox(height: 5),
         ],
       ),
@@ -133,10 +108,10 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
                 leading: Icon(
                   Icons.link,
                   color: Color(CommonUtils.colorToInt(
-                      _userPublicProfile!.gender!.color!)),
+                      widget._profile.gender!.color!)),
                 ),
                 title: Text(
-                    "Me identifico como ${_userPublicProfile!.gender!.name?.toLowerCase()}"),
+                    "Me identifico como ${ widget._profile.gender!.name?.toLowerCase()}"),
               ),
             ),
             SizedBox(
@@ -145,9 +120,9 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
                 leading: Icon(
                   Icons.link,
                   color: Color(CommonUtils.colorToInt(
-                      _userPublicProfile!.sexAlternative!.color)),
+                       widget._profile.sexAlternative!.color)),
                 ),
-                title: Text("Soy ${_userPublicProfile!.sexAlternative!.name.toLowerCase()}"),
+                title: Text( "Soy ${widget._profile.sexAlternative!.name.toLowerCase()}"),
               ),
             ),
             SizedBox(
@@ -156,20 +131,20 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
                 leading: Icon(
                   Icons.link,
                   color: Color(CommonUtils.colorToInt(
-                      _userPublicProfile!.relationShip!.color)),
+                       widget._profile.relationShip!.color)),
                 ),
-                title: Text( "Busco una relación ${_userPublicProfile!.relationShip!.value.toLowerCase()}"),
+                title: Text( "Busco una relación ${widget._profile.relationShip!.value.toLowerCase()}"),
               ),
             ),
-             SizedBox(
+            SizedBox(
               height: 30,
               child: ListTile(
                 leading: Icon(
                   Icons.link,
                   color: Color(CommonUtils.colorToInt(
-                       _userPublicProfile!.genderInterest!.color!)),
+                       widget._profile.genderInterest!.color!)),
                 ),
-                title: Text( "El género que busco es ${_userPublicProfile!.genderInterest!.name!.toLowerCase()}"),
+                title: Text( "El género que busco es ${widget._profile.genderInterest!.name!.toLowerCase()}"),
               ),
             )
           ],
@@ -180,7 +155,7 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
 
   Widget _buildNameTitle() {
     return Text(
-      widget._match.contactInfo?.name ?? "Desconocid@",
+      widget._profile.name ?? "Desconocid@",
       style: const TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
@@ -204,44 +179,11 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
               shape: BoxShape.circle,
               image: DecorationImage(
                 image: NetworkImage(
-                    "${widget._match.profileImage!}&width=100&height=100&quality=60"),
+                    "${widget._profile.profileImage!}&width=100&height=100&quality=60"),
                 fit: BoxFit.fill, // Customize fit here
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSocialNetworks() {
-    var networks = widget._match.sharing?.networks;
-    return Card(
-      child: Padding(
-        padding:
-            const EdgeInsets.only(top: 5, left: 20.0, right: 20.0, bottom: 10),
-        child: Column(
-          children: [
-            _buildSectionTitle("Redes Sociales"),
-            if (networks != null && networks.isNotEmpty)
-              Column(
-                children: List<Widget>.from(networks.map(
-                  (entry) {
-                    return ListTile(
-                      leading: SocialNetworkIcon().resolveIconForNetWorkId(entry.networkId),
-                      title: Text(entry.name),
-                      subtitle: Text(entry.value),
-                      onTap: () {
-                        // Add your logic to open the URL
-                        print("Open ${entry.value}");
-                      },
-                    );
-                  },
-                )),
-              )
-            else
-              const Text("No te han compatido las redes sociales"),
-          ],
         ),
       ),
     );
@@ -255,13 +197,13 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
         child: Column(
           children: [
             _buildSectionTitle("Me interesa..."),
-            if (_userPublicProfile?.hobbies != null &&
-                _userPublicProfile!.hobbies!.isNotEmpty)
+            if ( widget._profile.hobbies != null &&
+                 widget._profile.hobbies!.isNotEmpty)
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children:
-                    List<Widget>.from(_userPublicProfile!.hobbies!.map((hobby) {
+                    List<Widget>.from( widget._profile.hobbies!.map((hobby) {
                   return Chip(
                     label: Text(hobby.name),
                     backgroundColor: Colors.teal.withOpacity(0.2),
@@ -279,9 +221,9 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
   Widget _buildBiography() {
     String biography = "No sabemos mucho";
 
-    if (_userPublicProfile?.biography != null &&
-        _userPublicProfile!.biography!.isNotEmpty) {
-      biography = _userPublicProfile!.biography!;
+    if ( widget._profile.biography != null &&
+         widget._profile.biography!.isNotEmpty) {
+      biography =  widget._profile.biography!;
     }
 
     return Card(
@@ -303,36 +245,30 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
     );
   }
 
-  Widget _buildPhone() {
-    String text = "No tienes su teléfono";
+  // Widget _buildPhone() {
+  //   String text = "No tienes su teléfono";
 
-    if (widget._match.contactInfo?.phone != null &&
-        widget._match.contactInfo!.phone!.isNotEmpty) {
-      text = widget._match.contactInfo!.phone!;
-    }
+  //   if (widget._match.contactInfo?.phone != null &&
+  //       widget._match.contactInfo!.phone!.isNotEmpty) {
+  //     text = widget._match.contactInfo!.phone!;
+  //   }
 
-    return Text(
-      text,
-      style: const TextStyle(fontSize: 16, color: Colors.teal),
-    );
-  }
+  //   return Text(
+  //     text,
+  //     style: const TextStyle(fontSize: 16, color: Colors.teal),
+  //   );
+  // }
 
-  Future<void> _breakMatch() async {
-    Log.d("Starts _breakMatch");
-    await HostDisableUserMatchRequest()
-        .run(widget._match.matchId!, _user.userId);
-    _pop();
-  }
+  // Future<void> _breakMatch() async {
+  //   Log.d("Starts _breakMatch");
+  //   await HostDisableUserMatchRequest()
+  //       .run(widget._match.matchId!, _user.userId);
+  //   _pop();
+  // }
 
   void _pop() {
-    NavigatorApp.popWith(context, {
-      "broken_match": _brokenMatch,
-      "read": _readMessages,
-      "match_id": widget._match.matchId
-    });
+    NavigatorApp.pop(context);
   }
-
-  
 
   // Helper to build section titles
   Widget _buildSectionTitle(String title) {
@@ -346,26 +282,5 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
         ),
       ),
     );
-  }
-
-  Future<void> _fetchFromHost() async {
-    Log.d("Starts _fetchFromHost");
-
-    try {
-      HostGetUserPublicProfile()
-          .run(widget._match.contactInfo!.userId)
-          .then((response) {
-        if (response.profile != null) {
-          setState(() {
-            _userPublicProfile = response.profile;
-            _isLoading = false;
-          });
-        } else {
-          NavigatorApp.pop(context);
-        }
-      });
-    } catch (error, stackTrace) {
-      Log.d("$error, $stackTrace");
-    }
   }
 }

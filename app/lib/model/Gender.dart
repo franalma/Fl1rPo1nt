@@ -18,6 +18,6 @@ class Gender{
   }
 
   Map<String, dynamic> toJson() {
-    return {"id": id, "value": name, "color": color};
+    return {"id": id, "name": name, "color": color};
   }
 }

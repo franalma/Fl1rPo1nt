@@ -19,7 +19,11 @@ class HostUpdateUserGenderRequest extends BaseRequest {
         "action": option.action,
         "input": {
           "user_id": userId,
-          "gender": {"id": gender.id!, "name": gender.name}
+          "gender": {
+            "id": gender.id!,
+            "name": gender.name,
+            "color": gender.color
+          }
         }
       };
 

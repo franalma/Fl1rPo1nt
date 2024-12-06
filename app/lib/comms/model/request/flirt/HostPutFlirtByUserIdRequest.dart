@@ -24,10 +24,16 @@ class HostPutFlirtByUserIdRequest extends BaseRequest{
         "action": option.action,
         "input": {
            "user_id":user.userId, 
-           "relationship_id":user.relationShip.id, 
-           "relationship_name":user.relationShip.value, 
-           "orientation_id":user.sexAlternatives.id, 
-           "orientation_name":user.sexAlternatives.name, 
+          //  "relationship_id":user.relationShip.id, 
+          //  "relationship_name":user.relationShip.value, 
+          //  "orientation_id":user.sexAlternatives.id, 
+          //  "orientation_name":user.sexAlternatives.name, 
+          //  "gender_interest":user.genderInterest.id,
+          "user_interests": {
+            "relationship": user.relationShip, 
+            "sex_alternative": user.sexAlternatives, 
+            "gender_interest":user.genderInterest
+          },
            "location":{
             "latitude":location.lat,
             "longitude":location.lon

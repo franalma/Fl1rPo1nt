@@ -78,10 +78,12 @@ const UPDATE_USER_QRS_BY_USER_ID_RULES = [
 
 const PUT_USER_FLIRT_BY_USER_ID_RULES = [
     body('input.user_id').notEmpty().isString().withMessage("User id is required"),
-    body('input.relationship_id').notEmpty().isNumeric().withMessage("Relation id required"),
-    body('input.relationship_name').notEmpty().isString().withMessage("Relation name required"),
-    body('input.orientation_id').notEmpty().isNumeric().withMessage("Orientation id required"),
-    body('input.orientation_name').notEmpty().isString().withMessage("Orientation name required"),
+    
+    body('input.user_interests').notEmpty().isObject().withMessage("Relation id required"),
+    // body('input.relationship_id').notEmpty().isNumeric().withMessage("Relation id required"),
+    // body('input.relationship_name').notEmpty().isString().withMessage("Relation name required"),
+    // body('input.orientation_id').notEmpty().isNumeric().withMessage("Orientation id required"),
+    // body('input.orientation_name').notEmpty().isString().withMessage("Orientation name required"),
     body('input.location').notEmpty().isObject().withMessage("Location is required"),
 
 ];

@@ -215,7 +215,7 @@ async function getUserFlirts(input) {
 }
 
 async function getActiveFlirtsFromPointAndTendency(input) {
-  logger.info("Starts getActiveFlirtsFromPointAndTendency");
+  logger.info("Starts getActiveFlirtsFromPointAndTendency: "+ JSON.stringify(input));
   const db = DB_INSTANCES.DB_API;
   let result = {};
   try {
@@ -234,12 +234,14 @@ async function getActiveFlirtsFromPointAndTendency(input) {
 
     };
 
-    if (input.filters_status == 1) {
-      filters.sex_alternative_id = input.sex_alternative_id;
-      filters.relationship_id = input.relationship_id;
-      filters.gender_preference_id = input.gender_preference_id;
+    if (input.filters_enabled == true) {
+      filters["user_interests.relationship.id"] = input.relationship.id;
+      filters["user_interests.sex_alternative.id"] = input.sex_alternative.id;      
+      // filters["user_interests.gender_interest.id"] = input.gender_interest.id;
     }
+    logger.info("---filters: "+JSON.stringify(filters));
 
+    
     let dbResponse = await dbHandler.findWithFiltersAndClient(
       db.client,
       filters,
@@ -247,7 +249,7 @@ async function getActiveFlirtsFromPointAndTendency(input) {
     );
 
     let flirts = [];
-    let filtersUsers = [];
+    
 
     if (dbResponse) {
       for (var item of dbResponse) {

@@ -8,6 +8,10 @@ import 'package:app/model/HostErrorCode.dart';
 import 'package:app/model/NearByFlirt.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/model/UserPublicProfile.dart';
+import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/contacts/ContactDetailsPage.dart';
+import 'package:app/ui/contacts/ContactDetailsPageFromMap.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
@@ -33,8 +37,8 @@ class _MapExplorerController extends State<MapExplorerController> {
   bool _isShowInfoWindow = false;
   final User _user = Session.user;
   bool _filtersEnabled = true;
-  late String _imageUrl;
-  late String _userName;
+  UserPublicProfile? _profile; 
+  
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -59,15 +63,16 @@ class _MapExplorerController extends State<MapExplorerController> {
             children: [
               IconButton(
                   onPressed: () {
-                    setState(() {
-                      if (_filtersEnabled) {
+                     if (_filtersEnabled) {
                         _filtersEnabled = false;
                       } else {
                         _filtersEnabled = true;
                       }
+                    setState(() {
+                      _fetchFromHost(); 
                     });
                   },
-                  icon: const Icon(Icons.filter_alt))
+                  icon: Icon(_filtersEnabled ?Icons.filter_alt_off: Icons.filter_alt))
             ],
           )
         ],
@@ -114,12 +119,12 @@ class _MapExplorerController extends State<MapExplorerController> {
             child: Column(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(_imageUrl),
+                  backgroundImage: NetworkImage(_profile!.profileImage!),
                   radius: 40,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  _userName,
+                  _profile!.name!,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Container(
@@ -143,7 +148,9 @@ class _MapExplorerController extends State<MapExplorerController> {
                 ),
 
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    NavigatorApp.push(ContactDetailsPageFromMap(_profile!), context);
+                  },
                   icon: Icon(FontAwesomeIcons.heartCircleBolt),
                   color: Colors.red,
                   iconSize: 30,
@@ -233,8 +240,7 @@ class _MapExplorerController extends State<MapExplorerController> {
         position: position,
         onTap: () async {
           HostGetUserPublicProfile().run(flirtNearBy.userId!).then((value) {
-            _userName = value.profile!.name!;
-            _imageUrl = value.profile!.profileImage!;
+            _profile = value.profile;             
             setState(() {
               _isShowInfoWindow = true;
             });
@@ -249,6 +255,7 @@ class _MapExplorerController extends State<MapExplorerController> {
   Future<void> _fetchFromHost() async {
     Log.d("Starts");
     Location location = Session.location!;
+    _markers.clear(); 
     HostGetPeopleArroundRequest()
         .run(
             Session.currentFlirt!.id,
