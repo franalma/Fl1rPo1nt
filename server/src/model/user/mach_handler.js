@@ -78,8 +78,10 @@ async function createMatchExternal(item, input) {
     const userInfo = await userHandler.getUserPublicProfileByUserId(
       contactUser
     );
+
     printJson(userInfo);
     match.profile_image = userInfo.profile_image;
+    match.pending_messages = await chatroomHandler.getPendingMessagesForUserIdContactId(input.user_id, contactUser.user_id);
 
     return match;
   } catch (error) {

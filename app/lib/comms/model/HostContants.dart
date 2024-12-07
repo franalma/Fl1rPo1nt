@@ -245,6 +245,12 @@ class HostChatActions {
       BASE_CHAT_URL,
       HOST_CHAT["endpoint_root"].toString());
 
+  static final HostActionsItem removePendingMessagesByUserIdContactId = HostActionsItem(
+      "REMOVE_PENDING_CHAT_MESSGES_BY_USER_ID_SENDER_ID",
+      BASE_CHAT_URL,
+      HOST_CHAT["endpoint_root"].toString());
+      
+
   static final HostActionsItem socketListen =
       HostActionsItem("", BASE_CHAT_URL, "");
 }

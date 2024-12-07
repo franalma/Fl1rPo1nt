@@ -184,10 +184,13 @@ class _ListContactsPage extends State<ListContactsPage> {
         int? nMsgs = await Session.socketSubscription
             ?.getPendingMessagesForMap(match.matchId!);
         _pendingMessages[match.matchId!] = nMsgs ?? 0;
+        _pendingMessages[match.matchId!] =
+            (_pendingMessages[match.matchId!] ?? 0) +
+                (match.pendingMessges ?? 0);
+        setState(() {
+          _isLoading = false;
+        });
       }
-      setState(() {
-        _isLoading = false;
-      });
     });
   }
 

@@ -47,7 +47,7 @@ class _FlirtsStatsPage extends State<FlirtsStatsPage> {
                   title: Text(_flirtList[index].id.substring(0, 10)),
                   subtitle: Column(
                     children: [
-                      Text("Fecha: ${_timeFromEpoch(_flirtList[index].createdAt)}"),
+                      Text("Fecha: ${_timeFromEpoch(_flirtList[index].updatedAt!)}"),
                       Text(
                           "Dónde:  [${_flirtList[index].location?.lat},${_flirtList[index].location?.lon}]"),
                       Text("Estado: ${_getFlirtStatus(index)}")

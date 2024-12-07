@@ -74,7 +74,7 @@ async function getMessagesInChatroomByMatchId(input) {
     const dbMessages = await dbHandler.findAllWithClient(db.client, currentCollection);
     let values = [];
     for (let item of dbMessages) {
-      
+
       values.push({
         match_id: item.match_id,
         sender_id: item.sender_id,
@@ -128,6 +128,70 @@ async function removeChatroomForMatch(match) {
   return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
 }
 
+async function putPendingMessage(receiverId, senderId) {
+  logger.info("Starts putPendingMessage");
+  try {
+    const db = DB_INSTANCES.DB_CHAT;
+    const filters = { user_id: receiverId, sender_id: senderId };
+    let messageInfo = {};
+    let value = 1;
+    const dbResponse = await dbHandler.findWithFiltersAndClient(db.client, filters, db.collections.pending_message_collection);
+    if (dbResponse != null && dbResponse.length > 0) {
+      const messageInfo = dbResponse[0];
+
+      if (messageInfo) {
+        messageInfo.n_messages = messageInfo.n_messages + 1;
+        // logger.info("Counter " + counter);
+
+
+      }
+      await dbHandler.updateDocumentWithClient(db.client, messageInfo, filters, db.collections.pending_message_collection);
+    } else {
+      messageInfo = {
+        user_id: receiverId,
+        sender_id: senderId,
+        n_messages: value
+      }
+      await dbHandler.addDocumentWithClient(db.client, messageInfo, db.collections.pending_message_collection);
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+}
+
+async function getPendingMessagesForUserIdContactId(userId, senderId) {
+  logger.info("Starts getPendingMessagesForUserIdContactId");
+  try {
+    const db = DB_INSTANCES.DB_CHAT;
+    const filters = { user_id: userId, sender_id: senderId };
+
+    const dbResponse = await dbHandler.findWithFiltersAndClient(db.client, filters, db.collections.pending_message_collection);
+    if (dbResponse != null && dbResponse.length > 0) {
+      return dbResponse[0].n_messages;
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+  return 0;
+}
+
+async function removePendingMessagesForUserContactId(input) {
+  logger.info("Starts removePendingMessages");
+  try {
+    const db = DB_INSTANCES.DB_CHAT;
+    const filters = { user_id: input.user_id, sender_id: input.sender_id };
+    await dbHandler.deleteDocumentWithClient(db.client, filters, db.collections.pending_message_collection);
+    return {
+      ...genError(HOST_ERROR_CODES.NO_ERROR)
+    }
+
+  } catch (error) {
+    logger.info(error);
+  }
+  return {
+    ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR)
+  }
+}
 
 
 
@@ -135,5 +199,8 @@ module.exports = {
   putMessageInChatroomByMatchId,
   getMessagesInChatroomByMatchId,
   deleteChatRoomByMatchIdUserId,
-  removeChatroomForMatch
+  removeChatroomForMatch,
+  putPendingMessage,
+  getPendingMessagesForUserIdContactId,
+  removePendingMessagesForUserContactId
 };

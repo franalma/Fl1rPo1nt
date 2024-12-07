@@ -31,6 +31,7 @@ class GoogleAds {
   }
 
   Future<void> loadAdaptiveBanner(BuildContext context, Function(bool) onLoad) async {
+    Log.d("Starts loadAdaptiveBanner ");
     final AnchoredAdaptiveBannerAdSize? adSize = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
       MediaQuery.of(context).size.width.toInt()); 
 
@@ -49,7 +50,7 @@ class GoogleAds {
         },
       ),
     );
-
+  
     adaptiveBannerAd.load();
   }
 
@@ -61,7 +62,7 @@ class GoogleAds {
   }
 
   void disposeAdaptativeBanner (){
-    if (_isAdaptativeAdLoaded){
+    if (_isAdaptativeAdLoaded && adaptiveBannerAd != null){
       adaptiveBannerAd.dispose(); 
     }
   }

@@ -27,6 +27,7 @@ enum HostErrorCodesValue {
   WrongUserPass(-103, "Wrong user/pass"),
   UserNotExist(-104, "User not exists"),
   UserBlocked(-105, "User blocked"),
+  NoFlirtsFound(-106, "No flirts found"),
 
   UserInYourContacts(-401, "User in your contacts"),
 

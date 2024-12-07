@@ -1,6 +1,7 @@
 import 'package:app/comms/model/request/HostSendMessageToUserRequest.dart';
 import 'package:app/comms/model/request/chat/HostClearChatByUserId.dart';
 import 'package:app/comms/model/request/chat/HostGetChatroomMessagesRequest.dart';
+import 'package:app/comms/model/request/chat/HostRemovePendingMessagesRequest.dart';
 import 'package:app/model/ChatMessage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
@@ -44,7 +45,6 @@ class _ShowConversationPage extends State<ShowConversationPage> {
         //       NavigatorApp.popWith(context, "");
         //     }),
         actions: [
-         
           IconButton(
               icon: const Icon(
                 Icons.delete_forever,
@@ -138,7 +138,13 @@ class _ShowConversationPage extends State<ShowConversationPage> {
           "sender": item.senderId == _user.userId ? "user" : "bot"
         });
       }
-      setState(() {});
+
+      HostRemovePendingMessagesRequest()
+          .run(_user.userId, widget._userMatch.contactInfo!.userId)
+          .then((result) {
+        Log.d("Deleted pending messages $result");
+        setState(() {});
+      });
     });
   }
 
@@ -165,6 +171,4 @@ class _ShowConversationPage extends State<ShowConversationPage> {
       _messages.clear();
     });
   }
-
-
 }

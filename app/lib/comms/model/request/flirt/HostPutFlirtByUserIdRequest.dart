@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:app/comms/model/HostContants.dart';
@@ -9,49 +8,38 @@ import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:http/http.dart' as http;
 
-class HostPutFlirtByUserIdRequest extends BaseRequest{
-  
-
-  Future<HostPutFlirtByUserIdResponse> run(
-      User user, Location location) async {
+class HostPutFlirtByUserIdRequest extends BaseRequest {
+  Future<HostPutFlirtByUserIdResponse> run(User user, Location location) async {
     try {
       Log.d("Start HostPutFlirtByUserIdRequest");
-  
+
       HostActionsItem option = HostApiActions.putUserFlirtByUserId;
       Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
         "input": {
-           "user_id":user.userId, 
-          //  "relationship_id":user.relationShip.id, 
-          //  "relationship_name":user.relationShip.value, 
-          //  "orientation_id":user.sexAlternatives.id, 
-          //  "orientation_name":user.sexAlternatives.name, 
-          //  "gender_interest":user.genderInterest.id,
+          "user_id": user.userId,        
           "user_interests": {
-            "relationship": user.relationShip, 
-            "sex_alternative": user.sexAlternatives, 
-            "gender_interest":user.genderInterest
+            "relationship": user.relationShip,
+            "sex_alternative": user.sexAlternatives,
+            "gender_interest": user.genderInterest
           },
-           "location":{
-            "latitude":location.lat,
-            "longitude":location.lon
-           }
+          "location": {"latitude": location.lat, "longitude": location.lon},
+          "gender": user.gender
         }
       };
 
-    
-      String jsonBody = json.encode(mapBody);      
-      var response = await http.post(url, headers: buildHeader(), body: jsonBody);
-      var value = jsonDecode(response.body);          
+      String jsonBody = json.encode(mapBody);
+      var response =
+          await http.post(url, headers: buildHeader(), body: jsonBody);
+      var value = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        return  HostPutFlirtByUserIdResponse.fromJson(value["response"]);        
+        return HostPutFlirtByUserIdResponse.fromJson(value["response"]);
       }
     } catch (error) {
       Log.d(error.toString());
     }
     return HostPutFlirtByUserIdResponse.empty();
   }
-
 }

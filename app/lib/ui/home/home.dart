@@ -7,6 +7,7 @@ import 'package:app/comms/model/request/flirt/HostGetUserFlirtsRequest.dart';
 import 'package:app/comms/model/request/flirt/HostPutFlirtByUserIdRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/services/LocationService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ads/GoogleAds.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
   GoogleAds? _googleAds;
   bool _isBannerLoaded = false;
   bool _isAdaptativeAdLoaded = false;
+  LocationService? _locationService;
 
   @override
   void initState() {
@@ -267,6 +269,8 @@ class _HomeState extends State<Home> {
           Session.location = location;
           var flirt = value.flirts?[0];
           Session.currentFlirt = flirt;
+          _locationService = LocationService(Session.currentFlirt!);
+          _locationService?.startSendingLocation();
           setState(() {
             _isEnabled = true;
             _isLoading = false;
@@ -324,6 +328,8 @@ class _HomeState extends State<Home> {
         if (value.flirt != null) {
           user.isFlirting = true;
           Session.currentFlirt = value.flirt!;
+          _locationService = LocationService(Session.currentFlirt!);
+          _locationService?.startSendingLocation();
           setState(() {
             _isEnabled = true;
             _isLoading = false;
@@ -339,26 +345,32 @@ class _HomeState extends State<Home> {
   }
 
   void _onStopFlirt() async {
-    setState(() {
-      _isLoading = true;
-    });
+    Log.d("Starts _onStopFlirt");
+    try {
+      _locationService?.stopSendingLocation();
+      setState(() {
+        _isLoading = true;
+      });
 
-    HostDisableFlirtByFlirtIdUserId()
-        .run(user, Session.currentFlirt!)
-        .then((value) {
-      if (value) {
-        setState(() {
-          _isEnabled = false;
-          user.isFlirting = false;
-          _isLoading = false;
-        });
-      } else {
-        FlutterToast().showToast("No ha sido posible desactivar el Flirt");
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
+      HostDisableFlirtByFlirtIdUserId()
+          .run(user, Session.currentFlirt!)
+          .then((value) {
+        if (value) {
+          setState(() {
+            _isEnabled = false;
+            user.isFlirting = false;
+            _isLoading = false;
+          });
+        } else {
+          FlutterToast().showToast("No ha sido posible desactivar el Flirt");
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
   }
 
   @override

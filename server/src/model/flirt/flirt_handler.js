@@ -29,6 +29,40 @@ function createInternalUserCoordinates(input) {
 }
 
 
+function createOutputFlirt(item) {
+  logger.info("Starts createOutputFlirt");
+  try {
+    let flirt = {
+      user_id: item.user_id,
+      flirt_id: item.flirt_id,
+      location: [item.location.coordinates[1], item.location.coordinates[0]],
+      user_interests: item.user_interests,
+      gender: item.gender,
+      updated_at: item.updated_at,
+      status: item.status
+    };
+    return flirt;
+  } catch (error) {
+    logger.info(error);
+  }
+  return {};
+
+}
+
+function transformLocationForInternalUse(inputLocation) {
+  logger.info("Starts transformLocationForInternalUse");
+  try {
+    return {
+      value: {
+        type: "Point",
+        coordinates: [inputLocation.longitude, inputLocation.latitude],
+      },
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+  return {}
+}
 
 async function putUserFlirts(input) {
   logger.info("Starts putUserFlirts");
@@ -63,6 +97,7 @@ async function putUserFlirts(input) {
             type: "Point",
             coordinates: [input.location.longitude, input.location.latitude],
           },
+          gender: input.gender,
 
           status: FLIRT_ACTIVE,
           created_at: currentTime,
@@ -74,23 +109,25 @@ async function putUserFlirts(input) {
           flirt,
           db.collections.flirts_collection
         );
-        if (dbResponse) {
-          const userCoordinates = createInternalUserCoordinates();
+        // if (dbResponse) {
+        //   const userCoordinates = createInternalUserCoordinates();
 
-          if (userCoordinates) {
-            await dbHandler.addDocumentWithClient(db.client, userCoordinates, db.collections.user_coordinates_collection)
-          }
+        //   if (userCoordinates) {
+        //     await dbHandler.addDocumentWithClient(db.client, userCoordinates, db.collections.user_coordinates_collection)
+        //   }
 
-          result = {
-            ...genError(HOST_ERROR_CODES.NO_ERROR),
-            message: "Flirt registered successfully",
-            response: {
-              flirt_id: flirt.flirt_id,
-              created_at: flirt.created_at,
-              status: FLIRT_ACTIVE,
-              location: input.location,
-            },
-          };
+        //   result = {
+        //     ...genError(HOST_ERROR_CODES.NO_ERROR),
+        //     message: "Flirt registered successfully",
+        //     response:
+        //       createOutputFlirt(flirt)
+
+        //   };
+        result = {
+          ...genError(HOST_ERROR_CODES.NO_ERROR),
+          message: "Flirt registered successfully",
+          response:
+            createOutputFlirt(flirt)
         }
       } else {
         result = {
@@ -125,7 +162,7 @@ async function udpateUserFlirts(input) {
       };
     } else {
       let filters = {
-        user_id: input.user_id,
+        // user_id: input.user_id,
         flirt_id: input.flirt_id,
       };
 
@@ -133,7 +170,7 @@ async function udpateUserFlirts(input) {
         updated_at: Date.now(),
       };
       if (input.values.location) {
-        newDoc.location = input.values.location;
+        newDoc.location = transformLocationForInternalUse(input.values.location).value;
       }
       if (input.values.status != null) {
         newDoc.status = input.values.status;
@@ -169,7 +206,7 @@ async function udpateUserFlirts(input) {
 
 async function getUserFlirts(input) {
   logger.info("Starts getUserFlirts");
-  let result = {};
+
   try {
     const db = DB_INSTANCES.DB_API;
     let filters = {};
@@ -185,37 +222,37 @@ async function getUserFlirts(input) {
       db.collections.flirts_collection
     );
 
-    result.flirts = [];
+    let flirts = [];
 
     if (dbResponse) {
-      result.status = 200;
+
 
       for (var item of dbResponse) {
-        let flirt = {
-          user_id: item.user_id,
-          flirt_id: item.flirt_id,
-          created_at: item.created_at,
-          updated_at: item.updated_at,
-          status: item.status,
-          location: {
-            latitude: item.location.coordinates[1],
-            longitude: item.location.coordinates[0],
-          },
-          relationship_name: item.relationship_name,
-          orientation_name: item.orientation_name,
-        };
-        result.flirts.push(flirt);
+        const flirt = createOutputFlirt(item);
+        flirts.push(flirt);
       }
+      return {
+        ...genError(HOST_ERROR_CODES.NO_ERROR),
+        flirts: flirts
+      }
+
+    } else {
+      logger.info("-->No flirts");
+      return {
+        ...genError(HOST_ERROR_CODES.NO_FLIRTS_FOUND),
+        flirts: flirts
+      }
+
     }
   } catch (error) {
     logger.info(error);
   }
 
-  return result;
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
 }
 
 async function getActiveFlirtsFromPointAndTendency(input) {
-  logger.info("Starts getActiveFlirtsFromPointAndTendency: "+ JSON.stringify(input));
+  logger.info("Starts getActiveFlirtsFromPointAndTendency: " + JSON.stringify(input));
   const db = DB_INSTANCES.DB_API;
   let result = {};
   try {
@@ -236,12 +273,13 @@ async function getActiveFlirtsFromPointAndTendency(input) {
 
     if (input.filters_enabled == true) {
       filters["user_interests.relationship.id"] = input.relationship.id;
-      filters["user_interests.sex_alternative.id"] = input.sex_alternative.id;      
-      // filters["user_interests.gender_interest.id"] = input.gender_interest.id;
-    }
-    logger.info("---filters: "+JSON.stringify(filters));
+      filters["user_interests.sex_alternative.id"] = input.sex_alternative.id;
+      filters["gender.id"] = input.gender_interest.id;
 
-    
+    }
+    logger.info("---filters: " + JSON.stringify(filters));
+
+
     let dbResponse = await dbHandler.findWithFiltersAndClient(
       db.client,
       filters,
@@ -249,17 +287,21 @@ async function getActiveFlirtsFromPointAndTendency(input) {
     );
 
     let flirts = [];
-    
+
 
     if (dbResponse) {
       for (var item of dbResponse) {
-        let flirt = {
-          user_id: item.user_id,
-          flirt_id: item.flirt_id,
-          location: [item.location.coordinates[1], item.location.coordinates[0]],
-          relationship_name: item.relationship_name,
-          orientation_name: item.orientation_name,
-        };
+        // let flirt = {
+        //   user_id: item.user_id,
+        //   flirt_id: item.flirt_id,
+        //   location: [item.location.coordinates[1], item.location.coordinates[0]],
+        //   user_interests: item.user_interests,
+        //   gender: item.gender,
+        //   updated_at: item.updated_at,
+        //   status: item.status
+
+        // };
+        let flirt = createOutputFlirt(item);
         flirts.push(flirt);
       }
       result = { ...genError(HOST_ERROR_CODES.NO_ERROR), flirts };

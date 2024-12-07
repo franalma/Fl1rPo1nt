@@ -1,4 +1,5 @@
 import 'package:app/app_localizations.dart';
+import 'package:app/ui/home/Home2Page.dart';
 import 'package:app/ui/login/LoginPage2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

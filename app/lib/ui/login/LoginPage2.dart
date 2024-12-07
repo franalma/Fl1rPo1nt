@@ -8,6 +8,7 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/home/Home2Page.dart';
 import 'package:app/ui/home/HomeControllerPage.dart';
 import 'package:app/ui/login/components/my_button.dart';
 import 'package:app/ui/login/components/my_textfield.dart';
@@ -237,7 +238,7 @@ class _LoginPageState extends State<LoginPage2> {
               .saveSecureData("refresh_token", Session.user.refreshToken);
           SecureStorage().saveSecureData("user_id", Session.user.userId);
 
-          NavigatorApp.pushAndRemoveUntil(context, Home2());
+          NavigatorApp.pushAndRemoveUntil(context, Home2Page());
         });
       } else {
         NavigatorApp.pop(context);

@@ -53,6 +53,13 @@ const HOST_ERROR_CODES = {
     description: "User blocked",
   },
 
+
+  NO_FLIRTS_FOUND: {
+    error_code: -106,
+    status: 200,
+    description: "No flirts found",
+  },
+
   USER_ALREADY_IN_YOUR_CONTACTS: {
     error_code: -401,
     status: 200,

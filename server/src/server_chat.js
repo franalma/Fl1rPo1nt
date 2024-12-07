@@ -26,12 +26,22 @@ const validationRules = {
         body('input.user_id').notEmpty().isString().withMessage("User id is required"),
         body('input.match_id').notEmpty().isString().withMessage("match_id is required"),
 
-    ]
+    ],
+
+    REMOVE_PENDING_CHAT_MESSGES_BY_USER_ID_SENDER_ID_RULES: [
+        body('input.user_id').notEmpty().isString().withMessage("User id is required"),
+        body('input.sender_id').notEmpty().isString().withMessage("Sender id is required"),
+
+    ],
+
+
+
+    
 }
 
 
 function requestFieldsValidation(req, res, next) {
-    logger.info("custom requestFieldsValidation");
+    logger.info("custom requestFieldsValidation: "+ JSON.stringify(req,body));
 
     let validationSet = [];
     const { action } = req.body;
@@ -47,9 +57,15 @@ function requestFieldsValidation(req, res, next) {
         }
         case hostActions.DELETE_CHATROOM_FROM_MATCH_ID_USER_ID: {
             validationSet = validationRules.DELETE_CHATROOM_FROM_MATCH_ID_USER_ID_RULES
-
             break;
         }
+
+        case hostActions.REMOVE_PENDING_CHAT_MESSGES_BY_USER_ID_SENDER_ID: {
+            validationSet = validationRules.REMOVE_PENDING_CHAT_MESSGES_BY_USER_ID_SENDER_ID_RULES
+            break;
+        }
+
+        
     }
     Promise.all(validationSet.map(validation => validation.run(req)))
         .then(() => next())
@@ -83,13 +99,17 @@ async function processRequest(req, res) {
 
                     await chatroomHandler.putMessageInChatroomByMatchId(req.body.input);
 
-                    await socketHandler.sendChatMessage(
+                    const isMessageSent = await socketHandler.sendChatMessage(
                         "chat_message",
                         receiverId,
                         senderId,
                         message,
                         matchId
                     );
+
+                    if (isMessageSent == false) {
+                        await chatroomHandler.putPendingMessage(receiverId, senderId);
+                    }
 
                     break;
                 }
@@ -107,6 +127,14 @@ async function processRequest(req, res) {
                     );
                     break;
                 }
+
+                case hostActions.REMOVE_PENDING_CHAT_MESSGES_BY_USER_ID_SENDER_ID: {
+                    result = await chatroomHandler.removePendingMessagesForUserContactId(
+                        req.body.input
+                    );
+                    break;
+                }
+
 
                 case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID: {
 

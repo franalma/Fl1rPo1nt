@@ -10,9 +10,10 @@ class UserMatch {
   ContactInfo? contactInfo;
   SharingInfo? sharing;
   String? profileImage;
+  int? pendingMessges; 
 
   UserMatch(this.matchId, this.flirtId, this.contactInfo, this.sharing,
-      this.profileImage);
+      this.profileImage, this.pendingMessges);
   UserMatch.empty();
 
   factory UserMatch.fromJson(Map<String, dynamic> map) {
@@ -23,11 +24,12 @@ class UserMatch {
       ContactInfo contactInfo = ContactInfo.fromJson(map["contact"]);
       SharingInfo sharing = SharingInfo.fromJson(map["sharing"]);
       String profileImage = "";
+      
       if (map.containsKey("profile_image") && map["profile_image"] is Map) {
         profileImage = map["profile_image"]["url"];
       }
-
-      return UserMatch(matchId, flirtId, contactInfo, sharing, profileImage);
+      int pendingMessges = map["pending_messages"];
+      return UserMatch(matchId, flirtId, contactInfo, sharing, profileImage, pendingMessges);
     } catch (error, stackTrace) {
       Log.d("${error.toString()}  ${stackTrace.toString()}");
     }

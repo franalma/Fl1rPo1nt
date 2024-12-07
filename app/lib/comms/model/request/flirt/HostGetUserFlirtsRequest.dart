@@ -25,7 +25,7 @@ class HostGetUserFlirtsRequest extends BaseRequest {
 
       if (response.statusCode == 200) {
         return HostGetUserFlirtsResponse.fromJson(
-            jsonDecode(response.body)["flirts"]);
+            jsonDecode(response.body));
       }
     } catch (error) {
       Log.d(error.toString());
@@ -51,8 +51,7 @@ class HostGetUserFlirtsRequest extends BaseRequest {
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
       if (response.statusCode == 200) {
-        return HostGetUserFlirtsResponse.fromJson(
-            jsonDecode(response.body)["flirts"]);
+        return HostGetUserFlirtsResponse.fromJson(jsonDecode(response.body));
       }
     } catch (error) {
       Log.d(error.toString());

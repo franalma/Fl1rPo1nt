@@ -7,10 +7,9 @@ import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Styles.dart';
-import 'package:app/ui/flirts/FlirtsStatsPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
-import 'package:app/ui/smart_points/SmartPointsPage.dart';
+import 'package:app/ui/smart_points/SmartPointsListPage.dart';
 import 'package:app/ui/user_profile/UserAudiosPage.dart';
 import 'package:app/ui/user_profile/UserDataPage.dart';
 import 'package:app/ui/user_profile/UserPhotosPage.dart';
@@ -157,7 +156,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                         Text("Mis puntos", style: Styles.rowCellTitleTextStyle),
                     trailing: const Icon(
                         Icons.arrow_forward_ios), // Add a left arrow icon
-                    onTap: () => NavigatorApp.push(SmartPointsPage(), context)),
+                    onTap: () => NavigatorApp.push(SmartPointsListPage(), context)),
                 const Divider(),
                 ListTile(
                     title:
