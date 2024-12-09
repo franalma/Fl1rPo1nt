@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage2> {
                 child: SizedBox(
                     height: 150,
                     width: 150,
-                    child: Image.asset("assets/img/splash_icon.png")),
+                    child: Image.asset("assets/img/floiint_logo.png")),
               ),
               const SizedBox(height: 50),
               GestureDetector(

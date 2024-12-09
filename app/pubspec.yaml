@@ -73,8 +73,27 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_native_splash: ^2.2.18
+  flutter_launcher_icons: ^0.13.1
   
 
+
+
+
+flutter_native_splash:
+  color: "#ffffff" # Background color
+  image: assets/img/floiint_splash_logo.png # Path to your splash image
+  android: true # Enable Android splash screen
+  ios: true # Enable iOS splash screen
+  web: false # Disable for web
+  # android_scale_type: centerCrop # Controls how the icon is scaled
+  # fill: true # Whether the icon should fill the splash screen
+  
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/img/floiint_app_icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -94,3 +113,5 @@ flutter:
     - assets/img/
     - assets/lang/
   # see https://flutter.dev/to/font-from-package
+
+

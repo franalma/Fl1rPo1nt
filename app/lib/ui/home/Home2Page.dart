@@ -6,12 +6,14 @@ import 'package:app/ui/ads/AdsManager.dart';
 import 'package:app/ui/contacts/ListContactsPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FancyButton.dart';
+import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/party_mode/PartyModePage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/smart_points/SmartPointsAddPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
+import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,11 +25,11 @@ class Home2Page extends StatefulWidget {
 }
 
 class _Home2State extends State<Home2Page> {
-  late AdsManager _adsManager;
+  // late AdsManager _adsManager;
   @override
   void initState() {
     super.initState();
-    _adsManager = AdsManager(onAdaptativeBannerLoaded);
+    // _adsManager = AdsManager(onAdaptativeBannerLoaded);
     Session.socketSubscription?.onNewContactRequested =
         _handleNewContactRequest;
   }
@@ -44,7 +46,7 @@ class _Home2State extends State<Home2Page> {
   Widget build(BuildContext context) {
     // _adsManager.init(context);
     return Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(          
           actions: [
             IconButton(
                 onPressed: () {
@@ -63,7 +65,10 @@ class _Home2State extends State<Home2Page> {
           ),
         ),
         body: Stack(
-          children: [_buildBody(), _adsManager.buildAdaptativeBannerd(context)],
+          children: [_buildBody(), 
+          // _adsManager.buildAdaptativeBannerd(context)
+          
+          ],
         ));
   }
 
@@ -82,7 +87,7 @@ class _Home2State extends State<Home2Page> {
                 icon: FontAwesomeIcons.eye,
                 color: Color.fromARGB(255, 237, 129, 6),
                 onTap: () {
-                  // NavigatorApp.push(PartyModePage(), context);
+                  NavigatorApp.push(UserStatePage(), context);
                 }),
             FancyButton(
                 text: 'Modo fiesta',

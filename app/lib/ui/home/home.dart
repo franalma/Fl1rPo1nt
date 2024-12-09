@@ -96,9 +96,9 @@ class _HomeState extends State<Home> {
         right: 0,
         child: Center(
           child: Container(
-            height: _googleAds!.adaptiveBannerAd.size.height.toDouble(),
-            width: _googleAds!.adaptiveBannerAd.size.width.toDouble(),
-            child: AdWidget(ad: _googleAds!.adaptiveBannerAd),
+            // height: _googleAds!.adaptiveBannerAd.size.height.toDouble(),
+            // width: _googleAds!.adaptiveBannerAd.size.width.toDouble(),
+            // child: AdWidget(ad: _googleAds!.adaptiveBannerAd),
           ),
         ),
       );

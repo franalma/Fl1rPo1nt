@@ -4,9 +4,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class GoogleAds {
   late BannerAd bannerAd;
-  late BannerAd adaptiveBannerAd;
+   BannerAd? adaptiveBannerAd;
   bool _isAdLoadedBanner = false;
-  bool _isAdaptativeAdLoaded = false;
+  bool isAdaptativeAdLoaded = false;
 
   void loadBanner(Function(bool) onLoad) {
     bannerAd = BannerAd(
@@ -41,17 +41,17 @@ class GoogleAds {
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
-          _isAdaptativeAdLoaded = true; 
+          isAdaptativeAdLoaded = true;                     
           onLoad(true);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          _isAdaptativeAdLoaded = false; 
+          isAdaptativeAdLoaded = false; 
           onLoad(false);
         },
       ),
     );
   
-    adaptiveBannerAd.load();
+    adaptiveBannerAd?.load();
   }
 
 
@@ -62,8 +62,8 @@ class GoogleAds {
   }
 
   void disposeAdaptativeBanner (){
-    if (_isAdaptativeAdLoaded && adaptiveBannerAd != null){
-      adaptiveBannerAd.dispose(); 
+    if (isAdaptativeAdLoaded && adaptiveBannerAd != null){
+      adaptiveBannerAd?.dispose(); 
     }
   }
 

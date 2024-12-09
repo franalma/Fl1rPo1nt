@@ -1,3 +1,4 @@
+import 'package:app/ads/GoogleAds.dart';
 import 'package:app/comms/model/request/flirt/HostDisableFlirtByFlirtIdUserId.dart';
 import 'package:app/comms/model/request/flirt/HostGetUserFlirtsRequest.dart';
 import 'package:app/comms/model/request/flirt/HostPutFlirtByUserIdRequest.dart';
@@ -5,6 +6,8 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/services/LocationService.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/ads/AdsManager.dart';
+import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/login/components/my_button.dart';
 import 'package:app/ui/qr_manager/QrCodeScannerPage.dart';
 import 'package:app/ui/qr_manager/ShowQrCodeToShare.dart';
@@ -28,10 +31,13 @@ class _PartyModeState extends State<PartyModePage> {
   User user = Session.user;
   bool _isLoading = true;
   LocationService? _locationService;
-  // GoogleAds? _googleAds;
+  late AdsManager adsManager;
+  bool _isAdLoadedBanner = false;
 
   @override
   void initState() {
+    adsManager = AdsManager((value) => _loadedAd(value));
+
     if (!Session.flirtAlreadyLoaded) {
       _fetchFlirtStateFromHost();
     } else {
@@ -41,8 +47,16 @@ class _PartyModeState extends State<PartyModePage> {
     super.initState();
   }
 
+  void _loadedAd(value) {
+    Log.d("Starts _loadedAd $value");
+    setState(() {
+      _isAdLoadedBanner = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    adsManager.init(context);
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56.0), // Height of the AppBarP
@@ -105,6 +119,8 @@ class _PartyModeState extends State<PartyModePage> {
                     ),
             // _buildBanner(),
             // _buildAdaptativeBannerd()
+
+            if (_isAdLoadedBanner) adsManager.buildAdaptativeBannerd(context)
           ],
         ));
   }
@@ -133,55 +149,24 @@ class _PartyModeState extends State<PartyModePage> {
   }
 
   Widget _buildEnabledFlirtPanelPoint() {
+    double radius = 200;
+    double width = 300;
+    double heigth = 300;
     return Padding(
         padding: const EdgeInsets.only(top: 0.0),
         child: Column(
-           mainAxisAlignment:
-            MainAxisAlignment.center, // Center 
+          mainAxisAlignment: MainAxisAlignment.center, // Center
           children: [
-            SizedBox(
-              width: 300, // Width of the circle
-              height:
-                  300, // Height of the circle (same as width for a perfect circle)
-              child: Stack(
-                children: [
-                  Container(
-                    width: 150,
-                    decoration: BoxDecoration(
-                      color: _sexAltColor,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(200),
-                        bottomLeft: Radius.circular(200),
-                      ),
-                    ),
-                  ),
-                  // Second half color
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      width: 150, // Half the total width
-                      decoration: BoxDecoration(
-                        color: _relAltColor,
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(200),
-                          bottomRight: Radius.circular(200),
-                        ),
-                      ),
-                    ),
-                  ),      
-                ],
-              ),
-            ),
-              const SizedBox(height: 100),
-                Container(
-                  child: MyButton(
-                    text: "Parar",
-                    onTap: () {
-                      _onStopFlirt();
-                    },
-                  ),
-                ),
-              const SizedBox(height: 70)
+            FlirtPoint()
+                .build(width, heigth, radius, _sexAltColor!, _relAltColor!),
+            const SizedBox(height: 100),
+            // MyButton(
+            //   text: "Parar",
+            //   onTap: () {
+            //     _onStopFlirt();
+            //   },
+            // ),
+            // const SizedBox(height: 70)
           ],
         ));
   }

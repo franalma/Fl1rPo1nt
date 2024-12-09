@@ -147,13 +147,31 @@ class _UserStatePage extends State<UserStatePage> {
         });
   }
 
+  Widget _buildStatus() {
+    return ListTile(
+        leading: SizedBox(
+          height: 50,
+          width: 50,
+          child: Container(color: _getGenderColor()),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios_sharp),
+        title: const Text("Estado"),
+        subtitle: Text(user.isFlirting? "Activo": "Desactivado"),
+        onTap: () async {
+          
+        });
+  }
+
+
   Widget _buildBody() {
     return ListView(children: [
       _buildSexOrientation(),
       const Divider(),
       _buidRelationShip(),
       const Divider(),
-      _buildLookingForGender()
+      _buildLookingForGender(),
+      const Divider(),
+      _buildStatus()
     ]);
   }
 
@@ -187,5 +205,10 @@ class _UserStatePage extends State<UserStatePage> {
       }
       NavigatorApp.pop(context);
     });
+  }
+
+  void setFlirtStatus(){
+   
+
   }
 }
