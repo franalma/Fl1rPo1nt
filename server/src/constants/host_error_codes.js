@@ -34,6 +34,7 @@ const HOST_ERROR_CODES = {
     status: 200,
     description: "Wrong user/password",
   },
+  
   USER_NOT_EXIST: {
     error_code: -104,
     status: 200,
@@ -60,6 +61,19 @@ const HOST_ERROR_CODES = {
     description: "No flirts found",
   },
 
+  NOT_POSSIBLE_TO_ADD_POINT: {
+    error_code: -107,
+    status: 200,
+    description: "Not possible to add smart point",
+  },
+
+  QR_NOT_EXIST: {
+    error_code: -108,
+    status: 200,
+    description: "QR does not exist",
+  },
+
+
   USER_ALREADY_IN_YOUR_CONTACTS: {
     error_code: -401,
     status: 200,
@@ -68,6 +82,9 @@ const HOST_ERROR_CODES = {
 
 
 
+
+
+  
 
 
   

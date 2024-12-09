@@ -105,8 +105,11 @@ async function getUserQrByUserId(input) {
   return result;
 }
 
+
+
 module.exports = {
   addUserQrByUserId,
   removeUserQrByUserIdQrId,
   getUserQrByUserId,
+  
 };

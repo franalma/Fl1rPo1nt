@@ -180,6 +180,12 @@ const GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES = [
 
 ];
 
+const PUT_SMART_POINT_BY_USER_ID_RULES = [    
+    body('input.values.user_id').notEmpty().isArray().withMessage("User id is required"),    
+    body('input.values.qr_id').notEmpty().isArray().withMessage("QR id required"),    
+];
+
+
 
 
 
@@ -218,5 +224,6 @@ module.exports = {
     DISABLE_MATCH_BY_MATCH_ID_USER_ID_RULES,
     GET_USER_PUBLIC_PROFILE_BY_USER_ID_RULES,
     GET_PROTECTED_IMAGES_URLS_BY_USER_ID_RULES,
-    GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES
+    GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES,
+    PUT_SMART_POINT_BY_USER_ID_RULES
 }

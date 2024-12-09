@@ -3,8 +3,14 @@ const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
 const { printJson } = require("../../utils/json_utils");
 const { getUserQrByUserId } = require("../qr/qr_handler");
-const { getUserImagesByUserId, getImageByUserIdImageId } = require("../../files/file_handler");
-const { genError, HOST_ERROR_CODES } = require("./../../constants/host_error_codes")
+const {
+  getUserImagesByUserId,
+  getImageByUserIdImageId,
+} = require("../../files/file_handler");
+const {
+  genError,
+  HOST_ERROR_CODES,
+} = require("./../../constants/host_error_codes");
 
 const databases = require("../../database/databases");
 const { DB_INSTANCES } = require("../../database/databases");
@@ -26,18 +32,15 @@ async function creatInternalUser(input) {
     gender: {},
     created_at: currentTime,
     updated_at: currentTime,
-    user_interests:
-    {
+    user_interests: {
       relationship: {},
       sex_alternative: {},
-      gender_preference: {}
+      gender_preference: {},
     },
     biography: "",
     profile_image_id: "",
     default_qr_id: "",
     radio_visibility: 10,
-
-
   };
 
   return user;
@@ -47,7 +50,6 @@ async function createPublicProfileUser(input) {
   logger.info("Starts createPublicProfileUser:" + JSON.stringify(input));
   let user = {};
   try {
-
     user = {
       id: input.id,
       name: input.name,
@@ -62,24 +64,23 @@ async function createPublicProfileUser(input) {
         values: [
           {
             user_id: input.id,
-            file_id: input.profile_image_id
-          }
-        ]
-
+            file_id: input.profile_image_id,
+          },
+        ],
       };
 
       const imageData = await getImageByUserIdImageId(query);
-  
+
       if (imageData.status == 200) {
-        user.profile_image = imageData.files.length > 0 ? imageData.files[0] : "";
+        user.profile_image =
+          imageData.files.length > 0 ? imageData.files[0] : "";
       }
     }
-    logger.info("--public profile: "+JSON.stringify(user));
+    logger.info("--public profile: " + JSON.stringify(user));
   } catch (error) {
     logger.info(error);
   }
-  
-  
+
   return user;
 }
 
@@ -96,6 +97,25 @@ function createUserLocationExternal(value) {
   return result;
 }
 
+async function checkUserExist(userId) {
+  logger.info("Starts checkUserExist: " + userId);
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filter = { id: userId };
+    const dbResult = await dbHandler.findWithFiltersAndClient(
+      db.client,
+      filter,
+      db.collections.user_collection
+    );
+    if (dbResult && dbResult.length > 0) {
+      return true;
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+  return false;
+}
+
 async function registerUser(input) {
   logger.info("Start registerUser: " + JSON.stringify(input));
   let result = {};
@@ -103,7 +123,11 @@ async function registerUser(input) {
     const db = DB_INSTANCES.DB_API;
 
     let user = await creatInternalUser(input);
-    let dbResponse = await dbHandler.addDocumentWithClient(db.client, user, db.collections.user_collection);
+    let dbResponse = await dbHandler.addDocumentWithClient(
+      db.client,
+      user,
+      db.collections.user_collection
+    );
     if (dbResponse) {
       result = {
         status: 200,
@@ -126,10 +150,14 @@ async function getUserInfoByUserId(input) {
   try {
     const dbApi = databases.DB_INSTANCES.DB_API;
     let filters = {
-      id: input.id
+      id: input.id,
     };
     logger.info("-->filter: " + JSON.stringify(filters));
-    let dbRes = await dbHandler.findWithFiltersAndClient(dbApi.client, filters, dbApi.collections.user_collection);
+    let dbRes = await dbHandler.findWithFiltersAndClient(
+      dbApi.client,
+      filters,
+      dbApi.collections.user_collection
+    );
 
     const user = dbRes[0];
 
@@ -151,8 +179,8 @@ async function getUserInfoByUserId(input) {
         scans_performed: user.scans_performed,
         default_qr_id: user.default_qr_id,
         radio_visibility: user.radio_visibility,
-        gender: user.gender ? user.gender : {}
-      }
+        gender: user.gender ? user.gender : {},
+      },
     };
 
     return result;
@@ -162,53 +190,16 @@ async function getUserInfoByUserId(input) {
   return result;
 }
 
-// async function getUsersByDistanceFromPoint(input) {
-//   logger.info("Starts getUsersByDistanceFromPoint: ");
-//   let result = {};
-
-//   try {
-//     const db = DB_INSTANCES.DB_API;
-//     const filters = {
-//       location: {
-//         $near: {
-//           $geometry: {
-//             type: "Point",
-//             coordinates: [input.longitude, input.latitude],
-//           },
-//           $maxDistance: input.radio,
-//         },
-//       },
-//     };
-
-//     const dbResponse = await dbHandler.findWithFiltersAndClient(
-//       db.client,
-//       filters,
-//       db.collections.user_coordinates_collection
-//     );
-//     if (dbResponse) {
-//       result.status = 200;
-//       result.flirts = [];
-//       logger.info("items: " + JSON.stringify(dbResponse));
-//       for (let item of dbResponse) {
-//         result.flirts.push(createUserLocationExternal(item));
-//       }
-//     } else {
-//       result.status = 500;
-//     }
-
-//   } catch (error) {
-//     logger.info(error);
-//   }
-//   return result;
-// }
-
 async function updateUserNetworksByUserId(input) {
   logger.info("Start update");
   let result = {};
   try {
     const db = DB_INSTANCES.DB_API;
     const filters = { id: input.user_id };
-    const newValues = { networks: input.values.networks, updated_at: Date.now() };
+    const newValues = {
+      networks: input.values.networks,
+      updated_at: Date.now(),
+    };
     const dbResponse = await dbHandler.updateDocumentWithClient(
       db.client,
       newValues,
@@ -253,19 +244,16 @@ async function updateUserSearchingRangeByUserId(input) {
     } else {
       result.status = 500;
     }
-
   } catch (error) {
     logger.info(error);
   }
-
-
 
   return result;
 }
 
 async function updateUserInterestsByUserId(input) {
   logger.info("Starts updateUserInterestsByUserId :" + JSON.stringify(input));
-  
+
   try {
     const db = DB_INSTANCES.DB_API;
     const filters = { id: input.user_id };
@@ -282,16 +270,16 @@ async function updateUserInterestsByUserId(input) {
     logger.info("-> db result: " + dbResponse);
     if (dbResponse) {
       return {
-        ...genError(HOST_ERROR_CODES.NO_ERROR)
-      }
+        ...genError(HOST_ERROR_CODES.NO_ERROR),
+      };
     }
   } catch (error) {
     logger.info(error);
   }
 
   return {
-    ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR)
-  }
+    ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR),
+  };
 }
 
 async function updateUserQrsByUserId(input) {
@@ -334,13 +322,38 @@ async function updateUserQrsByUserId(input) {
   return result;
 }
 
+async function checkQrExist(userId, qrId) {
+  logger.info("Starts checkQrExist: userID: " + userId + " qrId: " + qrId);
+  // try {
+  //   const db = DB_INSTANCES.DB_API;
+  //   const filter = { id: userId , qr_values};
+  //   const dbResult = await dbHandler.findWithFiltersAndClient(
+  //     db.client,
+  //     filter,
+  //     db.collections.qr
+  //   );
+  //   if (dbResult && dbResult.length > 0) {
+  //     return true;
+  //   }
+  // } catch (error) {
+  //   logger.info(error);
+  // }
+  return false;
+}
+
 async function getUserInfoByUserIdQrId(userId, qrId) {
-  logger.info("Starts getUserInfoByUserIdQrId. user_id: " + userId + " qr_id: " + qrId);
+  logger.info(
+    "Starts getUserInfoByUserIdQrId. user_id: " + userId + " qr_id: " + qrId
+  );
   let result = {};
   try {
     const db = DB_INSTANCES.DB_API;
     const filter = { id: userId, qr_values: { $elemMatch: { qr_id: qrId } } };
-    let dbResponse = await dbHandler.findWithFiltersAndClient(db.client, filter, db.collections.user_collection);
+    let dbResponse = await dbHandler.findWithFiltersAndClient(
+      db.client,
+      filter,
+      db.collections.user_collection
+    );
 
     if (dbResponse) {
       for (let item of dbResponse[0].qr_values) {
@@ -353,7 +366,6 @@ async function getUserInfoByUserIdQrId(userId, qrId) {
   } catch (error) {
     logger.info(error);
   }
-
 
   return result;
 }
@@ -368,7 +380,12 @@ async function updateUserBiographyByUserId(input) {
       biography: input.biography,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
+    await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
   } catch (error) {
     logger.info(error);
     result = {
@@ -389,7 +406,12 @@ async function updateUserHobbiesByUserId(input) {
       hobbies: input.hobbies,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
+    await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
   } catch (error) {
     logger.info(error);
     result = {
@@ -411,7 +433,12 @@ async function updateUserNameByUserId(input) {
       updated_at: Date.now(),
     };
     logger.info(`filters: ${JSON.stringify(filters)}`);
-    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
+    await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
   } catch (error) {
     logger.info(error);
     result = {
@@ -432,7 +459,12 @@ async function updateUserRadioVisibility(input) {
       radio_visibility: input.radio_visibility,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
+    await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
   } catch (error) {
     logger.info(error);
     result = {
@@ -453,7 +485,12 @@ async function updateUserGenderByUserId(input) {
       gender: input.gender,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
+    await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
   } catch (error) {
     logger.info(error);
     result = {
@@ -474,7 +511,12 @@ async function updateUserImageProfileByUserId(input) {
       profile_image_id: input.image_id,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
+    await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
   } catch (error) {
     logger.info(error);
     result = {
@@ -502,14 +544,19 @@ async function updateUserDefaultQrByUserId(input) {
       }
     }
     if (!found) {
-      return { status: 500, message: "Qr not valid" }
+      return { status: 500, message: "Qr not valid" };
     }
     const filters = { id: input.user_id };
     const newValues = {
       default_qr_id: input.qr_id,
       updated_at: Date.now(),
     };
-    await dbHandler.updateDocumentWithClient(db.client, newValues, filters, db.collections.user_collection);
+    await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues,
+      filters,
+      db.collections.user_collection
+    );
   } catch (error) {
     logger.info(error);
     result = {
@@ -555,8 +602,12 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
       updated_at: Date.now(),
     };
 
-
-    await dbHandler.updateDocumentWithClient(db.client, newValues1, { id: userId }, db.collections.user_collection);
+    await dbHandler.updateDocumentWithClient(
+      db.client,
+      newValues1,
+      { id: userId },
+      db.collections.user_collection
+    );
     await dbHandler.updateDocumentWithClient(
       db.client,
       newValues2,
@@ -581,7 +632,11 @@ async function getUserPublicProfileByUserId(input) {
     logger.info("Starts getUserPublicProfileByUserId:" + JSON.stringify(input));
     const db = DB_INSTANCES.DB_API;
     const filter = { id: input.user_id };
-    const dbResponse = await dbHandler.findWithFiltersAndClient(db.client, filter, db.collections.user_collection);
+    const dbResponse = await dbHandler.findWithFiltersAndClient(
+      db.client,
+      filter,
+      db.collections.user_collection
+    );
     if (dbResponse) {
       const userDB = dbResponse[0];
       result = await createPublicProfileUser(userDB);
@@ -594,12 +649,10 @@ async function getUserPublicProfileByUserId(input) {
   }
 
   return { status: 500 };
-
 }
 
 module.exports = {
   registerUser,
-  // getUsersByDistanceFromPoint,
   updateUserNetworksByUserId,
   updateUserSearchingRangeByUserId,
   updateUserInterestsByUserId,
@@ -614,5 +667,7 @@ module.exports = {
   updateUserRadioVisibility,
   updateUserGenderByUserId,
   getUserPublicProfileByUserId,
-  getUserInfoByUserId
+  getUserInfoByUserId,
+  checkUserExist,
+  checkQrExist
 };

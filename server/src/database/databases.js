@@ -53,7 +53,8 @@ const DB_INSTANCES = {
             user_audios_collection: "user_audios",
             user_images_collection: "user_images",
             flirts_collection:"flirts",
-            user_coordinates_collection: "user_coordinates"
+            user_coordinates_collection: "user_coordinates",
+            smart_points_coolection: "smart_points"
         }
     },
     DB_AUTH: {

@@ -17,6 +17,7 @@ const path = require("path");
 const { printJson } = require("./utils/json_utils");
 const { header } = require("express-validator");
 const { DB_INSTANCES } = require("./database/databases");
+const smartpoint_handler = require("./model/smart_points/smart_points_handler");
 
 //Init
 const app = express();
@@ -25,7 +26,7 @@ const port = process.env.SERVER_PORT_API;
 const server = http.createServer(app);
 
 async function processRequest(req, res) {
-  logger.info("processRequest:"+JSON.stringify(req.body));
+  logger.info("processRequest:" + JSON.stringify(req.body));
 
   try {
     let result = requestValidator.requestDoValidation(req);
@@ -69,7 +70,7 @@ async function processRequest(req, res) {
           );
           break;
         }
-      
+
         case hostActions.GET_USER_CONTACTS_BY_USER_ID: {
           result = await contactHandler.getUserContactsByUserId(req.body.input);
           break;
@@ -149,8 +150,6 @@ async function processRequest(req, res) {
           break;
         }
 
-
-
         case hostActions.UPDATE_USER_DEFAULT_QR_BY_USER_ID: {
           result = await userHandler.updateUserDefaultQrByUserId(
             req.body.input
@@ -182,8 +181,6 @@ async function processRequest(req, res) {
           break;
         }
 
-
-
         case hostActions.DISABLE_MATCH_BY_MATCH_ID_USER_ID: {
           result = await contactHandler.diableMatchByMatchIdUserId(
             req.body.input
@@ -202,7 +199,15 @@ async function processRequest(req, res) {
           );
           break;
         }
+
+        case hostActions.PUT_SMART_POINT_BY_USER_ID: {
+          result = await smartpoint_handler.putUserSmartPointByUserId(
+            req.body.input
+          );
+          break;
+        }
       }
+
       if (result && result.status) {
         res.status(result.status).json(result);
       } else {
