@@ -15,10 +15,10 @@ class LocationService {
 
   void startSendingLocation() {
     Log.d("Statts startSendingLocation");
-    _timer?.cancel(); 
+    _timer?.cancel();
     _timer =
         Timer.periodic(Duration(seconds: _locationInterval), (timer) async {
-      try {        
+      try {
         Position position = await _getCurrentLocation();
         Location location = Location(position.latitude, position.longitude);
         _sendLocationToServer(location);

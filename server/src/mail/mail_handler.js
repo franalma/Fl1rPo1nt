@@ -2,7 +2,7 @@ require("dotenv").config();
 const logger = require("../logger/log"); 
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const image = "/Users/fran/Desktop/Projects/Personal/Fl1rPo1nt/Fl1rPo1nt/server/src/imgs/floiint_mail_logo.png";
+const image = "/Users/sierra/Desktop/Projects/Personal/Fl1rPo1nt/Fl1rPo1nt/server/src/imgs/floiint_mail_logo.png";
 const validationUrl = process.env.REGISTRATION_VALIDATION_URL;
 
 // Function to convert a file to Base64

@@ -24,4 +24,29 @@ class SmartPoint {
     }
     return SmartPoint.empty();
   }
+
+  Future<void> getSmartPointByUserId(String userId) async{
+      try{
+
+      }catch(error, stackTrace){
+        Log.d("$error, $stackTrace");
+      }
+  }
+
+   Future<void> getSmartPointByPointId(String pointId) async{
+      try{
+
+      }catch(error, stackTrace){
+        Log.d("$error, $stackTrace");
+      }
+  }
+
+  Future<void> updatePointStatusByPointId(String pointId) async{
+      try{
+
+      }catch(error, stackTrace){
+        Log.d("$error, $stackTrace");
+      }
+  }
+
 }

@@ -1,4 +1,6 @@
-import 'package:app/comms/model/response/auth/HostLoginResponse.dart';
+import 'package:app/comms/model/request/flirt/HostGetUserFlirtsRequest.dart';
+import 'package:app/comms/model/request/user/profile/HostUpdateUserRadioVisibilityRequest.dart';
+import 'package:app/model/Flirt.dart';
 import 'package:app/model/Gender.dart';
 import 'package:app/model/Hobby.dart';
 import 'package:app/model/QrValue.dart';
@@ -170,71 +172,27 @@ class User {
     return User.empty();
   }
 
-  // factory User.fromHost(HostLoginResponse response) {
-  //   Log.d("User starts fromHost");
-  //   try {
-  //     List<SocialNetwork> networks = [];
-  //     List<QrValue> qrValues = [];
-  //     SexAlternative sexAlternatives;
-  //     RelationShip relationShip;
-  //     String userProfileImageId ="";
+  Future<Flirt?> getUserActiveFlirt() async {
+    try {
+      var response = await HostGetUserFlirtsRequest().run(userId, 1);
+      if (response.flirts != null && response.flirts!.isNotEmpty) {
+        return response.flirts![0];
+      }
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
+    return null;
+  }
 
-  //     if (response.networks.isNotEmpty) {
-  //       networks = response.networks.map((e) => SocialNetwork.load(e)).toList();
-  //     }
-
-  //     if (response.qrValues.isNotEmpty) {
-  //       qrValues = response.qrValues.map((e) => QrValue.load(e)).toList();
-  //     }
-
-  //     if (response.relationShip.isNotEmpty) {
-  //       relationShip = RelationShip.load(response.relationShip);
-  //     } else {
-  //       relationShip = RelationShip.empty();
-  //     }
-
-  //     if (response.sexAlternatives.isNotEmpty) {
-  //       sexAlternatives = SexAlternative.load(response.sexAlternatives);
-  //     } else {
-  //       sexAlternatives = SexAlternative.empty();
-  //     }
-
-  //      if (response.sexAlternatives.isNotEmpty) {
-  //       sexAlternatives = SexAlternative.load(response.sexAlternatives);
-  //     } else {
-  //       sexAlternatives = SexAlternative.empty();
-  //     }
-
-  //     if (response.userProfileImageId.isNotEmpty) {
-  //       userProfileImageId = response.userProfileImageId;
-  //     }
-
-  //     return User(
-  //         response.userId,
-  //         response.name,
-  //         response.phone,
-  //         response.mail,
-  //         "",
-  //         "",
-  //         response.token,
-  //         response.resfreshToken,
-  //         networks,
-  //         qrValues,
-  //         relationShip,
-  //         sexAlternatives,
-  //         response.biography,
-  //         response.hobbies,
-  //         userProfileImageId,
-  //         response.nScanned,
-  //         response.nScansPerformed,
-  //         response.qrDefaultId,
-  //         response.radioVisibility,
-  //         response.gender!,
-  //         response.genderInterest!
-  //         );
-  //   } catch (error) {
-  //     Log.d(error.toString());
-  //   }
-  //   return User.empty();
-  // }
+  Future<bool> updateUserVisibility(double value) async {
+    try {
+      if (radioVisibility != value) {
+        var result = HostUpdateUserRadioVisibilityRequest().run(userId, value);
+        return result;
+      }
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
+    return false;
+  }
 }

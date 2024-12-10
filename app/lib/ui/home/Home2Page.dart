@@ -1,12 +1,10 @@
 import 'package:app/model/Session.dart';
-import 'package:app/model/SocialNetwork.dart';
+import 'package:app/model/User.dart';
 import 'package:app/services/NewMessageService.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/ads/AdsManager.dart';
 import 'package:app/ui/contacts/ListContactsPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FancyButton.dart';
-import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/party_mode/PartyModePage.dart';
@@ -25,7 +23,8 @@ class Home2Page extends StatefulWidget {
 }
 
 class _Home2State extends State<Home2Page> {
-  // late AdsManager _adsManager;
+  User _user = Session.user;
+
   @override
   void initState() {
     super.initState();
@@ -46,7 +45,7 @@ class _Home2State extends State<Home2Page> {
   Widget build(BuildContext context) {
     // _adsManager.init(context);
     return Scaffold(
-        appBar: AppBar(          
+        appBar: AppBar(
           actions: [
             IconButton(
                 onPressed: () {
@@ -65,9 +64,9 @@ class _Home2State extends State<Home2Page> {
           ),
         ),
         body: Stack(
-          children: [_buildBody(), 
-          // _adsManager.buildAdaptativeBannerd(context)
-          
+          children: [
+            _buildBody(),
+            // _adsManager.buildAdaptativeBannerd(context)
           ],
         ));
   }
@@ -90,11 +89,37 @@ class _Home2State extends State<Home2Page> {
                   NavigatorApp.push(UserStatePage(), context);
                 }),
             FancyButton(
+                text: 'Mis redes',
+                icon: FontAwesomeIcons.solidCirclePlay,
+                color: Color.fromARGB(255, 85, 22, 244),
+                onTap: () {
+                  NavigatorApp.push(MySocialNetworksPage(), context);
+                }),
+            FancyButton(
+                text: 'Mis QR',
+                icon: Icons.qr_code,
+                color: Color.fromARGB(255, 187, 23, 202),
+                onTap: () {
+                  NavigatorApp.push(ListQrPage(), context);
+                }),
+            FancyButton(
                 text: 'Modo fiesta',
                 icon: FontAwesomeIcons.hands,
                 color: Colors.blue,
                 onTap: () {
-                  NavigatorApp.push(PartyModePage(), context);
+                  if (_user.isFlirting) {
+                    NavigatorApp.push(PartyModePage(), context);
+                  } else {
+                    AlertDialogs().showModalDialogMessage(
+                        context,
+                        200,
+                        Icons.visibility,
+                        50,
+                        Colors.red,
+                        "Debes hacerte visible para comenzar la fiesta",
+                        TextStyle(fontSize: 18),
+                        "Cerrar");
+                  }
                 }),
             FancyButton(
                 text: 'Mis contactos',
@@ -113,26 +138,11 @@ class _Home2State extends State<Home2Page> {
                   NavigatorApp.push(MapExplorerController(location), context);
                 }),
             FancyButton(
-                text: 'Mis QR',
-                icon: Icons.qr_code,
-                color: Color.fromARGB(255, 187, 23, 202),
-                onTap: () {
-                  
-                  NavigatorApp.push(ListQrPage(), context);
-                }),
-            FancyButton(
                 text: 'Mis Puntos',
                 icon: Icons.nfc,
                 color: Color.fromARGB(255, 91, 3, 61),
-                onTap: () {                
-                  NavigatorApp.push(SmartPointsPage(), context);
-                }),
-                 FancyButton(
-                text: 'Mis redes',
-                icon: FontAwesomeIcons.solidCirclePlay,
-                color: Color.fromARGB(255, 85, 22, 244),
                 onTap: () {
-                   NavigatorApp.push(MySocialNetworksPage(), context);
+                  NavigatorApp.push(SmartPointsPage(), context);
                 }),
             FancyButton(
                 text: 'Eventos',

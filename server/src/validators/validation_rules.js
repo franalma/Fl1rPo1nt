@@ -185,13 +185,20 @@ const PUT_SMART_POINT_BY_USER_ID_RULES = [
     body('input.values.qr_id').notEmpty().isArray().withMessage("QR id required"),    
 ];
 
+const UPDATE_SMART_POINT_STATUS_BY_POINT_ID_RULES = [    
+    body('input.values.point_id').notEmpty().isArray().withMessage("Point id is required"),    
+    body('input.values.status').notEmpty().isArray().withMessage("Status value is required"),    
+];
 
 
+const UPDATE_SMART_POINTS_STATUS_BY_USER_ID_RULES = [    
+    body('input.values.user_id').notEmpty().isArray().withMessage("User id is required"),    
+    body('input.values.status').notEmpty().isArray().withMessage("Status value is required"),    
+];
 
-
-
-
-
+const GET_ALL_SMART_POINTS_BY_USER_ID_RULES = [    
+    body('input.values.user_id').notEmpty().isArray().withMessage("User id is required"),        
+];
 
 module.exports = {
     // NEW_USER_VALIDATION_RULES,
@@ -225,5 +232,8 @@ module.exports = {
     GET_USER_PUBLIC_PROFILE_BY_USER_ID_RULES,
     GET_PROTECTED_IMAGES_URLS_BY_USER_ID_RULES,
     GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES,
-    PUT_SMART_POINT_BY_USER_ID_RULES
+    PUT_SMART_POINT_BY_USER_ID_RULES,
+    UPDATE_SMART_POINT_STATUS_BY_POINT_ID_RULES,
+    UPDATE_SMART_POINTS_STATUS_BY_USER_ID_RULES,
+    GET_ALL_SMART_POINTS_BY_USER_ID_RULES
 }

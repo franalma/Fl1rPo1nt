@@ -206,6 +206,33 @@ async function processRequest(req, res) {
           );
           break;
         }
+
+        case hostActions.GET_ALL_SMART_POINTS_BY_USER_ID: {
+          result = await smartpoint_handler.getAllSmartPointsByUserId(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.UPDATE_SMART_POINT_STATUS_BY_POINT_ID: {
+          result = await smartpoint_handler.updaterSmartPointStatusByPointId(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.UPDATE_SMART_POINTS_STATUS_BY_USER_ID: {
+          result = await smartpoint_handler.updateAllPointsStatusByUserId(
+            req.body.input
+          );
+          break;
+        }
+
+
+
+
+      
+        
       }
 
       if (result && result.status) {

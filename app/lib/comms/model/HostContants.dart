@@ -2,7 +2,7 @@ const jsonHeaders = {
   'Content-Type': 'application/json', // Define el tipo de contenido como JSON
 };
 const HOST_API = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "172.20.10.2",
   "dev_port": 3000,
   "pro_ip": "",
   "pro_host": "",
@@ -10,7 +10,7 @@ const HOST_API = {
 };
 
 const HOST_AUTH = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "172.20.10.2",
   "dev_port": 5500,
   "pro_ip": "",
   "pro_host": "",
@@ -19,7 +19,7 @@ const HOST_AUTH = {
 };
 
 const HOST_CHAT = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "172.20.10.2",
   "dev_port": 4000,
   "pro_ip": "",
   "pro_host": "",
@@ -27,7 +27,7 @@ const HOST_CHAT = {
 };
 
 const HOST_MULT = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "172.20.10.2",
   "dev_port": 7000,
   "pro_ip": "",
   "pro_host": "",
@@ -43,20 +43,6 @@ String BASE_API_URL = "http://${HOST_API["dev_ip"]}:${HOST_API["dev_port"]}";
 String BASE_MULT_URL = "http://${HOST_MULT["dev_ip"]}:${HOST_MULT["dev_port"]}";
 String BASE_CHAT_URL = "http://${HOST_CHAT["dev_ip"]}:${HOST_CHAT["dev_port"]}";
 
-// const String _DEV_HOST = "http://$_DEV_HOST_IP:3000";
-// const String _HOST = _DEV_HOST;
-
-// const String BASE_API_URL = "$_HOST/api";
-// const String BASE_AUTH_URL = "$_HOST/auth";
-// const String BASE_UPLOAD_IMAGE_URL = "$_HOST/upload/image";
-// const String BASE_UPLOAD_AUDIO_URL = "$_HOST/upload/audio";
-// const String BASE_PROTECTED_IMAGE_URL = "$_HOST/protected-image";
-
-// const String SERVER_API = BASE_API_URL;
-// const String SERVER_AUTH = BASE_AUTH_URL;
-// const String SERVER_UPLOAD_IMAGE = BASE_UPLOAD_IMAGE_URL;
-// const String SERVER_UPLOAD_AUDIO = BASE_UPLOAD_AUDIO_URL;
-
 class HostActionsItem {
   String action;
   String _url;
@@ -64,9 +50,6 @@ class HostActionsItem {
   HostActionsItem(this.action, this._url, this.path);
   String build() => _url + path;
 }
-
-// final HostActionsItem Login = HostActionsItem(
-//     "LOGIN", BASE_AUTH_URL, HOST_AUTH["endpoint_login"].toString());
 
 class HostAuthActions {
   static final HostActionsItem login = HostActionsItem(
@@ -197,6 +180,33 @@ class HostApiActions {
       "GET_USER_PUBLIC_PROFILE_BY_USER_ID",
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
+
+
+  static final HostActionsItem putSmartPointByUserIdQrId = HostActionsItem(
+      "PUT_SMART_POINT_BY_USER_ID",
+      BASE_API_URL,
+      HOST_API["endpoint_api"].toString());
+
+
+  static final HostActionsItem updateSmartPointStatusByPointId = HostActionsItem(
+      "UPDATE_SMART_POINT_STATUS_BY_POINT_ID",
+      BASE_API_URL,
+      HOST_API["endpoint_api"].toString());
+
+ static final HostActionsItem updateSmartPointStatusByUserId = HostActionsItem(
+      "UPDATE_SMART_POINTS_STATUS_BY_USER_ID",
+      BASE_API_URL,
+      HOST_API["endpoint_api"].toString());
+
+ static final HostActionsItem getAllSmartPointsByUserId = HostActionsItem(
+      "GET_ALL_SMART_POINTS_BY_USER_ID",
+      BASE_API_URL,
+      HOST_API["endpoint_api"].toString());
+
+
+
+
+  
 }
 
 class HostMultActions {

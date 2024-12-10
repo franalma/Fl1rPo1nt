@@ -111,30 +111,7 @@ class _UserDataPage extends State<UserDataPage> {
               const Divider(),
             ],
           ),
-          Column(
-            children: [
-              ListTile(
-                onTap: () async {
-                  // await _onItemSelected(index);
-                },
-                title: Text("Visible en", style: Styles.rowCellTitleTextStyle),
-                subtitle: Text("$_currentRadioVisibility Kms",
-                    style: Styles.rowCellSubTitleTextStyle),
-              ),
-              Slider(
-                  value: _currentRadioVisibility,
-                  min: 0,
-                  max: 200,
-                  divisions: 5,
-                  // label: sliderValues[index].toStringAsFixed(1),
-                  onChanged: (value) {
-                    setState(() {
-                      _currentRadioVisibility = value;
-                    });
-                  }),
-              const Divider(),
-            ],
-          )
+        
         ]));
   }
 
@@ -170,18 +147,19 @@ class _UserDataPage extends State<UserDataPage> {
 
   Future<void> _beforeLeaving() async {
     Log.d("Start _beforeLeaving");
-    if (user.radioVisibility != _currentRadioVisibility) {
-      HostUpdateUserRadioVisibilityRequest()
-          .run(user.userId, _currentRadioVisibility)
-          .then((value) {
-        Log.d("updated radion $value");
-        NavigatorApp.pop(context);
-        if (value) {
-          user.radioVisibility = _currentRadioVisibility;
-        }
-      });
-    } else {
-      NavigatorApp.pop(context);
-    }
+    NavigatorApp.pop(context);
+    // if (user.radioVisibility != _currentRadioVisibility) {
+    //   HostUpdateUserRadioVisibilityRequest()
+    //       .run(user.userId, _currentRadioVisibility)
+    //       .then((value) {
+    //     Log.d("updated radion $value");
+    //     NavigatorApp.pop(context);
+    //     if (value) {
+    //       user.radioVisibility = _currentRadioVisibility;
+    //     }
+    //   });
+    // } else {
+    //   NavigatorApp.pop(context);
+    // }
   }
 }

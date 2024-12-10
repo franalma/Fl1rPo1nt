@@ -129,35 +129,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                     trailing: const Icon(
                         Icons.arrow_forward_ios), // Add a left arrow icon
                     onTap: () => NavigatorApp.push(UserDataPage(), context)),
-                const Divider(),
-                //ListTile(
-                //     title:
-                //         Text("Mis gustos", style: Styles.rowCellTitleTextStyle),
-                //     trailing: const Icon(
-                //         Icons.arrow_forward_ios), // Add a left arrow icon
-                //     onTap: () => NavigatorApp.push(UserStatePage(), context)),
-                // const Divider(),
-                // ListTile(
-                //     title: Text("Mis QR", style: Styles.rowCellTitleTextStyle),
-                //     trailing: const Icon(
-                //         Icons.arrow_forward_ios), // Add a left arrow icon
-                //     onTap: () => NavigatorApp.push(ListQrPage(), context)),
-                // const Divider(),
-                // ListTile(
-                //     title:
-                //         Text("Mis redes", style: Styles.rowCellTitleTextStyle),
-                //     trailing: const Icon(
-                //         Icons.arrow_forward_ios), // Add a left arrow icon
-                //     onTap: () => NavigatorApp.push(
-                //         const MySocialNetworksPage(), context)),
-                // const Divider(),
-                // ListTile(
-                //     title:
-                //         Text("Mis puntos", style: Styles.rowCellTitleTextStyle),
-                //     trailing: const Icon(
-                //         Icons.arrow_forward_ios), // Add a left arrow icon
-                //     onTap: () => NavigatorApp.push(SmartPointsListPage(), context)),
-                // const Divider(),
+                const Divider(),                
                 ListTile(
                     title:
                         Text("Mis fotos", style: Styles.rowCellTitleTextStyle),

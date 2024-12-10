@@ -127,13 +127,13 @@ async function getSmartPointByPointId(input) {
   }
 }
 
-async function toggleSmartPointByPointId(input) {
+async function updaterSmartPointStatusByPointId(input) {
   logger.info("Starts disableSmartPointByPointId");
   try {
     const filter = { point_id: input.point_id };
     const newDoc = {
       updated_at: Date.now(),
-      status: 0,
+      status: input.status,
     };
 
     const dbResult = await dbHandler.updateDocumentWithClient(
@@ -153,13 +153,13 @@ async function toggleSmartPointByPointId(input) {
   }
 }
 
-async function disableAllPointsByUserId(input) {
+async function updateAllPointsStatusByUserId(input) {
   logger.info("Starts disableSmartPointByPointId");
   try {
     const filter = { user_id: input.user_id };
     const newDoc = {
       updated_at: Date.now(),
-      status: 0,
+      status: input.status,
     };
 
     const dbResult = await dbHandler.updateDocumentWithClient(
@@ -171,7 +171,6 @@ async function disableAllPointsByUserId(input) {
     if (dbResult && dbResult.length > 0) {
       return {
         ...genError(HOST_ERROR_CODES.NO_ERROR),
-        
       };
     }
   } catch (error) {
@@ -183,6 +182,6 @@ module.exports = {
   putUserSmartPointByUserId,
   getAllSmartPointsByUserId,
   getSmartPointByPointId,
-  disableSmartPointByPointId,
-  disableAllPointsByUserId,
+  updaterSmartPointStatusByPointId,
+  updateAllPointsStatusByUserId
 };
