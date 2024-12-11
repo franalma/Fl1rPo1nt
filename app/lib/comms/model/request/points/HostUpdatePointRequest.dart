@@ -2,22 +2,24 @@ import 'dart:convert';
 
 import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
+import 'package:app/comms/model/response/smart_points/HostPutPointByUserIdResponse.dart';
 import 'package:app/comms/model/response/smart_points/HostUpdatePointResponse.dart';
+import 'package:app/comms/model/response/smart_points/HostUpdatePointsResponse.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
 
 class HostUpdatePointRequest extends BaseRequest {
-  Future<HostPutPointByUserIdResponse> runByUserId(
-      String userId) async {
+  Future<HostUpdatePointsResponse> runByUserId(
+      String userId, int status) async {
     try {
-      Log.d("Start HostUpdatePointRequest.runByUserId");
+      Log.d("Start HostUpdatePointsResponse.runByUserId");
 
       HostActionsItem option = HostApiActions.putSmartPointByUserIdQrId;
       Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
-        "input": {"user_id: $userId"}
+        "input": {"user_id: $userId, status:$status"}
       };
 
       String jsonBody = json.encode(mapBody);
@@ -25,18 +27,16 @@ class HostUpdatePointRequest extends BaseRequest {
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
       if (response.statusCode == 200) {
-        return HostPutPointByUserIdResponse.fromJson(
-            jsonDecode(response.body));
+        return HostUpdatePointsResponse.fromJson(jsonDecode(response.body));
       }
     } catch (error) {
       Log.d(error.toString());
     }
-    return HostPutPointByUserIdResponse.empty();
+    return HostUpdatePointsResponse.empty();
   }
 
-
-  Future<HostPutPointByUserIdResponse> runByPointId(
-      String userId, String qrId) async {
+  Future<HostUpdatePointResponse> runByPointId(
+      String pointId, int status) async {
     try {
       Log.d("Start HostPutPointByUserIdRequest");
 
@@ -45,7 +45,7 @@ class HostUpdatePointRequest extends BaseRequest {
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
-        "input": {"user_id: $userId, qr_id:$qrId"}
+        "input": {"point_id: $pointId, status:$status"}
       };
 
       String jsonBody = json.encode(mapBody);
@@ -53,14 +53,11 @@ class HostUpdatePointRequest extends BaseRequest {
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
       if (response.statusCode == 200) {
-        return HostPutPointByUserIdResponse.fromJson(
-            jsonDecode(response.body));
+        return HostUpdatePointResponse.fromJson(jsonDecode(response.body));
       }
     } catch (error) {
       Log.d(error.toString());
     }
-    return HostPutPointByUserIdResponse.empty();
+    return HostUpdatePointResponse.empty();
   }
-
-
 }

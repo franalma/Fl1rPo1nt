@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/services/NfcService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/ads/AdsManager.dart';
 import 'package:app/ui/elements/FlirtPoint.dart';
@@ -73,6 +76,16 @@ class _PartyModeState extends State<PartyModePage> {
                       }
                     },
                     icon: const Icon(Icons.qr_code)),
+                IconButton(
+                    onPressed: () async {
+                      if (user.isFlirting) {
+                        _readPoint();
+                      } else {
+                        FlutterToast()
+                            .showToast("Debes comenzar a ligar para acceder");
+                      }
+                    },
+                    icon: const Icon(Icons.nfc)),
               ]),
         ),
         body: Stack(
@@ -105,8 +118,8 @@ class _PartyModeState extends State<PartyModePage> {
 
   Widget _buildEnabledFlirtPanelPoint() {
     double radius = 200;
-    double width = MediaQuery.of(context).size.width.toDouble()-20;
-    double heigth = MediaQuery.of(context).size.width.toDouble()-20;
+    double width = MediaQuery.of(context).size.width.toDouble() - 20;
+    double heigth = MediaQuery.of(context).size.width.toDouble() - 20;
     Color sexColor = Color(CommonUtils.colorToInt(user.sexAlternatives.color));
     Color relColor = Color(CommonUtils.colorToInt(user.relationShip.color));
     return Padding(
@@ -118,5 +131,16 @@ class _PartyModeState extends State<PartyModePage> {
             const SizedBox(height: 100),
           ],
         ));
+  }
+
+  Future<void> _readPoint() async {
+    try {
+      NfcService nfcService = NfcService();
+      await nfcService.init();
+      var result = await nfcService.readNfc(30);      
+      Log.d("-->nfc value $result");
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
   }
 }

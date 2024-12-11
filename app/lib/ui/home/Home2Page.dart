@@ -10,6 +10,7 @@ import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/party_mode/PartyModePage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/smart_points/SmartPointsAddPage.dart';
+import 'package:app/ui/smart_points/SmartPointsListPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
 import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:app/ui/utils/Log.dart';
@@ -142,7 +143,7 @@ class _Home2State extends State<Home2Page> {
                 icon: Icons.nfc,
                 color: Color.fromARGB(255, 91, 3, 61),
                 onTap: () {
-                  NavigatorApp.push(SmartPointsPage(), context);
+                  NavigatorApp.push(SmartPointsListPage(), context);
                 }),
             FancyButton(
                 text: 'Eventos',

@@ -13,7 +13,7 @@ class HostPutPointByUserIdResponse extends BaseCustomResponse {
     Log.d("Starts HostPutPointByUserIdResponse.fromJson");
     try {
       HostErrorCode errorCode = HostErrorCode.fromJson(map);
-      var point = SmartPoint.fromJson(map);
+      var point = SmartPoint.fromJson(map["point"]);
       return HostPutPointByUserIdResponse(point, errorCode);
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");

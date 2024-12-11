@@ -13,7 +13,7 @@ class HostGetAllPointsByUserIdResponse extends BaseCustomResponse {
     Log.d("Starts HostGetAllPointsByUserIdResponse.fromJson");
     try {
       HostErrorCode errorCode = HostErrorCode.fromJson(map);
-      var values = map["values"] as List;
+      var values = map["points"] as List;
 
       List<SmartPoint> points = values.map((e) {
         return SmartPoint.fromJson(e);

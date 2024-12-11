@@ -15,11 +15,14 @@ function createInternalPoint(input) {
     return {
       point_id: uuidv4(),
       user_id: input.user_id,
-      qr_id: input.qr_id,
+      user_name: input.name ? input.name : "",
+      user_phone: input.phone ? input.phone : "",
+      networks: input.networks ? input.networks : [],
       created_at: now,
       updated_at: now,
       times_used: 0,
-      status: 1,
+      //it is not recorded wait for nfc on device
+      status: -1,
     };
   } catch (error) {
     logger.info(error);
@@ -33,8 +36,11 @@ function createSmartPointExternal(input) {
     return {
       point_id: input.point_id,
       user_id: input.user_id,
-      qr_id: input.qr_id,
       status: input.status,
+      user_name: input.user_name,
+      user_phone: input.user_phone,
+      networks: input.networks,
+      times_used: input.times_used,
     };
   } catch (error) {
     logger.info(error);
@@ -47,25 +53,21 @@ async function putUserSmartPointByUserId(input) {
     const db = DB_INSTANCES.DB_API;
     const isExistUser = await userHandler.checkUserExist(input.user_id);
     if (isExistUser) {
-      const isExistQr = await userHandler.checkQrExist(
-        input.user_id,
-        input.qr_id
+      const point = createInternalPoint(input);
+      const dbResult = await dbHandler.addDocumentWithClient(
+        db.client,
+        point,
+        db.collections.smart_points_coolection
       );
-      if (isExistQr) {
-        const point = createInternalPoint(input);
-        const dbResult = await dbHandler.addDocumentWithClient(
-          db.client,
-          point
-        );
-        if (dbResult) {
-          return {
-            ...genError(HOST_ERROR_CODES.NO_ERROR),
-            ...createSmartPointExternal(point),
-          };
+      if (dbResult) {
+        const result = {
+          ...genError(HOST_ERROR_CODES.NO_ERROR),
+          point: createSmartPointExternal(point),
         }
-      } else {
-        return { ...genError(HOST_ERROR_CODES.QR_NOT_EXIST) };
+        logger.info("result point: " + JSON.stringify(result));
+        return result;
       }
+
     } else {
       return { ...genError(HOST_ERROR_CODES.USER_NOT_EXIST) };
     }
@@ -98,8 +100,12 @@ async function getAllSmartPointsByUserId(input) {
     }
   } catch (error) {
     logger.info(error);
+    return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR), error: error };
   }
-  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
+  return {
+    ...genError(HOST_ERROR_CODES.NO_ERROR),
+    points: [],
+  };
 }
 
 async function getSmartPointByPointId(input) {

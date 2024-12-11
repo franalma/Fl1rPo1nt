@@ -1,109 +1,216 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
+import 'package:app/comms/model/response/smart_points/HostPutPointByUserIdResponse.dart';
+import 'package:app/model/HostErrorCode.dart';
+import 'package:app/model/Session.dart';
+import 'package:app/model/SmartPoint.dart';
+import 'package:app/model/SocialNetwork.dart';
+import 'package:app/model/User.dart';
+import 'package:app/services/NfcService.dart';
+import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:ndef/ndef.dart' as ndef;
 
-class SmartPointsPage extends StatefulWidget {
+class SmartPointsAddPage extends StatefulWidget {
   @override
-  State<SmartPointsPage> createState() {
-    return _SmartPointsPage();
+  State<SmartPointsAddPage> createState() {
+    return _SmartPointsAddState();
   }
 }
 
-class _SmartPointsPage extends State<SmartPointsPage> {
+class _SmartPointsAddState extends State<SmartPointsAddPage> {
+  User _user = Session.user;
+
+  bool _isPhoneSelected = false;
+  bool _isNameSelected = false;
+  List<SocialNetwork> _selectedNetwors = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(flexibleSpace: const FlexibleSpaceBar()),
+        appBar: AppBar(
+          flexibleSpace: FlexibleAppBar(),
+          actions: [
+            IconButton(
+                onPressed: () => _createPoint(), icon: const Icon(Icons.nfc))
+          ],
+        ),
         body: _buildBody());
   }
 
   @override
   void initState() {
-    FlutterNfcKit.nfcAvailability.then((value) {
-      if (value != NFCAvailability.available) {
-        // oh-no
-      }
-    });
-
     super.initState();
   }
 
   Widget _buildBody() {
-    return Center(
-      child: Column(
-        children: [
-          ElevatedButton(
-            child: Text("Grabar"),
-            onPressed: () {
-              _recordPoint();
-            },
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(children: [
+        const Text(
+          "Selecciona los valores a compartir",
+          style: TextStyle(fontSize: 18),
+        ),
+        const SizedBox(height: 10),
+        const Divider(),
+        SizedBox(
+          height: 200,
+          child: Expanded(
+            child: ListView(
+              children: [
+                CheckboxListTile(
+                    title: Text("Nombre"),
+                    subtitle: Text(_user.name),
+                    onChanged: (value) {
+                      setState(() {
+                        _isNameSelected = value!;
+                      });
+                    },
+                    value: _isNameSelected),
+                const Divider(),
+                CheckboxListTile(
+                    title: const Text("Teléfono"),
+                    subtitle: Text(_user.phone),
+                    onChanged: (value) {
+                      setState(() {
+                        _isPhoneSelected = value!;
+                      });
+                    },
+                    value: _isPhoneSelected),
+                const Divider(),
+              ],
+            ),
           ),
-          ElevatedButton(
-            child: Text("Leer"),
-            onPressed: () {
-              _readPoint();
-            },
-          ),
-        ],
-      ),
+        ),
+        const Text(
+          "Selecciona tus redes",
+          style: TextStyle(fontSize: 18),
+        ),
+        const Divider(),
+        Expanded(child: _buildSocialNetwors())
+      ]),
     );
   }
 
-  Future<void> _recordPoint() async {
-    try {
-      NFCTag tag = await FlutterNfcKit.poll(
-          timeout: const Duration(seconds: 10),
-          iosMultipleTagMessage: "Multiple tags found!",
-          iosAlertMessage: "Scan your tag");
-            print ("Detected tag");
-      // write NDEF records if applicable
-      print(tag.ndefAvailable!);
-      if (tag.ndefWritable!) {
-        // decoded NDEF records
-        var record = ndef.TextRecord();
-        print ("After recort");
-        record.text = base64Encode(utf8.encode("http://www.floiint.com"));
-        record.language = "es";
-         print ("After language");
-        record.id =  Uint8List.fromList(utf8.encode("9999"));
-        await FlutterNfcKit.writeNDEFRecords([record]);
-        print ("Recorded new value");
+  Widget _buildSocialNetwors() {
+    return ListView.builder(
+        itemCount: _user.networks.length,
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              CheckboxListTile(
+                  title: Text(_user.networks[index].name),
+                  subtitle: Text(_user.networks[index].value),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value!) {
+                        _selectedNetwors.add(_user.networks[index]);
+                      } else {
+                        _selectedNetwors.remove(_user.networks[index]);
+                      }
+                    });
+                  },
+                  value: _selectedNetwors.contains(_user.networks[index])),
+              const Divider()
+            ],
+          );
+        });
+  }
 
-      }
-    } catch (e) {
-      print('Error writing NFC tag: $e');
-    } finally {
-      // End the NFC session
-      await FlutterNfcKit.finish();
+  void setLoading(bool status) {
+    if (status) {
+      setState(() {
+        AlertDialogs().buildLoadingModal(context);
+      });
+    } else {
+      NavigatorApp.pop(context);
     }
   }
 
-  Future<void> _readPoint() async {
+  void _recordPoint(String id) async {
+    Log.d("Starts _recordPoint: $id");
     try {
-      NFCTag tag = await FlutterNfcKit.poll(
-          timeout: const Duration(seconds: 10),
-          iosMultipleTagMessage: "Multiple tags found!",
-          iosAlertMessage: "Scan your tag");
-      // print(jsonEncode(tag));
-      await FlutterNfcKit.setIosAlertMessage("hi there!");
-      if (tag.ndefAvailable!) {
-        for (var record in await FlutterNfcKit.readNDEFRecords(cached: false)) {
-          print(record.toString());
+      NfcService service = NfcService();
+      bool bInit = await service.init();
+      Log.d("nfc init: $bInit");
+      if (bInit) {
+        bool res = await service.recordNfc(id);
+        if (res) {
+          NavigatorApp.pop(context);
+          AlertDialogs().showModalDialogMessage(
+              context,
+              200,
+              Icons.check,
+              40,
+              Colors.green,
+              "Se ha grabado tu punto correctamente",
+              TextStyle(fontSize: 20),
+              "Cerrar");
+        } else {
+          NavigatorApp.pop(context);
+          AlertDialogs().showModalDialogMessage(
+              context,
+              200,
+              Icons.error,
+              40,
+              Colors.red,
+              "No ha sido posible grabar tu smartPoint",
+              TextStyle(fontSize: 20),
+              "Cerrar");
         }
-
-        // for (var record
-        //     in await FlutterNfcKit.readNDEFRawRecords(cached: false)) {
-        //   print(jsonEncode(record).toString());
-        // }
+      } else {
+        NavigatorApp.pop(context);
+        AlertDialogs().showModalDialogMessage(
+            context,
+            200,
+            Icons.error,
+            40,
+            Colors.red,
+            "No ha sido posible acceder al NFC de tu dispositivo",
+            TextStyle(fontSize: 20),
+            "Cerrar");
       }
-    } catch (e) {
-      print('Error reading NFC tag: $e');
-    } finally {
-      // End the NFC session
-      await FlutterNfcKit.finish();
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
+  }
+
+  Future<void> _createPoint() async {
+    Log.d("Starts _createPoint");
+    try {
+      setLoading(true);
+      HostPutPointByUserIdResponse response = await SmartPoint.empty()
+          .putSmartPointByByUserId(
+              _user.userId,
+              _isNameSelected ? _user.name : "",
+              _isPhoneSelected ? _user.phone : "",
+              _selectedNetwors);
+      setLoading(false);
+      if (response.hostErrorCode!.code == HostErrorCodesValue.NoError.code) {
+        Log.d("SmartPoint id: ${response.point!.id}");
+        AlertDialogs().showModalDialogMessage(
+            context,
+            200,
+            Icons.nfc,
+            40,
+            Colors.black,
+            "Acerca tu SmartPoint y espera",
+            TextStyle(fontSize: 20),
+            "Cerrar");
+         _recordPoint(response.point!.id!);
+      } else {
+        AlertDialogs().showModalDialogMessage(
+            context,
+            200,
+            Icons.error,
+            40,
+            Colors.red,
+            "No ha sido posible generar tu SmartPoint",
+            TextStyle(fontSize: 20),
+            "Cerrar");
+      }
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
     }
   }
 }

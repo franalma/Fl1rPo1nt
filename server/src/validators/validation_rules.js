@@ -181,23 +181,25 @@ const GET_USER_PROTECTED_URL_FOR_FILE_ID_USER_ID_RULES = [
 ];
 
 const PUT_SMART_POINT_BY_USER_ID_RULES = [    
-    body('input.values.user_id').notEmpty().isArray().withMessage("User id is required"),    
-    body('input.values.qr_id').notEmpty().isArray().withMessage("QR id required"),    
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.name').optional().isString().withMessage("No valid value for name"),    
+    body('input.phone').optional().isString().withMessage("No valid value for phone"),    
+    body('input.networks').optional().isArray().withMessage("No valid value for social networks"),    
 ];
 
 const UPDATE_SMART_POINT_STATUS_BY_POINT_ID_RULES = [    
-    body('input.values.point_id').notEmpty().isArray().withMessage("Point id is required"),    
-    body('input.values.status').notEmpty().isArray().withMessage("Status value is required"),    
+    body('input.values.point_id').notEmpty().isString().withMessage("Point id is required"),    
+    body('input.values.status').notEmpty().isNumeric().withMessage("Status value is required"),    
 ];
 
 
 const UPDATE_SMART_POINTS_STATUS_BY_USER_ID_RULES = [    
-    body('input.values.user_id').notEmpty().isArray().withMessage("User id is required"),    
-    body('input.values.status').notEmpty().isArray().withMessage("Status value is required"),    
+    body('input.values.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.values.status').notEmpty().isNumeric().withMessage("Status value is required"),    
 ];
 
 const GET_ALL_SMART_POINTS_BY_USER_ID_RULES = [    
-    body('input.values.user_id').notEmpty().isArray().withMessage("User id is required"),        
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),        
 ];
 
 module.exports = {
