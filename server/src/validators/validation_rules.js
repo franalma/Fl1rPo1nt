@@ -188,8 +188,8 @@ const PUT_SMART_POINT_BY_USER_ID_RULES = [
 ];
 
 const UPDATE_SMART_POINT_STATUS_BY_POINT_ID_RULES = [    
-    body('input.values.point_id').notEmpty().isString().withMessage("Point id is required"),    
-    body('input.values.status').notEmpty().isNumeric().withMessage("Status value is required"),    
+    body('input.point_id').notEmpty().isString().withMessage("Point id is required"),    
+    body('input.status').notEmpty().isNumeric().withMessage("Status value is required"),    
 ];
 
 

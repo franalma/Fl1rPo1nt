@@ -68,11 +68,11 @@ class SmartPoint {
     return HostGetPointByPointIdResponse.empty();
   }
 
-  Future<HostUpdatePointResponse> updatePointStatusByPointId(
-      String pointId, int status) async {
+  Future<HostUpdatePointResponse> updatePointStatusByPointId(int status) async {
+    Log.d("Starts updatePointStatusByPointId");
     try {
       HostUpdatePointResponse response =
-          await HostUpdatePointRequest().runByPointId(pointId, status);
+          await HostUpdatePointRequest().runByPointId(id!, status);
       return response;
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");

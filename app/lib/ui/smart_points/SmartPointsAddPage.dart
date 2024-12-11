@@ -11,6 +11,13 @@ import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 
+enum StatusMessage {
+  ok,
+  errorCreatingSmartPoint,
+  nfcNotAvailable,
+  waitToRecordSmartPoint
+}
+
 class SmartPointsAddPage extends StatefulWidget {
   @override
   State<SmartPointsAddPage> createState() {
@@ -19,11 +26,11 @@ class SmartPointsAddPage extends StatefulWidget {
 }
 
 class _SmartPointsAddState extends State<SmartPointsAddPage> {
-  User _user = Session.user;
+  final User _user = Session.user;
 
   bool _isPhoneSelected = false;
   bool _isNameSelected = false;
-  List<SocialNetwork> _selectedNetwors = [];
+  final List<SocialNetwork> _selectedNetwors = [];
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,8 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
           flexibleSpace: FlexibleAppBar(),
           actions: [
             IconButton(
-                onPressed: () => _createPoint(), icon: const Icon(Icons.nfc))
+                onPressed: () => _createPoint(_statusMessages),
+                icon: const Icon(Icons.nfc))
           ],
         ),
         body: _buildBody());
@@ -59,7 +67,7 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
             child: ListView(
               children: [
                 CheckboxListTile(
-                    title: Text("Nombre"),
+                    title: const Text("Nombre"),
                     subtitle: Text(_user.name),
                     onChanged: (value) {
                       setState(() {
@@ -127,15 +135,11 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
     }
   }
 
-  void _recordPoint(String id) async {
-    Log.d("Starts _recordPoint: $id");
-    try {
-      NfcService service = NfcService();
-      bool bInit = await service.init();
-      Log.d("nfc init: $bInit");
-      if (bInit) {
-        bool res = await service.recordNfc(id);
-        if (res) {
+  void _statusMessages(StatusMessage value) {
+    Log.d("Starts _statusMessages");
+    switch (value) {
+      case StatusMessage.ok:
+        {
           NavigatorApp.pop(context);
           AlertDialogs().showModalDialogMessage(
               context,
@@ -144,9 +148,12 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
               40,
               Colors.green,
               "Se ha grabado tu punto correctamente",
-              TextStyle(fontSize: 20),
+              const TextStyle(fontSize: 20),
               "Cerrar");
-        } else {
+          break;
+        }
+      case StatusMessage.errorCreatingSmartPoint:
+        {
           NavigatorApp.pop(context);
           AlertDialogs().showModalDialogMessage(
               context,
@@ -155,27 +162,66 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
               40,
               Colors.red,
               "No ha sido posible grabar tu smartPoint",
-              TextStyle(fontSize: 20),
+              const TextStyle(fontSize: 20),
               "Cerrar");
+          break;
         }
-      } else {
-        NavigatorApp.pop(context);
-        AlertDialogs().showModalDialogMessage(
-            context,
-            200,
-            Icons.error,
-            40,
-            Colors.red,
-            "No ha sido posible acceder al NFC de tu dispositivo",
-            TextStyle(fontSize: 20),
-            "Cerrar");
-      }
+      case StatusMessage.nfcNotAvailable:
+        {
+          NavigatorApp.pop(context);
+          AlertDialogs().showModalDialogMessage(
+              context,
+              200,
+              Icons.error,
+              40,
+              Colors.red,
+              "No ha sido posible acceder al NFC de tu dispositivo",
+              const TextStyle(fontSize: 20),
+              "Cerrar");
+          break;
+        }
+      case StatusMessage.waitToRecordSmartPoint:
+        {
+          AlertDialogs().showModalDialogMessage(
+              context,
+              200,
+              Icons.nfc,
+              40,
+              Colors.black,
+              "Acerca tu SmartPoint y espera",
+              const TextStyle(fontSize: 20),
+              "Cerrar");
+          break;
+        }
+    }
+  }
+
+  void _recordPoint(SmartPoint point, Function(StatusMessage) onResult) async {
+    Log.d("Starts _recordPoint: ${point.id}");
+    try {
+      NfcService service = NfcService();
+      bool bInit = await service.init();
+      Log.d("nfc init: $bInit");
+      if (bInit) {
+        bool res = await service.recordNfc(point.id!);
+        if (res) {
+          var response = await point.updatePointStatusByPointId(1);
+          if (response.hostErrorCode!.code ==
+              HostErrorCodesValue.NoError.code) {
+            onResult(StatusMessage.ok);
+          } else {
+            onResult(StatusMessage.errorCreatingSmartPoint);
+          }
+        } else {
+          onResult(StatusMessage.errorCreatingSmartPoint);
+        }
+      } else {}
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }
   }
 
-  Future<void> _createPoint() async {
+  Future<void> _createPoint(Function(StatusMessage) onResult) async {
     Log.d("Starts _createPoint");
     try {
       setLoading(true);
@@ -188,26 +234,10 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
       setLoading(false);
       if (response.hostErrorCode!.code == HostErrorCodesValue.NoError.code) {
         Log.d("SmartPoint id: ${response.point!.id}");
-        AlertDialogs().showModalDialogMessage(
-            context,
-            200,
-            Icons.nfc,
-            40,
-            Colors.black,
-            "Acerca tu SmartPoint y espera",
-            TextStyle(fontSize: 20),
-            "Cerrar");
-         _recordPoint(response.point!.id!);
+        onResult(StatusMessage.waitToRecordSmartPoint);
+        _recordPoint(response.point!, _statusMessages);
       } else {
-        AlertDialogs().showModalDialogMessage(
-            context,
-            200,
-            Icons.error,
-            40,
-            Colors.red,
-            "No ha sido posible generar tu SmartPoint",
-            TextStyle(fontSize: 20),
-            "Cerrar");
+        onResult(StatusMessage.errorCreatingSmartPoint);
       }
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");

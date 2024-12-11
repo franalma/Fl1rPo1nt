@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
-import 'package:app/comms/model/response/smart_points/HostPutPointByUserIdResponse.dart';
 import 'package:app/comms/model/response/smart_points/HostUpdatePointResponse.dart';
 import 'package:app/comms/model/response/smart_points/HostUpdatePointsResponse.dart';
+import 'package:app/model/HostErrorCode.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,12 +14,12 @@ class HostUpdatePointRequest extends BaseRequest {
     try {
       Log.d("Start HostUpdatePointsResponse.runByUserId");
 
-      HostActionsItem option = HostApiActions.putSmartPointByUserIdQrId;
+      HostActionsItem option = HostApiActions.updateSmartPointStatusByUserId;
       Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
-        "input": {"user_id: $userId, status:$status"}
+        "input": {"user_id": userId, "status": status}
       };
 
       String jsonBody = json.encode(mapBody);
@@ -37,27 +37,27 @@ class HostUpdatePointRequest extends BaseRequest {
 
   Future<HostUpdatePointResponse> runByPointId(
       String pointId, int status) async {
+        late var response; 
     try {
       Log.d("Start HostPutPointByUserIdRequest");
 
-      HostActionsItem option = HostApiActions.putSmartPointByUserIdQrId;
+      HostActionsItem option = HostApiActions.updateSmartPointStatusByPointId;
       Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
-        "input": {"point_id: $pointId, status:$status"}
+        "input": {"point_id": pointId, "status": status}
       };
 
       String jsonBody = json.encode(mapBody);
-      var response =
+      response =
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
-      if (response.statusCode == 200) {
-        return HostUpdatePointResponse.fromJson(jsonDecode(response.body));
-      }
+     return HostUpdatePointResponse.fromJson(jsonDecode(response.body));
     } catch (error) {
       Log.d(error.toString());
     }
+   
     return HostUpdatePointResponse.empty();
   }
 }

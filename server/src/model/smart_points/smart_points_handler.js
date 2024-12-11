@@ -134,8 +134,9 @@ async function getSmartPointByPointId(input) {
 }
 
 async function updaterSmartPointStatusByPointId(input) {
-  logger.info("Starts disableSmartPointByPointId");
+  logger.info("Starts updaterSmartPointStatusByPointId");
   try {
+    const db = DB_INSTANCES.DB_API;
     const filter = { point_id: input.point_id };
     const newDoc = {
       updated_at: Date.now(),
@@ -148,19 +149,21 @@ async function updaterSmartPointStatusByPointId(input) {
       filter,
       db.collections.smart_points_coolection
     );
-    if (dbResult && dbResult.length > 0) {
-      return {
-        ...genError(HOST_ERROR_CODES.NO_ERROR),
-        point_id: point_id,
-      };
-    }
+    return {
+      ...genError(HOST_ERROR_CODES.NO_ERROR),
+      point_id: input.point_id,
+    };
   } catch (error) {
     logger.info(error);
   }
+  return {
+    ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR),
+    
+  };
 }
 
 async function updateAllPointsStatusByUserId(input) {
-  logger.info("Starts disableSmartPointByPointId");
+  logger.info("Starts updateAllPointsStatusByUserId");
   try {
     const filter = { user_id: input.user_id };
     const newDoc = {
