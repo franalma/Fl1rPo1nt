@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/services/NfcService.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/ads/AdsManager.dart';
+import 'package:app/ads/AdsManager.dart';
 import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/qr_manager/QrCodeScannerPage.dart';
 import 'package:app/ui/qr_manager/ShowQrCodeToShare.dart';

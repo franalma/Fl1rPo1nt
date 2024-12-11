@@ -7,8 +7,11 @@ const chatroomHandler = require("./../../chatroom/chatroom_handler");
 const { printJson } = require("../../utils/json_utils");
 const { sendMatchLost } = require("../../sockets/socket_handler");
 const { DB_INSTANCES } = require("../../database/databases");
-const { genError, HOST_ERROR_CODES } = require("../../constants/host_error_codes");
-const axios = require('axios');
+const {
+  genError,
+  HOST_ERROR_CODES,
+} = require("../../constants/host_error_codes");
+const axios = require("axios");
 
 async function createMatchInternal(input) {
   logger.info("Starts createMatchInternal");
@@ -81,7 +84,11 @@ async function createMatchExternal(item, input) {
 
     printJson(userInfo);
     match.profile_image = userInfo.profile_image;
-    match.pending_messages = await chatroomHandler.getPendingMessagesForUserIdContactId(input.user_id, contactUser.user_id);
+    match.pending_messages =
+      await chatroomHandler.getPendingMessagesForUserIdContactId(
+        input.user_id,
+        contactUser.user_id
+      );
 
     return match;
   } catch (error) {
@@ -115,11 +122,28 @@ async function getMatchByMatchIdInternal(input) {
 }
 
 async function addUserContactByUserIdContactIdQrId(input) {
-  logger.info("Starts addUserContactByUserIdContactIdQrId");
-  let result = { status: 500 };
+  logger.info(
+    "Starts addUserContactByUserIdContactIdQrId:" + JSON.stringify(input)
+  );
 
   try {
     const db = DB_INSTANCES.DB_API;
+
+    const isUserExist = await userHandler.checkUserExist(input.user_id);
+    const isContactExist = await userHandler.checkUserExist(input.contact_id);
+
+    if (!isUserExist || isContactExist) {
+      return {
+        ...genError(HOST_ERROR_CODES.USER_NOT_EXIST),
+      };
+    }
+
+    if (input.user_id == input.contact_id) {
+      return {
+        ...genError(HOST_ERROR_CODES.MATCH_CONTACTS_CONFLICT),
+      };
+    }
+
     let doc = await createMatchInternal(input);
     let dbResponse = await dbHandler.addDocumentWithClient(
       db.client,
@@ -133,7 +157,6 @@ async function addUserContactByUserIdContactIdQrId(input) {
           input.user_id,
           input.contact_id
         );
-
 
       result = {
         ...genError(HOST_ERROR_CODES.NO_ERROR),
@@ -150,7 +173,6 @@ async function addUserContactByUserIdContactIdQrId(input) {
         contact_id: input.contact_id,
         scanned: updateUsersInfo.scanned,
         requested_user: requestedUserInfo,
-
       };
 
       const urlRealTimeHost = `${process.env.CHAT_HOST_PATH}:${process.env.SERVER_PORT_CHAT}${process.env.NEW_CONTACT_ENDPOINT}`;
@@ -165,7 +187,7 @@ async function addUserContactByUserIdContactIdQrId(input) {
     logger.info(error);
   }
 
-  return { ...genError(HOST_ERROR_CODES.USER_ALREADY_IN_YOUR_CONTACTS), }
+  return { ...genError(HOST_ERROR_CODES.USER_ALREADY_IN_YOUR_CONTACTS) };
 }
 
 async function getUserContactsByUserId(input) {

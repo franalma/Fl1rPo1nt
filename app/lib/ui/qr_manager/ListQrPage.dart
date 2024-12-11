@@ -8,6 +8,7 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/elements/SlideRowLeft.dart';
 import 'package:app/ui/qr_manager/NewQrGeneratePage.dart';
 import 'package:app/ui/qr_manager/model/DataToSave.dart';
@@ -94,7 +95,8 @@ class _ListQrPage extends State<ListQrPage> {
                               .translate("your_phone")),
                         for (var item in data.networks) Text(item.networkId)
                       ]),
-                  leading: _buildQrCode(index),
+                  // leading: _buildQrCode(index),
+                  leading: FlirtPoint().build(50, 50, 100, user.getSexAlternativeColor(), user.getRelationshipColor()),
                   trailing: Radio(
                       value: index,
                       groupValue: _selectedQr,

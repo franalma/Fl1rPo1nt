@@ -135,10 +135,6 @@ async function processRequest(req, res) {
                     break;
                 }
 
-
-                case hostActions.PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID: {
-
-                }
             }
         }
 

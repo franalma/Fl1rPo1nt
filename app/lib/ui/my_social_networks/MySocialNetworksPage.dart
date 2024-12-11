@@ -6,6 +6,7 @@ import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/SlideRowLeft.dart';
+import 'package:app/ui/elements/SocialNetworkIcon.dart';
 import 'package:app/ui/my_social_networks/new_social_network/NewSocialNetwork.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ class _MySocialNetworksPage extends State<MySocialNetworksPage> {
               children: [
                 ListTile(
                     title: Text(networks[index].name),
-                    leading: _getIconFromNetwork(index),
+                    leading: SocialNetworkIcon().resolveIconForNetWorkId(networks[index].networkId),
                     trailing: const Icon(Icons.arrow_forward_ios_sharp),
                     onTap: () {
                       NavigatorApp.pushWithCallback(

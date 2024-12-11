@@ -1,6 +1,6 @@
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
-import 'package:app/ui/ads/AdsManager.dart';
+import 'package:app/ads/AdsManager.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';

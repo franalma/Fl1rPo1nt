@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:app/comms/model/request/points/HostGetPointsRequest.dart';
 import 'package:app/comms/model/request/points/HostPutPointByUserIdRequest.dart';
 import 'package:app/comms/model/request/points/HostUpdatePointRequest.dart';
@@ -46,6 +44,7 @@ class SmartPoint {
 
   Future<HostGetAllPointsByUserIdResponse> getSmartPointByUserId(
       String userId) async {
+        Log.d("Starts getSmartPointByUserId");
     try {
       HostGetAllPointsByUserIdResponse response =
           await HostGetPointsRequest().runByUserID(userId);
@@ -58,6 +57,7 @@ class SmartPoint {
 
   Future<HostGetPointByPointIdResponse> getSmartPointByPointId(
       String pointId) async {
+        Log.d("Starts getSmartPointByPointId");
     try {
       HostGetPointByPointIdResponse response =
           await HostGetPointsRequest().runByPointId(pointId);
@@ -67,6 +67,7 @@ class SmartPoint {
     }
     return HostGetPointByPointIdResponse.empty();
   }
+
 
   Future<HostUpdatePointResponse> updatePointStatusByPointId(int status) async {
     Log.d("Starts updatePointStatusByPointId");
@@ -82,6 +83,7 @@ class SmartPoint {
 
   Future<HostPutPointByUserIdResponse> putSmartPointByByUserId(String userId,
       String userName, String phone, List<SocialNetwork> networks) async {
+        Log.d("Starts putSmartPointByByUserId");
     try {
       HostPutPointByUserIdResponse response =
           await HostPutPointByUserIdRequest()

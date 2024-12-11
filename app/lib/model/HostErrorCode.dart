@@ -28,9 +28,12 @@ enum HostErrorCodesValue {
   UserNotExist(-104, "User not exists"),
   UserBlocked(-105, "User blocked"),
   NoFlirtsFound(-106, "No flirts found"),
+  NoPossibleToAddPoint(-107, "Not possible to add smartpoint"),
+  QrDoNotExist(-108, "QR does not exist"),
+  FlirtActiveIssue(-109, "Not possible to active more than one flirt"),
+  MatchContactConflict(-110, "Match conflict users"),
 
   UserInYourContacts(-401, "User in your contacts"),
-
   InternalServerError(-500, "Server error"),
 
   Unknown(999999, "");

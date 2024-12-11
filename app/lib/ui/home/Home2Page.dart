@@ -9,11 +9,9 @@ import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/party_mode/PartyModePage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
-import 'package:app/ui/smart_points/SmartPointsAddPage.dart';
 import 'package:app/ui/smart_points/SmartPointsListPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
 import 'package:app/ui/user_state/UserStatePage.dart';
-import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,12 +22,11 @@ class Home2Page extends StatefulWidget {
 }
 
 class _Home2State extends State<Home2Page> {
-  User _user = Session.user;
+  final User _user = Session.user;
 
   @override
   void initState() {
-    super.initState();
-    // _adsManager = AdsManager(onAdaptativeBannerLoaded);
+    super.initState();    
     Session.socketSubscription?.onNewContactRequested =
         _handleNewContactRequest;
   }
@@ -44,7 +41,7 @@ class _Home2State extends State<Home2Page> {
 
   @override
   Widget build(BuildContext context) {
-    // _adsManager.init(context);
+    
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -52,7 +49,7 @@ class _Home2State extends State<Home2Page> {
                 onPressed: () {
                   NavigatorApp.push(UserProfilePage(), context);
                 },
-                icon: Icon(Icons.account_circle))
+                icon: const Icon(Icons.account_circle))
           ],
           flexibleSpace: Container(
             decoration: const BoxDecoration(
@@ -66,8 +63,7 @@ class _Home2State extends State<Home2Page> {
         ),
         body: Stack(
           children: [
-            _buildBody(),
-            // _adsManager.buildAdaptativeBannerd(context)
+            _buildBody(),            
           ],
         ));
   }
@@ -85,7 +81,7 @@ class _Home2State extends State<Home2Page> {
             FancyButton(
                 text: 'Visibilidad',
                 icon: FontAwesomeIcons.eye,
-                color: Color.fromARGB(255, 237, 129, 6),
+                color: const Color.fromARGB(255, 237, 129, 6),
                 onTap: () {
                   NavigatorApp.push(UserStatePage(), context);
                 }),
@@ -156,10 +152,4 @@ class _Home2State extends State<Home2Page> {
     );
   }
 
-  void onAdaptativeBannerLoaded(bool value) {
-    Log.d("Starts onAdaptativeBannerLoaded");
-    if (value) {
-      setState(() {});
-    }
-  }
 }

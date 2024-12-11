@@ -10,7 +10,6 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserPublicProfile.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ui/contacts/ContactDetailsPage.dart';
 import 'package:app/ui/contacts/ContactDetailsPageFromMap.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
@@ -129,7 +128,7 @@ class _MapExplorerController extends State<MapExplorerController> {
                 ),
                 Container(
                   alignment: Alignment.center,
-                  child: SizedBox(
+                  child: const SizedBox(
                     width: 200,
                     
                     child: Row(

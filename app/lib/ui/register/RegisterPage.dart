@@ -1,11 +1,10 @@
 import 'package:app/comms/model/request/auth/HostRegisterRequest.dart';
-import 'package:app/comms/model/response/auth/HostRegisterResponse.dart';
 import 'package:app/model/HostErrorCode.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
-import 'package:app/ui/login/LoginPage2.dart';
-import 'package:app/ui/login/components/my_button.dart';
-import 'package:app/ui/login/components/my_textfield.dart';
+import 'package:app/ui/login/LoginPage.dart';
+import 'package:app/ui/elements/my_button.dart';
+import 'package:app/ui/elements/my_textfield.dart';
 import 'package:app/ui/utils/Log.dart';
 
 import 'package:flutter/material.dart';

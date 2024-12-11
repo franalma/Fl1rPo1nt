@@ -29,7 +29,7 @@ class HostGetUserMacthsRequest extends BaseRequest {
             jsonDecode(response.body)["matchs"]);
       }
     } catch (error, stackTrace) {
-      Log.d("${error.toString()}  ${stackTrace.toString()}");
+      Log.d("$error, $stackTrace");
     }
     return HostGetMatchsResponse.empty();
   }

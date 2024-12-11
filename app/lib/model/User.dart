@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:app/comms/model/request/flirt/HostGetUserFlirtsRequest.dart';
 import 'package:app/comms/model/request/user/profile/HostUpdateUserRadioVisibilityRequest.dart';
 import 'package:app/model/Flirt.dart';
@@ -6,6 +8,7 @@ import 'package:app/model/Hobby.dart';
 import 'package:app/model/QrValue.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/UserInterest.dart';
+import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 
 class User {
@@ -194,5 +197,26 @@ class User {
       Log.d("$error, $stackTrace");
     }
     return false;
+  }
+
+  Future<Flirt?> getActiveFlirtByUserId() async {
+    try {
+      var response = await HostGetUserFlirtsRequest().run(userId, 1);
+
+      if (response.flirts != null && response.flirts!.isNotEmpty) {
+        return response.flirts![0];
+      }
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
+    return null;
+  }
+
+  Color getSexAlternativeColor() {
+    return Color(CommonUtils.colorToInt(sexAlternatives.color));
+  }
+
+  Color getRelationshipColor() {
+    return Color(CommonUtils.colorToInt(relationShip.color));
   }
 }

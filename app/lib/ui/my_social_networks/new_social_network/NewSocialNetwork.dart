@@ -43,18 +43,15 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        // drawer: AppDrawerMenu().getDrawer(context),
+    return Scaffold(        
         appBar: AppBar(
-            flexibleSpace: FlexibleAppBar(),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  _onSaveData();
-                },
-              ),
-            ]),
+          flexibleSpace: FlexibleAppBar(),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                _onSaveData();                
+              }),
+        ),
         body: _buildEditOptions());
   }
 
@@ -128,14 +125,17 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
           .run(user.userId, networksToUpate)
           .then((value) {
         if (value.isEmpty) {
-          FlutterToast().showToast( AppLocalizations.of(context)!.translate("network_added_error"),);
+          FlutterToast().showToast(
+            AppLocalizations.of(context)!.translate("network_added_error"),
+          );
           networksToUpate.remove(newNetwork);
         } else {
           NavigatorApp.pop(context);
         }
       });
     } else {
-      FlutterToast().showToast(AppLocalizations.of(context)!.translate("all_fields_required"));
+      FlutterToast().showToast(
+          AppLocalizations.of(context)!.translate("all_fields_required"));
     }
   }
 }

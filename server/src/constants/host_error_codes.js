@@ -41,12 +41,6 @@ const HOST_ERROR_CODES = {
     description: "User does not exist",
   },
 
-  FLIRT_ACTIVE_ISSUE: {
-    error_code: -105,
-    status: 200,
-    description: "There is one active flirt already",
-  },
-
 
   USER_BLOCKED: {
     error_code: -105,
@@ -73,6 +67,17 @@ const HOST_ERROR_CODES = {
     description: "QR does not exist",
   },
 
+  FLIRT_ACTIVE_ISSUE: {
+    error_code: -109,
+    status: 200,
+    description: "There is one active flirt already",
+  },
+
+  MATCH_CONTACTS_CONFLICT: {
+    error_code: -110,
+    status: 200,
+    description: "Conflict adding match",
+  },
 
   USER_ALREADY_IN_YOUR_CONTACTS: {
     error_code: -401,

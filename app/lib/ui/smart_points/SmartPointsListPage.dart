@@ -17,9 +17,12 @@ class SmartPointsListPage extends StatefulWidget {
 }
 
 class _SmartPointsListPage extends State<SmartPointsListPage> {
-  User _user = Session.user;
+  final User _user = Session.user;
   List<SmartPoint>? _points;
   bool _isLoading = true;
+
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +64,7 @@ class _SmartPointsListPage extends State<SmartPointsListPage> {
       SmartPoint.empty().getSmartPointByUserId(_user.userId).then((response) {
         if (response.hostErrorCode != null &&
             response.hostErrorCode!.status ==
-                HostErrorCodesValue.NoError.code) {
+                HostErrorCodesValue.NoError.code) {                  
           _points = response.points ?? List.empty();
         }
 

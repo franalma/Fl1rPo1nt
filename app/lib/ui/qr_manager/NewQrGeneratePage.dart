@@ -79,15 +79,14 @@ class _QrGeneratePage extends State<QrGeneratePage> {
     );
   }
 
-  void onQrInfoSelected(
-      String name, String phone, List<SocialNetwork> networks, bool pictures, bool audios) {
+  void onQrInfoSelected(String name, String phone, List<SocialNetwork> networks,
+      bool pictures, bool audios) {
     Log.d("Starts onQrInfoSelected");
 
     dataToSave = DataToSave(name, phone, networks, pictures, audios);
   }
 
-  Widget _buildQrPreview() {
-    // Este widget empuja el botón hacia abajo
+  Widget _buildQrPreview() {    
     return controller.text.isNotEmpty
         ? QrImageView(data: controller.text, size: 200)
         : Container();
@@ -97,24 +96,21 @@ class _QrGeneratePage extends State<QrGeneratePage> {
     return Scaffold(
         // drawer: AppDrawerMenu().getDrawer(context),
         appBar: AppBar(
-            flexibleSpace: FlexibleAppBar(),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  onSaveQr();
-                },
-              ),
-            ]),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              onSaveQr();
+            },
+          ),
+          flexibleSpace: FlexibleAppBar(),
+        ),
         body: _buildBody());
   }
 
   Future<void> onSaveQr() async {
     Log.d("Starts onSaveQr:${controller.text}");
-    if (controller.text.isEmpty) {
-      FlutterToast().showToast("Es necesario que selecciones algún valor");
-    } else if (_qrNameController.text.isEmpty) {
-      FlutterToast().showToast("Es necesario un nombre para tu QR");
+    if (controller.text.isEmpty || _qrNameController.text.isEmpty) {
+      NavigatorApp.pop(context);
     } else {
       QrValue qrValue =
           QrValue(user.userId, "", _qrNameController.text, controller.text);

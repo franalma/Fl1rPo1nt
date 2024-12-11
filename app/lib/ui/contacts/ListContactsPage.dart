@@ -2,7 +2,6 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
 import 'package:app/ui/NavigatorApp.dart';
-
 import 'package:app/ui/contacts/ContactDetailsPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
@@ -81,9 +80,7 @@ class _ListContactsPage extends State<ListContactsPage> {
                 onTap: () async {
                   Session.socketSubscription?.onMatchLost = null;
                   var values = await NavigatorApp.pushAndWait(
-                      // ShowContactDetailsPage(_matchs[index]), context);
-                      ContactDetailsPage(_matchs[index]),
-                      context);
+                      ContactDetailsPage(_matchs[index]), context);
 
                   var matchId = values["match_id"];
                   if (values["read"]) {
@@ -119,18 +116,6 @@ class _ListContactsPage extends State<ListContactsPage> {
 
   Widget _buildNewMessages(int index) {
     Log.d("Starts _buildNewMessages");
-    // var match = _matchs[index];
-    // Session.socketSubscription!
-    //     .getPendingMessagesForMap(match.matchId!)
-    //     .then((nMessages) {
-    //   Log.d("n messages $nMessages");
-    //   if (nMessages > 0) {
-    //     return CircleAvatar(
-    //         radius: 15,
-    //         child: Text(nMessages.toString(), style: TextStyle(fontSize: 15)),
-    //         backgroundColor: Colors.green);
-    //   }
-    //   return SizedBox(width: 20, height: 20, child: Container());
     var match = _matchs[index];
     int nMessages = _pendingMessages[match.matchId!] ?? 0;
     if (nMessages > 0) {
@@ -178,19 +163,19 @@ class _ListContactsPage extends State<ListContactsPage> {
     HostGetUserMacthsRequest().run(_user.userId).then((matches) async {
       if (matches.matchs != null) {
         _matchs = matches.matchs!;
+        for (int i = 0; i < _matchs.length; i++) {
+          var match = _matchs[i];
+          int? nMsgs = await Session.socketSubscription
+              ?.getPendingMessagesForMap(match.matchId!);
+          _pendingMessages[match.matchId!] = nMsgs ?? 0;
+          _pendingMessages[match.matchId!] =
+              (_pendingMessages[match.matchId!] ?? 0) +
+                  (match.pendingMessges ?? 0);
+        }
       }
-      for (int i = 0; i < _matchs.length; i++) {
-        var match = _matchs[i];
-        int? nMsgs = await Session.socketSubscription
-            ?.getPendingMessagesForMap(match.matchId!);
-        _pendingMessages[match.matchId!] = nMsgs ?? 0;
-        _pendingMessages[match.matchId!] =
-            (_pendingMessages[match.matchId!] ?? 0) +
-                (match.pendingMessges ?? 0);
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
 
