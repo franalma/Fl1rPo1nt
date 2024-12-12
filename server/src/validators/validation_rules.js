@@ -28,7 +28,9 @@ const PUT_USER_CONTACT_BY_USER_ID_CONTACT_ID_QR_ID_RULES = [
     body('input.user_id').notEmpty().isString().withMessage("User id cant be empty"),
     body('input.user_qr_id').notEmpty().isString().withMessage("User QR id cant be empty"),
     body('input.contact_id').notEmpty().isString().withMessage("Contact id cant be empty"),
-    body('input.contact_qr_id').notEmpty().isString().withMessage("Qr id  cant be empty"),
+    body('input.contact_qr_id').optional().isString().withMessage("Qr id issue"),
+    body('input.point_id').optional().isString().withMessage("Point id issue"),
+    body('input.source').notEmpty().isNumeric().withMessage("Source is mandatory"),
     body('input.flirt_id').notEmpty().isString().withMessage("Flirt id  cant be empty"),
 ]
 
@@ -202,6 +204,19 @@ const GET_ALL_SMART_POINTS_BY_USER_ID_RULES = [
     body('input.user_id').notEmpty().isString().withMessage("User id is required"),        
 ];
 
+const REMOVE_SMART_POINT_BY_POINT_ID_RULES = [    
+    body('input.point_id').notEmpty().isString().withMessage("Point id is required"),        
+];
+
+const GET_SMART_POINTS_BY_POINT_ID_RULES = [    
+    body('input.point_id').notEmpty().isString().withMessage("Point id is required"),        
+];
+
+
+
+
+
+
 module.exports = {
     // NEW_USER_VALIDATION_RULES,
     DO_LOGIN_RULES,
@@ -237,5 +252,7 @@ module.exports = {
     PUT_SMART_POINT_BY_USER_ID_RULES,
     UPDATE_SMART_POINT_STATUS_BY_POINT_ID_RULES,
     UPDATE_SMART_POINTS_STATUS_BY_USER_ID_RULES,
-    GET_ALL_SMART_POINTS_BY_USER_ID_RULES
+    GET_ALL_SMART_POINTS_BY_USER_ID_RULES,
+    REMOVE_SMART_POINT_BY_POINT_ID_RULES,
+    GET_SMART_POINTS_BY_POINT_ID_RULES
 }

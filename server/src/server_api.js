@@ -228,6 +228,22 @@ async function processRequest(req, res) {
           break;
         }
 
+        case hostActions.REMOVE_SMART_POINT_BY_POINT_ID: {
+          result = await smartpoint_handler.removeSmartPointByPointId(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.GET_SMART_POINTS_BY_POINT_ID: {
+          result = await smartpoint_handler.getSmartPointByPointId(
+            req.body.input
+          );
+          break;
+        }
+
+        
+
 
 
 

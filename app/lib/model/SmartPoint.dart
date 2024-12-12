@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app/comms/model/request/points/HostDeletePointByPointId.dart';
 import 'package:app/comms/model/request/points/HostGetPointsRequest.dart';
 import 'package:app/comms/model/request/points/HostPutPointByUserIdRequest.dart';
 import 'package:app/comms/model/request/points/HostUpdatePointRequest.dart';
@@ -44,10 +45,11 @@ class SmartPoint {
 
   Future<HostGetAllPointsByUserIdResponse> getSmartPointByUserId(
       String userId) async {
-        Log.d("Starts getSmartPointByUserId");
+    Log.d("Starts getSmartPointByUserId $userId");
     try {
       HostGetAllPointsByUserIdResponse response =
           await HostGetPointsRequest().runByUserID(userId);
+          
       return response;
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
@@ -57,7 +59,7 @@ class SmartPoint {
 
   Future<HostGetPointByPointIdResponse> getSmartPointByPointId(
       String pointId) async {
-        Log.d("Starts getSmartPointByPointId");
+    Log.d("Starts getSmartPointByPointId $pointId");
     try {
       HostGetPointByPointIdResponse response =
           await HostGetPointsRequest().runByPointId(pointId);
@@ -67,7 +69,6 @@ class SmartPoint {
     }
     return HostGetPointByPointIdResponse.empty();
   }
-
 
   Future<HostUpdatePointResponse> updatePointStatusByPointId(int status) async {
     Log.d("Starts updatePointStatusByPointId");
@@ -83,15 +84,28 @@ class SmartPoint {
 
   Future<HostPutPointByUserIdResponse> putSmartPointByByUserId(String userId,
       String userName, String phone, List<SocialNetwork> networks) async {
-        Log.d("Starts putSmartPointByByUserId");
+    Log.d("Starts putSmartPointByByUserId");
     try {
       HostPutPointByUserIdResponse response =
           await HostPutPointByUserIdRequest()
-              .run(userId, userName, phone, networks);
+              .run("d751728a-a7be-4d9e-88cc-630af95b667c", userName, phone, networks);
       return response;
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }
     return HostPutPointByUserIdResponse.empty();
   }
+
+  Future<bool> deleteSmartPointByPointId() async {
+    Log.d("Starts deleteSmartPointByPointId: $id");
+    try {
+      bool result = await HostDeletePointByPointId().run(id);
+      return result; 
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
+    return false;
+  }
+
+
 }

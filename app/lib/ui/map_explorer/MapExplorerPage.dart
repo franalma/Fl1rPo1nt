@@ -12,11 +12,13 @@ import 'package:app/model/UserPublicProfile.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ContactDetailsPageFromMap.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:widget_to_marker/widget_to_marker.dart';
 
 class MapExplorerController extends StatefulWidget {
   final LatLng _location;
@@ -234,6 +236,8 @@ class _MapExplorerController extends State<MapExplorerController> {
   }
 
   Future<void> _addMarker(LatLng position, NearByFlirt flirtNearBy) async {
+    
+    
     final marker = Marker(
         markerId: MarkerId(flirtNearBy.flirtId!),
         position: position,
@@ -246,6 +250,8 @@ class _MapExplorerController extends State<MapExplorerController> {
           });
         },
         icon: bitmapDescriptor!);
+        // icon: FlirtPoint().build(50, 50, 100, _user.getSexAlternativeColor(), _user.getRelationshipColor())
+      
     setState(() {
       _markers.add(marker);
     });

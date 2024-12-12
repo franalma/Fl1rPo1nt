@@ -96,7 +96,7 @@ class _ListQrPage extends State<ListQrPage> {
                         for (var item in data.networks) Text(item.networkId)
                       ]),
                   // leading: _buildQrCode(index),
-                  leading: FlirtPoint().build(50, 50, 100, user.getSexAlternativeColor(), user.getRelationshipColor()),
+                  leading: FlirtPoint().build(50, 50, 0, user.getSexAlternativeColor(), user.getRelationshipColor()),
                   trailing: Radio(
                       value: index,
                       groupValue: _selectedQr,

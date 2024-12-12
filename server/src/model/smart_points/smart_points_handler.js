@@ -8,6 +8,9 @@ const {
   HOST_ERROR_CODES,
 } = require("../../constants/host_error_codes");
 
+const MAX_SMART_POINTS_NUMBER = 3;
+
+
 function createInternalPoint(input) {
   logger.info("Starts createInternalPoint:" + JSON.stringify(input));
   try {
@@ -47,12 +50,21 @@ function createSmartPointExternal(input) {
   }
 }
 
+
+
 async function putUserSmartPointByUserId(input) {
   logger.info("Starts putUserSmartPointByUserId" + JSON.stringify(input));
   try {
     const db = DB_INSTANCES.DB_API;
     const isExistUser = await userHandler.checkUserExist(input.user_id);
     if (isExistUser) {
+      const resPoints = await getAllSmartPointsByUserId(input.user_id);
+      if (resPoints.points.length >= MAX_SMART_POINTS_NUMBER) {
+        return {
+          ...genError(HOST_ERROR_CODES.NOT_POSSIBLE_TO_ADD_POINT)
+        }
+
+      }
       const point = createInternalPoint(input);
       const dbResult = await dbHandler.addDocumentWithClient(
         db.client,
@@ -81,7 +93,7 @@ async function getAllSmartPointsByUserId(input) {
   logger.info("Starts getAllSmartPointsByUserId");
   try {
     const db = DB_INSTANCES.DB_API;
-    const filter = { id: input.user_id };
+    const filter = { user_id: input.user_id };
 
     const dbResult = await dbHandler.findWithFiltersAndClient(
       db.client,
@@ -119,13 +131,11 @@ async function getSmartPointByPointId(input) {
       db.collections.smart_points_coolection
     );
     if (dbResult && dbResult.length > 0) {
-      let points = [];
-      for (let item of dbResult) {
-        points.push(createSmartPointExternal(item));
-      }
+
+
       return {
         ...genError(HOST_ERROR_CODES.NO_ERROR),
-        points: points,
+        point: createSmartPointExternal(dbResult[0]),
       };
     }
   } catch (error) {
@@ -158,13 +168,14 @@ async function updaterSmartPointStatusByPointId(input) {
   }
   return {
     ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR),
-    
+
   };
 }
 
 async function updateAllPointsStatusByUserId(input) {
   logger.info("Starts updateAllPointsStatusByUserId");
   try {
+    const db = DB_INSTANCES.DB_API;
     const filter = { user_id: input.user_id };
     const newDoc = {
       updated_at: Date.now(),
@@ -187,10 +198,32 @@ async function updateAllPointsStatusByUserId(input) {
   }
 }
 
+async function removeSmartPointByPointId(input) {
+  logger.info("Starts removeSmartPointByPointId");
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filter = { point_id: input.point_id };
+    const dbResult = await dbHandler.deleteDocumentWithClient(
+      db.client,
+      filter,
+      db.collections.smart_points_coolection
+    );
+    return {
+      ...genError(HOST_ERROR_CODES.NO_ERROR),
+    };
+  } catch (error) {
+    logger.info(error);
+  }
+  return {
+    ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR),
+  };
+}
+
 module.exports = {
   putUserSmartPointByUserId,
   getAllSmartPointsByUserId,
   getSmartPointByPointId,
   updaterSmartPointStatusByPointId,
-  updateAllPointsStatusByUserId
+  updateAllPointsStatusByUserId,
+  removeSmartPointByPointId
 };

@@ -58,8 +58,12 @@ class NfcService {
       await FlutterNfcKit.setIosAlertMessage("hi there!");
       if (tag.ndefAvailable!) {
         for (var record in await FlutterNfcKit.readNDEFRecords(cached: false)) {
-          res = record.toString();
-          break;
+          if (record.payload != null) {
+          
+            res = String.fromCharCodes(record.payload!).substring(3);
+            res = utf8.decode(base64Decode(res));        
+            break;
+          }
         }
       }
     } catch (error, stackTrace) {
@@ -67,6 +71,7 @@ class NfcService {
     } finally {
       await FlutterNfcKit.finish();
     }
-    return res;
+    // callback(res);
+    return res; 
   }
 }

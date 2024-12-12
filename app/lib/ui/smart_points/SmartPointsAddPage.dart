@@ -4,6 +4,7 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/SmartPoint.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/User.dart';
+import 'package:app/services/DeviceInfoService.dart';
 import 'package:app/services/NfcService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
@@ -196,10 +197,11 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
     }
   }
 
-  void _recordPoint(SmartPoint point, Function(StatusMessage) onResult) async {
+  Future<bool> _recordPoint(SmartPoint point, Function(StatusMessage) onResult) async {
     Log.d("Starts _recordPoint: ${point.id}");
     try {
       NfcService service = NfcService();
+
       bool bInit = await service.init();
       Log.d("nfc init: $bInit");
       if (bInit) {
@@ -208,17 +210,15 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
           var response = await point.updatePointStatusByPointId(1);
           if (response.hostErrorCode!.code ==
               HostErrorCodesValue.NoError.code) {
-            onResult(StatusMessage.ok);
-          } else {
-            onResult(StatusMessage.errorCreatingSmartPoint);
+            return true;
           }
-        } else {
-          onResult(StatusMessage.errorCreatingSmartPoint);
         }
-      } else {}
+      }
+      await point.deleteSmartPointByPointId(); 
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }
+    return false;
   }
 
   Future<void> _createPoint(Function(StatusMessage) onResult) async {
@@ -235,7 +235,13 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
       if (response.hostErrorCode!.code == HostErrorCodesValue.NoError.code) {
         Log.d("SmartPoint id: ${response.point!.id}");
         onResult(StatusMessage.waitToRecordSmartPoint);
-        _recordPoint(response.point!, _statusMessages);
+        var result = await _recordPoint(response.point!, _statusMessages);
+
+        if (result) {
+          onResult(StatusMessage.ok);
+        } else {
+          onResult(StatusMessage.errorCreatingSmartPoint);
+        }
       } else {
         onResult(StatusMessage.errorCreatingSmartPoint);
       }

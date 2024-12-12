@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app/comms/model/response/BaseCustomResponse.dart';
 import 'package:app/model/HostErrorCode.dart';
 import 'package:app/model/SmartPoint.dart';
@@ -10,10 +12,10 @@ class HostGetPointByPointIdResponse extends BaseCustomResponse {
   HostGetPointByPointIdResponse.empty() : super(null);
 
   factory HostGetPointByPointIdResponse.fromJson(Map<String, dynamic> map) {
-    Log.d("Starts HostGetPointByPointIdResponse.fromJson");
+    Log.d("Starts HostGetPointByPointIdResponse.fromJson: ${jsonEncode(map)}");
     try {
       HostErrorCode errorCode = HostErrorCode.fromJson(map);  
-      SmartPoint point = SmartPoint.fromJson(map);      
+      SmartPoint point = SmartPoint.fromJson(map["point"]);      
       return HostGetPointByPointIdResponse(point, errorCode);
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");

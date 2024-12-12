@@ -4,7 +4,6 @@ import 'package:app/comms/model/HostContants.dart';
 import 'package:app/comms/model/request/BaseRequest.dart';
 import 'package:app/comms/model/response/smart_points/HostUpdatePointResponse.dart';
 import 'package:app/comms/model/response/smart_points/HostUpdatePointsResponse.dart';
-import 'package:app/model/HostErrorCode.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
 

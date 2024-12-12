@@ -79,6 +79,12 @@ const HOST_ERROR_CODES = {
     description: "Conflict adding match",
   },
 
+  MAX_NUM_SMART_POINTS:{
+    error_code: -111,
+    status: 200,
+    description: "Max smartpoints reached",
+  },
+
   USER_ALREADY_IN_YOUR_CONTACTS: {
     error_code: -401,
     status: 200,

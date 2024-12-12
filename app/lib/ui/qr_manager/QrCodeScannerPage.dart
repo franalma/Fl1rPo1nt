@@ -42,10 +42,9 @@ class _QrCodeScannerPage extends State<QrCodeScannerPage> {
     if (values.length == 2) {
       HostPutUserContactRequest()
           .run(user.userId, user.qrDefaultId, values[1], values[0],
-              flirt!.id.toString(), location!)
+              flirt!.id.toString(), location!, ContactUser.qr)
           .then((value) {
         if (value.code == HostErrorCodesValue.NoError.code) {
-          
           AlertDialogs().showModalDialogMessage(
               context,
               200,
@@ -56,7 +55,6 @@ class _QrCodeScannerPage extends State<QrCodeScannerPage> {
               styleMessages,
               "Cerrar");
         } else if (value.code == HostErrorCodesValue.UserInYourContacts.code) {
-          
           AlertDialogs().showModalDialogMessage(
               context,
               200,
@@ -69,7 +67,6 @@ class _QrCodeScannerPage extends State<QrCodeScannerPage> {
         }
       });
     } else {
-      
       AlertDialogs().showModalDialogMessage(
           context,
           200,

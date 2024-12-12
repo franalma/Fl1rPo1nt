@@ -4,6 +4,7 @@ const dbHandler = require("../../database/database_handler");
 
 const userHandler = require("./user_handler");
 const chatroomHandler = require("./../../chatroom/chatroom_handler");
+const smartPointHandler = require("./../smart_points/smart_points_handler");
 const { printJson } = require("../../utils/json_utils");
 const { sendMatchLost } = require("../../sockets/socket_handler");
 const { DB_INSTANCES } = require("../../database/databases");
@@ -13,12 +14,11 @@ const {
 } = require("../../constants/host_error_codes");
 const axios = require("axios");
 
-async function createMatchInternal(input) {
-  logger.info("Starts createMatchInternal");
+async function createMatchInternalForQr(input) {
+  logger.info("Starts createMatchInternalForQr");
   let doc = {
     id: uuidv4(),
-    source: 0,
-    point_id: -1,
+    source: input.source,
     flirt_id: input.flirt_id,
     location: input.location,
     created_at: Date.now(),
@@ -49,6 +49,56 @@ async function createMatchInternal(input) {
   printJson(doc);
   return doc;
 }
+
+async function createMatchInternalForPoint(input) {
+  logger.info("Starts createMatchInternalForPoint"+ JSON.stringify(input));
+  let doc = {
+    id: uuidv4(),
+    source: input.source,
+    flirt_id: input.flirt_id,
+    location: input.location,
+    created_at: Date.now(),
+    active: 1,
+  };
+
+  const smartPointInfo = (await smartPointHandler.getSmartPointByPointId(input)).point;
+  printJson(smartPointInfo);
+  const userQrInfo = await userHandler.getUserInfoByUserIdQrId(
+    input.user_id,
+    input.user_qr_id
+  );
+  const contactInfo = {
+    name: smartPointInfo.user_name ? smartPointInfo.user_name: "",
+    phone: smartPointInfo.user_phone ? smartPointInfo.user_phone: "",
+    audios:false,
+    pictures:false, 
+    networks: smartPointInfo.networks
+  }
+  logger.info("----------------");
+  logger.info("----------------");
+  printJson(contactInfo);
+  logger.info("----------------");
+  logger.info("----------------");
+
+
+  doc.users = [
+    {
+      user_id: input.user_id,
+      contact_info: userQrInfo.contact_info,
+    },
+    {
+      user_id: input.contact_id,
+      contact_info: JSON.stringify(contactInfo)
+    },
+  ];
+
+  printJson(doc);
+  return doc;
+}
+
+
+
+
 
 async function createMatchExternal(item, input) {
   logger.info("createMatchExternal " + JSON.stringify(item));
@@ -132,7 +182,7 @@ async function addUserContactByUserIdContactIdQrId(input) {
     const isUserExist = await userHandler.checkUserExist(input.user_id);
     const isContactExist = await userHandler.checkUserExist(input.contact_id);
 
-    if (!isUserExist || isContactExist) {
+    if (!isUserExist || !isContactExist) {
       return {
         ...genError(HOST_ERROR_CODES.USER_NOT_EXIST),
       };
@@ -144,7 +194,18 @@ async function addUserContactByUserIdContactIdQrId(input) {
       };
     }
 
-    let doc = await createMatchInternal(input);
+    let doc = {};
+    if (input.source == 0) {
+      //qr
+      doc = await createMatchInternalForQr(input);
+
+    } else if (input.source == 1) {
+      //point
+      doc = await createMatchInternalForPoint(input);
+    }
+
+
+
     let dbResponse = await dbHandler.addDocumentWithClient(
       db.client,
       doc,

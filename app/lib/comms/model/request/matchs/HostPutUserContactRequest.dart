@@ -7,9 +7,24 @@ import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:http/http.dart' as http;
 
+enum ContactUser {
+  qr(0),
+  point(1),
+  map(2);
+
+  final int value;
+  const ContactUser(this.value);
+}
+
 class HostPutUserContactRequest extends BaseRequest {
-  Future<HostErrorCode> run(String userId, String userQrId, String contactId,
-      String contactQrId, String userFlirtId, Location location) async {
+  Future<HostErrorCode> run(
+      String userId,
+      String userQrId,
+      String contactId,
+      String contactSourceId,
+      String userFlirtId,
+      Location location,
+      ContactUser source) async {
     try {
       Log.d("Start HostPutUserContactRequest");
 
@@ -23,13 +38,19 @@ class HostPutUserContactRequest extends BaseRequest {
           "user_id": userId,
           "user_qr_id": userQrId,
           "contact_id": contactId,
-          "contact_qr_id": contactQrId,
           "flirt_id": userFlirtId,
-          "location": {"latitude": location.lat, "longitude": location.lon}
+          "location": {"latitude": location.lat, "longitude": location.lon},
+          "source": source.value
         }
       };
 
+      if (source == ContactUser.point) {
+        mapBody["input"]["point_id"] = contactSourceId;
+      } else if (source == ContactUser.qr) {
+        mapBody["input"]["contact_qr_id"] = contactSourceId;
+      }
       String jsonBody = json.encode(mapBody);
+      Log.d("HostPutUserContactRequest::Sending $jsonBody");
       var response =
           await http.post(url, headers: buildHeader(), body: jsonBody);
 

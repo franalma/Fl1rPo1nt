@@ -197,6 +197,20 @@ function requestFieldsValidation(req, res, next) {
       break;
     }
 
+    case hostActions.REMOVE_SMART_POINT_BY_POINT_ID: {
+      validationSet = validationRules.REMOVE_SMART_POINT_BY_POINT_ID_RULES;
+      break;
+    }
+    case hostActions.GET_SMART_POINTS_BY_POINT_ID: {
+      validationSet = validationRules.GET_SMART_POINTS_BY_POINT_ID_RULES;
+      break;
+    }
+
+
+
+
+
+
     default: {
       logger.info("No request verification needed for " + action);
       validationSet = [];

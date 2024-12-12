@@ -24,10 +24,9 @@ class HostGetPointsRequest extends BaseRequest {
       var response =
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
-      if (response.statusCode == 200) {
-        return HostGetAllPointsByUserIdResponse.fromJson(
+     return HostGetAllPointsByUserIdResponse.fromJson(
             jsonDecode(response.body));
-      }
+
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }
@@ -38,22 +37,20 @@ class HostGetPointsRequest extends BaseRequest {
     try {
       Log.d("Start HostGetPointsRequest");
 
-      HostActionsItem option = HostApiActions.getAllSmartPointsByUserId;
+      HostActionsItem option = HostApiActions.getSmartPointByPointId;
       Uri url = Uri.parse(option.build());
 
       Map<String, dynamic> mapBody = {
         "action": option.action,
-        "input": {"point_id: $pointId"}
+        "input": {"point_id": pointId}
       };
 
       String jsonBody = json.encode(mapBody);
       var response =
           await http.post(url, headers: buildHeader(), body: jsonBody);
 
-      if (response.statusCode == 200) {
-        return HostGetPointByPointIdResponse.fromJson(
+     return HostGetPointByPointIdResponse.fromJson(
             jsonDecode(response.body));
-      }
     } catch (error) {
       Log.d(error.toString());
     }
