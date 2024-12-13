@@ -10,7 +10,6 @@ import 'package:app/ui/elements/SocialNetworkIcon.dart';
 import 'package:app/ui/my_social_networks/new_social_network/NewSocialNetwork.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MySocialNetworksPage extends StatefulWidget {
   const MySocialNetworksPage({super.key});
@@ -66,12 +65,14 @@ class _MySocialNetworksPage extends State<MySocialNetworksPage> {
               children: [
                 ListTile(
                     title: Text(networks[index].name),
+                    subtitle: Text(networks[index].value),
                     leading: SocialNetworkIcon().resolveIconForNetWorkId(networks[index].networkId),
-                    trailing: const Icon(Icons.arrow_forward_ios_sharp),
-                    onTap: () {
-                      NavigatorApp.pushWithCallback(
-                          NewSocialNetwork(networks[index]), context, _onPop);
-                    }),
+                    // trailing: const Icon(Icons.arrow_forward_ios_sharp),
+                    // onTap: () {
+                    //   NavigatorApp.pushWithCallback(
+                    //       NewSocialNetwork(networks[index]), context, _onPop);
+                    // }
+                    ),
                 const Divider()
               ],
             ),
@@ -98,18 +99,4 @@ class _MySocialNetworksPage extends State<MySocialNetworksPage> {
     });
   }
 
-  Widget? _getIconFromNetwork(int index) {
-    var network = networks[index];
-    IconData? iconData;
-    switch (network.networkId) {
-      case "11":
-        iconData = FontAwesomeIcons.twitter;
-    }
-
-    return Icon(
-      iconData, // Twitter icon
-      size: 20.0, // Size of the icon
-      color: Colors.blue, // Color of the icon
-    );
-  }
 }

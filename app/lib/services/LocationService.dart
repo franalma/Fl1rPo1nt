@@ -19,7 +19,7 @@ class LocationService {
     _timer =
         Timer.periodic(Duration(seconds: _locationInterval), (timer) async {
       try {
-        Position position = await _getCurrentLocation();
+        Position position = await getCurrentLocation();
         Location location = Location(position.latitude, position.longitude);
         _sendLocationToServer(location);
       } catch (e) {
@@ -35,7 +35,7 @@ class LocationService {
   }
 
   // Obtener la ubicación actual
-  Future<Position> _getCurrentLocation() async {
+  Future<Position> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       throw Exception('Location services are disabled.');

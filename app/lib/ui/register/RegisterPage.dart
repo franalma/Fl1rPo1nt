@@ -2,6 +2,7 @@ import 'package:app/comms/model/request/auth/HostRegisterRequest.dart';
 import 'package:app/model/HostErrorCode.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/login/LoginPage.dart';
 import 'package:app/ui/elements/my_button.dart';
 import 'package:app/ui/elements/my_textfield.dart';
@@ -22,6 +23,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+
+  final TextEditingController _dateController = TextEditingController();
+
+  DateTime? _selectedDate;
 
   bool isValidPass(String pass) {
     final RegExp passwordRegex = RegExp(
@@ -83,7 +88,23 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    var response = await _sendToHost();
+    if (!isValidDate(_selectedDate)) {
+      DefaultModalDialog.showErrorDialog(context, "Indica fecha de nacimiento válida", "Cerrar", FontAwesomeIcons.exclamation);
+      return;
+    }
+
+    await _sendToHost();
+  }
+
+  bool isValidDate(DateTime? dateTime) {
+    if (dateTime == null) return false;
+    DateTime today = DateTime.now();
+    if (dateTime.isAfter(today)) return false;
+    if (dateTime.year == today.year &&
+        dateTime.month == today.month &&
+        dateTime.day == today.day) return false;
+    if (today.year - dateTime.year < 18) return false;
+    return true;
   }
 
   void _showAllFieldsRequired() {
@@ -133,7 +154,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: [
                   const Icon(
                     FontAwesomeIcons.circleExclamation,
-                    size: 40,
+                    size: 10,
                     color: Colors.red,
                   ),
                   const Text(
@@ -324,14 +345,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   _confirmPasswordController.text = "Aa123456\$";
                 },
                 child: SizedBox(
-                    height: 150,
-                    width: 150,
+                    height: 20,
+                    width: 20,
                     child: Image.asset("assets/img/splash_icon.png")),
               ),
               const SizedBox(height: 30),
               GestureDetector(
-                onDoubleTap: (){
-                   _nameController.text = "Fran2";
+                onDoubleTap: () {
+                  _nameController.text = "Fran2";
                   _emailController.text = "test2@floiint.com";
                   _phoneController.text = "676404766";
                   _passwordController.text = "Aa123456\$";
@@ -365,6 +386,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 hintText: 'Teléfono',
                 obscureText: false,
               ),
+              const SizedBox(height: 10),
+              _buildBornDataPicker(),
               const SizedBox(height: 10),
               MyTextField(
                 controller: _passwordController,
@@ -418,15 +441,18 @@ class _RegisterPageState extends State<RegisterPage> {
     String phone = _phoneController.text;
     String email = _emailController.text;
     String pass = _passwordController.text;
+
     const TextStyle styleMessages =
         TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
     showLoadingModal();
-    HostRegisterRequest().run(name, phone, email, pass).then((response) {
+    HostRegisterRequest()
+        .run(name, phone, email, pass, _selectedDate!.millisecondsSinceEpoch)
+        .then((response) {
       var hostCode = HostErrorCodesValue.parse(response.hostErrorCode!.code);
       NavigatorApp.pop(context);
       switch (hostCode) {
         case HostErrorCodesValue.NoError:
-          {            
+          {
             AlertDialogs().showModalDialogMessage(
                 context,
                 250,
@@ -435,11 +461,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 const Color.fromARGB(245, 3, 203, 30),
                 "¡Enhorabuena! Te has registrado correctamente. Revisa tu correo para activar tu cuenta",
                 styleMessages,
-                "Cerrar", LoginPage2());
+                "Cerrar",
+                LoginPage2());
             break;
           }
         case HostErrorCodesValue.UserExist:
-          {            
+          {
             AlertDialogs().showModalDialogMessage(
                 context,
                 200,
@@ -468,5 +495,39 @@ class _RegisterPageState extends State<RegisterPage> {
           {}
       }
     });
+  }
+
+  Widget _buildBornDataPicker() {
+    // Display selected date or placeholder text
+    var today = DateTime.now();
+    return Column(
+      children: [
+        MyTextField(
+            isEditable: true,
+            buttonIcon: IconButton(
+              icon: const Icon(Icons.calendar_month),
+              onPressed: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: today, // Default initial date
+                  firstDate: DateTime(1900), // Earliest date
+                  lastDate: DateTime.now(), // Latest date
+                  helpText: "Fecha de nacimiento",
+                );
+
+                if (pickedDate != null && pickedDate != _selectedDate) {
+                  setState(() {
+                    _selectedDate = pickedDate;
+                    _dateController.text =
+                        _selectedDate!.toLocal().toString().split(' ')[0];
+                  });
+                }
+              },
+            ),
+            controller: _dateController,
+            hintText: "Fecha de nacimiento",
+            obscureText: false),
+      ],
+    );
   }
 }

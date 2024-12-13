@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:app/ads/AdsManager.dart';
 import 'package:app/comms/model/request/matchs/HostPutUserContactRequest.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/SmartPoint.dart';
@@ -7,8 +6,6 @@ import 'package:app/model/User.dart';
 import 'package:app/services/DeviceInfoService.dart';
 import 'package:app/services/NfcService.dart';
 import 'package:app/ui/NavigatorApp.dart';
-import 'package:app/ads/AdsManager.dart';
-import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/qr_manager/QrCodeScannerPage.dart';
@@ -28,12 +25,12 @@ class PartyModePage extends StatefulWidget {
 
 class _PartyModeState extends State<PartyModePage> {
   User user = Session.user;
-  // late AdsManager adsManager;
+  late AdsManager adsManager;
   bool _isAdLoadedBanner = false;
 
   @override
   void initState() {
-    // adsManager = AdsManager((value) => _loadedAd(value));
+    adsManager = AdsManager((value) => _loadedAd(value));
 
     super.initState();
   }
@@ -47,7 +44,10 @@ class _PartyModeState extends State<PartyModePage> {
 
   @override
   Widget build(BuildContext context) {
-    // adsManager.init(context);
+    if (!_isAdLoadedBanner) {
+      adsManager.init(context);
+    }
+
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56.0), // Height of the AppBarP
@@ -100,7 +100,7 @@ class _PartyModeState extends State<PartyModePage> {
                 child: user.isFlirting
                     ? _buildEnabledFlirtPanelPoint()
                     : _buildDisabledPanel()),
-            // if (_isAdLoadedBanner) adsManager.buildAdaptativeBannerd(context)
+            if (_isAdLoadedBanner) adsManager.buildAdaptativeBannerd(context)
           ],
         ));
   }
@@ -139,32 +139,6 @@ class _PartyModeState extends State<PartyModePage> {
         ));
   }
 
-  void nfcCallBack(String pointId) async {
-    Log.d("Starts nfcCallBack");
-    try {
-      Log.d("-->nfc value $pointId");
-      NavigatorApp.pop(context);
-
-      if (pointId.isNotEmpty) {
-        var response = await SmartPoint.empty().getSmartPointByPointId(pointId);
-
-        if (response.point != null) {
-          var message = "Nuevo contacto:${response.point!.name}";
-          DefaultModalDialog.showErrorDialog(context, "Nuevo contacto añadido",
-              "Cerrar", FontAwesomeIcons.user,
-              iconColor: Colors.green);
-        }
-      } else {
-        DefaultModalDialog.showErrorDialog(
-            context,
-            "No se han encontrado datos en el SmartPoint",
-            "Cerrar",
-            FontAwesomeIcons.exclamation);
-      }
-    } catch (error, stackTrace) {
-      Log.d("$error, $stackTrace");
-    }
-  }
 
   void _readPoint() async {
     Log.d("Starts _readdPoint");
@@ -185,18 +159,20 @@ class _PartyModeState extends State<PartyModePage> {
               await SmartPoint.empty().getSmartPointByPointId(pointId);
           if (pointResponse.point != null) {
             SmartPoint point = pointResponse.point!;
-            print("user_id:" +user.userId);
-            print("qr_id:"+user.qrDefaultId);
-            print( "point_user-id:"+ point.userId!);            
-            print("point_id:"+point.id!);
-            print("flirt_id:"+Session.currentFlirt!.id);
-            print("location:"+Session.location!.toString());
             HostPutUserContactRequest()
-                .run(user.userId, user.qrDefaultId, point.userId!, point.id!,
-                    Session.currentFlirt!.id, Session.location!, ContactUser.point)
+                .run(
+                    user.userId,
+                    user.qrDefaultId,
+                    point.userId!,
+                    point.id!,
+                    Session.currentFlirt!.id,
+                    Session.location!,
+                    ContactUser.point)
                 .then((value) {
-
-                });
+              DefaultModalDialog.showErrorDialog(context,
+                  "Nuevo contacto añadido", "Cerrar", FontAwesomeIcons.user,
+                  iconColor: Colors.green);
+            });
           }
         }
       } else {

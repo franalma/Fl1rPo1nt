@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 class HostRegisterRequest {
   Future<HostRegisterResponse> run(
-      String name, String phone, String email, String pass) async {
+      String name, String phone, String email, String pass, int bornDate) async {
     var hostErrorCode = HostErrorCode.undefined();
     try {
       Log.d("Start doRegisterV2");
@@ -23,7 +23,8 @@ class HostRegisterRequest {
           "password": pass,
           "phone": phone,
           "email": email,
-          "zip_code":0
+          "zip_code":0, 
+          "born_date": bornDate
           // "country": country,
           // "city": city
         }

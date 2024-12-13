@@ -45,13 +45,55 @@ async function createMatchInternalForQr(input) {
       contact_info: contactQrInfo.contact_info,
     },
   ];
-
-  printJson(doc);
   return doc;
 }
 
+
+async function createMatchInternalForMap(input) {
+  logger.info("Starts createMatchInternalForMap: "+JSON.stringify(input));
+  let doc = {
+    id: uuidv4(),
+    source: input.source,
+    flirt_id: input.flirt_id,
+    location: input.location,
+    created_at: Date.now(),
+    active: 1,
+  };
+
+  const contactQrInfo = await userHandler.getUserPublicProfileByUserId(
+    input.contact_id,
+    input.contact_qr_id
+  );
+
+  logger.info("--->map contactqrinfo: "+JSON.stringify(contactQrInfo));
+
+  const userQrInfo = await userHandler.getUserInfoByUserIdQrId(
+    input.user_id,
+    input.user_qr_id
+  );
+
+  
+
+  doc.users = [
+    {
+      user_id: input.user_id,
+      contact_info: userQrInfo.contact_info,
+    },
+    {
+      user_id: input.contact_id,
+      contact_info: contactQrInfo.contact_info,
+    },
+  ];
+
+  return doc;
+}
+
+
+
+
+
 async function createMatchInternalForPoint(input) {
-  logger.info("Starts createMatchInternalForPoint"+ JSON.stringify(input));
+  logger.info("Starts createMatchInternalForPoint" + JSON.stringify(input));
   let doc = {
     id: uuidv4(),
     source: input.source,
@@ -62,24 +104,18 @@ async function createMatchInternalForPoint(input) {
   };
 
   const smartPointInfo = (await smartPointHandler.getSmartPointByPointId(input)).point;
-  printJson(smartPointInfo);
   const userQrInfo = await userHandler.getUserInfoByUserIdQrId(
     input.user_id,
     input.user_qr_id
   );
+
   const contactInfo = {
-    name: smartPointInfo.user_name ? smartPointInfo.user_name: "",
-    phone: smartPointInfo.user_phone ? smartPointInfo.user_phone: "",
-    audios:false,
-    pictures:false, 
+    name: smartPointInfo.user_name ? smartPointInfo.user_name : "",
+    phone: smartPointInfo.user_phone ? smartPointInfo.user_phone : "",
+    audios: false,
+    pictures: false,
     networks: smartPointInfo.networks
   }
-  logger.info("----------------");
-  logger.info("----------------");
-  printJson(contactInfo);
-  logger.info("----------------");
-  logger.info("----------------");
-
 
   doc.users = [
     {
@@ -92,7 +128,6 @@ async function createMatchInternalForPoint(input) {
     },
   ];
 
-  printJson(doc);
   return doc;
 }
 
@@ -198,10 +233,12 @@ async function addUserContactByUserIdContactIdQrId(input) {
     if (input.source == 0) {
       //qr
       doc = await createMatchInternalForQr(input);
-
     } else if (input.source == 1) {
       //point
       doc = await createMatchInternalForPoint(input);
+    } else if (input.source == 2) {
+      //map
+      doc = await createMatchInternalForMap(input);
     }
 
 
@@ -281,14 +318,19 @@ async function getUserContactsByUserId(input) {
 }
 
 async function getAllUserMatchsByUserId(input) {
-  logger.info("Starts getAllUserMatchsByUserId");
+  logger.info("Starts getAllUserMatchsByUserId: "+JSON.stringify(input));
   let result = {};
   try {
     const db = DB_INSTANCES.DB_API;
     const filters = {
       users: { $elemMatch: { user_id: input.user_id } },
-      active: 1,
+      
     };
+
+    if (!input.include_disabled){
+      filters.active = 1; 
+    }
+
     const dbResponse = await dbHandler.findWithFiltersAndClient(
       db.client,
       filters,

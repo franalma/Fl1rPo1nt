@@ -43,13 +43,15 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(        
+    return Scaffold(
         appBar: AppBar(
           flexibleSpace: FlexibleAppBar(),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                _onSaveData();                
+                if (widget._socialNetworkSelected == null) {
+                  _saveNewData();
+                } else {}
               }),
         ),
         body: _buildEditOptions());
@@ -114,8 +116,8 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
     );
   }
 
-  Future<void> _onSaveData() async {
-    Log.d("Starts _onSaveData");
+  Future<void> _saveNewData() async {
+    Log.d("Starts _saveNewData");
     var networksToUpate = user.networks;
     if (_socialNetworkSelected != null) {
       var newNetwork = SocialNetwork(_socialNetworkSelected!.name,
@@ -138,4 +140,6 @@ class _NewSocialNetwork extends State<NewSocialNetwork> {
           AppLocalizations.of(context)!.translate("all_fields_required"));
     }
   }
+
+
 }

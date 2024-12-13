@@ -4,6 +4,7 @@ import 'package:app/services/NewMessageService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ListContactsPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FancyButton.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
@@ -26,7 +27,7 @@ class _Home2State extends State<Home2Page> {
 
   @override
   void initState() {
-    super.initState();    
+    super.initState();
     Session.socketSubscription?.onNewContactRequested =
         _handleNewContactRequest;
   }
@@ -41,7 +42,6 @@ class _Home2State extends State<Home2Page> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -63,7 +63,7 @@ class _Home2State extends State<Home2Page> {
         ),
         body: Stack(
           children: [
-            _buildBody(),            
+            _buildBody(),
           ],
         ));
   }
@@ -105,7 +105,14 @@ class _Home2State extends State<Home2Page> {
                 color: Colors.blue,
                 onTap: () {
                   if (_user.isFlirting) {
-                    NavigatorApp.push(PartyModePage(), context);
+                    if (_user.qrValues.isEmpty) {
+                      DefaultModalDialog.showErrorDialog(context, "Debes crear al menos un QR para compartir", "Cerrar", FontAwesomeIcons.exclamation);
+
+
+
+                    } else {
+                      NavigatorApp.push(PartyModePage(), context);
+                    }
                   } else {
                     AlertDialogs().showModalDialogMessage(
                         context,
@@ -130,9 +137,17 @@ class _Home2State extends State<Home2Page> {
                 icon: Icons.map,
                 color: Colors.amber,
                 onTap: () {
-                  var location =
-                      LatLng(Session.location!.lat, Session.location!.lon);
-                  NavigatorApp.push(MapExplorerController(location), context);
+                  if (Session.location != null) {
+                    var location =
+                        LatLng(Session.location!.lat, Session.location!.lon);
+                    NavigatorApp.push(MapExplorerController(location), context);
+                  } else {
+                    DefaultModalDialog.showErrorDialog(
+                        context,
+                        "Debes activar tu ubicación para poder acceder al mapa",
+                        "Cerrar",
+                        FontAwesomeIcons.exclamation);
+                  }
                 }),
             FancyButton(
                 text: 'Mis Puntos',
@@ -151,5 +166,4 @@ class _Home2State extends State<Home2Page> {
       ),
     );
   }
-
 }

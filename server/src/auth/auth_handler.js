@@ -52,7 +52,8 @@ async function doRegisterUser(input) {
                 phone: input.phone,
                 name: user.name,
                 surname: input.surname,
-                zip_code: input.zip_code
+                zip_code: input.zip_code,
+                born_date: input.born_date
             }
             const isCreated = await userHandler.registerUser(userProfile);
 

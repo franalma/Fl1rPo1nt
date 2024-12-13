@@ -6,6 +6,7 @@ import 'package:app/model/SmartPoint.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/elements/SlideRowLeft.dart';
@@ -13,6 +14,7 @@ import 'package:app/ui/smart_points/SmartPointShowDetailPage.dart';
 import 'package:app/ui/smart_points/SmartPointsAddPage.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SmartPointsListPage extends StatefulWidget {
   @override
@@ -34,8 +36,13 @@ class _SmartPointsListPage extends State<SmartPointsListPage> {
           actions: [
             IconButton(
                 onPressed: () async {
-                  await NavigatorApp.pushAndWait(SmartPointsAddPage(), context);
-                  _fechFromHost();
+                  if (_points!.length < 3) {
+                    await NavigatorApp.pushAndWait(
+                        SmartPointsAddPage(), context);
+                    _fechFromHost();
+                  }else{
+                    DefaultModalDialog.showErrorDialog(context, "Has llegado al máxinmo de SmartPoints", "Cerrar", FontAwesomeIcons.exclamation);
+                  }
                 },
                 icon: const Icon(Icons.add))
           ],
@@ -61,26 +68,33 @@ class _SmartPointsListPage extends State<SmartPointsListPage> {
                   child: Column(
                     children: [
                       ListTile(
-                        onTap: () {
-                          NavigatorApp.push(
-                              SmartPointShowDetailPage(_points![index]),
-                              context);
-                        },
-                        leading: FlirtPoint().build(
-                            50,
-                            50,
-                            100,
-                            _user.getSexAlternativeColor(),
-                            _user.getRelationshipColor()),
-                        title: Text("Floiint Point ${index+1} "),
-                        subtitle: Row(children: [
-                          _points![index].name!.isNotEmpty? const Icon(Icons.person):Container(),
-                          const SizedBox(width: 10),
-                          _points![index].phone!.isNotEmpty? const Icon(Icons.phone):Container(),
-                          const SizedBox(width: 10),
-                          _points![index].networks!.isNotEmpty? const Icon(Icons.link):Container()
-                        ],)
-                      ),
+                          onTap: () {
+                            NavigatorApp.push(
+                                SmartPointShowDetailPage(_points![index]),
+                                context);
+                          },
+                          leading: FlirtPoint().build(
+                              50,
+                              50,
+                              100,
+                              _user.getSexAlternativeColor(),
+                              _user.getRelationshipColor()),
+                          title: Text("Floiint Point ${index + 1} "),
+                          subtitle: Row(
+                            children: [
+                              _points![index].name!.isNotEmpty
+                                  ? const Icon(Icons.person)
+                                  : Container(),
+                              const SizedBox(width: 10),
+                              _points![index].phone!.isNotEmpty
+                                  ? const Icon(Icons.phone)
+                                  : Container(),
+                              const SizedBox(width: 10),
+                              _points![index].networks!.isNotEmpty
+                                  ? const Icon(Icons.link)
+                                  : Container()
+                            ],
+                          )),
                       const Divider()
                     ],
                   ));

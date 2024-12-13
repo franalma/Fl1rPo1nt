@@ -48,7 +48,10 @@ class HostPutUserContactRequest extends BaseRequest {
         mapBody["input"]["point_id"] = contactSourceId;
       } else if (source == ContactUser.qr) {
         mapBody["input"]["contact_qr_id"] = contactSourceId;
+      } else if (source == ContactUser.map) {
+        mapBody["input"]["contact_qr_id"] = contactSourceId;
       }
+
       String jsonBody = json.encode(mapBody);
       Log.d("HostPutUserContactRequest::Sending $jsonBody");
       var response =

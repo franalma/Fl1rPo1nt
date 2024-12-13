@@ -1,7 +1,3 @@
-import 'dart:typed_data';
-import 'dart:ui' as ui;
-import 'dart:ui';
-
 import 'package:app/comms/model/request/flirt/HostGetPeopleArroundRequest.dart';
 import 'package:app/comms/model/request/user/profile/HostGetUserPublicProfile.dart';
 import 'package:app/model/HostErrorCode.dart';
@@ -16,7 +12,6 @@ import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
@@ -33,13 +28,11 @@ class MapExplorerController extends StatefulWidget {
 
 class _MapExplorerController extends State<MapExplorerController> {
   late GoogleMapController mapController;
-  final Set<Marker> _markers = {};
-  BitmapDescriptor? bitmapDescriptor;
+  final Set<Marker> _markers = {};  
   bool _isShowInfoWindow = false;
   final User _user = Session.user;
   bool _filtersEnabled = true;
-  UserPublicProfile? _profile; 
-  
+  UserPublicProfile? _profile;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -49,9 +42,6 @@ class _MapExplorerController extends State<MapExplorerController> {
   void initState() {
     super.initState();
     _fetchFromHost();
-    createFontAwesomeIconBitmap(Colors.red, Colors.green).then((value) {
-      bitmapDescriptor = value;
-    });
   }
 
   @override
@@ -64,16 +54,18 @@ class _MapExplorerController extends State<MapExplorerController> {
             children: [
               IconButton(
                   onPressed: () {
-                     if (_filtersEnabled) {
-                        _filtersEnabled = false;
-                      } else {
-                        _filtersEnabled = true;
-                      }
+                    if (_filtersEnabled) {
+                      _filtersEnabled = false;
+                    } else {
+                      _filtersEnabled = true;
+                    }
                     setState(() {
-                      _fetchFromHost(); 
+                      _fetchFromHost();
                     });
                   },
-                  icon: Icon(_filtersEnabled ?Icons.filter_alt_off: Icons.filter_alt))
+                  icon: Icon(_filtersEnabled
+                      ? Icons.filter_alt_off
+                      : Icons.filter_alt))
             ],
           )
         ],
@@ -126,23 +118,15 @@ class _MapExplorerController extends State<MapExplorerController> {
                 const SizedBox(height: 8),
                 Text(
                   _profile!.name!,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Container(
                   alignment: Alignment.center,
                   child: const SizedBox(
                     width: 200,
-                    
                     child: Row(
                       children: [
-                        Text(
-                          "40",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Text(
-                          ",Madrid",
-                          style: TextStyle(fontSize: 16),
-                        ),
+                        
                       ],
                     ),
                   ),
@@ -150,9 +134,11 @@ class _MapExplorerController extends State<MapExplorerController> {
 
                 IconButton(
                   onPressed: () {
-                    NavigatorApp.push(ContactDetailsPageFromMap(_profile!), context);
+                    NavigatorApp.push(
+                        ContactDetailsPageFromMap(_profile!), context);
                   },
-                  icon: Icon(FontAwesomeIcons.heartCircleBolt),
+                  tooltip: "Ver más...",
+                  icon: const Icon(Icons.more_horiz),
                   color: Colors.red,
                   iconSize: 30,
                 )
@@ -190,68 +176,27 @@ class _MapExplorerController extends State<MapExplorerController> {
     );
   }
 
-  Future<BitmapDescriptor> createFontAwesomeIconBitmap(
-      Color foreground, Color background) async {
-    final PictureRecorder pictureRecorder = ui.PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    const Size size = Size(100, 100); // Define the icon size
-
-    // Create a Paint for background (optional, for visibility)
-    final Paint paint = Paint()
-      ..color = const ui.Color.fromARGB(0, 207, 11, 11);
-    canvas.drawRect(Rect.fromLTWH(0.0, 0.0, size.width, size.height), paint);
-
-    // Draw the FontAwesomeIcon widget
-    const Icon icon = Icon(
-      FontAwesomeIcons.solidCircle,
-      size: 80.0, // Icon size
-    );
-    // var stack = twoColorsIcon();
-    // Use a painter to draw the icon
-    final textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-      text: TextSpan(
-        text: String.fromCharCode(icon.icon!.codePoint),
-        style: TextStyle(
-          fontSize: icon.size,
-          fontFamily: icon.icon!.fontFamily,
-          package: icon.icon!.fontPackage,
-          color: ui.Color.fromARGB(255, 62, 77, 247),
-        ),
-      ),
-    );
-    textPainter.layout();
-    textPainter.paint(
-        canvas,
-        Offset((size.width - textPainter.width) / 2,
-            (size.height - textPainter.height) / 2));
-
-    // Convert the canvas into an image
-    final ui.Image image = await pictureRecorder
-        .endRecording()
-        .toImage(size.width.toInt(), size.height.toInt());
-    final ByteData? byteData =
-        await image.toByteData(format: ui.ImageByteFormat.png);
-    return BitmapDescriptor.fromBytes(byteData!.buffer.asUint8List());
-  }
 
   Future<void> _addMarker(LatLng position, NearByFlirt flirtNearBy) async {
-    
-    
+    var icon = await FlirtPoint()
+        .build(30, 30, 100, flirtNearBy.getSexAlternativeColor(),
+            flirtNearBy.getRelationshipColor())
+        .toBitmapDescriptor();
+
     final marker = Marker(
         markerId: MarkerId(flirtNearBy.flirtId!),
         position: position,
         onTap: () async {
           HostGetUserPublicProfile().run(flirtNearBy.userId!).then((value) {
-            _profile = value.profile;             
+            _profile = value.profile;
             setState(() {
               _isShowInfoWindow = true;
             });
           });
         },
-        icon: bitmapDescriptor!);
-        // icon: FlirtPoint().build(50, 50, 100, _user.getSexAlternativeColor(), _user.getRelationshipColor())
-      
+        // icon: bitmapDescriptor!);
+        icon: icon);
+
     setState(() {
       _markers.add(marker);
     });
@@ -260,10 +205,11 @@ class _MapExplorerController extends State<MapExplorerController> {
   Future<void> _fetchFromHost() async {
     Log.d("Starts");
     Location location = Session.location!;
-    _markers.clear(); 
+    _markers.clear();
     HostGetPeopleArroundRequest()
         .run(
             Session.currentFlirt!.id,
+            _user.userId,
             _user.sexAlternatives,
             _user.relationShip,
             _user.genderInterest,

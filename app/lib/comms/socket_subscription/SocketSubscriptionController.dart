@@ -17,10 +17,10 @@ class SocketSubscriptionController {
   Function(String)? onReload;
   List<String> mapMatchLost = [];
   Function(String)? onMatchLost;
-  
+
   NotificationService notificationService = NotificationService();
   SocketSubscriptionController initializeSocketConnection() {
-    notificationService.init();   
+    notificationService.init();
     socket = IO.io(HostChatActions.socketListen.build(), <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
@@ -45,28 +45,31 @@ class SocketSubscriptionController {
 
     socket.on('chat_message', (input) async {
       Log.d("chat message $input");
-      Map<String, dynamic> data = jsonDecode(input);
-      String matchId = data["match_id"];
-      String senderId = data["sender_id"];
-      String message = data["message"];
-      String receiverId = data["receiver_id"];
-      int time = data["send_at"];
+      try {
+        Map<String, dynamic> data = jsonDecode(input);
+        String matchId = data["match_id"];
+        String senderId = data["sender_id"];
+        String message = data["message"];
+        String receiverId = data["receiver_id"];
+        int time = data["send_at"];
 
-      var messageItem = ChatMessageItem(time, message, senderId, receiverId);
-      
+        var messageItem = ChatMessageItem(time, message, senderId, receiverId);
 
-      if (chatroomGlobal.containsKey(matchId)) {
-        var callback = chatroomGlobal[matchId]!;
-        callback(messageItem);
-      } else {
-        // int nMsg = newMessages[matchId] ?? 0;
-        // nMsg = nMsg + 1;
-        // newMessages[matchId] = nMsg;
-        await saveNewChatMessages(matchId);
+        if (chatroomGlobal.containsKey(matchId)) {
+          var callback = chatroomGlobal[matchId]!;
+          callback(messageItem);
+        } else {
+          // int nMsg = newMessages[matchId] ?? 0;
+          // nMsg = nMsg + 1;
+          // newMessages[matchId] = nMsg;
+          await saveNewChatMessages(matchId);
 
-        if (onReload != null) {
-          onReload!(matchId);
+          if (onReload != null) {
+            onReload!(matchId);
+          }
         }
+      } catch (error, stackTrace) {
+        Log.d("$error, $stackTrace");
       }
     });
     return this;

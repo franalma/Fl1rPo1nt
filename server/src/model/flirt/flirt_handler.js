@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
 const logger = require("../../logger/log");
+const matchHandler = require("../user/mach_handler");
 const { DB_INSTANCES } = require("../../database/databases");
 const {
   HOST_ERROR_CODES,
@@ -256,8 +257,14 @@ async function getActiveFlirtsFromPointAndTendency(input) {
   const db = DB_INSTANCES.DB_API;
   let result = {};
   try {
+    input.include_disabled = true; 
+    let matchs = (await matchHandler.getAllUserMatchsByUserId(input)).matchs;
+    printJson(matchs);
+    let userContacts = matchs.map((e) => e.contact.user_id);
+
     let filters = {
       flirt_id: { $ne: input.flirt_id },
+      user_id: { $nin: userContacts },
       location: {
         $near: {
           $geometry: {

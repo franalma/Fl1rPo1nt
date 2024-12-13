@@ -2,11 +2,11 @@ import 'package:app/app_localizations.dart';
 import 'package:app/comms/model/request/auth/HostLoginRequest.dart';
 import 'package:app/comms/model/response/auth/HostLoginResponse.dart';
 import 'package:app/comms/socket_subscription/SocketSubscriptionController.dart';
-import 'package:app/model/Flirt.dart';
 import 'package:app/model/HostErrorCode.dart';
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/services/DeviceInfoService.dart';
+import 'package:app/services/LocationService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/DefaultModalDialog.dart';
@@ -15,6 +15,7 @@ import 'package:app/ui/elements/my_button.dart';
 import 'package:app/ui/elements/my_textfield.dart';
 import 'package:app/ui/register/RegisterPage.dart';
 import 'package:app/ui/utils/Log.dart';
+import 'package:app/ui/utils/location.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -251,16 +252,28 @@ class _LoginPageState extends State<LoginPage2> {
           if (flirt != null) {
             Session.currentFlirt = flirt;
             Session.user.isFlirting = true;
+            LocationService(flirt).getCurrentLocation().then((value) {
+              Session.location = Location(value.latitude, value.longitude);
+              LocationService(flirt).startSendingLocation();
+              Session.loadProfileImage().then((value) {
+                SecureStorage().saveSecureData("token", Session.user.token);
+                SecureStorage()
+                    .saveSecureData("refresh_token", Session.user.refreshToken);
+                SecureStorage().saveSecureData("user_id", Session.user.userId);
+
+                NavigatorApp.pushAndRemoveUntil(context, Home2Page());
+              });
+            }).onError((error, stackTrace) {
+              NavigatorApp.pop(context);
+              DefaultModalDialog.showErrorDialog(
+                  context,
+                  "Debes habilitar tu ubicación para poder utilizar Floiint",
+                  "Cerrar",
+                  FontAwesomeIcons.exclamation);
+            });
+          }else{
+              NavigatorApp.pushAndRemoveUntil(context, Home2Page());
           }
-
-          Session.loadProfileImage().then((value) {
-            SecureStorage().saveSecureData("token", Session.user.token);
-            SecureStorage()
-                .saveSecureData("refresh_token", Session.user.refreshToken);
-            SecureStorage().saveSecureData("user_id", Session.user.userId);
-
-            NavigatorApp.pushAndRemoveUntil(context, Home2Page());
-          });
         });
       } else {
         _showStatusDialog(StatusDialog.unknownError);

@@ -1,7 +1,13 @@
+import 'package:app/comms/model/request/matchs/HostPutUserContactRequest.dart';
+import 'package:app/model/HostErrorCode.dart';
+import 'package:app/model/Session.dart';
+import 'package:app/model/User.dart';
 import 'package:app/model/UserPublicProfile.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ShowContactAudiosPage.dart';
 import 'package:app/ui/contacts/ShowContactPictures.dart';
+import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Gradient1.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
@@ -21,7 +27,6 @@ class ContactDetailsPageFromMap extends StatefulWidget {
 }
 
 class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
-  
   @override
   void initState() {
     Log.d("Starts _ContactDetailsPageForMap::initState");
@@ -53,12 +58,11 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
                 iconSize: 30,
                 color: Colors.white,
               ),
-           
               IconButton(
                   icon: const Icon(FontAwesomeIcons.add,
                       size: 30, color: Colors.white),
-                  onPressed: () async {
-
+                  onPressed: () {
+                    _addContact();
                   }),
             ],
             flexibleSpace: FlexibleAppBar(),
@@ -80,14 +84,12 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
           _buildProfile(),
           const SizedBox(height: 5),
           _buildNameTitle(),
-          
           const SizedBox(height: 5),
           _buildSexInterest(),
           const SizedBox(height: 5),
           _buildBiography(),
           const SizedBox(height: 5),
           _buildHobbies(),
-
           const SizedBox(height: 5),
         ],
       ),
@@ -107,11 +109,11 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
               child: ListTile(
                 leading: Icon(
                   Icons.link,
-                  color: Color(CommonUtils.colorToInt(
-                      widget._profile.gender!.color!)),
+                  color: Color(
+                      CommonUtils.colorToInt(widget._profile.gender!.color!)),
                 ),
                 title: Text(
-                    "Me identifico como ${ widget._profile.gender!.name?.toLowerCase()}"),
+                    "Me identifico como ${widget._profile.gender!.name?.toLowerCase()}"),
               ),
             ),
             SizedBox(
@@ -120,9 +122,10 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
                 leading: Icon(
                   Icons.link,
                   color: Color(CommonUtils.colorToInt(
-                       widget._profile.sexAlternative!.color)),
+                      widget._profile.sexAlternative!.color)),
                 ),
-                title: Text( "Soy ${widget._profile.sexAlternative!.name.toLowerCase()}"),
+                title: Text(
+                    "Soy ${widget._profile.sexAlternative!.name.toLowerCase()}"),
               ),
             ),
             SizedBox(
@@ -131,9 +134,10 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
                 leading: Icon(
                   Icons.link,
                   color: Color(CommonUtils.colorToInt(
-                       widget._profile.relationShip!.color)),
+                      widget._profile.relationShip!.color)),
                 ),
-                title: Text( "Busco una relación ${widget._profile.relationShip!.value.toLowerCase()}"),
+                title: Text(
+                    "Busco una relación ${widget._profile.relationShip!.value.toLowerCase()}"),
               ),
             ),
             SizedBox(
@@ -142,9 +146,10 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
                 leading: Icon(
                   Icons.link,
                   color: Color(CommonUtils.colorToInt(
-                       widget._profile.genderInterest!.color!)),
+                      widget._profile.genderInterest!.color!)),
                 ),
-                title: Text( "El género que busco es ${widget._profile.genderInterest!.name!.toLowerCase()}"),
+                title: Text(
+                    "El género que busco es ${widget._profile.genderInterest!.name!.toLowerCase()}"),
               ),
             )
           ],
@@ -197,13 +202,13 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
         child: Column(
           children: [
             _buildSectionTitle("Me interesa..."),
-            if ( widget._profile.hobbies != null &&
-                 widget._profile.hobbies!.isNotEmpty)
+            if (widget._profile.hobbies != null &&
+                widget._profile.hobbies!.isNotEmpty)
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children:
-                    List<Widget>.from( widget._profile.hobbies!.map((hobby) {
+                    List<Widget>.from(widget._profile.hobbies!.map((hobby) {
                   return Chip(
                     label: Text(hobby.name),
                     backgroundColor: Colors.teal.withOpacity(0.2),
@@ -221,9 +226,9 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
   Widget _buildBiography() {
     String biography = "No sabemos mucho";
 
-    if ( widget._profile.biography != null &&
-         widget._profile.biography!.isNotEmpty) {
-      biography =  widget._profile.biography!;
+    if (widget._profile.biography != null &&
+        widget._profile.biography!.isNotEmpty) {
+      biography = widget._profile.biography!;
     }
 
     return Card(
@@ -245,26 +250,39 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
     );
   }
 
-  // Widget _buildPhone() {
-  //   String text = "No tienes su teléfono";
-
-  //   if (widget._match.contactInfo?.phone != null &&
-  //       widget._match.contactInfo!.phone!.isNotEmpty) {
-  //     text = widget._match.contactInfo!.phone!;
-  //   }
-
-  //   return Text(
-  //     text,
-  //     style: const TextStyle(fontSize: 16, color: Colors.teal),
-  //   );
-  // }
-
-  // Future<void> _breakMatch() async {
-  //   Log.d("Starts _breakMatch");
-  //   await HostDisableUserMatchRequest()
-  //       .run(widget._match.matchId!, _user.userId);
-  //   _pop();
-  // }
+  Future<void> _addContact() async {
+    Log.d("Starts _addContact");
+    User user = Session.user;
+    try {
+      AlertDialogs().buildLoadingModal(context);
+      HostPutUserContactRequest()
+          .run(
+              user.userId,
+              user.qrDefaultId,
+              widget._profile.id!,
+              widget._profile.defaultQrId!,
+              Session.currentFlirt!.id,
+              Session.location!,
+              ContactUser.map)
+          .then((response) {
+        if (response.code == HostErrorCodesValue.NoError.code) {
+          NavigatorApp.pop(context);
+          DefaultModalDialog.showErrorDialog(context, "Nuevo contacto añadido",
+              "Cerrar", FontAwesomeIcons.user,
+              iconColor: Colors.green);
+        } else {
+          NavigatorApp.pop(context);
+          DefaultModalDialog.showErrorDialog(
+              context,
+              "No se ha podido añadir el contacto",
+              "Cerrar",
+              FontAwesomeIcons.exclamation);
+        }
+      });
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
+  }
 
   void _pop() {
     NavigatorApp.pop(context);

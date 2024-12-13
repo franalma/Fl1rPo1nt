@@ -135,7 +135,8 @@ const UPDATE_USER_DEFAULT_QR_BY_USER_ID_RULES = [
 ];
 
 const GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY_RULES = [
-    body('input.flirt_id').notEmpty().isString().withMessage("Flirt id is required"),    
+    body('input.flirt_id').notEmpty().isString().withMessage("Flirt id is required"),   
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
     body('input.sex_alternative').notEmpty().isObject().withMessage("Sex alternative id is required"),  
     body('input.relationship').notEmpty().isObject().withMessage("Relationship  is required"),  
     body('input.gender_interest').notEmpty().isObject().withMessage("Gender interest  is required"),  

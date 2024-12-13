@@ -41,6 +41,7 @@ async function creatInternalUser(input) {
     profile_image_id: "",
     default_qr_id: "",
     radio_visibility: 10,
+    born_date: input.born_date,
   };
 
   return user;
@@ -57,6 +58,7 @@ async function createPublicProfileUser(input) {
       biography: input.biography,
       hobbies: input.hobbies,
       gender: input.gender,
+      default_qr_id: input.default_qr_id
     };
 
     if (input.profile_image_id) {

@@ -29,6 +29,7 @@ const validationRules = {
       .matches(/\d/).withMessage('La contraseña debe contener al menos un número')
       .matches(/[@$!%*?&]/).withMessage('La contraseña debe contener al menos un carácter especial (@, $, !, %, *, ?, &)'),
     body("input.zip_code").isNumeric().withMessage("Zip code must be a number"),
+    body("input.born_date").isNumeric().withMessage("Born date must be a number"),
   ],
 
   LOGIN_USER_RULES: [

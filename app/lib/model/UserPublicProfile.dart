@@ -15,6 +15,7 @@ class UserPublicProfile {
   String? biography;
   String? profileImage;
   List<Hobby>? hobbies;
+  String? defaultQrId;
 
   UserPublicProfile(
       this.id,
@@ -25,7 +26,8 @@ class UserPublicProfile {
       this.gender,
       this.hobbies,
       this.biography,
-      this.profileImage);
+      this.profileImage,
+      this.defaultQrId);
   UserPublicProfile.empty();
 
   factory UserPublicProfile.fromJson(Map<String, dynamic> json) {
@@ -46,8 +48,19 @@ class UserPublicProfile {
           (json["hobbies"] as List).map((e) => Hobby.fromHost(e)).toList();
       var profileImage = json["profile_image"]["url"];
 
-      return UserPublicProfile(id, name, relationShip, sexAlternative,
-          genderInterest, gender, hobbies, biography, profileImage);
+      var defaultQrId = json["default_qr_id"];
+
+      return UserPublicProfile(
+          id,
+          name,
+          relationShip,
+          sexAlternative,
+          genderInterest,
+          gender,
+          hobbies,
+          biography,
+          profileImage,
+          defaultQrId);
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }

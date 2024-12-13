@@ -10,6 +10,7 @@ import 'package:app/ui/utils/Log.dart';
 class HostGetPeopleArroundRequest extends BaseRequest {
   Future<HostGetPeopleArroundResponse> run(
       String flirtId,
+      String userId,
       SexAlternative sexAlternative,
       RelationShip relationShip,
       Gender genderInterest,
@@ -26,6 +27,7 @@ class HostGetPeopleArroundRequest extends BaseRequest {
         "action": option.action,
         "input": {
           "flirt_id":flirtId,
+          "user_id":userId,
           "longitude": longitude,
           "latitude": latitude,
           "sex_alternative": sexAlternative.toJson(),

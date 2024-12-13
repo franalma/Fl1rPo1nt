@@ -4,11 +4,11 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/SmartPoint.dart';
 import 'package:app/model/SocialNetwork.dart';
 import 'package:app/model/User.dart';
-import 'package:app/services/DeviceInfoService.dart';
 import 'package:app/services/NfcService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/elements/SocialNetworkIcon.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +31,9 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
 
   bool _isPhoneSelected = false;
   bool _isNameSelected = false;
+  bool _isPhotosSelected = false;
+  bool _isAudioSelected = false;
+
   final List<SocialNetwork> _selectedNetwors = [];
 
   @override
@@ -53,77 +56,82 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
   }
 
   Widget _buildBody() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(children: [
-        const Text(
-          "Selecciona los valores a compartir",
-          style: TextStyle(fontSize: 18),
-        ),
-        const SizedBox(height: 10),
+    return ListView(
+      children: [
+        ListTile(
+            title: const Text("Nombre"),
+            subtitle: Text(_user.name),
+            leading: Icon(Icons.person),
+            trailing: Checkbox(
+                onChanged: (value) {
+                  setState(() {
+                    _isNameSelected = value!;
+                  });
+                },
+                value: _isNameSelected)),
         const Divider(),
-        SizedBox(
-          height: 200,
-          child: Expanded(
-            child: ListView(
-              children: [
-                CheckboxListTile(
-                    title: const Text("Nombre"),
-                    subtitle: Text(_user.name),
-                    onChanged: (value) {
-                      setState(() {
-                        _isNameSelected = value!;
-                      });
-                    },
-                    value: _isNameSelected),
-                const Divider(),
-                CheckboxListTile(
-                    title: const Text("Teléfono"),
-                    subtitle: Text(_user.phone),
-                    onChanged: (value) {
-                      setState(() {
-                        _isPhoneSelected = value!;
-                      });
-                    },
-                    value: _isPhoneSelected),
-                const Divider(),
-              ],
-            ),
-          ),
-        ),
-        const Text(
-          "Selecciona tus redes",
-          style: TextStyle(fontSize: 18),
-        ),
+        ListTile(
+            title: const Text("Teléfono"),
+            subtitle: Text(_user.phone),
+            leading: const Icon(Icons.phone),
+            trailing: Checkbox(
+                onChanged: (value) {
+                  setState(() {
+                    _isPhoneSelected = value!;
+                  });
+                },
+                value: _isPhoneSelected)),
         const Divider(),
-        Expanded(child: _buildSocialNetwors())
-      ]),
+        ListTile(
+            title: const Text("Tus fotos"),
+            leading: const Icon(Icons.image),
+            trailing: Checkbox(
+                onChanged: (value) {
+                  setState(() {
+                    _isPhotosSelected = value!;
+                  });
+                },
+                value: _isPhotosSelected)),
+        const Divider(),
+        ListTile(
+            title: const Text("Tus audios"),
+            leading: const Icon(Icons.audio_file),
+            trailing: Checkbox(
+            onChanged: (value) {
+              setState(() {
+                _isAudioSelected = value!;
+              });
+            },
+            value: _isAudioSelected)),
+        const Divider(),
+        ..._user.networks.map((item) {
+          return _buildSocialNetworkItem(item);
+        })
+      ],
     );
   }
 
-  Widget _buildSocialNetwors() {
-    return ListView.builder(
-        itemCount: _user.networks.length,
-        itemBuilder: (context, index) {
-          return Column(
+  Widget _buildSocialNetworkItem(SocialNetwork item) {
+    return  Column(
             children: [
-              CheckboxListTile(
-                  title: Text(_user.networks[index].name),
-                  subtitle: Text(_user.networks[index].value),
+              ListTile(
+                  title: Text(item.name),
+                  leading: SocialNetworkIcon().resolveIconForNetWorkId(item.networkId),
+                  subtitle: Text(item.value),
+                  trailing: Checkbox(
                   onChanged: (value) {
                     setState(() {
                       if (value!) {
-                        _selectedNetwors.add(_user.networks[index]);
+                        _selectedNetwors.add(item);
                       } else {
-                        _selectedNetwors.remove(_user.networks[index]);
+                        _selectedNetwors.remove(item);
                       }
                     });
                   },
-                  value: _selectedNetwors.contains(_user.networks[index])),
+                  value: _selectedNetwors.contains(item))),
               const Divider()
             ],
-          );
-        });
+    ); 
   }
 
   void setLoading(bool status) {
@@ -197,7 +205,8 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
     }
   }
 
-  Future<bool> _recordPoint(SmartPoint point, Function(StatusMessage) onResult) async {
+  Future<bool> _recordPoint(
+      SmartPoint point, Function(StatusMessage) onResult) async {
     Log.d("Starts _recordPoint: ${point.id}");
     try {
       NfcService service = NfcService();
@@ -214,7 +223,7 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
           }
         }
       }
-      await point.deleteSmartPointByPointId(); 
+      await point.deleteSmartPointByPointId();
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }

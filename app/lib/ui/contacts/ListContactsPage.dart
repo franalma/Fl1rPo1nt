@@ -160,23 +160,28 @@ class _ListContactsPage extends State<ListContactsPage> {
   }
 
   Future<void> _fetchFromHost() async {
-    HostGetUserMacthsRequest().run(_user.userId).then((matches) async {
-      if (matches.matchs != null) {
-        _matchs = matches.matchs!;
-        for (int i = 0; i < _matchs.length; i++) {
-          var match = _matchs[i];
-          int? nMsgs = await Session.socketSubscription
-              ?.getPendingMessagesForMap(match.matchId!);
-          _pendingMessages[match.matchId!] = nMsgs ?? 0;
-          _pendingMessages[match.matchId!] =
-              (_pendingMessages[match.matchId!] ?? 0) +
-                  (match.pendingMessges ?? 0);
+    Log.d("Starts _fetchFromHost");
+    try {
+      HostGetUserMacthsRequest().run(_user.userId).then((matches) async {
+        if (matches.matchs != null) {
+          _matchs = matches.matchs!;
+          for (int i = 0; i < _matchs.length; i++) {
+            var match = _matchs[i];
+            int? nMsgs = await Session.socketSubscription
+                ?.getPendingMessagesForMap(match.matchId!);
+            _pendingMessages[match.matchId!] = nMsgs ?? 0;
+            _pendingMessages[match.matchId!] =
+                (_pendingMessages[match.matchId!] ?? 0) +
+                    (match.pendingMessges ?? 0);
+          }
         }
-      }
-      setState(() {
-        _isLoading = false;
+        setState(() {
+          _isLoading = false;
+        });
       });
-    });
+    } catch (error, stackTrace) {
+      Log.d("$error $stackTrace");
+    }
   }
 
   void _onNewMessageReload(String matchId) {

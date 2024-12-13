@@ -4,9 +4,14 @@ class MyTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
+  final IconButton? buttonIcon;
+  final bool ?isEditable; 
 
-  const MyTextField({
+  const MyTextField(
+     {
     Key? key,
+    this.isEditable,
+    this.buttonIcon,
     required this.controller,
     required this.hintText,
     required this.obscureText,
@@ -19,6 +24,8 @@ class MyTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         obscureText: obscureText,
+        enabled: isEditable,
+        
         decoration: InputDecoration(
             enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
@@ -29,7 +36,13 @@ class MyTextField extends StatelessWidget {
             fillColor: Colors.grey.shade200,
             filled: true,
             hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey[500])),
+            hintStyle: TextStyle(color: Colors.grey[500]),
+
+           prefixIcon: buttonIcon
+            
+            
+            ),
+            
       ),
     );
   }
