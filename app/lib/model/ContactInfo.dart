@@ -13,13 +13,18 @@ class ContactInfo {
 
   factory ContactInfo.fromJson(Map<String, dynamic> json) {
     Log.d("Starts ContactInfo.fromJson");
-    try {         
-      List<dynamic> mapNetworks = json["contact_info"]["networks"];            
-      var networks = mapNetworks.map((e) {
-        return SocialNetwork.load(e);
-      }).toList();
+    try {
+      List<SocialNetwork> networks =[];
+      if (json["contact_info"] != null) {
+        List<dynamic> mapNetworks = json["contact_info"]["networks"];
+        var networks = mapNetworks.map((e) {
+          return SocialNetwork.load(e);
+        }).toList();
+        return ContactInfo(json["user_id"], json["contact_info"]["name"],
+          json["contact_info"]["phone"], networks);
+      }
 
-      return ContactInfo(json["user_id"], json["contact_info"]["name"], json["contact_info"]["phone"], networks);
+      
     } catch (error, stackTrace) {
       Log.d("${error.toString()}  ${stackTrace.toString()}");
     }

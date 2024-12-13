@@ -50,7 +50,7 @@ async function createMatchInternalForQr(input) {
 
 
 async function createMatchInternalForMap(input) {
-  logger.info("Starts createMatchInternalForMap: "+JSON.stringify(input));
+  logger.info("Starts createMatchInternalForMap: " + JSON.stringify(input));
   let doc = {
     id: uuidv4(),
     source: input.source,
@@ -60,20 +60,20 @@ async function createMatchInternalForMap(input) {
     active: 1,
   };
 
-  const contactQrInfo = await userHandler.getUserPublicProfileByUserId(
-    input.contact_id,
-    input.contact_qr_id
+  const contactPublicProfile = await userHandler.getUserPublicProfileByUserId({ user_id: input.contact_id });
+  const contactQrInfo = await userHandler.getUserInfoByUserIdQrId(
+    contactPublicProfile.id,
+    contactPublicProfile.default_qr_id
   );
-
-  logger.info("--->map contactqrinfo: "+JSON.stringify(contactQrInfo));
+  logger.info("--->map contactqrinfo: " + JSON.stringify(contactQrInfo));
 
   const userQrInfo = await userHandler.getUserInfoByUserIdQrId(
     input.user_id,
     input.user_qr_id
   );
 
-  
 
+  logger.info("--->map userQrInfo: " + JSON.stringify(userQrInfo));
   doc.users = [
     {
       user_id: input.user_id,
@@ -318,17 +318,17 @@ async function getUserContactsByUserId(input) {
 }
 
 async function getAllUserMatchsByUserId(input) {
-  logger.info("Starts getAllUserMatchsByUserId: "+JSON.stringify(input));
+  logger.info("Starts getAllUserMatchsByUserId: " + JSON.stringify(input));
   let result = {};
   try {
     const db = DB_INSTANCES.DB_API;
     const filters = {
       users: { $elemMatch: { user_id: input.user_id } },
-      
+
     };
 
-    if (!input.include_disabled){
-      filters.active = 1; 
+    if (!input.include_disabled) {
+      filters.active = 1;
     }
 
     const dbResponse = await dbHandler.findWithFiltersAndClient(

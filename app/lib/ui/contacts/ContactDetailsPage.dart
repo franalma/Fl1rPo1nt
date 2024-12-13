@@ -1,6 +1,5 @@
 import 'package:app/comms/model/request/matchs/HostDisableUserMatchRequest.dart';
 import 'package:app/comms/model/request/user/profile/HostGetUserPublicProfile.dart';
-import 'package:app/model/Flirt.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
@@ -179,13 +178,25 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
   }
 
   Widget _buildNameTitle() {
-    return Text(
-      widget._match.contactInfo?.name ?? "Desconocid@",
-      style: const TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-      ),
-      textAlign: TextAlign.center,
+    return Column(
+      children: [
+        Text(
+          widget._match.contactInfo?.name ?? "Desconocid@",
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          _userPublicProfile?.age != null ? "${_userPublicProfile?.age } años":"",
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 

@@ -19,14 +19,15 @@ class HostPutFlirtByUserIdRequest extends BaseRequest {
       Map<String, dynamic> mapBody = {
         "action": option.action,
         "input": {
-          "user_id": user.userId,        
+          "user_id": user.userId,
           "user_interests": {
             "relationship": user.relationShip,
             "sex_alternative": user.sexAlternatives,
             "gender_interest": user.genderInterest
           },
           "location": {"latitude": location.lat, "longitude": location.lon},
-          "gender": user.gender
+          "gender": user.gender,
+          "age": user.age
         }
       };
 

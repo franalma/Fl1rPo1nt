@@ -43,7 +43,7 @@ class FlirtPoint {
         ));
   }
 
-Future<BitmapDescriptor> getBitmapDescriptorFromWidget(Widget widget) async {
+static Future<BitmapDescriptor> getBitmapDescriptorFromWidget(Widget widget) async {
     // Create a PictureRecorder to capture the widget rendering
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);

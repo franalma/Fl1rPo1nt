@@ -74,7 +74,7 @@ class AppDrawerMenu {
       LocationHandler(onErrorLocation).getCurrentLocation().then((value) {
         LatLng coordinates = LatLng(value.lat, value.lon);
 
-        NavigatorApp.push(MapExplorerController(coordinates), context);
+        // NavigatorApp.push(MapExplorerController(coordinates), context);
       });
     } else {
       FlutterToast().showToast("Debes comenzar a ligar para ver el mapa");

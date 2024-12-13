@@ -14,6 +14,8 @@ class HostGetPeopleArroundRequest extends BaseRequest {
       SexAlternative sexAlternative,
       RelationShip relationShip,
       Gender genderInterest,
+      int fromAge,
+      int toAge, 
       double latitude,
       double longitude,
       double radio,
@@ -28,6 +30,8 @@ class HostGetPeopleArroundRequest extends BaseRequest {
         "input": {
           "flirt_id":flirtId,
           "user_id":userId,
+          "age_from":fromAge,
+          "to_age":toAge, 
           "longitude": longitude,
           "latitude": latitude,
           "sex_alternative": sexAlternative.toJson(),

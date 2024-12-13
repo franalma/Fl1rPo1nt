@@ -19,9 +19,10 @@ class Flirt {
   Gender? gender;
   int? updatedAt;
   int? status;
+  int? age; 
 
   Flirt(this.id, this.userId, this.relationShip, this.sexAlternative,
-      this.gender, this.location, this.updatedAt, this.status);
+      this.gender, this.location, this.updatedAt, this.status, this.age);
   Flirt.empty();
 
   factory Flirt.fromHost(Map<String, dynamic> map) {
@@ -38,8 +39,9 @@ class Flirt {
         var userId = map["user_id"];
         var updatedAt = map["updated_at"];
         var status = map["status"];
+        var age = map["age"];
         return Flirt(flirtId, userId, relationShip, sexAlternative, gender,
-            location, updatedAt, status);
+            location, updatedAt, status,age);
       }
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");

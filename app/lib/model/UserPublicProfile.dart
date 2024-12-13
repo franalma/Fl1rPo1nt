@@ -16,6 +16,8 @@ class UserPublicProfile {
   String? profileImage;
   List<Hobby>? hobbies;
   String? defaultQrId;
+  int? bornDate;
+  int? age;
 
   UserPublicProfile(
       this.id,
@@ -27,7 +29,9 @@ class UserPublicProfile {
       this.hobbies,
       this.biography,
       this.profileImage,
-      this.defaultQrId);
+      this.defaultQrId,
+      this.bornDate,
+      this.age);
   UserPublicProfile.empty();
 
   factory UserPublicProfile.fromJson(Map<String, dynamic> json) {
@@ -49,6 +53,9 @@ class UserPublicProfile {
       var profileImage = json["profile_image"]["url"];
 
       var defaultQrId = json["default_qr_id"];
+      var bornDate = json["born_date"];
+      var age = DateTime.now().year -
+          DateTime.fromMillisecondsSinceEpoch(bornDate).year;
 
       return UserPublicProfile(
           id,
@@ -60,7 +67,9 @@ class UserPublicProfile {
           hobbies,
           biography,
           profileImage,
-          defaultQrId);
+          defaultQrId,
+          bornDate,
+          age);
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }

@@ -84,7 +84,7 @@ class _UserStatePage extends State<UserStatePage> {
 
   Color _getGenderColor() {
     Color color = Colors.white;
-    if (_genderSelected?.color != null) {
+    if (_genderSelected.color != null) {
       color = Color(CommonUtils.colorToInt(_genderSelected!.color!));
     }
     return color;
@@ -371,35 +371,5 @@ class _UserStatePage extends State<UserStatePage> {
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }
-
-    // if (location.lat == 0 && location.lon == 0) {
-    //   FlutterToast().showToast("No ha sido posible obtener la localización");
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-    // } else {
-    //   HostGetUserFlirtsRequest().run(Session.user.userId, 1).then((value) {
-    //     if (value.flirts != null && value.flirts!.isNotEmpty) {
-    //       Session.user.isFlirting = true;
-    //       _sexAltColor =
-    //           Color(CommonUtils.colorToInt(user.sexAlternatives.color));
-    //       _relAltColor = Color(CommonUtils.colorToInt(user.relationShip.color));
-    //       Session.location = location;
-    //       var flirt = value.flirts?[0];
-    //       Session.currentFlirt = flirt;
-    //       _locationService = LocationService(Session.currentFlirt!);
-    //       _locationService?.startSendingLocation();
-    //       setState(() {
-    //         _isEnabled = true;
-    //         _isLoading = false;
-    //       });
-    //     } else {
-    //       setState(() {
-    //         _isLoading = false;
-    //         _isEnabled = false;
-    //       });
-    //     }
-    //     Session.flirtAlreadyLoaded = true;
-    //   });
   }
 }

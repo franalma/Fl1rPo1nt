@@ -58,7 +58,8 @@ async function createPublicProfileUser(input) {
       biography: input.biography,
       hobbies: input.hobbies,
       gender: input.gender,
-      default_qr_id: input.default_qr_id
+      default_qr_id: input.default_qr_id,
+      born_date:input.born_date
     };
 
     if (input.profile_image_id) {
@@ -182,6 +183,7 @@ async function getUserInfoByUserId(input) {
         default_qr_id: user.default_qr_id,
         radio_visibility: user.radio_visibility,
         gender: user.gender ? user.gender : {},
+        born_date:user.born_date
       },
     };
 
@@ -631,6 +633,7 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
 async function getUserPublicProfileByUserId(input) {
   let result = {};
   try {
+    printJson(input);
     logger.info("Starts getUserPublicProfileByUserId:" + JSON.stringify(input));
     const db = DB_INSTANCES.DB_API;
     const filter = { id: input.user_id };

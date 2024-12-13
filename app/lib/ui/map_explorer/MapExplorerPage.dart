@@ -1,9 +1,11 @@
 import 'package:app/comms/model/request/flirt/HostGetPeopleArroundRequest.dart';
 import 'package:app/comms/model/request/user/profile/HostGetUserPublicProfile.dart';
+import 'package:app/model/Gender.dart';
 import 'package:app/model/HostErrorCode.dart';
 import 'package:app/model/NearByFlirt.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/model/UserInterest.dart';
 import 'package:app/model/UserPublicProfile.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ContactDetailsPageFromMap.dart';
@@ -17,8 +19,14 @@ import 'package:widget_to_marker/widget_to_marker.dart';
 
 class MapExplorerController extends StatefulWidget {
   final LatLng _location;
+ int _minAge;
+ int _maxAge;
+ SexAlternative _sexAlternative;
+ RelationShip _relationShip;
+ Gender _genderInterest;
 
-  MapExplorerController(this._location);
+
+  MapExplorerController(this._location, this._minAge, this._maxAge, this._sexAlternative, this._relationShip, this._genderInterest);
 
   @override
   State<MapExplorerController> createState() {
@@ -117,7 +125,7 @@ class _MapExplorerController extends State<MapExplorerController> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  _profile!.name!,
+                  "${_profile!.name!}, ${_profile!.age!}",
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Container(
@@ -178,10 +186,11 @@ class _MapExplorerController extends State<MapExplorerController> {
 
 
   Future<void> _addMarker(LatLng position, NearByFlirt flirtNearBy) async {
-    var icon = await FlirtPoint()
+    var flirtPoint = FlirtPoint()
         .build(30, 30, 100, flirtNearBy.getSexAlternativeColor(),
-            flirtNearBy.getRelationshipColor())
-        .toBitmapDescriptor();
+            flirtNearBy.getRelationshipColor()); 
+    // var icon = await FlirtPoint.getBitmapDescriptorFromWidget(flirtPoint); 
+    var icon = await flirtPoint.toBitmapDescriptor();
 
     final marker = Marker(
         markerId: MarkerId(flirtNearBy.flirtId!),
@@ -210,9 +219,11 @@ class _MapExplorerController extends State<MapExplorerController> {
         .run(
             Session.currentFlirt!.id,
             _user.userId,
-            _user.sexAlternatives,
-            _user.relationShip,
-            _user.genderInterest,
+            widget._sexAlternative,
+            widget._relationShip,
+            widget._genderInterest,
+            widget._minAge,
+            widget._maxAge,
             location.lat,
             location.lon,
             _user.radioVisibility,

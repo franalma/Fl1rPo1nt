@@ -14,21 +14,28 @@ class NearByFlirt {
   SexAlternative? sexAlternative;
   Gender? genderInterest;
   Gender? gender;
+  int? age;
 
   NearByFlirt(this.userId, this.flirtId, this.latLng, this.relationShip,
-      this.sexAlternative, this.genderInterest, this.gender);
+      this.sexAlternative, this.genderInterest, this.gender, this.age);
   NearByFlirt.empty();
   factory NearByFlirt.fromJson(Map<String, dynamic> json) {
     try {
       String userId = json["user_id"];
       String flirtId = json["flirt_id"];
       LatLng latLng = LatLng(json["location"][0], json["location"][1]);
-      RelationShip relationShip = RelationShip.load(json["user_interests"]["relationship"]);
-      SexAlternative sexAlternative  = SexAlternative.load(json["user_interests"]["sex_alternative"]);
-      Gender genderInterest  = Gender.fromJson(json["user_interests"]["gender_interest"]);
-      Gender gender  = Gender.fromJson(json["gender"]);
+      RelationShip relationShip =
+          RelationShip.load(json["user_interests"]["relationship"]);
+      SexAlternative sexAlternative =
+          SexAlternative.load(json["user_interests"]["sex_alternative"]);
+      Gender genderInterest =
+          Gender.fromJson(json["user_interests"]["gender_interest"]);
+      Gender gender = Gender.fromJson(json["gender"]);
+      int age = json["age"];
+      
 
-      return NearByFlirt(userId, flirtId, latLng, relationShip, sexAlternative, genderInterest, gender);
+      return NearByFlirt(userId, flirtId, latLng, relationShip, sexAlternative,
+          genderInterest, gender, age);
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }

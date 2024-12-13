@@ -28,7 +28,7 @@ class _Home2 extends State<Home2> {
     _screens = [
       Center(child: Home()),
       Center(child: Container()),
-      Center(child: MapExplorerController(coordinates)),
+      // Center(child: MapExplorerController(coordinates)),
       Center(child: ListContactsPage()),
       Center(child: Container()),
     ];
@@ -85,7 +85,7 @@ class _Home2 extends State<Home2> {
                       _currentIndex = 2;
                       var location =
                           LatLng(Session.location!.lat, Session.location!.lon);
-                      _screens[_currentIndex] = MapExplorerController(location);
+                      // _screens[_currentIndex] = MapExplorerController(location);
                       setState(() {});
                     },
                   ),

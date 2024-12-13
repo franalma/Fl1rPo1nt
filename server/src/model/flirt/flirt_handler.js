@@ -40,7 +40,8 @@ function createOutputFlirt(item) {
       user_interests: item.user_interests,
       gender: item.gender,
       updated_at: item.updated_at,
-      status: item.status
+      status: item.status,
+      age:item.age
     };
     return flirt;
   } catch (error) {
@@ -103,27 +104,14 @@ async function putUserFlirts(input) {
           status: FLIRT_ACTIVE,
           created_at: currentTime,
           updated_at: currentTime,
+          age:input.age
         };
 
-        let dbResponse = await dbHandler.addDocumentWithClient(
+        await dbHandler.addDocumentWithClient(
           db.client,
           flirt,
           db.collections.flirts_collection
-        );
-        // if (dbResponse) {
-        //   const userCoordinates = createInternalUserCoordinates();
-
-        //   if (userCoordinates) {
-        //     await dbHandler.addDocumentWithClient(db.client, userCoordinates, db.collections.user_coordinates_collection)
-        //   }
-
-        //   result = {
-        //     ...genError(HOST_ERROR_CODES.NO_ERROR),
-        //     message: "Flirt registered successfully",
-        //     response:
-        //       createOutputFlirt(flirt)
-
-        //   };
+        );      
         result = {
           ...genError(HOST_ERROR_CODES.NO_ERROR),
           message: "Flirt registered successfully",

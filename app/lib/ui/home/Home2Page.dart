@@ -7,6 +7,7 @@ import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FancyButton.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
+import 'package:app/ui/map_explorer/MapFilterCriterialsPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/party_mode/PartyModePage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
@@ -140,7 +141,7 @@ class _Home2State extends State<Home2Page> {
                   if (Session.location != null) {
                     var location =
                         LatLng(Session.location!.lat, Session.location!.lon);
-                    NavigatorApp.push(MapExplorerController(location), context);
+                    NavigatorApp.push(MapFilterCriterialsPage(), context);
                   } else {
                     DefaultModalDialog.showErrorDialog(
                         context,

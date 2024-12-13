@@ -83,6 +83,7 @@ const PUT_USER_FLIRT_BY_USER_ID_RULES = [
     body('input.user_interests').notEmpty().isObject().withMessage("Relation id required"),
     body('input.gender').notEmpty().isObject().withMessage("Gender id required"),
     body('input.location').notEmpty().isObject().withMessage("Location is required"),
+    body('input.age').notEmpty().isNumeric().withMessage("Age is required"),
 
 ];
 

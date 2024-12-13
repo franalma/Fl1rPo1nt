@@ -35,6 +35,8 @@ class User {
   late double radioVisibility;
   late Gender gender;
   late Gender genderInterest;
+  late int bornDate; 
+  late int age; 
 
   User(
       this.userId,
@@ -57,7 +59,11 @@ class User {
       this.qrDefaultId,
       this.radioVisibility,
       this.gender,
-      this.genderInterest);
+      this.genderInterest,
+      this.bornDate,
+      this.age
+      
+      );
 
   User.empty();
 
@@ -85,6 +91,8 @@ class User {
       var relationShip = RelationShip.empty();
       SexAlternative sexAlternatives = SexAlternative.empty();
       Gender genderInterest = Gender.empty();
+      var bornDate = json["born_date"];
+      var age = DateTime.now().year - DateTime.fromMillisecondsSinceEpoch(bornDate).year;
 
       if (json["user_interests"]["relationship"] is Map) {
         relationShip =
@@ -165,7 +173,9 @@ class User {
           qrDefaultId,
           radioVisibility,
           gender,
-          genderInterest);
+          genderInterest,
+          bornDate,
+          age);      
 
       return user;
     } catch (error, stackTrace) {

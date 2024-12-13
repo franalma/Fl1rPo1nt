@@ -159,13 +159,25 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
   }
 
   Widget _buildNameTitle() {
-    return Text(
-      widget._profile.name ?? "Desconocid@",
-      style: const TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-      ),
-      textAlign: TextAlign.center,
+    return Column(
+      children: [
+        Text(
+          widget._profile.name ?? "Desconocid@",
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          "${widget._profile.age}  años",
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 
@@ -266,6 +278,7 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
               ContactUser.map)
           .then((response) {
         if (response.code == HostErrorCodesValue.NoError.code) {
+          NavigatorApp.pop(context);
           NavigatorApp.pop(context);
           DefaultModalDialog.showErrorDialog(context, "Nuevo contacto añadido",
               "Cerrar", FontAwesomeIcons.user,

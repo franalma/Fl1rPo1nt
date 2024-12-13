@@ -1,8 +1,6 @@
 import 'dart:convert';
-
-import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/utils/Log.dart';
-import 'package:flutter/material.dart';
+
 
 class NewMessageServie{
 
