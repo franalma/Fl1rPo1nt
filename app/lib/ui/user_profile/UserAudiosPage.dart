@@ -8,13 +8,14 @@ import 'package:app/model/BufferAudioSource.dart';
 import 'package:app/model/FileData.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/SlideRowLeft.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
-// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:permission_handler/permission_handler.dart';
@@ -41,9 +42,10 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   // List of audio files or URLs
   List<FileData> _audioList = [];
   Timer? _timer;
-  int _maxDuration = 10; // Maximum recording duration in seconds
+  int _maxDuration = 60; // Maximum recording duration in seconds
+  int maxAudioNumber = 4; 
   int _currentDuration = 0;
-
+  int counter = 0;
   @override
   void initState() {
     super.initState();
@@ -54,13 +56,33 @@ class _UserAudiosPage extends State<UserAudiosPage> {
   }
 
   Future<void> _startRecording() async {
-    await _audioRecorder!.startRecorder(
-      toFile: 'recorded_audio.aac',
-      codec: Codec.aacADTS,
-    );
-    setState(() {
-      _isRecording = true;
-    });
+    if (_audioList.length < maxAudioNumber) {
+      await _audioRecorder!.startRecorder(
+        toFile: 'recorded_audio.aac',
+        codec: Codec.aacADTS,
+      );
+
+      // _timer = Timer(Duration(seconds: _maxDuration), callbackMaxTime);
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          if (timer.tick >= _maxDuration) {
+            callbackMaxTime();
+          } else {
+            counter++;
+          }
+        });
+      });
+
+      setState(() {
+        _isRecording = true;
+      });
+    } else {
+      DefaultModalDialog.showErrorDialog(
+          context,
+          "Has llegado al máximo de audios",
+          "Cerrar",
+          FontAwesomeIcons.exclamation);
+    }
   }
 
   Future<void> _initializeRecorder() async {
@@ -77,11 +99,16 @@ class _UserAudiosPage extends State<UserAudiosPage> {
     _audioRecorder!.closeRecorder();
     _audioRecorder = null;
     _audioPlayer.dispose();
+    if (_timer != null) {
+      _timer!.cancel();
+    }
     super.dispose();
   }
 
   Future<void> _stopRecording() async {
     var filePath = await _audioRecorder!.stopRecorder();
+    _timer!.cancel();
+    counter = 0; 
     setState(() {
       _isRecording = false;
     });
@@ -98,14 +125,23 @@ class _UserAudiosPage extends State<UserAudiosPage> {
           flexibleSpace: FlexibleAppBar(),
           actions: [
             _isRecording
-                ? IconButton(
-                    onPressed: _stopRecording, icon: const Icon(Icons.stop))
+                ? _buildRecordingPanel()
                 : IconButton(
                     onPressed: _startRecording,
                     icon: const Icon(Icons.record_voice_over_outlined))
           ],
         ),
         body: _isLoading ? _buildLoading() : _buildBody());
+  }
+
+  Widget _buildRecordingPanel() {
+    return Row(
+      children: [
+        
+        Text("00:${counter.toString().padLeft(2, '0')}"),
+        IconButton(onPressed: _stopRecording, icon: const Icon(Icons.stop))
+      ],
+    );
   }
 
   Widget _buildLoading() {
@@ -154,8 +190,8 @@ class _UserAudiosPage extends State<UserAudiosPage> {
           _currentlyPlayingIndex = index;
         });
         final bufferAudioSource = BufferAudioSource(bytes);
-         await _audioPlayer.setAudioSource(bufferAudioSource);
-         await _audioPlayer.play();
+        await _audioPlayer.setAudioSource(bufferAudioSource);
+        await _audioPlayer.play();
       } catch (error) {
         Log.d(error.toString());
       }
@@ -166,7 +202,7 @@ class _UserAudiosPage extends State<UserAudiosPage> {
           _currentlyPlayingIndex = index;
         });
         await _audioPlayer.setUrl(_audioList[index].url!);
-        await _audioPlayer.play();        
+        await _audioPlayer.play();
       } catch (error) {
         Log.d(error.toString());
       }
@@ -250,5 +286,18 @@ class _UserAudiosPage extends State<UserAudiosPage> {
         _stopRecording();
       }
     });
+  }
+
+  void callbackMaxTime() {
+    _stopRecording();
+    setState(() {
+      _isRecording = false;
+    });
+
+    DefaultModalDialog.showErrorDialog(
+        context,
+        "La duración de los audios no puede superar 1 minuto",
+        "Cerrar",
+        FontAwesomeIcons.exclamation);
   }
 }

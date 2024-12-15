@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../comms/model/request/user/images/HostGetUserImagesRequest.dart';
@@ -37,6 +39,7 @@ class _UserPhotosPage extends State<UserPhotosPage> {
   bool _isLoading = false;
   User user = Session.user;
   int selectedUserProfileImage = 0;
+  int maxNumberPictures = 10;
 
   @override
   void initState() {
@@ -56,7 +59,18 @@ class _UserPhotosPage extends State<UserPhotosPage> {
               icon: const Icon(Icons.arrow_back)),
           actions: [
             IconButton(
-                onPressed: () => _onAddPicture(-1), icon: const Icon(Icons.add))
+                onPressed: () {
+                  if (_imageList.length < maxNumberPictures) {
+                    _onAddPicture(-1);
+                  } else {
+                    DefaultModalDialog.showErrorDialog(
+                        context,
+                        "Has llegado al máximo de imágenes",
+                        "Cerrar",
+                        FontAwesomeIcons.exclamation);
+                  }
+                },
+                icon: const Icon(Icons.add))
           ],
         ),
         body: _isLoading ? _buildOnLoading() : _buildBody());
@@ -75,12 +89,12 @@ class _UserPhotosPage extends State<UserPhotosPage> {
         itemBuilder: (context, index) {
           return Stack(
             children: [
-              // Image
-              // Positioned.fill(child: _imageList[index].image!),
               if (_imageList[index].url.isNotEmpty)
                 Positioned.fill(child: Image.network(_imageList[index].url))
               else
-                Positioned.fill(child: Image.memory(_imageList[index].buffer,fit:BoxFit.cover)),
+                Positioned.fill(
+                    child: Image.memory(_imageList[index].buffer,
+                        fit: BoxFit.cover)),
               Positioned(
                 top: 8,
                 right: 8,
@@ -120,8 +134,8 @@ class _UserPhotosPage extends State<UserPhotosPage> {
                       child: GestureDetector(
                         onTap: () => _onSetProfilePicture(index),
                         child: CircleAvatar(
-                          backgroundColor:
-                              const Color.fromARGB(255, 5, 20, 242).withOpacity(0.6),
+                          backgroundColor: const Color.fromARGB(255, 5, 20, 242)
+                              .withOpacity(0.6),
                           radius: 16,
                           child: const Icon(
                             Icons.person_2_rounded,
@@ -227,8 +241,8 @@ class _UserPhotosPage extends State<UserPhotosPage> {
           .then((value) {
         Log.d("setting user profile result $value");
         Session.user.userProfileImageId = profileImage.id!;
-       
-         NavigatorApp.pop(context);
+
+        NavigatorApp.pop(context);
       });
     } else {
       NavigatorApp.pop(context);

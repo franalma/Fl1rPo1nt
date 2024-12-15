@@ -48,30 +48,7 @@ class _UserDataPage extends State<UserDataPage> {
           ),
         ),
         body: ListView(children: [
-          Column(
-            children: [
-              ListTile(
-                onTap: () async {
-                  await _onChangeName();
-                },
-                title: Text("Nombre", style: Styles.rowCellTitleTextStyle),
-                subtitle:
-                    Text(user.name, style: Styles.rowCellSubTitleTextStyle),
-              ),
-              const Divider(),
-            ],
-          ),
-          Column(
-            children: [
-              ListTile(
-                onTap: () async {},
-                title: Text("Contraseña", style: Styles.rowCellTitleTextStyle),
-                subtitle:
-                    Text("********", style: Styles.rowCellSubTitleTextStyle),
-              ),
-              const Divider(),
-            ],
-          ),
+          
           
           
         

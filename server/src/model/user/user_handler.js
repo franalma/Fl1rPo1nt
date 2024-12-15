@@ -632,8 +632,7 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
 
 async function getUserPublicProfileByUserId(input) {
   let result = {};
-  try {
-    printJson(input);
+  try {    
     logger.info("Starts getUserPublicProfileByUserId:" + JSON.stringify(input));
     const db = DB_INSTANCES.DB_API;
     const filter = { id: input.user_id };
@@ -647,7 +646,7 @@ async function getUserPublicProfileByUserId(input) {
       result = await createPublicProfileUser(userDB);
       result.status = 200;
     }
-    printJson(result);
+    
     return result;
   } catch (error) {
     logger.info(error);

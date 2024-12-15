@@ -4,6 +4,7 @@ class FancyButton extends StatelessWidget {
   final String text;
   final IconData icon;
   final Color color;
+  final bool? enable; 
   final VoidCallback onTap;
 
   const FancyButton({
@@ -11,14 +12,19 @@ class FancyButton extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.onTap,
+    this.enable
+    
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      
       onTap: onTap,
       child: Container(
+
         decoration: BoxDecoration(
+          
           color: color,
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
@@ -30,6 +36,7 @@ class FancyButton extends StatelessWidget {
           ],
         ),
         child: Column(
+          
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(

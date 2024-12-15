@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:app/model/Gender.dart';
@@ -23,6 +24,7 @@ class NearByFlirt {
   NearByFlirt.empty();
   factory NearByFlirt.fromJson(Map<String, dynamic> json) {
     try {
+      Log.d("Starts NearByFlirt.fromJson ${jsonEncode(json)}");
       String userId = json["user_id"];
       String flirtId = json["flirt_id"];
       LatLng latLng = LatLng(json["location"][0], json["location"][1]);

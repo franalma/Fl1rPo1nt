@@ -107,9 +107,6 @@ class _Home2State extends State<Home2Page> {
                   if (_user.isFlirting) {
                     if (_user.qrValues.isEmpty) {
                       DefaultModalDialog.showErrorDialog(context, "Debes crear al menos un QR para compartir", "Cerrar", FontAwesomeIcons.exclamation);
-
-
-
                     } else {
                       NavigatorApp.push(PartyModePage(), context);
                     }
@@ -121,7 +118,7 @@ class _Home2State extends State<Home2Page> {
                         50,
                         Colors.red,
                         "Debes hacerte visible para comenzar la fiesta",
-                        TextStyle(fontSize: 18),
+                        const TextStyle(fontSize: 18),
                         "Cerrar");
                   }
                 }),
@@ -137,9 +134,7 @@ class _Home2State extends State<Home2Page> {
                 icon: Icons.search,
                 color: Colors.amber,
                 onTap: () {
-                  if (Session.location != null) {
-                    var location =
-                        LatLng(Session.location!.lat, Session.location!.lon);
+                  if (Session.location != null) {                    
                     NavigatorApp.push(MapFilterCriterialsPage(), context);
                   } else {
                     DefaultModalDialog.showErrorDialog(
@@ -152,12 +147,12 @@ class _Home2State extends State<Home2Page> {
             FancyButton(
                 text: 'Mis Puntos',
                 icon: Icons.nfc,
-                color: Color.fromARGB(255, 91, 3, 61),
+                color: const Color.fromARGB(255, 91, 3, 61),
                 onTap: () {
                   NavigatorApp.push(SmartPointsListPage(), context);
                 }),
-            FancyButton(
-                text: 'Eventos',
+            FancyButton(                
+                text: 'Dónde ir',
                 icon: Icons.people,
                 color: Colors.green,
                 onTap: () {}),

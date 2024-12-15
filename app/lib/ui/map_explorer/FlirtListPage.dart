@@ -8,7 +8,9 @@ import 'package:app/model/UserInterest.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
+import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
+import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +19,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class FlirtListPage extends StatefulWidget {
   final Location _location;
 
-  int _minAge;
-  int _maxAge;
-  SexAlternative _sexAlternative;
-  RelationShip _relationShip;
-  Gender _genderInterest;
+  final int _minAge;
+  final int _maxAge;
+  final SexAlternative _sexAlternative;
+  final RelationShip _relationShip;
+  final Gender _genderInterest;
+  
 
   FlirtListPage(this._location, this._minAge, this._maxAge,
       this._sexAlternative, this._relationShip, this._genderInterest);
@@ -34,15 +37,17 @@ class FlirtListPage extends StatefulWidget {
 
 class _FlirtListState extends State<FlirtListPage> {
   final User _user = Session.user;
-  bool _filtersEnabled = true;
+
   late List<NearByFlirt> _nearbyFlirts = [];
   bool _isLoading = true;
   int _skip = 0;
+  int pageSize = 10; 
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
-    _fetchFromHost();
+    _fetchFromHost();    
+    _skip = pageSize; 
     super.initState();
   }
 
@@ -52,7 +57,10 @@ class _FlirtListState extends State<FlirtListPage> {
         appBar: AppBar(
             flexibleSpace: FlexibleAppBar(),
             leading: IconButton(
-                icon: const Icon(Icons.arrow_back), onPressed: () {}),
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  NavigatorApp.pop(context);
+                }),
             actions: [
               IconButton(
                 icon: const Icon(
@@ -74,25 +82,38 @@ class _FlirtListState extends State<FlirtListPage> {
               ),
               IconButton(
                 icon: const Icon(
-                  Icons.backspace_sharp,
+                  Icons.skip_previous_rounded,
                 ),
                 onPressed: () {
-                  _skip = _skip - 10;
-                  _fetchFromHost();
+                  if (_skip >= pageSize) {
+                    _skip = _skip - pageSize;
+                    _fetchFromHost();
+                  }
+                  print("---skip $_skip");
                 },
               ),
               IconButton(
                 icon: const Icon(
-                  Icons.forward,
+                  Icons.skip_next_rounded,
                 ),
                 onPressed: () {
-                  _skip = _skip + 10;
-                  _fetchFromHost();
+                  _skip = _skip + pageSize; 
+                   _fetchFromHost();
+                  
+                  print("---skip $_skip");
                 },
               ),
             ]),
-        // body: _isLoading ? AlertDialogs().buildLoading() : _buildList());
-        body: _buildList());
+        body: _isLoading ? AlertDialogs().buildLoading() : _buildList());
+    // body: _buildList());
+  }
+
+  Color getSexAlternativeColor(SexAlternative sexAlternative) {
+    return Color(CommonUtils.colorToInt(sexAlternative.color));
+  }
+
+  Color getRelationshipColor(RelationShip relationShip) {
+    return Color(CommonUtils.colorToInt(relationShip.color));
   }
 
   Widget _buildList() {
@@ -105,9 +126,45 @@ class _FlirtListState extends State<FlirtListPage> {
           return Column(
             children: [
               ListTile(
-                title: Text(_nearbyFlirts[index].name!),
-                subtitle: Text(_nearbyFlirts[index].distance!.toString()),
-              ),
+                  leading: SizedBox(
+                    width: 80, // Set equal width
+                    height: 80, // Set equal height
+                    child: ClipRRect(
+                      child: Image.network(
+                        'https://via.placeholder.com/150', // Replace with your image URL
+                        fit: BoxFit.cover, // Ensures the image covers the box
+                      ),
+                    ),
+                  ),
+                  trailing: SizedBox(
+                    child: Column(
+                      children: [
+                        FlirtPoint().build(
+                          50,
+                          50,
+                          100,
+                          getSexAlternativeColor(
+                              _nearbyFlirts[index].sexAlternative!),
+                          getRelationshipColor(
+                              _nearbyFlirts[index].relationShip!),
+                        ),
+                      ],
+                    ),
+                  ),
+                  title: Text(
+                    _nearbyFlirts[index].name!,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  subtitle: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Column(
+                      children: [
+                        Text("Edad ${_nearbyFlirts[index].age!.toString()}"),
+                        Text(
+                            " ${(_nearbyFlirts[index].distance! / 1000).toInt().toString()} Kms"),
+                      ],
+                    ),
+                  )),
               const Divider(),
             ],
           );
@@ -136,19 +193,25 @@ class _FlirtListState extends State<FlirtListPage> {
               widget._location.lon,
               _user.radioVisibility,
               _skip,
-              10,
-              _filtersEnabled)
+              pageSize,
+              true)
           .then((value) {
         if (value.errorCode!.code == HostErrorCodesValue.NoError.code) {
           if (value.flirts != null && value.flirts!.isNotEmpty) {
-            _nearbyFlirts = (value.flirts!);
+            _nearbyFlirts = (value.flirts!);            
+          }else{
+            _skip = _skip - pageSize; 
           }
 
-          setState(() {
+         
+        }else{
+            _skip = _skip - pageSize; 
+        }
+         setState(() {
             _isLoading = false;
           });
-        }
       });
     } catch (error) {}
+    
   }
 }

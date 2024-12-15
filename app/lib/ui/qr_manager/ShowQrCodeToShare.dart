@@ -27,7 +27,6 @@ class _ShowQrCodeToShare extends State<ShowQrCodeToShare> {
   @override
   void initState() {
     super.initState();
-
     adsManager = AdsManager((value) => _loadedAd(value));
 
     if (user.qrDefaultId.isNotEmpty) {
@@ -35,7 +34,6 @@ class _ShowQrCodeToShare extends State<ShowQrCodeToShare> {
     } else {
       qrValue = "${user.qrValues[0].qrId}:${user.userId}";
     }
-    Log.d("-->qr value: $qrValue");
   }
 
   void _loadedAd(value) {
@@ -66,9 +64,7 @@ class _ShowQrCodeToShare extends State<ShowQrCodeToShare> {
   }
 
   Widget _buildNoQr() {
-    return Center(
-        child: Container(
-      child: const Text("Debes añadir un código QR para compartir"),
-    ));
+    return const Center(
+        child: Text("Debes añadir un código QR para compartir"));
   }
 }

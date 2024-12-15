@@ -1,19 +1,16 @@
 import 'package:app/comms/model/request/user/images/HostGetUserImgeUrlByIdRequest.dart';
+import 'package:app/comms/model/request/user/profile/HostUpdateUserNameRequest.dart';
 import 'package:app/main.dart';
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
-
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Styles.dart';
-import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
-import 'package:app/ui/qr_manager/ListQrPage.dart';
-import 'package:app/ui/smart_points/SmartPointsListPage.dart';
-import 'package:app/ui/user_profile/UserAudiosPage.dart';
 import 'package:app/ui/user_profile/UserDataPage.dart';
-import 'package:app/ui/user_profile/UserPhotosPage.dart';
-import 'package:app/ui/user_state/UserStatePage.dart';
+import 'package:app/ui/utils/Log.dart';
+import 'package:app/ui/utils/toast_message.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -43,9 +40,8 @@ class _UserProfilePage extends State<UserProfilePage> {
   }
 
   Future<void> _loadImageProfile() async {
-    var values = 
-      {"user_id": user.userId, "file_id": user.userProfileImageId};
-    
+    var values = {"user_id": user.userId, "file_id": user.userProfileImageId};
+
     HostGetUserImgeUrlByIdRequest().run(values).then((response) {
       if (response.fileData != null && response.fileData!.isNotEmpty) {
         setState(() {
@@ -113,25 +109,76 @@ class _UserProfilePage extends State<UserProfilePage> {
     );
   }
 
+  Future<void> _onChangeName() async {
+    Log.d("Starts _onChangeName");
+    AlertDialogs().showDialogEdit(
+        context, user.name, "Cambia tu nombre", "Introduce tu nombre",
+        (result) {
+      if (result.isNotEmpty) {
+        HostUpdateUserNameRequest().run(user.userId, result).then((value) {
+          if (value) {
+            setState(() {
+              user.name = result;
+            });
+          } else {
+            FlutterToast().showToast("No ha sido posible cambiar tu nombre");
+          }
+        });
+      }
+    });
+  }
+
   Widget _buildList() {
     return Column(
       children: [
         _buildProfileInfo(),
         SizedBox(
-          height: MediaQuery.of(context).size.height-280,
+          height: MediaQuery.of(context).size.height - 280,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: ListView(
               children: [
+                Column(
+                  children: [
+                    ListTile(
+                      onTap: () async {
+                        await _onChangeName();
+                      },
+                      leading: const Icon(Icons.person),
+                      title:
+                          Text("Nombre", style: Styles.rowCellTitleTextStyle),
+                      subtitle: Text(user.name,
+                          style: Styles.rowCellSubTitleTextStyle),
+                    ),
+                    const Divider(),
+                  ],
+                ),
+                Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.password),
+                      onTap: () async {},
+                      title: Text("Contraseña",
+                          style: Styles.rowCellTitleTextStyle),
+                      subtitle: Text("********",
+                          style: Styles.rowCellSubTitleTextStyle),
+                    ),
+                    const Divider(),
+                  ],
+                ),
+                Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.subscriptions_outlined),
+                      onTap: () async {},
+                      title: Text("Suscripciones",
+                          style: Styles.rowCellTitleTextStyle),                  
+                    ),
+                    const Divider(),
+                  ],
+                ),
                 ListTile(
-                    title:
-                        Text("Mis datos", style: Styles.rowCellTitleTextStyle),
-                    trailing: const Icon(
-                        Icons.arrow_forward_ios), // Add a left arrow icon
-                    onTap: () => NavigatorApp.push(UserDataPage(), context)),
-                const Divider(),                
-               
-                ListTile(
+                  leading: const Icon(Icons.exit_to_app),
                     title: const Text(
                       "Cerrar sesión",
                       style: TextStyle(color: Colors.red, fontSize: 20),

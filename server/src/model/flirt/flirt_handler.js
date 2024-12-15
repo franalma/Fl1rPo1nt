@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
 const logger = require("../../logger/log");
+const userHandler = require("../user/user_handler");
 const matchHandler = require("../user/mach_handler");
 const { DB_INSTANCES } = require("../../database/databases");
 const {
@@ -27,6 +28,12 @@ function createOutputFlirt(item) {
       age: item.age,
       distance: item.distance,
     };
+    // const publicProfile = await userHandler.getUserPublicProfileByUserId(
+    //   {user_id: "2a3d3bf9-cd04-4204-9613-534f4bcdd9b6"}
+    // );
+
+    // flirt.profile_image = publicProfile.profile_image;
+
     return flirt;
   } catch (error) {
     logger.info(error);
@@ -199,7 +206,7 @@ async function getUserFlirts(input) {
 
     if (dbResponse) {
       for (var item of dbResponse) {
-        const flirt = createOutputFlirt(item);
+        const flirt =  createOutputFlirt(item);
         flirts.push(flirt);
       }
       return {
@@ -229,7 +236,6 @@ async function getActiveFlirtsFromPointAndTendency(input) {
   try {
     input.include_disabled = true;
     let matchs = (await matchHandler.getAllUserMatchsByUserId(input)).matchs;
-    printJson(matchs);
     let userContacts = matchs.map((e) => e.contact.user_id);
     let filters = [
       {
@@ -247,13 +253,8 @@ async function getActiveFlirtsFromPointAndTendency(input) {
       { $match: { user_id: { $nin: userContacts } } },
       { $match: { age: { $gte: input.age_from, $lte: input.age_to } } },
       { $match: { status: FLIRT_ACTIVE } },
-      {
-        $skip: input.skip,
-      },
-
-      {
-        $sort: { distance: 1 }, // Ascending order
-      },
+      { $skip: input.skip },
+      { $sort: { distance: 1 } },
     ];
 
     if (input.limit > 0) {
@@ -268,7 +269,6 @@ async function getActiveFlirtsFromPointAndTendency(input) {
       filters["user_interests.gender_interest.id"] = input.gender.id;
       filters["gender.id"] = input.gender_interest.id;
     }
-    logger.info("---filters: " + JSON.stringify(filters));
 
     let dbResponse = await dbHandler.findWithFiltersAndClientWitPagination(
       db.client,
@@ -280,8 +280,8 @@ async function getActiveFlirtsFromPointAndTendency(input) {
 
     if (dbResponse) {
       for (var item of dbResponse.documents) {
-        let flirt = createOutputFlirt(item);
-        printJson(flirt);
+        let flirt = createOutputFlirt(item);    
+         
         flirts.push(flirt);
       }
       result = { ...genError(HOST_ERROR_CODES.NO_ERROR), flirts };
