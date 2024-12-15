@@ -80,7 +80,7 @@ class _Home2State extends State<Home2Page> {
           mainAxisSpacing: 10,
           children: [
             FancyButton(
-                text: 'Visibilidad',
+                text: 'Mi estado',
                 icon: FontAwesomeIcons.eye,
                 color: const Color.fromARGB(255, 237, 129, 6),
                 onTap: () {

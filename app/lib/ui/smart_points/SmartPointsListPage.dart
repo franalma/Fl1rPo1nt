@@ -40,8 +40,12 @@ class _SmartPointsListPage extends State<SmartPointsListPage> {
                     await NavigatorApp.pushAndWait(
                         SmartPointsAddPage(), context);
                     _fechFromHost();
-                  }else{
-                    DefaultModalDialog.showErrorDialog(context, "Has llegado al máxinmo de SmartPoints", "Cerrar", FontAwesomeIcons.exclamation);
+                  } else {
+                    DefaultModalDialog.showErrorDialog(
+                        context,
+                        "Has llegado al máxinmo de SmartPoints",
+                        "Cerrar",
+                        FontAwesomeIcons.exclamation);
                   }
                 },
                 icon: const Icon(Icons.add))
@@ -85,14 +89,14 @@ class _SmartPointsListPage extends State<SmartPointsListPage> {
                               _points![index].name!.isNotEmpty
                                   ? const Icon(Icons.person)
                                   : Container(),
-                              const SizedBox(width: 10),
-                              _points![index].phone!.isNotEmpty
-                                  ? const Icon(Icons.phone)
-                                  : Container(),
-                              const SizedBox(width: 10),
-                              _points![index].networks!.isNotEmpty
-                                  ? const Icon(Icons.link)
-                                  : Container()
+
+                              _points![index].phone!.isNotEmpty ? const Stack(children: [SizedBox(width: 10),Icon(Icons.phone)]):Container(),
+                              _points![index].networks!.isNotEmpty ? const Stack(children: [SizedBox(width: 10),Icon(Icons.link)]):Container(),
+                              _points![index].audioAccess! ? const Stack(children: [SizedBox(width: 10),Icon(Icons.audio_file)]):Container(),
+                              _points![index].picturesAccess! ? const Stack(children: [SizedBox(width: 10),Icon(FontAwesomeIcons.image)]):Container(),
+                                  
+                              
+                      
                             ],
                           )),
                       const Divider()

@@ -1,5 +1,7 @@
 import 'package:app/comms/model/request/matchs/HostDisableUserMatchRequest.dart';
+import 'package:app/comms/model/request/matchs/HostUpdateMatchRequest.dart';
 import 'package:app/comms/model/request/user/profile/HostGetUserPublicProfile.dart';
+import 'package:app/model/HostErrorCode.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserMatch.dart';
@@ -9,18 +11,19 @@ import 'package:app/ui/contacts/ShowContactAudiosPage.dart';
 import 'package:app/ui/contacts/ShowContactPictures.dart';
 import 'package:app/ui/contacts/ShowConversationPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
+import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Gradient1.dart';
 import 'package:app/ui/elements/SocialNetworkIcon.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactDetailsPage extends StatefulWidget {
   UserMatch _match;
 
   ContactDetailsPage(this._match);
-
 
   @override
   State<ContactDetailsPage> createState() {
@@ -34,10 +37,14 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
   final User _user = Session.user;
   bool _isLoading = true;
   UserPublicProfile? _userPublicProfile;
+  late bool _accessToPictures; 
+  late bool _accessToAudios; 
 
   @override
   void initState() {
     _fetchFromHost();
+    _accessToPictures =  widget._match.sharing!.allwoAccessToPictures!;
+    _accessToAudios =  widget._match.sharing!.allwoAccessToPictures!;
     super.initState();
   }
 
@@ -50,8 +57,20 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
             actions: [
               IconButton(
                 onPressed: () {
-                  NavigatorApp.push(
-                      ShowContactAudiosPage(widget._match.contactInfo!.userId), context);
+                  Log.d(
+                      "access to audios: ${widget._match.contactInfo!.allwoAccessToAudios}");
+                  if (widget._match.contactInfo!.allwoAccessToAudios!) {
+                    NavigatorApp.push(
+                        ShowContactAudiosPage(
+                            widget._match.contactInfo!.userId),
+                        context);
+                  } else {
+                    DefaultModalDialog.showErrorDialog(
+                        context,
+                        "Este contacto no te ha compartido sus audios",
+                        "Cerrar",
+                        FontAwesomeIcons.lock);
+                  }
                 },
                 icon: const Icon(Icons.voice_chat),
                 iconSize: 30,
@@ -59,8 +78,17 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
               ),
               IconButton(
                 onPressed: () {
-                  NavigatorApp.push(
-                      ShowContactPictures(widget._match.contactInfo!.userId), context);
+                  if (widget._match.contactInfo!.allwoAccessToPictures!) {
+                    NavigatorApp.push(
+                        ShowContactPictures(widget._match.contactInfo!.userId),
+                        context);
+                  } else {
+                    DefaultModalDialog.showErrorDialog(
+                        context,
+                        "Este contacto no te ha compartido sus fotos",
+                        "Cerrar",
+                        FontAwesomeIcons.lock);
+                  }
                 },
                 icon: const Icon(Icons.image),
                 iconSize: 30,
@@ -105,6 +133,8 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
           const SizedBox(height: 5),
           _buildPhone(),
           const SizedBox(height: 5),
+          _buildAccessControlPanel(),
+          const SizedBox(height: 5),
           _buildSexInterest(),
           const SizedBox(height: 5),
           _buildBiography(),
@@ -114,6 +144,44 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
           _buildSocialNetworks(),
           const SizedBox(height: 5),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAccessControlPanel() {
+    return Card(
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 5, left: 20.0, right: 4.0, bottom: 10),
+        child: Column(
+          children: [
+            const Text(
+              "Cambiar acceso a tus contenidos",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 40,
+              child: ListTile(
+                title: const Text("Acceso a tus fotos"),
+                leading: 
+                    _accessToPictures? const Icon(FontAwesomeIcons.lockOpen)
+                    : const Icon((FontAwesomeIcons.lock)),
+                onTap: () {
+                  _toggleAccessToPictures();
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text("Acceso a tus audios"),
+              leading: _accessToAudios
+                  ? const Icon(FontAwesomeIcons.lockOpen)
+                  : const Icon((FontAwesomeIcons.lock)),
+              onTap: () {
+                _toggleAccessToAudios();
+              },
+            )
+          ],
+        ),
       ),
     );
   }
@@ -146,7 +214,8 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
                   color: Color(CommonUtils.colorToInt(
                       _userPublicProfile!.sexAlternative!.color)),
                 ),
-                title: Text("Soy ${_userPublicProfile!.sexAlternative!.name.toLowerCase()}"),
+                title: Text(
+                    "Soy ${_userPublicProfile!.sexAlternative!.name.toLowerCase()}"),
               ),
             ),
             SizedBox(
@@ -157,18 +226,20 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
                   color: Color(CommonUtils.colorToInt(
                       _userPublicProfile!.relationShip!.color)),
                 ),
-                title: Text( "Busco una relación ${_userPublicProfile!.relationShip!.value.toLowerCase()}"),
+                title: Text(
+                    "Busco una relación ${_userPublicProfile!.relationShip!.value.toLowerCase()}"),
               ),
             ),
-             SizedBox(
+            SizedBox(
               height: 30,
               child: ListTile(
                 leading: Icon(
                   Icons.link,
                   color: Color(CommonUtils.colorToInt(
-                       _userPublicProfile!.genderInterest!.color!)),
+                      _userPublicProfile!.genderInterest!.color!)),
                 ),
-                title: Text( "El género que busco es ${_userPublicProfile!.genderInterest!.name!.toLowerCase()}"),
+                title: Text(
+                    "El género que busco es ${_userPublicProfile!.genderInterest!.name!.toLowerCase()}"),
               ),
             )
           ],
@@ -189,7 +260,9 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
           textAlign: TextAlign.center,
         ),
         Text(
-          _userPublicProfile?.age != null ? "${_userPublicProfile?.age } años":"",
+          _userPublicProfile?.age != null
+              ? "${_userPublicProfile?.age} años"
+              : "",
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -239,7 +312,8 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
                 children: List<Widget>.from(networks.map(
                   (entry) {
                     return ListTile(
-                      leading: SocialNetworkIcon().resolveIconForNetWorkId(entry.networkId),
+                      leading: SocialNetworkIcon()
+                          .resolveIconForNetWorkId(entry.networkId),
                       title: Text(entry.name),
                       subtitle: Text(entry.value),
                       onTap: () {
@@ -343,8 +417,6 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
     });
   }
 
-  
-
   // Helper to build section titles
   Widget _buildSectionTitle(String title) {
     return Align(
@@ -375,6 +447,45 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
           NavigatorApp.pop(context);
         }
       });
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
+  }
+
+  Future<void> _toggleAccessToAudios() async {
+    Log.d("Starts _toggleAccessToAudios");
+    try {
+      AlertDialogs().buildLoadingModal(context);
+      var audioAccess = !_accessToAudios; 
+      HostUpdateMatchRequest()
+          .updateAudioAccess(widget._match.matchId!, _user.userId, audioAccess)
+          .then((_) {
+        NavigatorApp.pop(context);
+        setState(() {
+          _accessToAudios = audioAccess; 
+        });
+      });
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
+  }
+
+  Future<void> _toggleAccessToPictures() async {
+    Log.d("Starts _toggleAccessToPictures");
+    try {
+      AlertDialogs().buildLoadingModal(context);
+      var picturesAccess = !_accessToPictures; 
+      HostUpdateMatchRequest()
+          .updatePictureAccess(widget._match.matchId!, _user.userId, picturesAccess)
+          .then((_) {
+        NavigatorApp.pop(context);
+        setState(() {
+          _accessToPictures = picturesAccess; 
+        });
+      });
+
+
+
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }

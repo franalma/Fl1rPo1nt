@@ -259,9 +259,10 @@ async function getActiveFlirtsFromPointAndTendency(input) {
             type: "Point",
             coordinates: [input.longitude, input.latitude],
           },
-          $maxDistance: input.radio,
+          $maxDistance: input.radio*1000,
         },
       },
+      age: { $gte: input.age_from, $lte: input.age_to },
       status: FLIRT_ACTIVE,
 
     };
@@ -269,13 +270,14 @@ async function getActiveFlirtsFromPointAndTendency(input) {
     if (input.filters_enabled == true) {
       filters["user_interests.relationship.id"] = input.relationship.id;
       filters["user_interests.sex_alternative.id"] = input.sex_alternative.id;
+      filters["user_interests.gender_interest.id"] = input.gender.id;
       filters["gender.id"] = input.gender_interest.id;
 
     }
     logger.info("---filters: " + JSON.stringify(filters));
 
 
-    let dbResponse = await dbHandler.findWithFiltersAndClient(
+    let dbResponse = await dbHandler.findWithFiltersAndClientWitPagination(
       db.client,
       filters,
       db.collections.flirts_collection
@@ -283,9 +285,9 @@ async function getActiveFlirtsFromPointAndTendency(input) {
 
     let flirts = [];
 
-
+      printJson(dbResponse);
     if (dbResponse) {
-      for (var item of dbResponse) {
+      for (var item of dbResponse.documents) {
         // let flirt = {
         //   user_id: item.user_id,
         //   flirt_id: item.flirt_id,

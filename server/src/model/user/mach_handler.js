@@ -1,7 +1,6 @@
 const logger = require("../../logger/log");
 const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
-
 const userHandler = require("./user_handler");
 const chatroomHandler = require("./../../chatroom/chatroom_handler");
 const smartPointHandler = require("./../smart_points/smart_points_handler");
@@ -89,9 +88,6 @@ async function createMatchInternalForMap(input) {
 }
 
 
-
-
-
 async function createMatchInternalForPoint(input) {
   logger.info("Starts createMatchInternalForPoint" + JSON.stringify(input));
   let doc = {
@@ -130,10 +126,6 @@ async function createMatchInternalForPoint(input) {
 
   return doc;
 }
-
-
-
-
 
 async function createMatchExternal(item, input) {
   logger.info("createMatchExternal " + JSON.stringify(item));
@@ -394,9 +386,82 @@ async function diableMatchByMatchIdUserId(input) {
   return { status: 500 };
 }
 
+
+async function updateAudiosAccessForMarchIdContactId(input) {
+  logger.info("Starts updateAudiosAccessForMarchIdContactId:"+JSON.stringify(input));
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filter = { id: input.match_id };
+    let docs = await dbHandler.findWithFiltersAndClient(db.client, filter, db.collections.user_contact_collection);
+    if (docs && docs.length > 0) {
+      let doc = docs[0];
+      let contactInfo = {};
+      if (doc.users[0].user_id == input.user_id) {
+        contactInfo = JSON.parse(doc.users[0].contact_info);
+        contactInfo.audios = input.audio_access;
+        doc.users[0].contact_info = JSON.stringify(contactInfo);
+      } else {
+        contactInfo = JSON.parse(doc.users[1].contact_info);
+        contactInfo.audios = input.audio_access;
+        doc.users[1].contact_info = JSON.stringify(contactInfo);
+      }
+      await dbHandler.updateDocumentWithClient(db.client, doc, filter, db.collections.user_contact_collection);
+      return {
+        ...genError(HOST_ERROR_CODES.NO_ERROR)
+      }
+    }
+  } catch (error) {
+    logger.info(error);
+    return {
+      ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR)
+    }
+  }
+  return {
+    ...genError(HOST_ERROR_CODES.NOT_POSSIBLE_TO_UPDATE_MATCH)
+  }
+}
+
+async function updatePicturesAccessForMarchIdContactId(input) {
+  logger.info("Starts updatePicturesAccessForMarchIdContactId:"+JSON.stringify(input));
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filter = { id: input.match_id };
+    let docs = await dbHandler.findWithFiltersAndClient(db.client, filter, db.collections.user_contact_collection);
+    if (docs && docs.length > 0) {
+      let doc = docs[0];
+      let contactInfo = {};
+      if (doc.users[0].user_id == input.user_id) {
+        contactInfo = JSON.parse(doc.users[0].contact_info);
+        contactInfo.pictures = input.picture_access;
+        doc.users[0].contact_info = JSON.stringify(contactInfo);
+      } else {
+        contactInfo = JSON.parse(doc.users[1].contact_info);
+        contactInfo.pictures = input.picture_access;
+        doc.users[1].contact_info = JSON.stringify(contactInfo);
+      }
+      await dbHandler.updateDocumentWithClient(db.client, doc, filter, db.collections.user_contact_collection);
+      return {
+        ...genError(HOST_ERROR_CODES.NO_ERROR)
+      }
+    }
+  } catch (error) {
+    logger.info(error);
+    return {
+      ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR)
+    }
+  }
+  return {
+    ...genError(HOST_ERROR_CODES.NOT_POSSIBLE_TO_UPDATE_MATCH)
+  }
+}
+
+
+
 module.exports = {
   addUserContactByUserIdContactIdQrId,
   getUserContactsByUserId,
   getAllUserMatchsByUserId,
   diableMatchByMatchIdUserId,
+  updateAudiosAccessForMarchIdContactId,
+  updatePicturesAccessForMarchIdContactId
 };

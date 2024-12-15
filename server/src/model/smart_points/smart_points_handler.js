@@ -24,6 +24,8 @@ function createInternalPoint(input) {
       created_at: now,
       updated_at: now,
       times_used: 0,
+      audios: input.audios, 
+      pictures: input.pictures,
       //it is not recorded wait for nfc on device
       status: -1,
     };
@@ -44,6 +46,8 @@ function createSmartPointExternal(input) {
       user_phone: input.user_phone,
       networks: input.networks,
       times_used: input.times_used,
+      audios: input.audios, 
+      pictures: input.pictures,
     };
   } catch (error) {
     logger.info(error);

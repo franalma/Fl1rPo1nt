@@ -130,20 +130,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                         Icons.arrow_forward_ios), // Add a left arrow icon
                     onTap: () => NavigatorApp.push(UserDataPage(), context)),
                 const Divider(),                
-                ListTile(
-                    title:
-                        Text("Mis fotos", style: Styles.rowCellTitleTextStyle),
-                    trailing: const Icon(
-                        Icons.arrow_forward_ios), // Add a left arrow icon
-                    onTap: () => NavigatorApp.push(UserPhotosPage(), context)),
-                const Divider(),
-                ListTile(
-                    title:
-                        Text("Mis audios", style: Styles.rowCellTitleTextStyle),
-                    trailing: const Icon(
-                        Icons.arrow_forward_ios), // Add a left arrow icon
-                    onTap: () => NavigatorApp.push(UserAudiosPage(), context)),
-                const Divider(),
+               
                 ListTile(
                     title: const Text(
                       "Cerrar sesión",

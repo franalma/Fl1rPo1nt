@@ -206,10 +206,17 @@ function requestFieldsValidation(req, res, next) {
       break;
     }
 
+    case hostActions.UPDATE_MATCH_AUDIO_ACCESS_BY_MATCH_ID_USER_ID: {
+      validationSet = validationRules.UPDATE_MATCH_AUDIO_ACCESS_BY_MATCH_ID_USER_ID_RULES;
+      break;
+    }
 
+    case hostActions.UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID: {
+      validationSet = validationRules.UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID_RULES;
+      break;
+    }
 
-
-
+    
 
     default: {
       logger.info("No request verification needed for " + action);

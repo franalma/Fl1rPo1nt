@@ -14,6 +14,7 @@ class HostGetPeopleArroundRequest extends BaseRequest {
       SexAlternative sexAlternative,
       RelationShip relationShip,
       Gender genderInterest,
+      Gender userGender, 
       int fromAge,
       int toAge, 
       double latitude,
@@ -31,14 +32,15 @@ class HostGetPeopleArroundRequest extends BaseRequest {
           "flirt_id":flirtId,
           "user_id":userId,
           "age_from":fromAge,
-          "to_age":toAge, 
+          "age_to":toAge, 
           "longitude": longitude,
           "latitude": latitude,
           "sex_alternative": sexAlternative.toJson(),
           "relationship": relationShip.toJson(),
           "gender_interest": genderInterest.toJson(),
           "radio": radio,
-          "filters_enabled": enableFilters
+          "filters_enabled": enableFilters,
+          "gender": userGender
         }
       };
 

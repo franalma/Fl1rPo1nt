@@ -85,6 +85,12 @@ const HOST_ERROR_CODES = {
     description: "Max smartpoints reached",
   },
 
+  NOT_POSSIBLE_TO_UPDATE_MATCH:{
+    error_code: -112,
+    status: 200,
+    description: "Not possible to update match",
+  },
+
   USER_ALREADY_IN_YOUR_CONTACTS: {
     error_code: -401,
     status: 200,

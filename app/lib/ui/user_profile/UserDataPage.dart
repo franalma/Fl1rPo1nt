@@ -72,45 +72,8 @@ class _UserDataPage extends State<UserDataPage> {
               const Divider(),
             ],
           ),
-          Column(
-            children: [
-              ListTile(
-                onTap: () async {
-                  var result = await NavigatorApp.pushAndWait(
-                      UserGenderSelection(), context) as Gender;
-                  Log.d(" gender selected ${result.name}");
-                  await _onGenderChanged(result);
-                },
-                title: Text("Género", style: Styles.rowCellTitleTextStyle),
-                subtitle: Text(
-                    user.gender.name != null ? user.gender.name! : "",
-                    style: Styles.rowCellSubTitleTextStyle),
-              ),
-              const Divider(),
-            ],
-          ),
-          Column(
-            children: [
-              ListTile(
-                  onTap: () async {
-                    NavigatorApp.push(UserBiographyPage(), context);
-                  },
-                  title: Text("Biografía", style: Styles.rowCellTitleTextStyle),
-                  trailing: const Icon(Icons.arrow_forward_ios)),
-              const Divider(),
-            ],
-          ),
-          Column(
-            children: [
-              ListTile(
-                  onTap: () async {
-                    NavigatorApp.push(UserHobbiesPage(), context);
-                  },
-                  title: Text("Aficiones", style: Styles.rowCellTitleTextStyle),
-                  trailing: const Icon(Icons.arrow_forward_ios)),
-              const Divider(),
-            ],
-          ),
+          
+          
         
         ]));
   }
@@ -134,16 +97,7 @@ class _UserDataPage extends State<UserDataPage> {
     });
   }
 
-  Future<void> _onGenderChanged(Gender gender) async {
-    Log.d("Start _onGenderChanged");
-    HostUpdateUserGenderRequest().run(user.userId, gender).then((value) {
-      setState(() {
-        if (value) {
-          user.gender = gender;
-        }
-      });
-    });
-  }
+
 
   Future<void> _beforeLeaving() async {
     Log.d("Start _beforeLeaving");

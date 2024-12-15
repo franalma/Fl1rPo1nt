@@ -222,6 +222,7 @@ class _MapExplorerController extends State<MapExplorerController> {
             widget._sexAlternative,
             widget._relationShip,
             widget._genderInterest,
+            _user.gender,
             widget._minAge,
             widget._maxAge,
             location.lat,

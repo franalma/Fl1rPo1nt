@@ -239,7 +239,7 @@ class _SmartPointsAddState extends State<SmartPointsAddPage> {
               _user.userId,
               _isNameSelected ? _user.name : "",
               _isPhoneSelected ? _user.phone : "",
-              _selectedNetwors);
+              _selectedNetwors, _isPhotosSelected, _isAudioSelected);
       setLoading(false);
       if (response.hostErrorCode!.code == HostErrorCodesValue.NoError.code) {
         Log.d("SmartPoint id: ${response.point!.id}");

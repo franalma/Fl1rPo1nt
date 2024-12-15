@@ -13,6 +13,7 @@ import 'package:app/ui/elements/SocialNetworkIcon.dart';
 import 'package:app/ui/smart_points/SmartPointsAddPage.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SmartPointShowDetailPage extends StatefulWidget {
   SmartPoint smartPoint;
@@ -71,17 +72,38 @@ class _SmartPointShowDetailState extends State<SmartPointShowDetailPage> {
         ],
       ):Container(),
       
-
-      point.phone!.isNotEmpty ?  Column(
+       Column(
         children: [
           ListTile(
-            title: Text("Veces utilizado"),
+            title: Text("Acceso a tus fotos"),
+            leading: const Icon(FontAwesomeIcons.image),
+            trailing: point.picturesAccess! ? const Icon(FontAwesomeIcons.thumbsUp, color: Colors.green):const Icon(FontAwesomeIcons.thumbsDown, color: Colors.red)
+          ),
+           const Divider(),
+        ],
+      ),
+
+      Column(
+        children: [
+          ListTile(
+            title: Text("Acceso a tus audios"),
+            leading: const Icon(Icons.audio_file),
+            trailing: point.audioAccess! ? const Icon(FontAwesomeIcons.thumbsUp, color: Colors.green):const Icon(FontAwesomeIcons.thumbsDown, color: Colors.red)
+          ),
+           const Divider(),
+        ],
+      ),
+
+      Column(
+        children: [
+          ListTile(
+            title: const Text("Veces utilizado"),
             leading: Icon(Icons.insert_chart_outlined_rounded),
             subtitle: Text(point.nUsed.toString()),
           ),
            Divider(),
         ],
-      ):Container(),
+      ),
      
 
       Expanded(
@@ -105,9 +127,7 @@ class _SmartPointShowDetailState extends State<SmartPointShowDetailPage> {
 
 
     ],);
-    
-    
-    // return ListView.builder(itemBuilder: itemBuilder)
+  
   }
 
   Future<void> _preloadInfo() async {

@@ -18,9 +18,11 @@ class SmartPoint {
   String? phone;
   List<SocialNetwork>? networks;
   int? nUsed;
+  bool? audioAccess; 
+  bool? picturesAccess;
 
   SmartPoint(this.id, this.userId, this.status, this.name, this.phone,
-      this.networks, this.nUsed);
+      this.networks, this.nUsed, this.audioAccess, this.picturesAccess);
   SmartPoint.empty();
 
   factory SmartPoint.fromJson(Map<String, dynamic> map) {
@@ -32,11 +34,13 @@ class SmartPoint {
       int nUsed = map["times_used"];
       String name = map["user_name"];
       String phone = map["user_phone"];
+      bool audioAcess = map["audios"];
+      bool pictureAccess = map["pictures"];
 
       var networks =
           (map["networks"] as List).map((e) => SocialNetwork.load(e)).toList();
 
-      return SmartPoint(id, userId, status, name, phone, networks, nUsed);
+      return SmartPoint(id, userId, status, name, phone, networks, nUsed, audioAcess, pictureAccess);
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }
@@ -83,12 +87,12 @@ class SmartPoint {
   }
 
   Future<HostPutPointByUserIdResponse> putSmartPointByByUserId(String userId,
-      String userName, String phone, List<SocialNetwork> networks) async {
+      String userName, String phone, List<SocialNetwork> networks, bool pictures, bool audios) async {
     Log.d("Starts putSmartPointByByUserId");
     try {
       HostPutPointByUserIdResponse response =
           await HostPutPointByUserIdRequest()
-              .run("d751728a-a7be-4d9e-88cc-630af95b667c", userName, phone, networks);
+              .run(userId, userName, phone, networks, pictures, audios);
       return response;
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");

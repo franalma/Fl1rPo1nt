@@ -144,7 +144,12 @@ const GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY_RULES = [
     body('input.longitude').notEmpty().isNumeric().withMessage("Longitude is required"),  
     body('input.latitude').notEmpty().isNumeric().withMessage("Latitude is required"),  
     body('input.radio').notEmpty().isNumeric().withMessage("Radio is required"),  
-    body('input.filters_enabled').notEmpty().isBoolean().withMessage("Filters flag is required"),  
+    body('input.filters_enabled').notEmpty().isBoolean().withMessage("Filters flag is required"), 
+    body('input.gender').notEmpty().isObject().withMessage("User gender is required"), 
+    body('input.age_from').notEmpty().isNumeric().withMessage("Age from is required"), 
+    body('input.age_to').notEmpty().isNumeric().withMessage("Age to is required"), 
+
+     
 
 ];
 
@@ -189,6 +194,8 @@ const PUT_SMART_POINT_BY_USER_ID_RULES = [
     body('input.name').optional().isString().withMessage("No valid value for name"),    
     body('input.phone').optional().isString().withMessage("No valid value for phone"),    
     body('input.networks').optional().isArray().withMessage("No valid value for social networks"),    
+    body('input.audios').notEmpty().isBoolean().withMessage("No valid value for audios"),    
+    body('input.pictures').notEmpty().isBoolean().withMessage("No valid value for pictures"),    
 ];
 
 const UPDATE_SMART_POINT_STATUS_BY_POINT_ID_RULES = [    
@@ -213,6 +220,20 @@ const REMOVE_SMART_POINT_BY_POINT_ID_RULES = [
 const GET_SMART_POINTS_BY_POINT_ID_RULES = [    
     body('input.point_id').notEmpty().isString().withMessage("Point id is required"),        
 ];
+
+const UPDATE_MATCH_AUDIO_ACCESS_BY_MATCH_ID_USER_ID_RULES = [    
+    body('input.match_id').notEmpty().isString().withMessage("Match id is required"),    
+    body('input.user_id').notEmpty().isString().withMessage("User id value is required"),    
+    body('input.audio_access').notEmpty().isBoolean().withMessage("Audio access value is required"),    
+];
+
+const UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID_RULES = [    
+    body('input.match_id').notEmpty().isString().withMessage("Match id is required"),    
+    body('input.user_id').notEmpty().isString().withMessage("User id value is required"),    
+    body('input.picture_access').notEmpty().isBoolean().withMessage("Picture access value is required"),    
+];
+
+
 
 
 
@@ -256,5 +277,7 @@ module.exports = {
     UPDATE_SMART_POINTS_STATUS_BY_USER_ID_RULES,
     GET_ALL_SMART_POINTS_BY_USER_ID_RULES,
     REMOVE_SMART_POINT_BY_POINT_ID_RULES,
-    GET_SMART_POINTS_BY_POINT_ID_RULES
+    GET_SMART_POINTS_BY_POINT_ID_RULES,
+    UPDATE_MATCH_AUDIO_ACCESS_BY_MATCH_ID_USER_ID_RULES,
+    UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID_RULES
 }

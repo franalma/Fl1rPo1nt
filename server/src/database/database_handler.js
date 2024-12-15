@@ -247,6 +247,31 @@ async function findWithFiltersAndClient(client, filters, path) {
     return result;
 }
 
+async function findWithFiltersAndClientWitPagination(client, filters, path, page = 1, limit = 10) {
+    logger.info("Starts findWithFiltersAndClient: " + JSON.stringify(filters));
+    let result = null;
+    try {
+        const skip = (page -1)* limit;         
+        await client.connect();
+        const db = client.db(database);
+        const collection = db.collection(path);
+        const cursor = await collection.find(filters).skip(skip).limit(limit);
+        const documents = await cursor.toArray();
+        result = {
+            current_page:page,                         
+            documents:documents
+        };
+
+        
+    } catch (error) {
+        logger.info(error);
+    } finally {
+        await client.close();
+    }
+
+    return result;
+}
+
 async function findAll(path) {
     logger.info("Starts findAll")
     let result = null;
@@ -304,6 +329,7 @@ module.exports = {
     addManyDocumentsWithClient,
     findWithFiltersAndClient,
     findAllWithClient,
-    deleteCollectionWithClient
+    deleteCollectionWithClient,
+    findWithFiltersAndClientWitPagination
     // connectToAuthDatabase
 }

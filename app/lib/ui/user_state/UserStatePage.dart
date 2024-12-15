@@ -1,3 +1,4 @@
+import 'package:app/comms/model/request/user/profile/HostUpdateUserGenderRequest.dart';
 import 'package:app/comms/model/request/user/profile/HostUpdateUserInterestRequest.dart';
 import 'package:app/model/Flirt.dart';
 import 'package:app/model/Gender.dart';
@@ -9,7 +10,11 @@ import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/FlirtPoint.dart';
 import 'package:app/ui/elements/Styles.dart';
+import 'package:app/ui/user_profile/UserAudiosPage.dart';
+import 'package:app/ui/user_profile/UserBiographyPage.dart';
 import 'package:app/ui/user_profile/UserGenderSelection.dart';
+import 'package:app/ui/user_profile/UserHobbiesPage.dart';
+import 'package:app/ui/user_profile/UserPhotosPage.dart';
 import 'package:app/ui/user_state/SelectRelationshipOptionPage.dart';
 import 'package:app/ui/user_state/SelectSexOptionPage.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
@@ -17,6 +22,7 @@ import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/location.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../comms/model/request/fix_values/HostGetAllSexRelationshipRequest.dart';
 
 class UserStatePage extends StatefulWidget {
@@ -34,7 +40,8 @@ class _UserStatePage extends State<UserStatePage> {
 
   late RelationShip _relationshipSelected;
   late SexAlternative _sexAlternativeSelected;
-  late Gender _genderSelected;
+  late Gender _searchingGenderSelected;
+
   User user = Session.user;
   LocationService? _locationService;
   late double _currentRadioVisibility;
@@ -44,8 +51,7 @@ class _UserStatePage extends State<UserStatePage> {
     _currentRadioVisibility = user.radioVisibility;
     _sexAlternativeSelected = user.sexAlternatives;
     _relationshipSelected = user.relationShip;
-    _genderSelected = user.genderInterest;
-
+    _searchingGenderSelected = user.genderInterest;
     _fetchFromHost();
 
     super.initState();
@@ -82,10 +88,10 @@ class _UserStatePage extends State<UserStatePage> {
     return color;
   }
 
-  Color _getGenderColor() {
+  Color _getGenderColor(Gender gender) {
     Color color = Colors.white;
-    if (_genderSelected.color != null) {
-      color = Color(CommonUtils.colorToInt(_genderSelected!.color!));
+    if (gender.color != null) {
+      color = Color(CommonUtils.colorToInt(gender!.color!));
     }
     return color;
   }
@@ -141,17 +147,17 @@ class _UserStatePage extends State<UserStatePage> {
         leading: SizedBox(
           height: 50,
           width: 50,
-          child: Container(color: _getGenderColor()),
+          child: Container(color: _getGenderColor(_searchingGenderSelected)),
         ),
         trailing: const Icon(Icons.arrow_forward_ios_sharp),
         title: const Text("Género que buscas"),
-        subtitle: Text(_genderSelected.name ?? ""),
+        subtitle: Text(_searchingGenderSelected.name ?? ""),
         onTap: () async {
           var selected =
               await NavigatorApp.pushAndWait(UserGenderSelection(), context)
                   as Gender;
           setState(() {
-            _genderSelected = selected;
+            _searchingGenderSelected = selected;
           });
         });
   }
@@ -185,8 +191,7 @@ class _UserStatePage extends State<UserStatePage> {
       children: [
         ListTile(
           enabled: !user.isFlirting,
-          onTap: () async {          
-          },
+          onTap: () async {},
           title: Text("Visible en", style: Styles.rowCellTitleTextStyle),
           subtitle: Text("${user.radioVisibility} Kms",
               style: Styles.rowCellSubTitleTextStyle),
@@ -195,7 +200,7 @@ class _UserStatePage extends State<UserStatePage> {
             value: _currentRadioVisibility,
             min: 0,
             max: 200,
-            divisions: 5,          
+            divisions: 5,
             onChanged: (value) async {
               if (!user.isFlirting) {
                 bool status = await user.updateUserVisibility(value);
@@ -208,6 +213,28 @@ class _UserStatePage extends State<UserStatePage> {
               }
             }),
       ],
+    );
+  }
+
+  Widget _buildMyGender() {
+    return ListTile(
+      enabled: !user.isFlirting,
+      onTap: () async {
+        var result =
+            await NavigatorApp.pushAndWait(UserGenderSelection(), context)
+                as Gender;
+        Log.d(" gender selected ${result.name}");
+        await _onGenderChanged(result);
+      },
+      title: Text("Me percibo como"),
+      subtitle: Text(user.gender.name != null ? user.gender.name! : "",
+          style: Styles.rowCellSubTitleTextStyle),
+      leading: SizedBox(
+        height: 50,
+        width: 50,
+        child: Container(color: _getGenderColor(user.gender)),
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios_sharp),
     );
   }
 
@@ -228,15 +255,63 @@ class _UserStatePage extends State<UserStatePage> {
     return ListView(children: [
       _buildStatus(),
       const Divider(),
+      _buildMyGender(),
+      const Divider(),
       _buildSexOrientation(),
       const Divider(),
       _buidRelationShip(),
       const Divider(),
       _buildLookingForGender(),
       const Divider(),
+      _buildMyMultimedia(),
+      const Divider(),
+      _buildBiography(),
+      const Divider(),
+      _buildHobbies(),
+      const Divider(),
       _buildRadioVisibility(),
       const Divider(),
     ]);
+  }
+
+  Widget _buildBiography() {
+    return ListTile(
+        onTap: () async {
+          NavigatorApp.push(UserBiographyPage(), context);
+        },
+        leading: const Icon(FontAwesomeIcons.pen),
+        title: Text("Un poco sobre mí...", style: Styles.rowCellTitleTextStyle),
+        trailing: const Icon(Icons.arrow_forward_ios));
+  }
+
+  Widget _buildHobbies() {
+    return ListTile(
+        onTap: () async {
+          NavigatorApp.push(UserHobbiesPage(), context);
+        },
+        leading: const Icon(Icons.houseboat_outlined),
+        title: Text("Aficiones", style: Styles.rowCellTitleTextStyle),
+        trailing: const Icon(Icons.arrow_forward_ios));
+  }
+
+  Widget _buildMyMultimedia() {
+    return Column(
+      children: [
+        ListTile(
+            title: Text("Mis fotos", style: Styles.rowCellTitleTextStyle),
+            leading: const Icon(FontAwesomeIcons.image),
+            trailing:
+                const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
+            onTap: () => NavigatorApp.push(UserPhotosPage(), context)),
+        const Divider(),
+        ListTile(
+            title: Text("Mis audios", style: Styles.rowCellTitleTextStyle),
+            leading: const Icon(Icons.audio_file),
+            trailing:
+                const Icon(Icons.arrow_forward_ios), // Add a left arrow icon
+            onTap: () => NavigatorApp.push(UserAudiosPage(), context)),
+      ],
+    );
   }
 
   Widget _buildLoading() {
@@ -256,10 +331,21 @@ class _UserStatePage extends State<UserStatePage> {
     });
   }
 
+  Future<void> _onGenderChanged(Gender gender) async {
+    Log.d("Start _onGenderChanged");
+    HostUpdateUserGenderRequest().run(user.userId, gender).then((value) {
+      setState(() {
+        if (value) {
+          user.gender = gender;
+        }
+      });
+    });
+  }
+
   Future<void> _onSaveData() async {
     HostUpdateUserInterestRequest()
         .run(user.userId, _relationshipSelected, _sexAlternativeSelected,
-            _genderSelected)
+            _searchingGenderSelected)
         .then((value) {
       if (!value) {
         FlutterToast()
@@ -267,7 +353,7 @@ class _UserStatePage extends State<UserStatePage> {
       } else {
         user.relationShip = _relationshipSelected;
         user.sexAlternatives = _sexAlternativeSelected;
-        user.genderInterest = _genderSelected;
+        user.genderInterest = _searchingGenderSelected;
       }
       NavigatorApp.pop(context);
     });

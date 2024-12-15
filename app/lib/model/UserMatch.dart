@@ -12,6 +12,7 @@ class UserMatch {
   String? profileImage;
   int? pendingMessges; 
 
+
   UserMatch(this.matchId, this.flirtId, this.contactInfo, this.sharing,
       this.profileImage, this.pendingMessges);
   UserMatch.empty();
@@ -24,6 +25,7 @@ class UserMatch {
       ContactInfo contactInfo = ContactInfo.fromJson(map["contact"]);
       SharingInfo sharing = SharingInfo.fromJson(map["sharing"]);
       String profileImage = "";
+
       
       if (map.containsKey("profile_image") && map["profile_image"] is Map) {
         profileImage = map["profile_image"]["url"];

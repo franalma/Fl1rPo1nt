@@ -65,10 +65,9 @@ class HostApiActions {
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 
-  static final HostActionsItem getActiveFlirtsFromPointAndTendency = HostActionsItem(
-      "GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY",
-      BASE_API_URL,
-      HOST_API["endpoint_api"].toString());
+  static final HostActionsItem getActiveFlirtsFromPointAndTendency =
+      HostActionsItem("GET_ACTIVE_FLIRTS_FROM_POINT_AND_TENDENCY", BASE_API_URL,
+          HOST_API["endpoint_api"].toString());
 
   static final HostActionsItem getAllSocialNetworks = HostActionsItem(
       "GET_ALL_SOCIAL_NETWORKS",
@@ -181,42 +180,50 @@ class HostApiActions {
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 
-
   static final HostActionsItem putSmartPointByUserIdQrId = HostActionsItem(
       "PUT_SMART_POINT_BY_USER_ID",
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 
+  static final HostActionsItem updateSmartPointStatusByPointId =
+      HostActionsItem("UPDATE_SMART_POINT_STATUS_BY_POINT_ID", BASE_API_URL,
+          HOST_API["endpoint_api"].toString());
 
-  static final HostActionsItem updateSmartPointStatusByPointId = HostActionsItem(
-      "UPDATE_SMART_POINT_STATUS_BY_POINT_ID",
-      BASE_API_URL,
-      HOST_API["endpoint_api"].toString());
-
- static final HostActionsItem updateSmartPointStatusByUserId = HostActionsItem(
+  static final HostActionsItem updateSmartPointStatusByUserId = HostActionsItem(
       "UPDATE_SMART_POINTS_STATUS_BY_USER_ID",
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 
- static final HostActionsItem getAllSmartPointsByUserId = HostActionsItem(
+  static final HostActionsItem getAllSmartPointsByUserId = HostActionsItem(
       "GET_ALL_SMART_POINTS_BY_USER_ID",
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 
-     static final HostActionsItem getSmartPointByPointId = HostActionsItem(
+  static final HostActionsItem getSmartPointByPointId = HostActionsItem(
       "GET_SMART_POINTS_BY_POINT_ID",
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 
- static final HostActionsItem deleteSmartPointByPointId = HostActionsItem(
+  static final HostActionsItem deleteSmartPointByPointId = HostActionsItem(
       "REMOVE_SMART_POINT_BY_POINT_ID",
+      BASE_API_URL,
+      HOST_API["endpoint_api"].toString());
+
+  static final HostActionsItem updateMatchAudioAccessByMatchIdUserId = HostActionsItem(
+      "UPDATE_MATCH_AUDIO_ACCESS_BY_MATCH_ID_USER_ID",
+      BASE_API_URL,
+      HOST_API["endpoint_api"].toString());
+
+ static final HostActionsItem updateMatchPicturesAccessByMatchIdUserId = HostActionsItem(
+      "UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID",
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 
 
 
-  
 }
+
+
 
 class HostMultActions {
   static final HostActionsItem uploadImageByUserId = HostActionsItem(
@@ -264,11 +271,9 @@ class HostChatActions {
       BASE_CHAT_URL,
       HOST_CHAT["endpoint_root"].toString());
 
-  static final HostActionsItem removePendingMessagesByUserIdContactId = HostActionsItem(
-      "REMOVE_PENDING_CHAT_MESSGES_BY_USER_ID_SENDER_ID",
-      BASE_CHAT_URL,
-      HOST_CHAT["endpoint_root"].toString());
-      
+  static final HostActionsItem removePendingMessagesByUserIdContactId =
+      HostActionsItem("REMOVE_PENDING_CHAT_MESSGES_BY_USER_ID_SENDER_ID",
+          BASE_CHAT_URL, HOST_CHAT["endpoint_root"].toString());
 
   static final HostActionsItem socketListen =
       HostActionsItem("", BASE_CHAT_URL, "");

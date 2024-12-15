@@ -124,11 +124,7 @@ async function processRequest(req, res) {
           result = await flirtHandler.getUserFlirts(req.body.input);
           break;
         }
-        // case hostActions.GET_USER_IMAGES_BY_USER_ID: {
-        //   result = await fileHandler.getUserImagesByUserId(req.body.input);
-        //   break;
-        // }
-
+        
         case hostActions.UPDATE_USER_BIOGRAPHY_BY_USER_ID: {
           result = await userHandler.updateUserBiographyByUserId(
             req.body.input
@@ -242,6 +238,24 @@ async function processRequest(req, res) {
           break;
         }
 
+        case hostActions.UPDATE_MATCH_AUDIO_ACCESS_BY_MATCH_ID_USER_ID: {
+          result = await contactHandler.updateAudiosAccessForMarchIdContactId(
+            req.body.input
+          );
+          break;
+        }
+
+        case hostActions.UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID: {
+          result = await contactHandler.updatePicturesAccessForMarchIdContactId(
+            req.body.input
+          );
+          break;
+        }
+
+
+        
+
+        
         
 
 

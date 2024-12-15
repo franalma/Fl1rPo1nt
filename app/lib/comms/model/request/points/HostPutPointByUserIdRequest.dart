@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 class HostPutPointByUserIdRequest extends BaseRequest {
   Future<HostPutPointByUserIdResponse> run(String userId, String userName,
-      String phone, List<SocialNetwork> networks) async {
+      String phone, List<SocialNetwork> networks, bool pictures, bool audios) async {
     try {
       Log.d("Start HostPutPointByUserIdRequest");
 
@@ -21,6 +21,8 @@ class HostPutPointByUserIdRequest extends BaseRequest {
         "input": {
           "user_id": userId,
           "name": userName,
+          "pictures": pictures,
+          "audios":audios, 
           "phone": phone,
           "networks": networks.map((e) => e.toHost()).toList()
         }
