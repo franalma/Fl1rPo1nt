@@ -6,7 +6,6 @@ import 'package:app/ui/contacts/ListContactsPage.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FancyButton.dart';
-import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/map_explorer/MapFilterCriterialsPage.dart';
 import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/party_mode/PartyModePage.dart';
@@ -134,8 +133,8 @@ class _Home2State extends State<Home2Page> {
                   NavigatorApp.push(ListContactsPage(), context);
                 }),
             FancyButton(
-                text: 'Explorar',
-                icon: Icons.map,
+                text: 'Buscar',
+                icon: Icons.search,
                 color: Colors.amber,
                 onTap: () {
                   if (Session.location != null) {

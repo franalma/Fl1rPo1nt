@@ -12,43 +12,26 @@ const { printJson } = require("../../utils/json_utils");
 const FLIRT_ACTIVE = 1;
 const FLIRT_INACTIVE = 0;
 
-
-function createInternalUserCoordinates(input) {
-  logger.info("Starts createInternalUserCoordinates");
-  try {
-    const doc = {
-      id: uuidv4(),
-      user_id: input.user_id,
-      flirt_id: input.flirt_id,
-      created_at: Date.now(),
-      location: input.location
-    }
-  } catch (error) {
-    logger.info(error);
-  }
-  return null;
-}
-
-
 function createOutputFlirt(item) {
   logger.info("Starts createOutputFlirt");
   try {
     let flirt = {
       user_id: item.user_id,
       flirt_id: item.flirt_id,
+      name: item.name ? item.name : "Unknown",
       location: [item.location.coordinates[1], item.location.coordinates[0]],
       user_interests: item.user_interests,
       gender: item.gender,
       updated_at: item.updated_at,
       status: item.status,
-      age:item.age
+      age: item.age,
+      distance: item.distance,
     };
     return flirt;
   } catch (error) {
     logger.info(error);
   }
   return {};
-
 }
 
 function transformLocationForInternalUse(inputLocation) {
@@ -59,11 +42,11 @@ function transformLocationForInternalUse(inputLocation) {
         type: "Point",
         coordinates: [inputLocation.longitude, inputLocation.latitude],
       },
-    }
+    };
   } catch (error) {
     logger.info(error);
   }
-  return {}
+  return {};
 }
 
 async function putUserFlirts(input) {
@@ -94,6 +77,7 @@ async function putUserFlirts(input) {
         let flirt = {
           flirt_id: uuidv4(),
           user_id: input.user_id,
+          name: input.name,
           user_interests: input.user_interests,
           location: {
             type: "Point",
@@ -104,24 +88,23 @@ async function putUserFlirts(input) {
           status: FLIRT_ACTIVE,
           created_at: currentTime,
           updated_at: currentTime,
-          age:input.age
+          age: input.age,
         };
 
         await dbHandler.addDocumentWithClient(
           db.client,
           flirt,
           db.collections.flirts_collection
-        );      
+        );
         result = {
           ...genError(HOST_ERROR_CODES.NO_ERROR),
           message: "Flirt registered successfully",
-          response:
-            createOutputFlirt(flirt)
-        }
+          response: createOutputFlirt(flirt),
+        };
       } else {
         result = {
           ...genError(HOST_ERROR_CODES.FLIRT_ACTIVE_ISSUE),
-          ...checkExist[0].id
+          ...checkExist[0].id,
         };
       }
     }
@@ -145,9 +128,8 @@ async function udpateUserFlirts(input) {
     );
 
     if (!checkExist) {
-
       result = {
-        ...genError(HOST_ERROR_CODES.USER_NOT_EXIST)
+        ...genError(HOST_ERROR_CODES.USER_NOT_EXIST),
       };
     } else {
       let filters = {
@@ -159,7 +141,9 @@ async function udpateUserFlirts(input) {
         updated_at: Date.now(),
       };
       if (input.values.location) {
-        newDoc.location = transformLocationForInternalUse(input.values.location).value;
+        newDoc.location = transformLocationForInternalUse(
+          input.values.location
+        ).value;
       }
       if (input.values.status != null) {
         newDoc.status = input.values.status;
@@ -182,7 +166,7 @@ async function udpateUserFlirts(input) {
         };
       } else {
         result = {
-          ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR)
+          ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR),
         };
       }
     }
@@ -214,24 +198,20 @@ async function getUserFlirts(input) {
     let flirts = [];
 
     if (dbResponse) {
-
-
       for (var item of dbResponse) {
         const flirt = createOutputFlirt(item);
         flirts.push(flirt);
       }
       return {
         ...genError(HOST_ERROR_CODES.NO_ERROR),
-        flirts: flirts
-      }
-
+        flirts: flirts,
+      };
     } else {
       logger.info("-->No flirts");
       return {
         ...genError(HOST_ERROR_CODES.NO_FLIRTS_FOUND),
-        flirts: flirts
-      }
-
+        flirts: flirts,
+      };
     }
   } catch (error) {
     logger.info(error);
@@ -241,41 +221,54 @@ async function getUserFlirts(input) {
 }
 
 async function getActiveFlirtsFromPointAndTendency(input) {
-  logger.info("Starts getActiveFlirtsFromPointAndTendency: " + JSON.stringify(input));
+  logger.info(
+    "Starts getActiveFlirtsFromPointAndTendency: " + JSON.stringify(input)
+  );
   const db = DB_INSTANCES.DB_API;
   let result = {};
   try {
-    input.include_disabled = true; 
+    input.include_disabled = true;
     let matchs = (await matchHandler.getAllUserMatchsByUserId(input)).matchs;
     printJson(matchs);
     let userContacts = matchs.map((e) => e.contact.user_id);
-
-    let filters = {
-      flirt_id: { $ne: input.flirt_id },
-      user_id: { $nin: userContacts },
-      location: {
-        $near: {
-          $geometry: {
+    let filters = [
+      {
+        $geoNear: {
+          near: {
             type: "Point",
             coordinates: [input.longitude, input.latitude],
           },
-          $maxDistance: input.radio*1000,
+          distanceField: "distance",
+          maxDistance: input.radio * 1000,
+          spherical: true,
         },
       },
-      age: { $gte: input.age_from, $lte: input.age_to },
-      status: FLIRT_ACTIVE,
+      { $match: { flirt_id: { $ne: input.flirt_id } } },
+      { $match: { user_id: { $nin: userContacts } } },
+      { $match: { age: { $gte: input.age_from, $lte: input.age_to } } },
+      { $match: { status: FLIRT_ACTIVE } },
+      {
+        $skip: input.skip,
+      },
 
-    };
+      {
+        $sort: { distance: 1 }, // Ascending order
+      },
+    ];
+
+    if (input.limit > 0) {
+      filters.push({
+        $limit: input.limit,
+      });
+    }
 
     if (input.filters_enabled == true) {
       filters["user_interests.relationship.id"] = input.relationship.id;
       filters["user_interests.sex_alternative.id"] = input.sex_alternative.id;
       filters["user_interests.gender_interest.id"] = input.gender.id;
       filters["gender.id"] = input.gender_interest.id;
-
     }
     logger.info("---filters: " + JSON.stringify(filters));
-
 
     let dbResponse = await dbHandler.findWithFiltersAndClientWitPagination(
       db.client,
@@ -285,24 +278,14 @@ async function getActiveFlirtsFromPointAndTendency(input) {
 
     let flirts = [];
 
-      printJson(dbResponse);
     if (dbResponse) {
       for (var item of dbResponse.documents) {
-        // let flirt = {
-        //   user_id: item.user_id,
-        //   flirt_id: item.flirt_id,
-        //   location: [item.location.coordinates[1], item.location.coordinates[0]],
-        //   user_interests: item.user_interests,
-        //   gender: item.gender,
-        //   updated_at: item.updated_at,
-        //   status: item.status
-
-        // };
         let flirt = createOutputFlirt(item);
+        printJson(flirt);
         flirts.push(flirt);
       }
       result = { ...genError(HOST_ERROR_CODES.NO_ERROR), flirts };
-      printJson(result);
+      // printJson(result);
       return result;
     }
   } catch (error) {

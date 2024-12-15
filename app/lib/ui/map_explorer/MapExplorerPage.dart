@@ -228,6 +228,7 @@ class _MapExplorerController extends State<MapExplorerController> {
             location.lat,
             location.lon,
             _user.radioVisibility,
+            0, 0,
             _filtersEnabled)
         .then((value) {
       if (value.errorCode!.code == HostErrorCodesValue.NoError.code) {

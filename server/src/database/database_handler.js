@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb');
 const logger = require("../logger/log");
 const database = process.env.DATABASE_NAME;
 const json = require("../utils/json_utils");
+const { cli } = require('winston/lib/winston/config');
 // const { DB_INSTANCES } = require("./databases")
 
 async function connectToDatabase(input) {
@@ -247,26 +248,28 @@ async function findWithFiltersAndClient(client, filters, path) {
     return result;
 }
 
-async function findWithFiltersAndClientWitPagination(client, filters, path, page = 1, limit = 10) {
+async function findWithFiltersAndClientWitPagination(client, filters, path) {
     logger.info("Starts findWithFiltersAndClient: " + JSON.stringify(filters));
     let result = null;
-    try {
-        const skip = (page -1)* limit;         
+    try {        
+        if (client && client.topology && client.topology.isConnected()) {
+            await client.connect(); 
+        }
         await client.connect();
         const db = client.db(database);
-        const collection = db.collection(path);
-        const cursor = await collection.find(filters).skip(skip).limit(limit);
+        const collection = db.collection(path);        
+        const cursor = await collection.aggregate(filters);
         const documents = await cursor.toArray();
-        result = {
-            current_page:page,                         
+        result = {               
             documents:documents
         };
+        
 
         
     } catch (error) {
         logger.info(error);
     } finally {
-        await client.close();
+        //  await client.close();
     }
 
     return result;

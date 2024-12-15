@@ -20,6 +20,7 @@ class HostPutFlirtByUserIdRequest extends BaseRequest {
         "action": option.action,
         "input": {
           "user_id": user.userId,
+          "name": user.name, 
           "user_interests": {
             "relationship": user.relationShip,
             "sex_alternative": user.sexAlternatives,

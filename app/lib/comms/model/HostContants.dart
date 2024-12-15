@@ -2,7 +2,7 @@ const jsonHeaders = {
   'Content-Type': 'application/json', // Define el tipo de contenido como JSON
 };
 const HOST_API = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "192.168.2.91",
   "dev_port": 3000,
   "pro_ip": "",
   "pro_host": "",
@@ -10,7 +10,7 @@ const HOST_API = {
 };
 
 const HOST_AUTH = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "192.168.2.91",
   "dev_port": 5500,
   "pro_ip": "",
   "pro_host": "",
@@ -19,7 +19,7 @@ const HOST_AUTH = {
 };
 
 const HOST_CHAT = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "192.168.2.91",
   "dev_port": 4000,
   "pro_ip": "",
   "pro_host": "",
@@ -27,7 +27,7 @@ const HOST_CHAT = {
 };
 
 const HOST_MULT = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "192.168.2.91",
   "dev_port": 7000,
   "pro_ip": "",
   "pro_host": "",

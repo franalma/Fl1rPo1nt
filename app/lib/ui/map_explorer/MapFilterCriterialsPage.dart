@@ -7,6 +7,7 @@ import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/my_button.dart';
+import 'package:app/ui/map_explorer/FlirtListPage.dart';
 import 'package:app/ui/map_explorer/MapExplorerPage.dart';
 import 'package:app/ui/user_profile/UserGenderSelection.dart';
 import 'package:app/ui/user_state/SelectRelationshipOptionPage.dart';
@@ -140,8 +141,8 @@ class _MapFilterCriterialsState extends State<MapFilterCriterialsPage> {
           if (Session.location != null) {
             var location = LatLng(Session.location!.lat, Session.location!.lon);
             NavigatorApp.push(
-                MapExplorerController(
-                    location,
+                FlirtListPage(
+                    Session.location!,
                     _selectedMinAge,
                     _selectedMaxAge,
                     _sexAlternativeSelected,
