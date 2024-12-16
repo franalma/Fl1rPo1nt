@@ -18,9 +18,10 @@ class NearByFlirt {
   Gender? gender;
   int? age;
   double? distance; 
+  String? profileImage; 
 
   NearByFlirt(this.userId, this.flirtId, this.latLng, this.relationShip,
-      this.sexAlternative, this.genderInterest, this.gender, this.age, this.name, this.distance);
+      this.sexAlternative, this.genderInterest, this.gender, this.age, this.name, this.distance, this.profileImage);
   NearByFlirt.empty();
   factory NearByFlirt.fromJson(Map<String, dynamic> json) {
     try {
@@ -38,10 +39,11 @@ class NearByFlirt {
       int age = json["age"];
       String name = json["name"];
       double distance = json["distance"];
+      String profileImage = json["profile_url"];
       
 
       return NearByFlirt(userId, flirtId, latLng, relationShip, sexAlternative,
-          genderInterest, gender, age, name, distance);
+          genderInterest, gender, age, name, distance, profileImage);
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");
     }

@@ -206,3 +206,10 @@ server.listen(port, () => {
     }
   });
 });
+
+
+process.on('SIGINT', async () => {
+  dbHandler.connectToDatabase(DB_INSTANCES.MULTIMEDIA_PATH)
+  console.log('DB connection pool closed for server mult ');
+  process.exit(0);
+});

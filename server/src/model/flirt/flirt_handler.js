@@ -13,11 +13,12 @@ const { printJson } = require("../../utils/json_utils");
 const FLIRT_ACTIVE = 1;
 const FLIRT_INACTIVE = 0;
 
-function createOutputFlirt(item) {
+ function createOutputFlirt(item) {
   logger.info("Starts createOutputFlirt");
   try {
     let flirt = {
       user_id: item.user_id,
+      user_name: item.name, 
       flirt_id: item.flirt_id,
       name: item.name ? item.name : "Unknown",
       location: [item.location.coordinates[1], item.location.coordinates[0]],
@@ -27,13 +28,9 @@ function createOutputFlirt(item) {
       status: item.status,
       age: item.age,
       distance: item.distance,
+      profile_url: item.profile_url
     };
-    // const publicProfile = await userHandler.getUserPublicProfileByUserId(
-    //   {user_id: "2a3d3bf9-cd04-4204-9613-534f4bcdd9b6"}
-    // );
-
-    // flirt.profile_image = publicProfile.profile_image;
-
+  
     return flirt;
   } catch (error) {
     logger.info(error);
@@ -81,10 +78,15 @@ async function putUserFlirts(input) {
         db.collections.flirts_collection
       );
       if (checkExist.length == 0) {
-        let flirt = {
+        const publicProfile = await userHandler.getUserPublicProfileByUserId(
+          {user_id: input.user_id}
+        ); 
+
+
+        let doc = {
           flirt_id: uuidv4(),
           user_id: input.user_id,
-          name: input.name,
+          name: publicProfile.name,
           user_interests: input.user_interests,
           location: {
             type: "Point",
@@ -96,17 +98,20 @@ async function putUserFlirts(input) {
           created_at: currentTime,
           updated_at: currentTime,
           age: input.age,
+          profile_url: publicProfile.profile_image.url
         };
 
         await dbHandler.addDocumentWithClient(
           db.client,
-          flirt,
+          doc,
           db.collections.flirts_collection
         );
+
+        
         result = {
           ...genError(HOST_ERROR_CODES.NO_ERROR),
           message: "Flirt registered successfully",
-          response: createOutputFlirt(flirt),
+          response: createOutputFlirt(doc)
         };
       } else {
         result = {
@@ -280,7 +285,7 @@ async function getActiveFlirtsFromPointAndTendency(input) {
 
     if (dbResponse) {
       for (var item of dbResponse.documents) {
-        let flirt = createOutputFlirt(item);    
+        let flirt =  createOutputFlirt(item);    
          
         flirts.push(flirt);
       }

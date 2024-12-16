@@ -55,7 +55,7 @@ function configAudios() {
   return uploadAudios;
 }
 
-function generateSignedImageUrl(filename, expiresIn = 300) {
+function generateSignedImageUrl(filename, expiresIn = 3000) {
   // expiresIn is in seconds
   logger.info("Starts generateSignedImageUrl");
   const expirationTime = Math.floor(Date.now() / 1000) + expiresIn;

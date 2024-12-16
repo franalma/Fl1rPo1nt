@@ -294,3 +294,10 @@ server.listen(port, () => {
     }
   });
 });
+
+
+process.on('SIGINT', async () => {
+  dbHandler.connectToDatabase(DB_INSTANCES.DB_API)
+  console.log('DB connection pool closed for server api ');
+  process.exit(0);
+});

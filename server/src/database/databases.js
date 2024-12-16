@@ -60,6 +60,7 @@ const DB_INSTANCES = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       maxPoolSize: 10, // Use a connection pool
+      minPoolSize: 2,  // Keep minimum number of connections
       serverSelectionTimeoutMS: 5000, // Timeout for selecting a server
     }),
     collections: {
@@ -83,6 +84,8 @@ const DB_INSTANCES = {
     client: new MongoClient(dbAuthUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      maxPoolSize: 10, // Use a connection pool
+      minPoolSize: 2,  // Keep minimum number of connections
     }),
     collections: {
       user_collection: "users",
@@ -93,6 +96,8 @@ const DB_INSTANCES = {
     client: new MongoClient(dbChatUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      maxPoolSize: 10, // Use a connection pool
+      minPoolSize: 2,  // Keep minimum number of connections
     }),
     collections: {
       chatroom_collection: "chatrooms",
@@ -104,6 +109,8 @@ const DB_INSTANCES = {
     client: new MongoClient(dbMultUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      maxPoolSize: 10, // Use a connection pool
+      minPoolSize: 2,  // Keep minimum number of connections
     }),
     collections: {
       user_images_collection: "user_images",

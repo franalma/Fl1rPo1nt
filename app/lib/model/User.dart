@@ -229,4 +229,12 @@ class User {
   Color getRelationshipColor() {
     return Color(CommonUtils.colorToInt(relationShip.color));
   }
+
+   Color getLookingForGenderColor() {
+    return Color(CommonUtils.colorToInt(genderInterest.color!));
+  }
+
+   Color getGenderColor() {
+    return Color(CommonUtils.colorToInt(gender.color!));
+  }
 }

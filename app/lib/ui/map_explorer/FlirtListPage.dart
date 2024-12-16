@@ -1,4 +1,5 @@
 import 'package:app/comms/model/request/flirt/HostGetPeopleArroundRequest.dart';
+import 'package:app/comms/model/request/user/profile/HostGetUserPublicProfile.dart';
 import 'package:app/model/Gender.dart';
 import 'package:app/model/HostErrorCode.dart';
 import 'package:app/model/NearByFlirt.dart';
@@ -6,6 +7,7 @@ import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/model/UserInterest.dart';
 import 'package:app/ui/NavigatorApp.dart';
+import 'package:app/ui/contacts/ContactDetailsPageFromMap.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/FlirtPoint.dart';
@@ -88,8 +90,7 @@ class _FlirtListState extends State<FlirtListPage> {
                   if (_skip >= pageSize) {
                     _skip = _skip - pageSize;
                     _fetchFromHost();
-                  }
-                  print("---skip $_skip");
+                  }                  
                 },
               ),
               IconButton(
@@ -99,13 +100,11 @@ class _FlirtListState extends State<FlirtListPage> {
                 onPressed: () {
                   _skip = _skip + pageSize; 
                    _fetchFromHost();
-                  
-                  print("---skip $_skip");
+                                    
                 },
               ),
             ]),
-        body: _isLoading ? AlertDialogs().buildLoading() : _buildList());
-    // body: _buildList());
+        body: _isLoading ? AlertDialogs().buildLoading() : _buildList());    
   }
 
   Color getSexAlternativeColor(SexAlternative sexAlternative) {
@@ -131,7 +130,7 @@ class _FlirtListState extends State<FlirtListPage> {
                     height: 80, // Set equal height
                     child: ClipRRect(
                       child: Image.network(
-                        'https://via.placeholder.com/150', // Replace with your image URL
+                        "${_nearbyFlirts[index].profileImage!}&width=80&height=80&quality=60", // Replace with your image URL
                         fit: BoxFit.cover, // Ensures the image covers the box
                       ),
                     ),
@@ -161,10 +160,15 @@ class _FlirtListState extends State<FlirtListPage> {
                       children: [
                         Text("Edad ${_nearbyFlirts[index].age!.toString()}"),
                         Text(
-                            " ${(_nearbyFlirts[index].distance! / 1000).toInt().toString()} Kms"),
+                            " ${_nearbyFlirts[index].distance! ~/ 1000} Kms"),
                       ],
                     ),
-                  )),
+                  ),
+                  onTap: (){
+                      _showContactDetailPage(_nearbyFlirts[index]);  
+                    
+                  },
+                  ),
               const Divider(),
             ],
           );
@@ -211,7 +215,27 @@ class _FlirtListState extends State<FlirtListPage> {
             _isLoading = false;
           });
       });
-    } catch (error) {}
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
     
+  }
+
+  Future<void> _showContactDetailPage(NearByFlirt nearByFlirt) async{
+    Log.d("Starts _showContactDetailPage");
+    try{
+        AlertDialogs().buildLoadingModal(context);
+        HostGetUserPublicProfile().run(nearByFlirt.userId!).then((value){          
+          NavigatorApp.pop(context); 
+          if (value.profile != null){            
+            NavigatorApp.push(ContactDetailsPageFromMap(value.profile!), context);
+          }else{
+            //not possible to load
+          }          
+        });
+    }catch(error, stackTrace){
+      Log.d("$error, $stackTrace");
+      NavigatorApp.pop(context);
+    }
   }
 }

@@ -192,3 +192,11 @@ server.listen(port, () => {
         }
     });
 });
+
+
+process.on('SIGINT', async () => {
+    dbHandler.connectToDatabase(DB_INSTANCES.DB_CHAT)
+    console.log('DB connection pool closed for server chat ');
+    process.exit(0);
+  });
+  

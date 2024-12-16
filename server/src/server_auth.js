@@ -155,3 +155,11 @@ server.listen(port, () => {
   });
 
 });
+
+
+process.on('SIGINT', async () => {
+  dbHandler.connectToDatabase(DB_INSTANCES.DB_AUTH)
+  console.log('DB connection pool closed for server auth ');
+  process.exit(0);
+});
+

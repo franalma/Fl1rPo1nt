@@ -1,5 +1,6 @@
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
+import 'package:app/services/ConfigService.dart';
 import 'package:app/services/NewMessageService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ListContactsPage.dart';
@@ -11,11 +12,14 @@ import 'package:app/ui/my_social_networks/MySocialNetworksPage.dart';
 import 'package:app/ui/party_mode/PartyModePage.dart';
 import 'package:app/ui/qr_manager/ListQrPage.dart';
 import 'package:app/ui/smart_points/SmartPointsListPage.dart';
+import 'package:app/ui/tutorial/TutorialPage.dart';
 import 'package:app/ui/user_profile/UserProfilePage.dart';
 import 'package:app/ui/user_state/UserStatePage.dart';
+import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class Home2Page extends StatefulWidget {
   @override
@@ -24,12 +28,15 @@ class Home2Page extends StatefulWidget {
 
 class _Home2State extends State<Home2Page> {
   final User _user = Session.user;
+  late ConfigService _configService;
 
   @override
   void initState() {
     super.initState();
     Session.socketSubscription?.onNewContactRequested =
         _handleNewContactRequest;
+    _configService = ConfigService(_user);
+    _launchConfigChecker();
   }
 
   void _handleNewContactRequest(String message) {
@@ -106,7 +113,11 @@ class _Home2State extends State<Home2Page> {
                 onTap: () {
                   if (_user.isFlirting) {
                     if (_user.qrValues.isEmpty) {
-                      DefaultModalDialog.showErrorDialog(context, "Debes crear al menos un QR para compartir", "Cerrar", FontAwesomeIcons.exclamation);
+                      DefaultModalDialog.showErrorDialog(
+                          context,
+                          "Debes crear al menos un QR para compartir",
+                          "Cerrar",
+                          FontAwesomeIcons.exclamation);
                     } else {
                       NavigatorApp.push(PartyModePage(), context);
                     }
@@ -134,14 +145,27 @@ class _Home2State extends State<Home2Page> {
                 icon: Icons.search,
                 color: Colors.amber,
                 onTap: () {
-                  if (Session.location != null) {                    
-                    NavigatorApp.push(MapFilterCriterialsPage(), context);
-                  } else {
-                    DefaultModalDialog.showErrorDialog(
+                  if (_user.isFlirting) {
+                    if (Session.location != null) {
+                      NavigatorApp.push(MapFilterCriterialsPage(), context);
+                    } else {
+                      DefaultModalDialog.showErrorDialog(
+                          context,
+                          "Debes activar tu ubicación para poder acceder al mapa",
+                          "Cerrar",
+                          FontAwesomeIcons.exclamation);
+                    }
+                  }else{
+                    AlertDialogs().showModalDialogMessage(
                         context,
-                        "Debes activar tu ubicación para poder acceder al mapa",
-                        "Cerrar",
-                        FontAwesomeIcons.exclamation);
+                        200,
+                        Icons.visibility,
+                        50,
+                        Colors.red,
+                        "Debes hacerte visible para comenzar la fiesta",
+                        const TextStyle(fontSize: 18),
+                        "Cerrar");
+
                   }
                 }),
             FancyButton(
@@ -151,7 +175,7 @@ class _Home2State extends State<Home2Page> {
                 onTap: () {
                   NavigatorApp.push(SmartPointsListPage(), context);
                 }),
-            FancyButton(                
+            FancyButton(
                 text: 'Dónde ir',
                 icon: Icons.people,
                 color: Colors.green,
@@ -160,5 +184,18 @@ class _Home2State extends State<Home2Page> {
         ),
       ),
     );
+  }
+
+  Future<void> _launchConfigChecker() async {
+    Log.d("Starts _launchConfigChecker");
+    try {
+      bool isFirstLogin = await _configService.isFirstLogin();
+      if (isFirstLogin) {
+          TutorialPage.showTutorialDialog(context);
+      //  NavigatorApp.push(TutorialPage(), context);
+      }
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
+    }
   }
 }
