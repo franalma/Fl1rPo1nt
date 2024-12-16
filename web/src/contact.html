@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Floiint web site"
+    />
+    <title>Floiint</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/scripts.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <h1 class="logo">Floiint</h1>
+        <nav class="navbar">
+          <ul class="nav-list">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="privacy.html">Privacidad</a></li>
+            <li><a href="contact.html">Contacto</a></li>
+            <li><a href="login.html">Login</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <section id="hero" class="hero">
+      <div class="container">
+        <img src="images/floiint_logo.png" alt="" />
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">        
+          <h1>Contacta con nostros</h1>
+          <form action="https://example.com/submit-form" method="post">
+            <!-- Name Field -->
+            <label for="name">Nombre</label>
+            <input type="text" id="name" name="name" placeholder="Introduce tu nombre completo" required>
+            
+            <!-- Email Field -->
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Introduce tu email" required>
+            
+            <!-- Subject Field -->
+            <label for="subject">Asunto</label>
+            <input type="text" id="subject" name="subject" placeholder="Asunto" required>            
+            <label for="message">Mensaje</label>
+            <textarea id="message" name="message" placeholder="Escribe tu mensaje" required></textarea>
+             <!-- Hidden honeypot field -->
+            <input type="text" name="hiddenField" style="display:none;">
+            <div class="g-recaptcha" data-sitekey="6LfrsZ0qAAAAAMF_hqQdqWmu6gkXwTeSVC4D8J_-"></div>
+            <!-- Submit Button -->
+            <button type="submit">Enviar</button>
+
+            
+          </form>
+          
+                          
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2024 Floiint. All rights reserved.</p>
+        <!-- <ul class="social-links">
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">LinkedIn</a></li>
+        </ul> -->
+      </div>
+    </footer>
+  </body>
+</html>
+
+
+
