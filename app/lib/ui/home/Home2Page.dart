@@ -36,7 +36,7 @@ class _Home2State extends State<Home2Page> {
     Session.socketSubscription?.onNewContactRequested =
         _handleNewContactRequest;
     _configService = ConfigService(_user);
-    _launchConfigChecker();
+    _launchTutorial();
   }
 
   void _handleNewContactRequest(String message) {
@@ -97,12 +97,12 @@ class _Home2State extends State<Home2Page> {
                 icon: FontAwesomeIcons.solidCirclePlay,
                 color: Color.fromARGB(255, 85, 22, 244),
                 onTap: () {
-                  NavigatorApp.push(MySocialNetworksPage(), context);
+                  NavigatorApp.push(const MySocialNetworksPage(), context);
                 }),
             FancyButton(
                 text: 'Mis QR',
                 icon: Icons.qr_code,
-                color: Color.fromARGB(255, 187, 23, 202),
+                color: const Color.fromARGB(255, 187, 23, 202),
                 onTap: () {
                   NavigatorApp.push(ListQrPage(), context);
                 }),
@@ -110,62 +110,68 @@ class _Home2State extends State<Home2Page> {
                 text: 'Modo fiesta',
                 icon: FontAwesomeIcons.hands,
                 color: Colors.blue,
-                onTap: () {
-                  if (_user.isFlirting) {
-                    if (_user.qrValues.isEmpty) {
-                      DefaultModalDialog.showErrorDialog(
-                          context,
-                          "Debes crear al menos un QR para compartir",
-                          "Cerrar",
-                          FontAwesomeIcons.exclamation);
+                onTap: () async {
+                  var result = await _launchConfigChecker();
+                  if (await _launchConfigChecker() == ConfigError.noError) {
+                    if (_user.isFlirting) {
+                      if (_user.qrValues.isEmpty) {
+                        DefaultModalDialog.showErrorDialog(
+                            context,
+                            "Debes crear al menos un QR para compartir",
+                            "Cerrar",
+                            FontAwesomeIcons.exclamation);
+                      } else {
+                        NavigatorApp.push(PartyModePage(), context);
+                      }
                     } else {
-                      NavigatorApp.push(PartyModePage(), context);
+                      AlertDialogs().showModalDialogMessage(
+                          context,
+                          200,
+                          Icons.visibility,
+                          50,
+                          Colors.red,
+                          "Debes hacerte visible para comenzar la fiesta",
+                          const TextStyle(fontSize: 18),
+                          "Cerrar");
                     }
-                  } else {
-                    AlertDialogs().showModalDialogMessage(
-                        context,
-                        200,
-                        Icons.visibility,
-                        50,
-                        Colors.red,
-                        "Debes hacerte visible para comenzar la fiesta",
-                        const TextStyle(fontSize: 18),
-                        "Cerrar");
                   }
                 }),
             FancyButton(
                 text: 'Mis contactos',
                 icon: Icons.favorite,
                 color: Colors.pink,
-                onTap: () {
-                  NavigatorApp.push(ListContactsPage(), context);
+                onTap: () async {
+                  if (await _launchConfigChecker() == ConfigError.noError) {
+                    NavigatorApp.push(ListContactsPage(), context);
+                  }
                 }),
             FancyButton(
                 text: 'Buscar',
                 icon: Icons.search,
                 color: Colors.amber,
-                onTap: () {
-                  if (_user.isFlirting) {
-                    if (Session.location != null) {
-                      NavigatorApp.push(MapFilterCriterialsPage(), context);
+                onTap: () async {
+                  if (await _launchConfigChecker() == ConfigError.noError) {
+                    if (_user.isFlirting) {
+                      if (Session.location != null) {
+                        NavigatorApp.push(MapFilterCriterialsPage(), context);
+                      } else {
+                        DefaultModalDialog.showErrorDialog(
+                            context,
+                            "Debes activar tu ubicación para poder acceder al mapa",
+                            "Cerrar",
+                            FontAwesomeIcons.exclamation);
+                      }
                     } else {
-                      DefaultModalDialog.showErrorDialog(
+                      AlertDialogs().showModalDialogMessage(
                           context,
-                          "Debes activar tu ubicación para poder acceder al mapa",
-                          "Cerrar",
-                          FontAwesomeIcons.exclamation);
+                          200,
+                          Icons.visibility,
+                          50,
+                          Colors.red,
+                          "Debes hacerte visible para comenzar la fiesta",
+                          const TextStyle(fontSize: 18),
+                          "Cerrar");
                     }
-                  }else{
-                    AlertDialogs().showModalDialogMessage(
-                        context,
-                        200,
-                        Icons.visibility,
-                        50,
-                        Colors.red,
-                        "Debes hacerte visible para comenzar la fiesta",
-                        const TextStyle(fontSize: 18),
-                        "Cerrar");
-
                   }
                 }),
             FancyButton(
@@ -186,13 +192,92 @@ class _Home2State extends State<Home2Page> {
     );
   }
 
-  Future<void> _launchConfigChecker() async {
+  void _handleConfigCheckerStatus(ConfigError result) {
+    switch (result) {
+      case ConfigError.genderRequired:
+        DefaultModalDialog.showErrorDialog(
+            context,
+            "Necesitamos tu género antes de comenzar. Cámbialo en Mi Estado",
+            "Cerrar",
+            FontAwesomeIcons.genderless);
+        break;
+
+      case ConfigError.qrRequired:
+        DefaultModalDialog.showErrorDialog(
+            context,
+            "Necesitamos que registres un QR antes de comenzar. Agrégalo en Mis QR",
+            "Cerrar",
+            FontAwesomeIcons.qrcode);
+        break;
+
+      case ConfigError.profileImageRequired:
+        DefaultModalDialog.showErrorDialog(
+            context,
+            "Necesitamos que añadas al menos una foto a tu perfil. Puedes hacerlo en Mi Estado",
+            "Cerrar",
+            FontAwesomeIcons.image);
+        break;
+
+      case ConfigError.sexOrientationRequired:
+        DefaultModalDialog.showErrorDialog(
+            context,
+            "Necesitamos que indiques tu preferencia sexual. Puedes hacerlo en Mi Estado",
+            "Cerrar",
+            FontAwesomeIcons.person);
+        break;
+      case ConfigError.relationshipRequired:
+        DefaultModalDialog.showErrorDialog(
+            context,
+            "Necesitamos que indiques el tipo de pareja que buscas. Puedes hacerlo en Mi Estado",
+            "Cerrar",
+            FontAwesomeIcons.peopleGroup);
+        break;
+      case ConfigError.lookingForGenderRequired:
+        DefaultModalDialog.showErrorDialog(
+            context,
+            "Necesitamos que indiques el género que buscas. Puedes hacerlo en Mi Estado",
+            "Cerrar",
+            FontAwesomeIcons.searchengin);
+        break;
+      case ConfigError.biographyRequired:
+        DefaultModalDialog.showErrorDialog(
+            context,
+            "Necesitamos que hables un poco sobre ti. Puedes hacerlo en Mi Estado",
+            "Cerrar",
+            FontAwesomeIcons.peopleGroup);
+        break;
+      case ConfigError.hobbiesRequired:
+        DefaultModalDialog.showErrorDialog(
+            context,
+            "Necesitamos que indiques tus afciones. Puedes hacerlo en Mi Estado",
+            "Cerrar",
+            FontAwesomeIcons.peopleGroup);
+        break;
+      default:
+    }
+  }
+
+  Future<ConfigError> _launchConfigChecker() async {
+    Log.d("Starts _launchConfigChecker");
+    ConfigError result = ConfigError.noError;
+    try {
+      result = _configService.checkConfiguration();
+      _handleConfigCheckerStatus(result);
+    } catch (error, stackTrace) {
+      Log.d("$error $stackTrace");
+    }
+    return result;
+  }
+
+  Future<void> _launchTutorial() async {
     Log.d("Starts _launchConfigChecker");
     try {
       bool isFirstLogin = await _configService.isFirstLogin();
       if (isFirstLogin) {
-          TutorialPage.showTutorialDialog(context);
-      //  NavigatorApp.push(TutorialPage(), context);
+        TutorialPage.showTutorialDialog(context);
+        await _configService.registerFirstInit(true);
+      } else {
+        await _launchConfigChecker();
       }
     } catch (error, stackTrace) {
       Log.d("$error, $stackTrace");

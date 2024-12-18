@@ -195,7 +195,7 @@ async function getUserInfoByUserId(input) {
 }
 
 async function updateUserNetworksByUserId(input) {
-  logger.info("Start update");
+  logger.info("Start updateUserNetworksByUserId");
   let result = {};
   try {
     const db = DB_INSTANCES.DB_API;

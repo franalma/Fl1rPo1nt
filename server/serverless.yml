@@ -1,0 +1,103 @@
+custom:
+  environments:
+    dev:
+      DATABASE_API_NAME: FloiintDb
+      DABATASE_API_SERVER: 172.31.6.107
+      DATABASE_API_PORT: 27017
+      DATABASE_API_USER: admin
+      DATABASE_API_PASS: securepassword
+      
+      DATABASE_AUTH_NAME: FloiintAuthDb
+      DATABASE_AUTH_SERVER: 172.31.6.107
+      DATABASE_AUTH_PORT: 27017
+      DATABASE_AUTH_USER: admin
+      DATABASE_AUTH_PASS: securepassword
+      SECRET_TOKEN: \%Aa123456$
+      SECRET_REFRESH_TOKEN: \%Aa123456$
+      TOKEN_LIFE: 1d
+      TOKEN_ACTIVATION_LIFE: 1m
+      REFRESH_TOKEN_LIFE: 7d
+      REGISTRATION_VALIDATION_URL: http://81.44.232.108:5500/register/validation
+
+
+    prod:
+      DB_HOST: prod-db.example.com
+      API_KEY: prod-key
+
+
+
+
+service: lambda-floint-api
+
+provider:
+  name: aws
+  profile: floiint
+  runtime: nodejs18.x  
+  region: eu-west-3
+
+  environment:
+
+# api
+    DATABASE_API_NAME: ${self:custom.environments.${opt:stage}.DATABASE_API_NAME}
+    DABATASE_API_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_API_SERVER}
+    DATABASE_API_PORT: ${self:custom.environments.${opt:stage}.DATABASE_API_PORT}
+    DATABASE_API_USER: ${self:custom.environments.${opt:stage}.DATABASE_API_USER}
+    DATABASE_API_PASS: ${self:custom.environments.${opt:stage}.DATABASE_API_PASS}
+
+# auth
+    DATABASE_AUTH_NAME: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_NAME}
+    DATABASE_AUTH_SERVER: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_SERVER}
+    DATABASE_AUTH_PORT: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_PORT}
+    DATABASE_AUTH_USER: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_USER}
+    SECRET_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_TOKEN}
+    SECRET_REFRESH_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_REFRESH_TOKEN}
+    TOKEN_LIFE: ${self:custom.environments.${opt:stage}.TOKEN_LIFE}
+    TOKEN_ACTIVATION_LIFE: ${self:custom.environments.${opt:stage}.TOKEN_ACTIVATION_LIFE}
+    REFRESH_TOKEN_LIFE: ${self:custom.environments.${opt:stage}.REFRESH_TOKEN_LIFE}
+    REGISTRATION_VALIDATION_URL: ${self:custom.environments.${opt:stage}.REGISTRATION_VALIDATION_URL}
+
+
+
+functions:
+  floiint-api:
+    handler: src/handler_api.handler
+    vpc:
+      securityGroupIds:
+        - sg-0d825c487bd94c18a
+      subnetIds:        
+        - subnet-b5bf4add
+    events:
+      - http:
+          path: api
+          method: post
+
+  floiint-auth:
+    handler: src/handler_auth.handler
+    vpc:
+      securityGroupIds:
+        - sg-0d825c487bd94c18a
+      subnetIds:        
+        - subnet-b5bf4add
+    events:
+      - http:
+          path: login
+          method: post
+
+      - http:
+          path: register
+          method: post
+
+      
+    
+
+package:
+  exclude:
+    - node_modules/**
+  include:
+    - node_modules/sharp/**
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-plugin-include-dependencies
+
+

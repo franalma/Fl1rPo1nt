@@ -100,6 +100,17 @@ class ConfigService {
     String? value = await secureStorage.getSecureData("first_login");
     return value == null; 
   }
+
+  Future<void> registerFirstInit(bool value)async {
+    Log.d("Starts registerFirstInit");
+    try{
+      SecureStorage secureStorage = SecureStorage();
+      await secureStorage.saveSecureData("first_login", value.toString());
+    }catch(error, stackTrace){
+      Log.d("$error, $stackTrace");
+    }
+
+  }
   
 
 }

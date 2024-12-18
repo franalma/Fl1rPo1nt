@@ -1,8 +1,8 @@
 {
-  "name": "tokenization",
+  "name": "floiintapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "handler_api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-validator": "^7.2.0",
@@ -20,8 +21,12 @@
     "multer": "^1.4.5-lts.1",
     "node-geocoder": "^4.4.0",
     "nodemailer": "^6.9.16",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-http": "^3.2.0",
+    "serverless-plugin-include-dependencies": "^6.1.1",
     "sharp": "^0.33.5",
     "socket.io": "^4.8.1",
+    "superagent": "^10.1.1",
     "uuid": "^11.0.2",
     "winston": "^3.16.0"
   }

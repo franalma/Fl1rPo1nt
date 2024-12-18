@@ -20,3 +20,7 @@ server_user_images/
 app/.flutter-plugins-dependencies
 
 app/.flutter-plugins
+
+layers/
+
+server/.serverless/

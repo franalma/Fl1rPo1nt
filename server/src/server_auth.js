@@ -13,8 +13,8 @@ const { printJson } = require("./utils/json_utils");
 //Init
 const app = express();
 app.use(express.json());
-const port = process.env.SERVER_PORT_AUTH;
-const server = http.createServer(app);
+// const port = process.env.SERVER_PORT_AUTH;
+// const server = http.createServer(app);
 
 const validationRules = {
   REGISTER_USER_RULES: [
@@ -145,16 +145,16 @@ app.get("/register/validation/:token/:id", (req, res) => {
 
 
 
-server.listen(port, () => {
-  dbHandler.connectToDatabase(DB_INSTANCES.DB_AUTH).then((result) => {
-    if (result == null) {
-      throw "Db connection error";
-    } else {
-      console.log(`El servidor AUTH está corriendo en el puerto ${port}`);
-    }
-  });
+// server.listen(port, () => {
+//   dbHandler.connectToDatabase(DB_INSTANCES.DB_AUTH).then((result) => {
+//     if (result == null) {
+//       throw "Db connection error";
+//     } else {
+//       console.log(`El servidor AUTH está corriendo en el puerto ${port}`);
+//     }
+//   });
 
-});
+// });
 
 
 process.on('SIGINT', async () => {
@@ -162,4 +162,8 @@ process.on('SIGINT', async () => {
   console.log('DB connection pool closed for server auth ');
   process.exit(0);
 });
+
+module.exports = {
+  app,
+};
 

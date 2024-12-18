@@ -41,6 +41,14 @@ async function procesBulkRequest(req, res) {
         result = await bulkHandler.addGenderIdentity(req.body.input);
         break;
       }
+      case bulkHostActions.BULK_POPULATE_USERS:{
+        logger.info("populating users");
+        for (let item of req.body.input){
+          result = await bulkHandler.bulkPopulateUsers(item);
+        }
+        
+        break; 
+      }
     }
     logger.info("Request response: "+result);
     if (result == 0) {

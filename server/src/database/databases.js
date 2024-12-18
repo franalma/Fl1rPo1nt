@@ -3,6 +3,7 @@
 // db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintChat" } ]});
 // db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "MultimediaDb" } ]});
 
+// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintDb" } ]});
 const { MongoClient } = require("mongodb");
 
 const dbAuthUri =
@@ -56,9 +57,7 @@ const dbMultUri =
 const DB_INSTANCES = {
   DB_API: {
     database_name: process.env.DATABASE_API_NAME,
-    client: new MongoClient(dbApiUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+    client: new MongoClient(dbApiUri, {      
       maxPoolSize: 10, // Use a connection pool
       minPoolSize: 2,  // Keep minimum number of connections
       serverSelectionTimeoutMS: 5000, // Timeout for selecting a server
@@ -82,8 +81,6 @@ const DB_INSTANCES = {
   DB_AUTH: {
     database_name: process.env.DATABASE_AUTH_NAME,
     client: new MongoClient(dbAuthUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       maxPoolSize: 10, // Use a connection pool
       minPoolSize: 2,  // Keep minimum number of connections
     }),
@@ -94,8 +91,6 @@ const DB_INSTANCES = {
   DB_CHAT: {
     database_name: process.env.DATABASE_CHAT_NAME,
     client: new MongoClient(dbChatUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       maxPoolSize: 10, // Use a connection pool
       minPoolSize: 2,  // Keep minimum number of connections
     }),
@@ -106,9 +101,7 @@ const DB_INSTANCES = {
   },
   DB_MULT: {
     database_name: process.env.DATABASE_MULT_NAME,
-    client: new MongoClient(dbMultUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+    client: new MongoClient(dbMultUri, {      
       maxPoolSize: 10, // Use a connection pool
       minPoolSize: 2,  // Keep minimum number of connections
     }),

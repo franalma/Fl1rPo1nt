@@ -1,0 +1,1 @@
+npm install --os=linux --cpu=x64

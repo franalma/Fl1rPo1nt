@@ -22,8 +22,8 @@ const smartpoint_handler = require("./model/smart_points/smart_points_handler");
 //Init
 const app = express();
 app.use(express.json());
-const port = process.env.SERVER_PORT_API;
-const server = http.createServer(app);
+// const port = process.env.SERVER_PORT_API;
+// const server = http.createServer(app);
 
 async function processRequest(req, res) {
   logger.info("processRequest:" + JSON.stringify(req.body));
@@ -285,15 +285,15 @@ app.post(
   }
 );
 
-server.listen(port, () => {
-  dbHandler.connectToDatabase(DB_INSTANCES.DB_API).then((result) => {
-    if (result == null) {
-      throw "Db connection error";
-    } else {
-      console.log(`El servidor API está corriendo en el puerto ${port}`);
-    }
-  });
-});
+// server.listen(port, () => {
+//   dbHandler.connectToDatabase(DB_INSTANCES.DB_API).then((result) => {
+//     if (result == null) {
+//       throw "Db connection error";
+//     } else {
+//       console.log(`El servidor API está corriendo en el puerto ${port}`);
+//     }
+//   });
+// });
 
 
 process.on('SIGINT', async () => {
@@ -301,3 +301,7 @@ process.on('SIGINT', async () => {
   console.log('DB connection pool closed for server api ');
   process.exit(0);
 });
+
+module.exports = {
+  app,
+};
