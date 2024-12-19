@@ -3,6 +3,7 @@ const logger = require("../logger/log");
 const { body, validationResult } = require("express-validator");
 const validationRules = require("../validators/validation_rules");
 const hostActions = require("../constants/host_actions");
+const { printJson } = require("../utils/json_utils");
 let validationSet = [];
 
 function requestAuthValidation(req, res, next) {
@@ -27,7 +28,8 @@ function requestAuthValidation(req, res, next) {
 
 function requestFieldsValidation(req, res, next) {
   logger.info("custom requestFieldsValidation");
-  const { action } = req.body;
+
+  const { action } = req.body;  
   switch (action) {
     case hostActions.PUT_USER: {
       validationSet = validationRules.NEW_USER_VALIDATION_RULES;

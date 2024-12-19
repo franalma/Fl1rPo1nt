@@ -27,7 +27,7 @@ app.use(express.json());
 
 async function processRequest(req, res) {
   logger.info("processRequest:" + JSON.stringify(req.body));
-
+  
   try {
     let result = requestValidator.requestDoValidation(req);
     if (result) {

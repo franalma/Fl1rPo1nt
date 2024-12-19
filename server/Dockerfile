@@ -15,4 +15,4 @@ RUN npm install --os=linux --cpu=x64 sharp
 # ENTRYPOINT ["/aws-lambda-rie"]
 # ENTRYPOINT ["node","src/handler_api"]
 
-CMD ["src/handler_api.handler" ]
+CMD ["src/handler_api.handler"]
