@@ -17,9 +17,9 @@ provider "aws" {
 # VPC
 resource "aws_vpc" "vpc_floiint_t" {
 
-  cidr_block           = "172.31.0.0/16"
-  enable_dns_hostnames = false
-  enable_dns_support   = false
+  cidr_block           = "172.31.0.0/24"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
   tags = {
     Name        = "vpc-floiint-t"
     "Terraform" = "Yes"
@@ -68,7 +68,7 @@ resource "aws_security_group" "sec_group_floiint" {
 
 resource "aws_subnet" "public_subnet_floiint" {
   vpc_id                  = aws_vpc.vpc_floiint_t.id
-  cidr_block              = "172.31.0.0/20"
+  cidr_block              = "172.31.2.0/24"
   availability_zone       = "eu-west-3a"
   map_public_ip_on_launch = true
   tags = {
@@ -79,7 +79,7 @@ resource "aws_subnet" "public_subnet_floiint" {
 
 resource "aws_subnet" "private_subnet_floiint" {
   vpc_id                  = aws_vpc.vpc_floiint_t.id
-  cidr_block              = "172.31.32.0/20"
+  cidr_block              = "172.31.1.0/24"
   availability_zone       = "eu-west-3a"
   map_public_ip_on_launch = true
   tags = {
@@ -92,7 +92,7 @@ resource "aws_subnet" "private_subnet_floiint" {
 resource "aws_internet_gateway" "igw_floiint" {
   vpc_id = aws_vpc.vpc_floiint_t.id
   tags = {
-    Name        = "igw-floiint"
+    Name        = "igw-floiint-t"
     "Terraform" = "Yes"
   }
 }
@@ -119,7 +119,7 @@ resource "aws_route_table_association" "public_floiint_association" {
 
 resource "aws_eip" "nat_eip" {
   tags = {
-    Name        = "example-nat-eip"
+    Name        = "nat-eip"
     "Terraform" = "Yes"
   }
 }

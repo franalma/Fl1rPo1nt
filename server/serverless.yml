@@ -2,23 +2,24 @@ custom:
   environments:
     dev:
       DATABASE_API_NAME: FloiintDb
-      DABATASE_API_SERVER: 172.31.6.107
+      DABATASE_API_SERVER: 172.31.1.234
       DATABASE_API_PORT: 27017
       DATABASE_API_USER: admin
       DATABASE_API_PASS: securepassword
       
       DATABASE_AUTH_NAME: FloiintDbAuth
-      DATABASE_AUTH_SERVER: 172.31.6.107
+      DATABASE_AUTH_SERVER: 172.31.1.234
       DATABASE_AUTH_PORT: 27017
       DATABASE_AUTH_USER: admin
       DATABASE_AUTH_PASS: securepassword
-      SECRET_TOKEN: \%Aa123456$
-      SECRET_REFRESH_TOKEN: \%Aa123456$
+      SECRET_TOKEN: Aa123456%$
+      SECRET_REFRESH_TOKEN: Aa123456%$
       TOKEN_LIFE: 1d
       TOKEN_ACTIVATION_LIFE: 1m
       REFRESH_TOKEN_LIFE: 7d
-      REGISTRATION_VALIDATION_URL: http://81.44.232.108:5500/register/validation
-
+      REGISTRATION_VALIDATION_URL: https://eb6c0cbshg.execute-api.eu-west-3.amazonaws.com/dev/register/validation
+      AWS_INTERNAL_ACCESS_KEY: novalue
+      AWS_INTERNAL_SECRET_KEY: novalue
 
     prod:
       DB_HOST: prod-db.example.com
@@ -46,9 +47,9 @@ functions:
         DATABASE_API_PASS: ${self:custom.environments.${opt:stage}.DATABASE_API_PASS}
     vpc:
       securityGroupIds:
-        - sg-0d825c487bd94c18a
+        - sg-0905f2754bb63e653
       subnetIds:        
-        - subnet-b5bf4add
+        - subnet-037c5ab85cb042873
     events:
       - http:
           path: api
@@ -75,12 +76,13 @@ functions:
         TOKEN_ACTIVATION_LIFE: ${self:custom.environments.${opt:stage}.TOKEN_ACTIVATION_LIFE}
         REFRESH_TOKEN_LIFE: ${self:custom.environments.${opt:stage}.REFRESH_TOKEN_LIFE}
         REGISTRATION_VALIDATION_URL: ${self:custom.environments.${opt:stage}.REGISTRATION_VALIDATION_URL}
-
+        AWS_INTERNAL_ACCESS_KEY: ${self:custom.environments.${opt:stage}.AWS_INTERNAL_ACCESS_KEY}
+        AWS_INTERNAL_SECRET_KEY: ${self:custom.environments.${opt:stage}.AWS_INTERNAL_SECRET_KEY}
     vpc:
       securityGroupIds:
-        - sg-0d825c487bd94c18a
+        - sg-0905f2754bb63e653
       subnetIds:        
-        - subnet-b5bf4add
+        - subnet-037c5ab85cb042873
     events:
       - http:
           path: login

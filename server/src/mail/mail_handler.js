@@ -20,8 +20,8 @@ buckets.floiint.internal.logo_mail = buckets.floiint.internal + "/floiint_mail_l
 
 const s3 = new AWS.S3({
   region: 'eu-west-3', // Your bucket's region
-  accessKeyId: '',
-  secretAccessKey: ''
+  accessKeyId: process.env.AWS_INTERNAL_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_INTERNAL_SECRET_KEY
 });
 
 async function getPresignedUrl(bucketName, key, expiresInSeconds = 3600) {
@@ -249,9 +249,9 @@ async function sendMailToUser(eMail, token, userId) {
       },
     ],
   };
-
+  logger.info("Before sending mail ");
   const response = await transporter.sendMail(mailOptions);
-
+  logger.info("after sending mail "+JSON.stringify(response));
 
 }
 
