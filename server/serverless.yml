@@ -7,7 +7,7 @@ custom:
       DATABASE_API_USER: admin
       DATABASE_API_PASS: securepassword
       
-      DATABASE_AUTH_NAME: FloiintAuthDb
+      DATABASE_AUTH_NAME: FloiintDbAuth
       DATABASE_AUTH_SERVER: 172.31.6.107
       DATABASE_AUTH_PORT: 27017
       DATABASE_AUTH_USER: admin
@@ -25,8 +25,6 @@ custom:
       API_KEY: prod-key
 
 
-
-
 service: lambda-floint-api
 
 provider:
@@ -35,32 +33,17 @@ provider:
   runtime: nodejs18.x  
   region: eu-west-3
 
-  environment:
-
-# api
-    DATABASE_API_NAME: ${self:custom.environments.${opt:stage}.DATABASE_API_NAME}
-    DABATASE_API_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_API_SERVER}
-    DATABASE_API_PORT: ${self:custom.environments.${opt:stage}.DATABASE_API_PORT}
-    DATABASE_API_USER: ${self:custom.environments.${opt:stage}.DATABASE_API_USER}
-    DATABASE_API_PASS: ${self:custom.environments.${opt:stage}.DATABASE_API_PASS}
-
-# auth
-    DATABASE_AUTH_NAME: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_NAME}
-    DATABASE_AUTH_SERVER: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_SERVER}
-    DATABASE_AUTH_PORT: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_PORT}
-    DATABASE_AUTH_USER: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_USER}
-    SECRET_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_TOKEN}
-    SECRET_REFRESH_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_REFRESH_TOKEN}
-    TOKEN_LIFE: ${self:custom.environments.${opt:stage}.TOKEN_LIFE}
-    TOKEN_ACTIVATION_LIFE: ${self:custom.environments.${opt:stage}.TOKEN_ACTIVATION_LIFE}
-    REFRESH_TOKEN_LIFE: ${self:custom.environments.${opt:stage}.REFRESH_TOKEN_LIFE}
-    REGISTRATION_VALIDATION_URL: ${self:custom.environments.${opt:stage}.REGISTRATION_VALIDATION_URL}
-
-
-
 functions:
-  floiint-api:
-    handler: src/handler_api.handler
+  floiint-api:    
+    image:       
+      uri: 392002456877.dkr.ecr.eu-west-3.amazonaws.com/floiint-docker:latest
+    environment: 
+        HANDLER: api
+        DATABASE_API_NAME: ${self:custom.environments.${opt:stage}.DATABASE_API_NAME}
+        DABATASE_API_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_API_SERVER}
+        DATABASE_API_PORT: ${self:custom.environments.${opt:stage}.DATABASE_API_PORT}
+        DATABASE_API_USER: ${self:custom.environments.${opt:stage}.DATABASE_API_USER}
+        DATABASE_API_PASS: ${self:custom.environments.${opt:stage}.DATABASE_API_PASS}
     vpc:
       securityGroupIds:
         - sg-0d825c487bd94c18a
@@ -72,7 +55,27 @@ functions:
           method: post
 
   floiint-auth:
-    handler: src/handler_auth.handler
+    image:       
+      uri: 392002456877.dkr.ecr.eu-west-3.amazonaws.com/floiint-docker:latest
+    environment: 
+        HANDLER: auth
+        DATABASE_API_NAME: ${self:custom.environments.${opt:stage}.DATABASE_API_NAME}
+        DABATASE_API_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_API_SERVER}
+        DATABASE_API_PORT: ${self:custom.environments.${opt:stage}.DATABASE_API_PORT}
+        DATABASE_API_USER: ${self:custom.environments.${opt:stage}.DATABASE_API_USER}
+        DATABASE_API_PASS: ${self:custom.environments.${opt:stage}.DATABASE_API_PASS}
+        DATABASE_AUTH_NAME: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_NAME}
+        DATABASE_AUTH_SERVER: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_SERVER}
+        DATABASE_AUTH_PORT: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_PORT}
+        DATABASE_AUTH_USER: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_USER}
+        DATABASE_AUTH_PASS: ${self:custom.environments.${opt:stage}.DATABASE_AUTH_PASS}
+        SECRET_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_TOKEN}
+        SECRET_REFRESH_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_REFRESH_TOKEN}
+        TOKEN_LIFE: ${self:custom.environments.${opt:stage}.TOKEN_LIFE}
+        TOKEN_ACTIVATION_LIFE: ${self:custom.environments.${opt:stage}.TOKEN_ACTIVATION_LIFE}
+        REFRESH_TOKEN_LIFE: ${self:custom.environments.${opt:stage}.REFRESH_TOKEN_LIFE}
+        REGISTRATION_VALIDATION_URL: ${self:custom.environments.${opt:stage}.REGISTRATION_VALIDATION_URL}
+
     vpc:
       securityGroupIds:
         - sg-0d825c487bd94c18a
@@ -90,14 +93,14 @@ functions:
       
     
 
-package:
-  exclude:
-    - node_modules/**
-  include:
-    - node_modules/sharp/**
+# package:
+#   exclude:
+#     - node_modules/**
+#   include:
+#     - node_modules/sharp/**
 
-plugins:
-  - serverless-dotenv-plugin
-  - serverless-plugin-include-dependencies
+# plugins:
+#   - serverless-dotenv-plugin
+#   - serverless-plugin-include-dependencies
 
 

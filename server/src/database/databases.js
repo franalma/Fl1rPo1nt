@@ -54,10 +54,20 @@ const dbMultUri =
   "/" +
   process.env.DATABASE_MULT_NAME;
 
-const DB_INSTANCES = {
-  DB_API: {
+
+
+
+
+let dbApi = {};
+let dbAuth = {};
+let dbChat = {};
+let dbMult = {};
+
+if (process.env.DATABASE_API_NAME != null) {
+  dbApi = {
     database_name: process.env.DATABASE_API_NAME,
-    client: new MongoClient(dbApiUri, {      
+
+    client: new MongoClient(dbApiUri, {
       maxPoolSize: 10, // Use a connection pool
       minPoolSize: 2,  // Keep minimum number of connections
       serverSelectionTimeoutMS: 5000, // Timeout for selecting a server
@@ -77,8 +87,11 @@ const DB_INSTANCES = {
       user_coordinates_collection: "user_coordinates",
       smart_points_coolection: "smart_points",
     },
-  },
-  DB_AUTH: {
+  };
+}
+
+if (process.env.DATABASE_AUTH_NAME != null) {
+  dbAuth = {
     database_name: process.env.DATABASE_AUTH_NAME,
     client: new MongoClient(dbAuthUri, {
       maxPoolSize: 10, // Use a connection pool
@@ -87,8 +100,10 @@ const DB_INSTANCES = {
     collections: {
       user_collection: "users",
     },
-  },
-  DB_CHAT: {
+  };
+}
+if (process.env.DATABASE_CHAT_NAME != null) {
+  dbChat = {
     database_name: process.env.DATABASE_CHAT_NAME,
     client: new MongoClient(dbChatUri, {
       maxPoolSize: 10, // Use a connection pool
@@ -97,21 +112,35 @@ const DB_INSTANCES = {
     collections: {
       chatroom_collection: "chatrooms",
       pending_message_collection: "pending_messages",
-    },
-  },
-  DB_MULT: {
+    }
+  };
+}
+
+if (process.env.DATABASE_MULT_NAME != null) {
+  dbMult = {
     database_name: process.env.DATABASE_MULT_NAME,
-    client: new MongoClient(dbMultUri, {      
+    client: new MongoClient(dbMultUri, {
       maxPoolSize: 10, // Use a connection pool
       minPoolSize: 2,  // Keep minimum number of connections
     }),
     collections: {
       user_images_collection: "user_images",
       user_audios_collection: "user_audios",
-    },
-  },
+    }
+  };
+}
+
+
+
+
+const DB_INSTANCES = {
+  DB_API: dbApi,
+  DB_AUTH: dbAuth,
+  DB_CHAT: dbChat,
+  DB_MULT: dbMult
 };
 
-module.exports = {
-  DB_INSTANCES,
-};
+
+  module.exports = {
+    DB_INSTANCES,
+  };

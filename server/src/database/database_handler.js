@@ -24,7 +24,10 @@ async function addDocumentWithClient(client,document, path) {
     logger.info("Starts addDocumentWithClient: " + JSON.stringify(document));
     let result = {};
     try {
-        
+        if (client && client.topology && client.topology.isConnected()) {
+            await client.connect(); 
+        }
+
         const db = client.db(database);
         const collection = db.collection(path);
         result = await collection.insertOne(document);
@@ -42,7 +45,10 @@ async function addManyDocumentsWithClient(client, document, path) {
     logger.info("Starts addManyDocumentsWithClient: " + JSON.stringify(document));
     let result = {};
     try {
-        // await client.connect();
+        
+        if (client && client.topology && client.topology.isConnected()) {
+            await client.connect(); 
+        }
         const db = client.db(database);
         const collection = db.collection(path);
         result = await collection.insertMany(document);
@@ -83,7 +89,9 @@ async function addManyDocumentsWithClient(client, document, path) {
 async function updateDocumentWithClient(client, newDocument, filter, path) {
     let result = {};
     try {
-        // await client.connect();
+        if (client && client.topology && client.topology.isConnected()) {
+            await client.connect(); 
+        }
         const db = client.db(database);
         const collection = db.collection(path);
         const update = { $set: newDocument }        
@@ -105,6 +113,9 @@ async function updateDocumentWithClient(client, newDocument, filter, path) {
 async function deleteDocumentWithClient(client, filter, path) {
     let result = null;
     try {    
+        if (client && client.topology && client.topology.isConnected()) {
+            await client.connect(); 
+        }
         const db = client.db(database);
         const collection = db.collection(path);
         result = await collection.deleteOne(filter);
@@ -120,6 +131,9 @@ async function deleteDocumentWithClient(client, filter, path) {
 async function deleteCollectionWithClient(client,path) {
     let result = null;
     try {        
+        if (client && client.topology && client.topology.isConnected()) {
+            await client.connect(); 
+        }
         const db = client.db(database);
         result = await db.collection(path).drop();
         console.log(`Collection deleted with id= ${result}`);
@@ -134,9 +148,9 @@ async function findWithFiltersAndClient(client, filters, path) {
     logger.info("Starts findWithFiltersAndClient: " + JSON.stringify(filters));
     let result = null;
     try {
-    //    if (client && client.topology && client.topology.isConnected()) {
-    //         await client.connect(); 
-    //     }
+       if (client && client.topology && client.topology.isConnected()) {
+            await client.connect(); 
+        }
         const db = client.db(database);
         const collection = db.collection(path);
         const cursor = await collection.find(filters);
@@ -155,10 +169,9 @@ async function findWithFiltersAndClientWitPagination(client, filters, path) {
     logger.info("Starts findWithFiltersAndClient: " + JSON.stringify(filters));
     let result = null;
     try {        
-        // if (client && client.topology && client.topology.isConnected()) {
-        //     await client.connect(); 
-        // }
-        // await client.connect();
+        if (client && client.topology && client.topology.isConnected()) {
+            await client.connect(); 
+        }
         const db = client.db(database);
         const collection = db.collection(path);        
         const cursor = await collection.aggregate(filters);
@@ -182,7 +195,9 @@ async function findAllWithClient(client, path) {
     logger.info("Starts findAllWithClient")
     let result = null;
     try {
-        // await client.connect();
+        if (client && client.topology && client.topology.isConnected()) {
+            await client.connect(); 
+        }
         const db = client.db(database);
         const collection = db.collection(path);
         logger.info("No filters detected");

@@ -24,3 +24,5 @@ app/.flutter-plugins
 layers/
 
 server/.serverless/
+
+aws/.terraform/
