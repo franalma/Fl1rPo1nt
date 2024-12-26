@@ -2,21 +2,20 @@ require("dotenv").config();
 const logger = require("../logger/log");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-// const image = "/Users/fran/Desktop/Projects/Personal/Fl1rPo1nt/Fl1rPo1nt/server/src/imgs/floiint_mail_logo.png";
 const validationUrl = process.env.REGISTRATION_VALIDATION_URL;
 const AWS = require('aws-sdk');
-const bucketName = 'flooint-bucket';
+
 
 const buckets = {
   floiint: {
-    name: "flooint-bucket",
+    name: "floiint-bucket",
     internal: {
       path: "internal"
     }
   }
 };
 
-buckets.floiint.internal.logo_mail = buckets.floiint.internal + "/floiint_mail_logo.png";
+buckets.floiint.internal.logo_mail = buckets.floiint.internal.path + "/floiint_mail_logo.png";
 
 const s3 = new AWS.S3({
   region: 'eu-west-3', // Your bucket's region
@@ -44,13 +43,9 @@ async function getPresignedUrl(bucketName, key, expiresInSeconds = 3600) {
 async function fileToBase64(bucketName, filePath) {
 
   try {
-    logger.info("Starts fileToBase64: " + filePath);
-    // Read the file
-    const fileBuffer = await s3.getObject({ Bucket: bucketName, Key: filePath }).promise();
-    logger.info("afterreading");
-    // const fileBuffer = fs.readFileSync(filePath);
-    // Convert to Base64
-    const base64String = fileBuffer.toString("base64");
+    logger.info("Starts fileToBase64: " + filePath);    
+    const data = await s3.getObject({ Bucket: bucketName, Key: filePath }).promise();
+    const base64String = data.Body.toString('base64');  
     return base64String;
   } catch (error) {
     console.error("Error reading or encoding file:", error);
@@ -66,7 +61,7 @@ async function genMailBody(token, userId) {
   logger.info("genMailBody link:" + link);
   const html = `
     <div> 
-        <img src="cid:unique-image-id" alt="loco" />
+        <img src="cid:unique-image-id" alt="logo" />
 
         <p>Verifca tu cuenta haciendo clic en <a href='${link}'>este</a> enlace.</p>
         <p>Comienza a ligar cuanto antes!</p>
@@ -79,12 +74,11 @@ async function genMailBody(token, userId) {
   return html;
 }
 
-
-
 async function genHtmlAccountVerified() {
   logger.info("Starts genHtmlAccountVerified");
-  const base64 = fileToBase64(buckets.floiint.name, buckets.floiint.internal.logo_mail);
-  const image64 = `data:image/png;base64,${base64}`;
+  // const base64 = fileToBase64(buckets.floiint.name, buckets.floiint.internal.logo_mail);
+  // const image64 = `data:image/png;base64,${base64}`;
+  const imageUrl = await getPresignedUrl(buckets.floiint.name, buckets.floiint.internal.logo_mail);
 
   return `
       <!DOCTYPE html>
@@ -141,7 +135,7 @@ async function genHtmlAccountVerified() {
         </head>
         <body>
           <div class="container">
-          <img src="${image64}" alt="Logo" class="logo">
+          <img src="${imageUrl}" alt="Logo" class="logo">
             <h1>¡Se ha verificado tu cuenta!</h1>
             <p>Ahora ya puedes disfrutar de Floiint.</p>            
           </div>
@@ -150,12 +144,11 @@ async function genHtmlAccountVerified() {
     `;
 }
 
-
-
 async function gentAccountNotVerified() {
   logger.info("Starts gentAccountNotVerified");  
-  const base64 = fileToBase64(buckets.floiint.name, buckets.floiint.internal.logo_mail);
-  const image64 = `data:image/png;base64,${base64}`;
+  // const base64 = fileToBase64(buckets.floiint.name, buckets.floiint.internal.logo_mail);
+  // const image64 = `data:image/png;base64,${base64}`;
+  const imageUrl = await getPresignedUrl(buckets.floiint.name, buckets.floiint.internal.logo_mail);
 
   return `
       <!DOCTYPE html>
@@ -212,7 +205,7 @@ async function gentAccountNotVerified() {
         </head>
         <body>
           <div class="container">
-          <img src="${image64}" alt="Logo" class="logo">
+          <img src="${imageUrl}" alt="Logo" class="logo">
             <h1>¡No ha sido posible verificar tu cuenta, el enlace de verificación ha caducado!</h1>
             <p>Lo sentimos, inténtalo de nuevo.</p>            
           </div>
@@ -221,10 +214,13 @@ async function gentAccountNotVerified() {
     `;
 }
 
-
-
-
 async function sendMailToUser(eMail, token, userId) {
+
+    // Download image from S3
+    logger.info("---->logo_mail: "+buckets.floiint.internal.logo_mail);
+    // const imageData = await downloadImageFromS3(buckets.floiint.name, buckets.floiint.internal.logo_mail);
+
+
   const transporter = nodemailer.createTransport({
     host: "mail.privateemail.com",
     port: 465, // Use 465 for SSL or 587 for TLS

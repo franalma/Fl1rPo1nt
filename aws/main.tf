@@ -49,6 +49,14 @@ resource "aws_security_group" "sec_group_floiint" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "MongoDb"
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Outbound rules
   egress {
     description = "Allow all outbound traffic"
@@ -57,7 +65,6 @@ resource "aws_security_group" "sec_group_floiint" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
 
   tags = {
     Name       = "sg-floiint-t"
@@ -124,6 +131,7 @@ resource "aws_eip" "nat_eip" {
   }
 }
 
+
 # Create a NAT Gateway
 resource "aws_nat_gateway" "nat_gw_floiiint" {
   allocation_id = aws_eip.nat_eip.id
@@ -157,6 +165,17 @@ resource "aws_route_table_association" "private_association" {
 }
 
 
+resource "aws_ec2_instance_connect_endpoint" "endpoint_ec2_bd" {
+  subnet_id          = aws_subnet.private_subnet_floiint.id
+  security_group_ids = [aws_security_group.sec_group_floiint.id]
+  tags = {
+    Name        = "endpoint-ec2-floiint"
+    "Terraform" = true
+  }
+
+}
+
+
 # EC2 instances
 # resource "aws_instance" "ec2_floiint_web_server" {
 #   ami                         = "ami-0b70357cd87d64d6a"
@@ -186,6 +205,9 @@ resource "aws_instance" "ec2_floiint_db_server" {
     "Terraform" = true
   }
 }
+
+
+
 
 
 
