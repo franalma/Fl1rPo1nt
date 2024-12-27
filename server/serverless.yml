@@ -1,14 +1,16 @@
 custom:
   environments:
     dev:
+    # API
       DATABASE_API_NAME: FloiintDb
-      DABATASE_API_SERVER: 172.31.1.25
+      DABATASE_API_SERVER: 172.31.1.175
       DATABASE_API_PORT: 27017
       DATABASE_API_USER: admin
       DATABASE_API_PASS: securepassword
-      
+
+    # AUTH
       DATABASE_AUTH_NAME: FloiintDbAuth
-      DATABASE_AUTH_SERVER: 172.31.1.25
+      DATABASE_AUTH_SERVER: 172.31.1.175
       DATABASE_AUTH_PORT: 27017
       DATABASE_AUTH_USER: admin
       DATABASE_AUTH_PASS: securepassword
@@ -17,13 +19,44 @@ custom:
       TOKEN_LIFE: 1d
       TOKEN_ACTIVATION_LIFE: 1m
       REFRESH_TOKEN_LIFE: 7d
-      REGISTRATION_VALIDATION_URL: https://59estadqc0.execute-api.eu-west-3.amazonaws.com/dev/register/validation
+      REGISTRATION_VALIDATION_URL: https://etohps0ija.execute-api.eu-west-3.amazonaws.com/dev/register/validation
       AWS_INTERNAL_ACCESS_KEY: here
       AWS_INTERNAL_SECRET_KEY: here
+
+
+    # MULT    
+      DATABASE_MULT_NAME: FloiintDbMult
+      DABATASE_MULT_SERVER: 172.31.1.175
+      DATABASE_MULT_PORT: 27017
+      DATABASE_MULT_USER: admin
+      DATABASE_MULT_PASS: securepassword
+      SEC_IMAGE_KEY: Aa123456$
+      MULTIMEDIA_PATH: s3://floiint-bucket/users
+      IMAGE_DIR_PATH: /images
+      AUDIO_DIR_PATH: /audios
+      DB_IMAGE_COLLECTION: user_images
+      DB_AUDIO_COLLECTION: user_audios
+
+      BUCKET_NAME: floiint-bucket
 
     prod:
       DB_HOST: prod-db.example.com
       API_KEY: prod-key
+   # IAM role statements to allow S3 access
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:PutObjectAcl # Required if using ACLs like "public-read"
+          Resource:
+            - arn:aws:s3:::floiint-bucket/*
+        - Effect: Allow
+          Action:
+            - s3:GetObject # Optional: Allows retrieving files
+          Resource:
+            - arn:aws:s3:::floiint-bucket/*
 
 
 service: lambda-floint-api
@@ -45,15 +78,19 @@ functions:
         DATABASE_API_PORT: ${self:custom.environments.${opt:stage}.DATABASE_API_PORT}
         DATABASE_API_USER: ${self:custom.environments.${opt:stage}.DATABASE_API_USER}
         DATABASE_API_PASS: ${self:custom.environments.${opt:stage}.DATABASE_API_PASS}
+        SECRET_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_TOKEN}
+        SECRET_REFRESH_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_REFRESH_TOKEN}
+        
     vpc:
       securityGroupIds:
-        - sg-0b7923062cd44f5e7
+        - sg-0ffa30a21372aae47
       subnetIds:        
-        - subnet-07a7878223cf7c4d3
+        - subnet-0340b773dc1ca33f7
     events:
       - http:
           path: api
           method: post
+          private: true
 
   floiint-auth:
     image:       
@@ -80,33 +117,109 @@ functions:
         AWS_INTERNAL_SECRET_KEY: ${self:custom.environments.${opt:stage}.AWS_INTERNAL_SECRET_KEY}
     vpc:
       securityGroupIds:
-        - sg-0b7923062cd44f5e7
+        - sg-0ffa30a21372aae47
       subnetIds:        
-        - subnet-07a7878223cf7c4d3
+        - subnet-0340b773dc1ca33f7
     events:
       - http:
           path: login
           method: post
+          private: true
 
       - http:
           path: register
           method: post
+          private: true
 
       - http:
           path: register/validation/{token}/{id}
           method: get
+          private: true
 
+
+  floiint-mult:    
+    image:       
+      uri: 392002456877.dkr.ecr.eu-west-3.amazonaws.com/floiint-docker:latest
+    environment: 
+        HANDLER: mult
+        DATABASE_MULT_NAME: ${self:custom.environments.${opt:stage}.DATABASE_MULT_NAME}
+        DABATASE_MULT_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_MULT_SERVER}
+        DATABASE_MULT_PORT: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PORT}
+        DATABASE_MULT_USER: ${self:custom.environments.${opt:stage}.DATABASE_MULT_USER}
+        DATABASE_MULT_PASS: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PASS}
+        SEC_IMAGE_KEY: ${self:custom.environments.${opt:stage}.SEC_IMAGE_KEY}
+        MULTIMEDIA_PATH: ${self:custom.environments.${opt:stage}.MULTIMEDIA_PATH}
+        IMAGE_DIR_PATH: ${self:custom.environments.${opt:stage}.IMAGE_DIR_PATH}
+        AUDIO_DIR_PATH: ${self:custom.environments.${opt:stage}.AUDIO_DIR_PATH}
+        DB_IMAGE_COLLECTION: ${self:custom.environments.${opt:stage}.DB_IMAGE_COLLECTION}
+        DB_AUDIO_COLLECTION: ${self:custom.environments.${opt:stage}.DB_AUDIO_COLLECTION}
+        SECRET_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_TOKEN}
+        SECRET_REFRESH_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_REFRESH_TOKEN}
       
-    
+    vpc:
+      securityGroupIds:
+        - sg-0ffa30a21372aae47
+      subnetIds:        
+        - subnet-0340b773dc1ca33f7
+    events:
+      - http:
+          path: /
+          method: post
+          private: true
 
-# package:
-#   exclude:
-#     - node_modules/**
-#   include:
-#     - node_modules/sharp/**
+      - http:
+          path: /upload/image
+          method: post
+          private: true
 
-# plugins:
-#   - serverless-dotenv-plugin
-#   - serverless-plugin-include-dependencies
+      - http:
+          path: /upload/audio
+          method: post
+          private: true
+
+      - http:
+          path: /secure-images/{filename}
+          method: get
+          private: true
+
+      - http:
+          path: /secure-audios/{filename}
+          method: get
+          private: true
 
 
+resources:
+  Resources:
+    MyApiGatewayApiKey:
+      Type: AWS::ApiGateway::ApiKey
+      Properties:
+        Name: FloiintApiKey
+        Enabled: true
+        StageKeys:
+          - RestApiId:
+              Ref: ApiGatewayRestApi
+            StageName:
+              dev
+    MyApiGatewayUsagePlan:
+      Type: AWS::ApiGateway::UsagePlan
+      Properties:
+        UsagePlanName: FloiintApiUsagePlan
+        ApiStages:
+          - ApiId:
+              Ref: ApiGatewayRestApi
+            Stage: 
+              dev
+        Throttle:
+          RateLimit: 100
+          BurstLimit: 200
+        Quota:
+          Limit: 1000
+          Period: MONTH
+    MyApiGatewayUsagePlanKey:
+      Type: AWS::ApiGateway::UsagePlanKey
+      Properties:
+        KeyId:
+          Ref: MyApiGatewayApiKey
+        KeyType: API_KEY
+        UsagePlanId:
+          Ref: MyApiGatewayUsagePlan

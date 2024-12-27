@@ -4,20 +4,22 @@ const { header } = require("express-validator");
 const logger = require("./logger/log");
 const http = require("http");
 const fileHandler = require("./files/file_handler");
+const s3Handler = require("./files/s3_handler");
 const path = require("path");
 const { DB_INSTANCES } = require("./database/databases");
 const requestValidator = require("./auth/validate_request");
 const dbHandler = require("./database/database_handler");
 const hostActions = require("./constants/host_actions");
-
-//Init
+const { printJson } = require("./utils/json_utils");
 const app = express();
 app.use(express.json());
-const port = process.env.SERVER_PORT_MULT;
-const server = http.createServer(app);
 
-const uploadImages = fileHandler.configImages();
-const uploadAudios = fileHandler.configAudios();
+//Init
+// const port = process.env.SERVER_PORT_MULT;
+// const server = http.createServer(app);
+
+const uploadImages = s3Handler.configImages();
+// const uploadAudios = fileHandler.configAudios();
 
 
 
@@ -134,12 +136,13 @@ app.post(
   uploadImages.single("image"),
   (req, res) => {
     logger.info("starts upload")
+    printJson(req);
     if (!req.file) {
       return res.status(400).send("No file uploaded.");
     }
     const userId = req.body.user_id;
 
-    fileHandler.doUploadImageByUserId(req, userId).then((result) => {
+    s3Handler.doUploadImageByUserId(req, userId).then((result) => {
       console.log("---result: " + result);
       if (result) {
         res.status(200).json(result);
@@ -155,7 +158,7 @@ app.post(
 app.post(
   "/upload/audio",
   requestValidator.requestAuthValidation,
-  uploadAudios.single("audio"),
+  // uploadAudios.single("audio"),
   (req, res) => {
     if (!req.file) {
       logger.info("no audio file");
@@ -197,15 +200,15 @@ app.get(
   }
 );
 
-server.listen(port, () => {
-  dbHandler.connectToDatabase(DB_INSTANCES.DB_MULT).then((result) => {
-    if (result == null) {
-      throw "Db connection error";
-    } else {
-      console.log(`El servidor API está corriendo en el puerto ${port}`);
-    }
-  });
-});
+// server.listen(port, () => {
+//   dbHandler.connectToDatabase(DB_INSTANCES.DB_MULT).then((result) => {
+//     if (result == null) {
+//       throw "Db connection error";
+//     } else {
+//       console.log(`El servidor API está corriendo en el puerto ${port}`);
+//     }
+//   });
+// });
 
 
 process.on('SIGINT', async () => {
@@ -213,3 +216,9 @@ process.on('SIGINT', async () => {
   console.log('DB connection pool closed for server mult ');
   process.exit(0);
 });
+
+
+module.exports = {
+  app,
+};
+

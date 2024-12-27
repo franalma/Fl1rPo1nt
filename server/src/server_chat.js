@@ -16,9 +16,9 @@ const sockerHandler = require("./sockets/socket_handler");
 //Init
 const app = express();
 app.use(express.json());
-const port = process.env.SERVER_PORT_CHAT;
-const server = http.createServer(app);
-socketHandler.socketInit(server);
+// const port = process.env.SERVER_PORT_CHAT;
+// const server = http.createServer(app);
+// socketHandler.socketInit(server);
 
 
 const validationRules = {
@@ -33,15 +33,11 @@ const validationRules = {
         body('input.sender_id').notEmpty().isString().withMessage("Sender id is required"),
 
     ],
-
-
-
-    
 }
 
 
 function requestFieldsValidation(req, res, next) {
-    logger.info("custom requestFieldsValidation: "+ JSON.stringify(req,body));
+    logger.info("custom requestFieldsValidation: " + JSON.stringify(req, body));
 
     let validationSet = [];
     const { action } = req.body;
@@ -65,7 +61,7 @@ function requestFieldsValidation(req, res, next) {
             break;
         }
 
-        
+
     }
     Promise.all(validationSet.map(validation => validation.run(req)))
         .then(() => next())
@@ -183,20 +179,24 @@ app.post("/new-contact",
 
 
 
-server.listen(port, () => {
-    dbHandler.connectToDatabase(DB_INSTANCES.DB_CHAT).then((result) => {
-        if (result == null) {
-            throw "Db connection error";
-        } else {
-            console.log(`El servidor API está corriendo en el puerto ${port}`);
-        }
-    });
-});
+// server.listen(port, () => {
+//     dbHandler.connectToDatabase(DB_INSTANCES.DB_CHAT).then((result) => {
+//         if (result == null) {
+//             throw "Db connection error";
+//         } else {
+//             console.log(`El servidor API está corriendo en el puerto ${port}`);
+//         }
+//     });
+// });
 
 
 process.on('SIGINT', async () => {
     dbHandler.connectToDatabase(DB_INSTANCES.DB_CHAT)
     console.log('DB connection pool closed for server chat ');
     process.exit(0);
-  });
-  
+});
+
+module.exports = {
+    app,
+};
+

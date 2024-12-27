@@ -1,12 +1,13 @@
 require("dotenv").config();
 const serverless = require("serverless-http");
 const logger = require("./logger/log");
-const { printJson } = require("./utils/json_utils");
 const dbHandler = require("./database/database_handler");
 const { DB_INSTANCES } = require("./database/databases");
 const apiServer = require("./server_api");
 const authServer = require("./server_auth");
-const { http } = require("winston");
+const multServer = require("./server_mult");
+// const chatServer = require("./server_chat");
+
 
 switch (process.env.HANDLER) {
   case "api": {
@@ -55,5 +56,39 @@ switch (process.env.HANDLER) {
 
         return result;
       }
+      
     };
+
+
+  case "mult":
+    exports.handler = async (event, context) => {
+      await dbHandler.connectToDatabase(DB_INSTANCES.DB_MULT);
+      const serverlessHandler = serverless(multServer.app);
+      const response = await serverlessHandler(event, context);
+      const result = {
+        headers: {
+          "Content-Type": "application/json", // Set Content-Type
+        },
+        body: response.body,
+      };
+      return result;
+    };
+
+    // case "chat":
+    //   exports.handler = async (event, context) => {
+    //     await dbHandler.connectToDatabase(DB_INSTANCES.DB_CHAT);
+    //     const serverlessHandler = serverless(chatServer.app);
+    //     const response = await serverlessHandler(event, context);
+    //     const result = {
+    //       headers: {
+    //         "Content-Type": "application/json", // Set Content-Type
+    //       },
+    //       body: response.body,
+    //     };
+    //     return result;
+    //   };
 }
+
+
+
+

@@ -18,7 +18,10 @@ const rootDirAudios = rootDir + process.env.AUDIO_DIR_PATH;
 let uploadAudios;
 let uploadImages;
 
+
+
 function configImages() {
+  logger.info("Starts configImages");
   // Configure multer for file storage
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -38,6 +41,7 @@ function configImages() {
 }
 
 function configAudios() {
+  logger.info("Starts configAudios");
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, rootDirAudios);
@@ -54,6 +58,9 @@ function configAudios() {
   uploadAudios = multer({ storage: storage });
   return uploadAudios;
 }
+
+
+
 
 function generateSignedImageUrl(filename, expiresIn = 3000) {
   // expiresIn is in seconds
@@ -255,37 +262,6 @@ async function getImageByUserIdImageId(input) {
   return { status: 500 };
 }
 
-// async function getUserImagesByUserId(input) {
-//   logger.info("Starts getUserImagesByUserId");
-//   let result = { status: 200 };
-//   result.images = [];
-//   try {
-//     // const filters = { user_id: input.user_id };
-//     // const dbResponse = await dbHandler.findWithFilters(filters, userImageCollection);
-//     // if (dbResponse) {
-//     //     for (var item of dbResponse) {
-//     //         try {
-//     //             let fileName = item.filename;
-//     //             const filePath = path.join(rootDirImages, fileName);
-//     //             const imageData = fs.readFileSync(filePath);
-//     //             result.images.push({
-//     //                 file_id: item.file_id,
-//     //                 created_at: item.created_at,
-//     //                 file: imageData.toString('base64')
-//     //             });
-//     //         } catch (error) {
-//     //             logger.info(error);
-//     //         }
-//     //     }
-//     // }
-//   } catch (error) {
-//     logger.info(error);
-//     result.status = 500;
-//   }
-
-//   return result;
-// }
-
 async function getUserAudiosByUserId(input) {
   logger.info("Starts getUserAudiosByUserId");
   let result = { ...genError(HOST_ERROR_CODES.NO_ERROR) };
@@ -408,7 +384,6 @@ module.exports = {
   doUploadImageByUserId,
   configAudios,
   configImages,
-  //   getUserImagesByUserId,
   removeUserImageByImageIdUserId,
   doUploadAudioByUserId,
   getUserAudiosByUserId,

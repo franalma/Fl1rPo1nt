@@ -1,7 +1,7 @@
-// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintAuth" } ]});
-// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintApi" } ]});
-// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintChat" } ]});
-// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "MultimediaDb" } ]});
+// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintDbAuth" } ]});
+// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintDb" } ]});
+// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintDbChat" } ]});
+// db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintDbMult" } ]});
 
 // db.createUser({user:"admin", pwd:"securepassword",roles: [ { role: "readWrite", db: "FloiintDb" } ]});
 const { MongoClient } = require("mongodb");
