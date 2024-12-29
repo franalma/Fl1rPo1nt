@@ -94,7 +94,7 @@ async function processRequest(req, res) {
           break;
         }
         case hostActions.REMOVE_USER_AUDIO_BY_USER_ID_AUDIO_ID: {
-          result = await n.removeUserAudioByAudioIdUserId(
+          result = await s3Handler.removeUserAudioByAudioIdUserId(
             req.body.input
           );
           break;
