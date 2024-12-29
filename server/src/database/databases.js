@@ -55,13 +55,13 @@ const dbMultUri =
   process.env.DATABASE_MULT_NAME;
 
 
-
-
-
 let dbApi = {};
 let dbAuth = {};
 let dbChat = {};
 let dbMult = {};
+
+
+
 
 if (process.env.DATABASE_API_NAME != null) {
   dbApi = {
@@ -90,6 +90,7 @@ if (process.env.DATABASE_API_NAME != null) {
   };
 }
 
+
 if (process.env.DATABASE_AUTH_NAME != null) {
   dbAuth = {
     database_name: process.env.DATABASE_AUTH_NAME,
@@ -102,6 +103,7 @@ if (process.env.DATABASE_AUTH_NAME != null) {
     },
   };
 }
+
 if (process.env.DATABASE_CHAT_NAME != null) {
   dbChat = {
     database_name: process.env.DATABASE_CHAT_NAME,

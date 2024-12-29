@@ -1,4 +1,13 @@
 custom:
+  securityGroups: 
+    dev: sg-0ffa30a21372aae47
+  
+  subnets: 
+    dev: subnet-0340b773dc1ca33f7
+
+  
+
+
   environments:
     dev:
     # API
@@ -20,10 +29,7 @@ custom:
       TOKEN_ACTIVATION_LIFE: 1m
       REFRESH_TOKEN_LIFE: 7d
       REGISTRATION_VALIDATION_URL: https://etohps0ija.execute-api.eu-west-3.amazonaws.com/dev/register/validation
-      AWS_INTERNAL_ACCESS_KEY: here
-      AWS_INTERNAL_SECRET_KEY: here
-
-
+    
     # MULT    
       DATABASE_MULT_NAME: FloiintDbMult
       DABATASE_MULT_SERVER: 172.31.1.175
@@ -36,13 +42,20 @@ custom:
       AUDIO_DIR_PATH: /audios
       DB_IMAGE_COLLECTION: user_images
       DB_AUDIO_COLLECTION: user_audios
-
       BUCKET_NAME: floiint-bucket
+
+    # CHAT      
+      DATABASE_CHAT_NAME: FloiintDbChat
+      DABATASE_CHAT_SERVER: 172.31.1.175
+      DATABASE_CHAT_PORT: 27017
+      DATABASE_CHAT_USER: admin
+      DATABASE_CHAT_PASS: securepassword
 
     prod:
       DB_HOST: prod-db.example.com
       API_KEY: prod-key
-   # IAM role statements to allow S3 access
+
+  # IAM role statements to allow S3 access
   iam:
     role:
       statements:
@@ -66,6 +79,9 @@ provider:
   profile: floiint
   runtime: nodejs18.x  
   region: eu-west-3
+  apiGateway:
+    binaryMediaTypes:
+      - multipart/form-data
 
 functions:
   floiint-api:    
@@ -83,9 +99,9 @@ functions:
         
     vpc:
       securityGroupIds:
-        - sg-0ffa30a21372aae47
+        - ${self:custom.securityGroups.${opt:stage}}
       subnetIds:        
-        - subnet-0340b773dc1ca33f7
+        - ${self:custom.subnets.${opt:stage}}         
     events:
       - http:
           path: api
@@ -113,13 +129,12 @@ functions:
         TOKEN_ACTIVATION_LIFE: ${self:custom.environments.${opt:stage}.TOKEN_ACTIVATION_LIFE}
         REFRESH_TOKEN_LIFE: ${self:custom.environments.${opt:stage}.REFRESH_TOKEN_LIFE}
         REGISTRATION_VALIDATION_URL: ${self:custom.environments.${opt:stage}.REGISTRATION_VALIDATION_URL}
-        AWS_INTERNAL_ACCESS_KEY: ${self:custom.environments.${opt:stage}.AWS_INTERNAL_ACCESS_KEY}
-        AWS_INTERNAL_SECRET_KEY: ${self:custom.environments.${opt:stage}.AWS_INTERNAL_SECRET_KEY}
+        
     vpc:
       securityGroupIds:
-        - sg-0ffa30a21372aae47
+        - ${self:custom.securityGroups.${opt:stage}}
       subnetIds:        
-        - subnet-0340b773dc1ca33f7
+        - ${self:custom.subnets.${opt:stage}}
     events:
       - http:
           path: login
@@ -133,9 +148,7 @@ functions:
 
       - http:
           path: register/validation/{token}/{id}
-          method: get
-          private: true
-
+          method: get          
 
   floiint-mult:    
     image:       
@@ -155,15 +168,15 @@ functions:
         DB_AUDIO_COLLECTION: ${self:custom.environments.${opt:stage}.DB_AUDIO_COLLECTION}
         SECRET_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_TOKEN}
         SECRET_REFRESH_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_REFRESH_TOKEN}
-      
+   
     vpc:
       securityGroupIds:
-        - sg-0ffa30a21372aae47
+        - ${self:custom.securityGroups.${opt:stage}}
       subnetIds:        
-        - subnet-0340b773dc1ca33f7
+        - ${self:custom.subnets.${opt:stage}}
     events:
       - http:
-          path: /
+          path: /base
           method: post
           private: true
 
@@ -186,6 +199,36 @@ functions:
           path: /secure-audios/{filename}
           method: get
           private: true
+
+  floiint-chat:    
+    image:       
+      uri: 392002456877.dkr.ecr.eu-west-3.amazonaws.com/floiint-docker:latest
+    environment: 
+        HANDLER: chat
+        DATABASE_CHAT_NAME: ${self:custom.environments.${opt:stage}.DATABASE_CHAT_NAME}
+        DABATASE_CHAT_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_CHAT_SERVER}
+        DATABASE_CHAT_PORT: ${self:custom.environments.${opt:stage}.DATABASE_CHAT_PORT}
+        DATABASE_CHAT_USER: ${self:custom.environments.${opt:stage}.DATABASE_CHAT_USER}
+        DATABASE_CHAT_PASS: ${self:custom.environments.${opt:stage}.DATABASE_CHAT_PASS}        
+        SECRET_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_TOKEN}
+        SECRET_REFRESH_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_REFRESH_TOKEN}
+   
+    vpc:
+      securityGroupIds:
+        - ${self:custom.securityGroups.${opt:stage}}
+      subnetIds:        
+        - ${self:custom.subnets.${opt:stage}}
+    events:
+      - http:
+          path: /base
+          method: post
+          private: true
+          
+      - http:
+          path: /new-contact
+          method: post
+          private: true
+      
 
 
 resources:
@@ -223,3 +266,5 @@ resources:
         KeyType: API_KEY
         UsagePlanId:
           Ref: MyApiGatewayUsagePlan
+# plugins:
+#   - serverless-offline

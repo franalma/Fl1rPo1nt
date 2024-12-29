@@ -14,23 +14,12 @@ const { printJson } = require("./utils/json_utils");
 const app = express();
 app.use(express.json());
 
-//Init
-// const port = process.env.SERVER_PORT_MULT;
-// const server = http.createServer(app);
-
-const uploadImages = s3Handler.configImages();
-// const uploadAudios = fileHandler.configAudios();
-
-
-
-
 
 async function processGettingImage(req, res) {
   logger.info(`Starts processGettingImage`);
   try {
     const { filename } = req.params;
     const { expires, signature, width, height, quality } = req.query;
-
 
     if (fileHandler.validateSignedSignedUrl(filename, expires, signature)) {
       const filePath = path.join(
@@ -81,9 +70,7 @@ async function processGettingAudios(req, res) {
 }
 
 async function processRequest(req, res) {
-  const { action } = req.body;
-  logger.info("processRequest: " + action);
-  logger.info("processRequest payload: " + JSON.stringify(req.body));
+  const { action } = req.body;    
   let result = requestValidator.requestDoValidation(req);
   try {
     if (result) {
@@ -91,23 +78,23 @@ async function processRequest(req, res) {
     } else {
       switch (action) {
         case hostActions.GET_PROTECTED_IMAGES_URLS_BY_USER_ID: {
-          result = await fileHandler.getSecureSharedImagesUrlByUserId(
+          result = await s3Handler.getSecureSharedImagesUrlByUserId(
             req.body.input
           );
           break;
         }
         case hostActions.REMOVE_USER_IMAGES_BY_USER_ID_IMAGE_ID: {
-          result = await fileHandler.removeUserImageByImageIdUserId(
+          result = await s3Handler.removeUserImageByImageIdUserId(
             req.body.input
           );
           break;
         }
         case hostActions.GET_USER_AUDIOS_BY_USER_ID: {
-          result = await fileHandler.getUserAudiosByUserId(req.body.input);
+          result = await s3Handler.getUserAudiosByUserId(req.body.input);
           break;
         }
         case hostActions.REMOVE_USER_AUDIO_BY_USER_ID_AUDIO_ID: {
-          result = await fileHandler.removeUserAudioByAudioIdUserId(
+          result = await n.removeUserAudioByAudioIdUserId(
             req.body.input
           );
           break;
@@ -125,25 +112,40 @@ async function processRequest(req, res) {
   }
 }
 
-app.post("/", requestValidator.requestAuthValidation,
-  requestValidator.requestFieldsValidation, (req, res) => {
+app.post(
+  "/base",
+  requestValidator.requestAuthValidation,
+  requestValidator.requestFieldsValidation,
+  (req, res) => {
     processRequest(req, res);
-  });
+  }
+);
 
 app.post(
   "/upload/image",
   requestValidator.requestAuthValidation,
-  uploadImages.single("image"),
   (req, res) => {
-    logger.info("starts upload")
-    printJson(req);
-    if (!req.file) {
-      return res.status(400).send("No file uploaded.");
-    }
-    const userId = req.body.user_id;
+    logger.info("starts upload");
 
-    s3Handler.doUploadImageByUserId(req, userId).then((result) => {
-      console.log("---result: " + result);
+    const userId = req.params.user_id; // Extract path parameter
+    const query = req.query; // Extract query parameters
+    const headers = req.headers; // Extract headers
+    const context = req.requestContext; // Extract Lambda context (mapped by serverless-express)
+
+    // res.status(200).json({
+    //     message: 'User details retrieved',
+    //     userId,
+    //     query,
+    //     headers,
+    //     context,
+    // });
+    // return;
+
+    // if (!req.body.file) {
+    //   return res.status(400).send("No file uploaded");
+    // }
+
+    s3Handler.doUploadImage(req).then((result) => {
       if (result) {
         res.status(200).json(result);
       } else {
@@ -158,16 +160,9 @@ app.post(
 app.post(
   "/upload/audio",
   requestValidator.requestAuthValidation,
-  // uploadAudios.single("audio"),
-  (req, res) => {
-    if (!req.file) {
-      logger.info("no audio file");
-      return res.status(400).send("No file uploaded.");
-    }
-    const userId = req.body.user_id;
 
-    fileHandler.doUploadAudioByUserId(req, userId).then((result) => {
-      console.log("---result: " + result);
+  (req, res) => {
+    s3Handler.doUploadAudio(req).then((result) => {
       if (result) {
         res.status(200).json(result);
       } else {
@@ -210,15 +205,12 @@ app.get(
 //   });
 // });
 
-
-process.on('SIGINT', async () => {
-  dbHandler.connectToDatabase(DB_INSTANCES.MULTIMEDIA_PATH)
-  console.log('DB connection pool closed for server mult ');
+process.on("SIGINT", async () => {
+  dbHandler.connectToDatabase(DB_INSTANCES.MULTIMEDIA_PATH);
+  console.log("DB connection pool closed for server mult ");
   process.exit(0);
 });
-
 
 module.exports = {
   app,
 };
-

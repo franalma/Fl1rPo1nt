@@ -6,8 +6,11 @@ const { DB_INSTANCES } = require("./database/databases");
 const apiServer = require("./server_api");
 const authServer = require("./server_auth");
 const multServer = require("./server_mult");
+const { printJson } = require("./utils/json_utils");
 // const chatServer = require("./server_chat");
+const s3Handler = require("./files/s3_handler");
 
+console.log("api handler: " + process.env.HANDLER);
 
 switch (process.env.HANDLER) {
   case "api": {
@@ -31,7 +34,8 @@ switch (process.env.HANDLER) {
     break;
   }
 
-  case "auth":
+  case "auth": {
+    logger.info("auth handler");
     exports.handler = async (event, context) => {
       await dbHandler.connectToDatabase(DB_INSTANCES.DB_AUTH);
       const serverlessHandler = serverless(authServer.app);
@@ -44,7 +48,7 @@ switch (process.env.HANDLER) {
           },
           body: response.body,
         };
-
+        
         return result;
       } else {
         const result = {
@@ -53,15 +57,16 @@ switch (process.env.HANDLER) {
           },
           body: response.body,
         };
-
+        
         return result;
       }
-      
     };
+    break;
+  }
 
-
-  case "mult":
-    exports.handler = async (event, context) => {
+  case "mult": {
+    logger.info("mult handler");    
+    exports.handler = async (event, context) => {      
       await dbHandler.connectToDatabase(DB_INSTANCES.DB_MULT);
       const serverlessHandler = serverless(multServer.app);
       const response = await serverlessHandler(event, context);
@@ -72,23 +77,22 @@ switch (process.env.HANDLER) {
         body: response.body,
       };
       return result;
-    };
+    };   
+  
+    break;
+  }
 
-    // case "chat":
-    //   exports.handler = async (event, context) => {
-    //     await dbHandler.connectToDatabase(DB_INSTANCES.DB_CHAT);
-    //     const serverlessHandler = serverless(chatServer.app);
-    //     const response = await serverlessHandler(event, context);
-    //     const result = {
-    //       headers: {
-    //         "Content-Type": "application/json", // Set Content-Type
-    //       },
-    //       body: response.body,
-    //     };
-    //     return result;
-    //   };
+  // case "chat":
+  //   exports.handler = async (event, context) => {
+  //     await dbHandler.connectToDatabase(DB_INSTANCES.DB_CHAT);
+  //     const serverlessHandler = serverless(chatServer.app);
+  //     const response = await serverlessHandler(event, context);
+  //     const result = {
+  //       headers: {
+  //         "Content-Type": "application/json", // Set Content-Type
+  //       },
+  //       body: response.body,
+  //     };
+  //     return result;
+  //   };
 }
-
-
-
-

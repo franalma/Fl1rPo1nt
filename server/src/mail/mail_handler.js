@@ -3,25 +3,27 @@ const logger = require("../logger/log");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const validationUrl = process.env.REGISTRATION_VALIDATION_URL;
-const AWS = require('aws-sdk');
-
+const AWS = require("aws-sdk");
 
 const buckets = {
   floiint: {
     name: "floiint-bucket",
     internal: {
-      path: "internal"
-    }
-  }
+      path: "internal",
+    },
+  },
 };
 
-buckets.floiint.internal.logo_mail = buckets.floiint.internal.path + "/floiint_mail_logo.png";
+buckets.floiint.internal.logo_mail =
+  buckets.floiint.internal.path + "/floiint_mail_logo.png";
 
-const s3 = new AWS.S3({
-  region: 'eu-west-3', // Your bucket's region
-  accessKeyId: process.env.AWS_INTERNAL_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_INTERNAL_SECRET_KEY
-});
+// const s3 = new AWS.S3({
+//   region: 'eu-west-3', // Your bucket's region
+//   accessKeyId: process.env.AWS_INTERNAL_ACCESS_KEY,
+//   secretAccessKey: process.env.AWS_INTERNAL_SECRET_KEY
+// });
+
+const s3 = new AWS.S3();
 
 async function getPresignedUrl(bucketName, key, expiresInSeconds = 3600) {
   const params = {
@@ -31,21 +33,22 @@ async function getPresignedUrl(bucketName, key, expiresInSeconds = 3600) {
   };
 
   try {
-    const url = s3.getSignedUrl('getObject', params);
-    console.log('Pre-signed URL:', url);
+    const url = s3.getSignedUrl("getObject", params);
+    console.log("Pre-signed URL:", url);
     return url;
   } catch (error) {
-    console.error('Error generating pre-signed URL:', error);
+    console.error("Error generating pre-signed URL:", error);
     throw error;
   }
-};
+}
 
 async function fileToBase64(bucketName, filePath) {
-
   try {
-    logger.info("Starts fileToBase64: " + filePath);    
-    const data = await s3.getObject({ Bucket: bucketName, Key: filePath }).promise();
-    const base64String = data.Body.toString('base64');  
+    logger.info("Starts fileToBase64: " + filePath);
+    const data = await s3
+      .getObject({ Bucket: bucketName, Key: filePath })
+      .promise();
+    const base64String = data.Body.toString("base64");
     return base64String;
   } catch (error) {
     console.error("Error reading or encoding file:", error);
@@ -55,9 +58,9 @@ async function fileToBase64(bucketName, filePath) {
 
 async function genMailBody(token, userId) {
   logger.info("Starts genMailBody");
-  // const imagePath = "internal/floiint_mail_logo.png"  
+  // const imagePath = "internal/floiint_mail_logo.png"
   // const base64 = await fileToBase64(imagePath);
-  const link = `${validationUrl}/${token}/${userId}`
+  const link = `${validationUrl}/${token}/${userId}`;
   logger.info("genMailBody link:" + link);
   const html = `
     <div> 
@@ -78,7 +81,10 @@ async function genHtmlAccountVerified() {
   logger.info("Starts genHtmlAccountVerified");
   // const base64 = fileToBase64(buckets.floiint.name, buckets.floiint.internal.logo_mail);
   // const image64 = `data:image/png;base64,${base64}`;
-  const imageUrl = await getPresignedUrl(buckets.floiint.name, buckets.floiint.internal.logo_mail);
+  const imageUrl = await getPresignedUrl(
+    buckets.floiint.name,
+    buckets.floiint.internal.logo_mail
+  );
 
   return `
       <!DOCTYPE html>
@@ -145,10 +151,13 @@ async function genHtmlAccountVerified() {
 }
 
 async function gentAccountNotVerified() {
-  logger.info("Starts gentAccountNotVerified");  
+  logger.info("Starts gentAccountNotVerified");
   // const base64 = fileToBase64(buckets.floiint.name, buckets.floiint.internal.logo_mail);
   // const image64 = `data:image/png;base64,${base64}`;
-  const imageUrl = await getPresignedUrl(buckets.floiint.name, buckets.floiint.internal.logo_mail);
+  const imageUrl = await getPresignedUrl(
+    buckets.floiint.name,
+    buckets.floiint.internal.logo_mail
+  );
 
   return `
       <!DOCTYPE html>
@@ -215,11 +224,9 @@ async function gentAccountNotVerified() {
 }
 
 async function sendMailToUser(eMail, token, userId) {
-
-    // Download image from S3
-    logger.info("---->logo_mail: "+buckets.floiint.internal.logo_mail);
-    // const imageData = await downloadImageFromS3(buckets.floiint.name, buckets.floiint.internal.logo_mail);
-
+  // Download image from S3
+  logger.info("---->logo_mail: " + buckets.floiint.internal.logo_mail);
+  // const imageData = await downloadImageFromS3(buckets.floiint.name, buckets.floiint.internal.logo_mail);
 
   const transporter = nodemailer.createTransport({
     host: "mail.privateemail.com",
@@ -240,24 +247,22 @@ async function sendMailToUser(eMail, token, userId) {
     attachments: [
       {
         filename: "Logo-Floiint", // Image file name
-        path: await getPresignedUrl(buckets.floiint.name, buckets.floiint.internal.logo_mail), // Local path to the image
+        path: await getPresignedUrl(
+          buckets.floiint.name,
+          buckets.floiint.internal.logo_mail
+        ), // Local path to the image
         cid: "unique-image-id", // Content ID (used in the HTML as `src="cid:unique-image-id"`)
       },
     ],
   };
   logger.info("Before sending mail ");
   const response = await transporter.sendMail(mailOptions);
-  logger.info("after sending mail "+JSON.stringify(response));
-
+  logger.info("after sending mail " + JSON.stringify(response));
 }
-
-
-
-
 
 module.exports = {
   genMailBody,
   sendMailToUser,
   genHtmlAccountVerified,
-  gentAccountNotVerified
+  gentAccountNotVerified,
 };
