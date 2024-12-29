@@ -83,10 +83,21 @@ if (process.env.DATABASE_API_NAME != null) {
       sex_orientations_collection: "sex_orientations",
       user_audios_collection: "user_audios",
       user_images_collection: "user_images",
-      flirts_collection: "flirts",
-      user_coordinates_collection: "user_coordinates",
+      flirts_collection: "flirts",      
       smart_points_coolection: "smart_points",
     },
+  };
+  
+  dbMult = {
+    database_name: process.env.DATABASE_MULT_NAME,
+    client: new MongoClient(dbMultUri, {
+      maxPoolSize: 10, // Use a connection pool
+      minPoolSize: 2,  // Keep minimum number of connections
+    }),
+    collections: {
+      user_images_collection: "user_images",
+      user_audios_collection: "user_audios",
+    }
   };
 }
 

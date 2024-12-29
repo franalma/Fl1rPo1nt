@@ -49,6 +49,8 @@ custom:
       DATABASE_CHAT_PORT: 27017
       DATABASE_CHAT_USER: admin
       DATABASE_CHAT_PASS: securepassword
+      SOCKET_SERVER: 172.31.2.81
+      SOCKET_SERVER_PORT: 8000
 
     prod:
       DB_HOST: prod-db.example.com
@@ -95,6 +97,12 @@ functions:
         DATABASE_API_PASS: ${self:custom.environments.${opt:stage}.DATABASE_API_PASS}
         SECRET_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_TOKEN}
         SECRET_REFRESH_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_REFRESH_TOKEN}
+
+        DATABASE_MULT_NAME: ${self:custom.environments.${opt:stage}.DATABASE_MULT_NAME}
+        DABATASE_MULT_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_MULT_SERVER}
+        DATABASE_MULT_PORT: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PORT}
+        DATABASE_MULT_USER: ${self:custom.environments.${opt:stage}.DATABASE_MULT_USER}
+        DATABASE_MULT_PASS: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PASS}
         
     vpc:
       securityGroupIds:
@@ -175,27 +183,27 @@ functions:
         - ${self:custom.subnets.${opt:stage}}
     events:
       - http:
-          path: /base
+          path: /mult/base
           method: post
           private: true
 
       - http:
-          path: /upload/image
+          path: /mult/upload/image
           method: post
           private: true
 
       - http:
-          path: /upload/audio
+          path: /mult/upload/audio
           method: post
           private: true
 
       - http:
-          path: /secure-images/{filename}
+          path: /mult/secure-images/{filename}
           method: get
           private: true
 
       - http:
-          path: /secure-audios/{filename}
+          path: /mult/secure-audios/{filename}
           method: get
           private: true
 
@@ -211,6 +219,10 @@ functions:
         DATABASE_CHAT_PASS: ${self:custom.environments.${opt:stage}.DATABASE_CHAT_PASS}        
         SECRET_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_TOKEN}
         SECRET_REFRESH_TOKEN: ${self:custom.environments.${opt:stage}.SECRET_REFRESH_TOKEN}
+        SOCKET_SERVER: ${self:custom.environments.${opt:stage}.SOCKET_SERVER}
+        SOCKET_SERVER_PORT: ${self:custom.environments.${opt:stage}.SOCKET_SERVER_PORT}
+
+        
    
     vpc:
       securityGroupIds:
@@ -219,12 +231,12 @@ functions:
         - ${self:custom.subnets.${opt:stage}}
     events:
       - http:
-          path: /base
+          path: /chat/base
           method: post
           private: true
           
       - http:
-          path: /new-contact
+          path: /chat/new-contact
           method: post
           private: true
       

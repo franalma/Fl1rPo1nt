@@ -33,6 +33,8 @@ class HostPutFlirtByUserIdRequest extends BaseRequest {
       };
 
       String jsonBody = json.encode(mapBody);
+      print(jsonBody);
+      print ( buildHeader());
       var response =
           await http.post(url, headers: buildHeader(), body: jsonBody);
       var value = jsonDecode(response.body);

@@ -394,4 +394,5 @@ module.exports = {
   doUploadAudio,
   getUserAudiosByUserId,
   removeUserAudioByAudioIdUserId,
+  getPresignedUrl
 };

@@ -113,7 +113,7 @@ async function processRequest(req, res) {
 }
 
 app.post(
-  "/base",
+  "/mult/base",
   requestValidator.requestAuthValidation,
   requestValidator.requestFieldsValidation,
   (req, res) => {
@@ -122,7 +122,7 @@ app.post(
 );
 
 app.post(
-  "/upload/image",
+  "/mult/upload/image",
   requestValidator.requestAuthValidation,
   (req, res) => {
     logger.info("starts upload");
@@ -158,7 +158,7 @@ app.post(
 );
 
 app.post(
-  "/upload/audio",
+  "/mult/upload/audio",
   requestValidator.requestAuthValidation,
 
   (req, res) => {
@@ -176,7 +176,7 @@ app.post(
 
 // Serve secure images
 app.get(
-  "/secure-images/:filename",
+  "/mult/secure-images/:filename",
   // requestValidator.requestAuthValidation,
   (req, res) => {
     logger.info("Secure image getting: " + req.url);
@@ -186,7 +186,7 @@ app.get(
 );
 
 app.get(
-  "/secure-audios/:filename",
+  "/mult/secure-audios/:filename",
   // requestValidator.requestAuthValidation,
   (req, res) => {
     logger.info("Secure image getting: " + req.url);

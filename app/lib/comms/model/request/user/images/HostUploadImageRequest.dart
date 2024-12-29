@@ -19,6 +19,7 @@ class HostUploadImageRequest extends BaseRequest {
         await http.MultipartFile.fromPath('image', path),
       );
       request.headers["Authorization"] = getToken();
+      request.headers["x-api-key"] = APIKEY; 
       request.fields["user_id"] = userId;
 
       final response = await request.send();

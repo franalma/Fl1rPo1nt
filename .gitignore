@@ -26,3 +26,5 @@ layers/
 server/.serverless/
 
 aws/.terraform/
+
+*.zip

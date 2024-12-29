@@ -1,6 +1,6 @@
 const winston = require('winston');
 
- // Configurar el logger
+// Configurar el logger
 const logger = winston.createLogger({
     level: 'info', // Nivel mínimo de logging
     format: winston.format.combine(
@@ -11,9 +11,9 @@ const logger = winston.createLogger({
             // console.log(stack);
             // const functionName = stackLines[6] ? stackLines[6].trim() : 'Desconocido';
             return `${timestamp} [${level.toUpperCase()}]:${message}`;
-            
-        }), 
-        
+
+        }),
+
     ),
     transports: [
         new winston.transports.Console(), // Imprimir en la consola
@@ -23,7 +23,8 @@ const logger = winston.createLogger({
 
 
 function info(value) {
-   logger.info(value);
+    //    logger.info(value);
+    console.log(value);
 }
 
 

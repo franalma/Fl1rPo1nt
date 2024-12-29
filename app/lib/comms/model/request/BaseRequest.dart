@@ -10,6 +10,7 @@ class BaseRequest {
   Map<String, String> buildHeader() {
     var result = Map<String, String>.from(jsonHeaders);
     result["Authorization"] = "Token ${Session.user.token}";
+    result["x-api-key"] = APIKEY;
     return result;
   }
 

@@ -1,8 +1,12 @@
+const APIKEY= "w3knD4w6gh3lH6ZSVU1Qn9aRLKNgMQUa8YhJZYic";
+
+
 const jsonHeaders = {
   'Content-Type': 'application/json', // Define el tipo de contenido como JSON
+  'x-api-key': APIKEY
 };
 const HOST_API = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "https://etohps0ija.execute-api.eu-west-3.amazonaws.com/dev",
   "dev_port": 3000,
   "pro_ip": "",
   "pro_host": "",
@@ -10,7 +14,7 @@ const HOST_API = {
 };
 
 const HOST_AUTH = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "https://etohps0ija.execute-api.eu-west-3.amazonaws.com/dev",
   "dev_port": 5500,
   "pro_ip": "",
   "pro_host": "",
@@ -19,15 +23,15 @@ const HOST_AUTH = {
 };
 
 const HOST_CHAT = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "https://etohps0ija.execute-api.eu-west-3.amazonaws.com/dev/chat",
   "dev_port": 4000,
   "pro_ip": "",
   "pro_host": "",
-  "endpoint_root": "/"
+  "endpoint_root": "/base"
 };
 
 const HOST_MULT = {
-  "dev_ip": "192.168.2.206",
+  "dev_ip": "https://etohps0ija.execute-api.eu-west-3.amazonaws.com/dev/mult",
   "dev_port": 7000,
   "pro_ip": "",
   "pro_host": "",
@@ -35,13 +39,18 @@ const HOST_MULT = {
   "endpoint_up_audio": "/upload/audio",
   "endpoint_sec_images": "/secure-images",
   "endpoint_sec_audios": "/secure-audios",
-  "endpoint_root": "/",
+  "endpoint_root": "/base",
 };
 
-String BASE_AUTH_URL = "http://${HOST_AUTH["dev_ip"]}:${HOST_AUTH["dev_port"]}";
-String BASE_API_URL = "http://${HOST_API["dev_ip"]}:${HOST_API["dev_port"]}";
-String BASE_MULT_URL = "http://${HOST_MULT["dev_ip"]}:${HOST_MULT["dev_port"]}";
-String BASE_CHAT_URL = "http://${HOST_CHAT["dev_ip"]}:${HOST_CHAT["dev_port"]}";
+// String BASE_AUTH_URL = "http://${HOST_AUTH["dev_ip"]}:${HOST_AUTH["dev_port"]}";
+// String BASE_API_URL = "http://${HOST_API["dev_ip"]}:${HOST_API["dev_port"]}";
+// String BASE_MULT_URL = "http://${HOST_MULT["dev_ip"]}:${HOST_MULT["dev_port"]}";
+// String BASE_CHAT_URL = "http://${HOST_CHAT["dev_ip"]}:${HOST_CHAT["dev_port"]}";
+
+String BASE_AUTH_URL = "${HOST_AUTH["dev_ip"]}";
+String BASE_API_URL = "${HOST_API["dev_ip"]}";
+String BASE_MULT_URL = "${HOST_MULT["dev_ip"]}";
+String BASE_CHAT_URL = "${HOST_CHAT["dev_ip"]}";
 
 class HostActionsItem {
   String action;
@@ -209,21 +218,14 @@ class HostApiActions {
       BASE_API_URL,
       HOST_API["endpoint_api"].toString());
 
-  static final HostActionsItem updateMatchAudioAccessByMatchIdUserId = HostActionsItem(
-      "UPDATE_MATCH_AUDIO_ACCESS_BY_MATCH_ID_USER_ID",
-      BASE_API_URL,
-      HOST_API["endpoint_api"].toString());
+  static final HostActionsItem updateMatchAudioAccessByMatchIdUserId =
+      HostActionsItem("UPDATE_MATCH_AUDIO_ACCESS_BY_MATCH_ID_USER_ID",
+          BASE_API_URL, HOST_API["endpoint_api"].toString());
 
- static final HostActionsItem updateMatchPicturesAccessByMatchIdUserId = HostActionsItem(
-      "UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID",
-      BASE_API_URL,
-      HOST_API["endpoint_api"].toString());
-
-
-
+  static final HostActionsItem updateMatchPicturesAccessByMatchIdUserId =
+      HostActionsItem("UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID",
+          BASE_API_URL, HOST_API["endpoint_api"].toString());
 }
-
-
 
 class HostMultActions {
   static final HostActionsItem uploadImageByUserId = HostActionsItem(

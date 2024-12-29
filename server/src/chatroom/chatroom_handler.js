@@ -2,6 +2,7 @@ const dbHandler = require("../database/database_handler");
 const logger = require("../logger/log");
 const { HOST_ERROR_CODES, genError } = require("../constants/host_error_codes");
 const { DB_INSTANCES } = require("../database/databases");
+const { printJson } = require("../utils/json_utils");
 
 async function getMatchByMatchIdInternal(input) {
   try {

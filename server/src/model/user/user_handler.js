@@ -1,12 +1,8 @@
 const logger = require("../../logger/log");
 const { v4: uuidv4 } = require("uuid");
 const dbHandler = require("../../database/database_handler");
-const { printJson } = require("../../utils/json_utils");
 const { getUserQrByUserId } = require("../qr/qr_handler");
-const {
-  getUserImagesByUserId,
-  getImageByUserIdImageId,
-} = require("../../files/file_handler");
+const s3Handler = require("../../files/s3_handler");
 const {
   genError,
   HOST_ERROR_CODES,
@@ -46,6 +42,42 @@ async function creatInternalUser(input) {
 
   return user;
 }
+
+async function getImageByUserIdImageId(input) {
+  logger.info("Starts getImageByUserIdImageId:" + JSON.stringify(input));
+  try {
+    const db = DB_INSTANCES.DB_MULT;
+    const filters = { $or: input.values };
+    logger.info(JSON.stringify(filters));
+    const dbFiles = await dbHandler.findWithFiltersAndClient(
+      db.client,
+      filters,
+      db.collections.user_images_collection
+    );
+    if (dbFiles) {
+      let result = { status: 200, files: [] };
+      for (let file of dbFiles) {
+        try {
+          const secureUrl = s3Handler.getPresignedUrl("floiint-bucket", `users/images/${input.user_id}/${file.filename}`)
+          // const secureUrl = generateSignedImageUrl(file.filename);
+          result.files.push({
+            file_id: file.file_id,
+            url: secureUrl,
+            created_at: 0,
+            filename: "",
+          });
+        } catch (error) {
+          logger.info(error);
+        }
+      }
+      return result;
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+  return { status: 500 };
+}
+
 
 async function createPublicProfileUser(input) {
   logger.info("Starts createPublicProfileUser:" + JSON.stringify(input));
