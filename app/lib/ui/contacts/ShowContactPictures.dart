@@ -72,10 +72,12 @@ class _ShowContactPictures extends State<ShowContactPictures> {
             children: [
               GestureDetector(
                 child: Positioned.fill(
-                    child: Image.network("${_imageList[index].url}&width=200&height=200&quality=40")),
+                    // child: Image.network("${_imageList[index].url}&width=200&height=200&quality=40")),
+                    child: Image.network(_imageList[index].url)),
                 onTap: () {
                   
-                  AlertDialogs().showPolishedImageDialog(context, "${_imageList[index].url}&width=500&height=500&quality=80");
+                  // AlertDialogs().showPolishedImageDialog(context, "${_imageList[index].url}&width=500&height=500&quality=80");
+                  AlertDialogs().showPolishedImageDialog(context, _imageList[index].url);
                 },
               )
             ],
@@ -90,7 +92,8 @@ class _ShowContactPictures extends State<ShowContactPictures> {
   }
 
   String _customizeImage(String url) {
-    return "$url&width=200&height=200&quality=40";
+    // return "$url&width=200&height=200&quality=40";
+    return url; 
   }
 
   Future<void> _fechImagesFromServer() async {

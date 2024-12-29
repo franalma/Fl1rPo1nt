@@ -265,7 +265,7 @@ async function addUserContactByUserIdContactIdQrId(input) {
         requested_user: requestedUserInfo,
       };
 
-      const urlRealTimeHost = `${process.env.CHAT_HOST_PATH}:${process.env.SERVER_PORT_CHAT}${process.env.NEW_CONTACT_ENDPOINT}`;
+      const urlRealTimeHost = `http://${process.env.SOCKET_SERVER}:${process.env.SOCKET_SERVER_PORT}/new-contact`;
       logger.info(`real time url: ${urlRealTimeHost}`);
       const resNewContact = await axios.post(urlRealTimeHost, payload);
       printJson(resNewContact);

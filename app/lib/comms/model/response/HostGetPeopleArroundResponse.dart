@@ -12,6 +12,7 @@ class HostGetPeopleArroundResponse {
   factory HostGetPeopleArroundResponse.fromJson(Map<String, dynamic> json) {
     try {
       var errorCode = HostErrorCode.fromJson(json);
+      
       var values =
           (json["flirts"] as List).map((e) => NearByFlirt.fromJson(e)).toList();
       return HostGetPeopleArroundResponse(errorCode, values);

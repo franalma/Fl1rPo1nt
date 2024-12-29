@@ -21,6 +21,7 @@ class SocketSubscriptionController {
   NotificationService notificationService = NotificationService();
   SocketSubscriptionController initializeSocketConnection() {
     notificationService.init();
+    
     socket = IO.io(HostChatActions.socketListen.build(), <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
@@ -58,10 +59,7 @@ class SocketSubscriptionController {
         if (chatroomGlobal.containsKey(matchId)) {
           var callback = chatroomGlobal[matchId]!;
           callback(messageItem);
-        } else {
-          // int nMsg = newMessages[matchId] ?? 0;
-          // nMsg = nMsg + 1;
-          // newMessages[matchId] = nMsg;
+        } else {          
           await saveNewChatMessages(matchId);
 
           if (onReload != null) {
@@ -106,16 +104,11 @@ class SocketSubscriptionController {
     chatroomGlobal.remove(matchId);
   }
 
-  Future<int> getPendingMessagesForMap(String matchId) async {
-    // if (!newMessages.containsKey(matchId)) {
-    //   return 0;
-    // }
-    // return newMessages[matchId]!;
+  Future<int> getPendingMessagesForMap(String matchId) async {    
     return await getPendingMessagesForMatchId(matchId);
   }
 
-  Future<void> clearPendingMessages(String matchId) async {
-    // newMessages[matchId] = 0;
+  Future<void> clearPendingMessages(String matchId) async {    
     await clearPendingMessageForMacthId(matchId);
   }
 }

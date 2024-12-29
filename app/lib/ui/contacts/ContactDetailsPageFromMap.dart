@@ -196,7 +196,8 @@ class _ContactDetailsPageForMap extends State<ContactDetailsPageFromMap> {
               shape: BoxShape.circle,
               image: DecorationImage(
                 image: NetworkImage(
-                    "${widget._profile.profileImage!}&width=100&height=100&quality=60"),
+                    // "${widget._profile.profileImage!}&width=100&height=100&quality=60"),
+                    widget._profile.profileImage!),
                 fit: BoxFit.fill, // Customize fit here
               ),
             ),

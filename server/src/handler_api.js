@@ -12,6 +12,7 @@ console.log("api handler: " + process.env.HANDLER);
 
 switch (process.env.HANDLER) {
   case "api": {
+    
     exports.handler = async (event, context) => {
       try {
         await dbHandler.connectToDatabase(DB_INSTANCES.DB_API);
@@ -33,9 +34,9 @@ switch (process.env.HANDLER) {
   }
 
   case "auth": {
-    logger.info("auth handler");
+    logger.info("auth handler");  
     exports.handler = async (event, context) => {
-      await dbHandler.connectToDatabase(DB_INSTANCES.DB_AUTH);
+      await dbHandler.connectToDatabase(DB_INSTANCES.DB_AUTH); 
       const serverlessHandler = serverless(authServer.app);
       const response = await serverlessHandler(event, context);
       const httpMethod = event.httpMethod;
@@ -63,6 +64,7 @@ switch (process.env.HANDLER) {
   }
 
   case "mult": {
+   
     logger.info("mult handler");
     exports.handler = async (event, context) => {
       await dbHandler.connectToDatabase(DB_INSTANCES.DB_MULT);
@@ -81,6 +83,7 @@ switch (process.env.HANDLER) {
   }
 
   case "chat": {
+   
     exports.handler = async (event, context) => {
       await dbHandler.connectToDatabase(DB_INSTANCES.DB_CHAT);
       const serverlessHandler = serverless(chatServer.app);

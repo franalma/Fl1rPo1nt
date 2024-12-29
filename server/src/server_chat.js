@@ -117,22 +117,26 @@ async function processRequest(req, res) {
                         matchId
                     );
 
-                    await chatroomHandler.putMessageInChatroomByMatchId(req.body.input);
-                    const socketPayload = {
-                        message_type: "chat_message",
-                        receiver_id: receiverId,
-                        sender_id: senderId,
-                        message: message,
-                        match_id: matchId,
-                    };
+                    const response = await chatroomHandler.putMessageInChatroomByMatchId(req.body.input);
+                    if (response.status == 200) {
+                        const socketPayload = {
+                            message_type: "chat_message",
+                            receiver_id: receiverId,
+                            sender_id: senderId,
+                            message: message,
+                            match_id: matchId,
+                        };
 
-                    const isMessageSent = await sendToSocketServer("/chat", socketPayload);
+                        const isMessageSent = await sendToSocketServer("/chat", socketPayload);
 
-                    if (isMessageSent == false) {
-                        await chatroomHandler.putPendingMessage(receiverId, senderId);
+                        if (isMessageSent == false) {
+                            await chatroomHandler.putPendingMessage(receiverId, senderId);
+                        }
+                        result = { status: 200, message: "OK" };
+
                     }
-                    result = { status: 200, message: "OK" };
                     break;
+
                 }
 
                 case hostActions.GET_CHATROOM_MESSAGES_BY_MATCH_ID: {
@@ -177,37 +181,6 @@ app.post(
     }
 );
 
-app.post(
-    "/chat/new-contact",
-    // requestValidator.requestAuthValidation,
-    // requestFieldsValidation,
-    async (req, res) => {
-        try {
-            const input = req.body;
-            logger.info("new-contact: " + JSON.stringify(input));
-
-            const socketPayload = {
-                message_type: "new_contact_request",
-                contact_id: input.contact_id,
-                scanned: input.scanned,
-                input: input
-            };
-
-            await sendToSocketServer("/notif", socketPayload);
-            res.status(200).json({});
-            return;
-        } catch (error) {
-            logger.info(error);
-        }
-        res.status(500).json({});
-    }
-);
-
-process.on("SIGINT", async () => {
-    dbHandler.connectToDatabase(DB_INSTANCES.DB_CHAT);
-    console.log("DB connection pool closed for server chat ");
-    process.exit(0);
-});
 
 module.exports = {
     app,

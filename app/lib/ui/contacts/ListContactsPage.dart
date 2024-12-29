@@ -46,7 +46,8 @@ class _ListContactsPage extends State<ListContactsPage> {
           radius: 80, // Size of the circle
           backgroundColor: Colors.red);
     }
-    var url = "${_matchs[index].profileImage!}&quality=50&width=80&heigth=80";
+    // var url = "${_matchs[index].profileImage!}&quality=50&width=80&heigth=80";
+    var url = _matchs[index].profileImage!;
     return SizedBox(
       height: 200,
       width: 80,

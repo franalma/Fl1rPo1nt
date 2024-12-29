@@ -288,7 +288,8 @@ class _ContactDetailsPage extends State<ContactDetailsPage> {
               shape: BoxShape.circle,
               image: DecorationImage(
                 image: NetworkImage(
-                    "${widget._match.profileImage!}&width=100&height=100&quality=60"),
+                    // "${widget._match.profileImage!}&width=100&height=100&quality=60"),
+                    widget._match.profileImage!),
                 fit: BoxFit.fill, // Customize fit here
               ),
             ),

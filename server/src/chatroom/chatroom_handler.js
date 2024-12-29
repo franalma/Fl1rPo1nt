@@ -29,7 +29,7 @@ async function getMatchByMatchIdInternal(input) {
 }
 
 async function putMessageInChatroomByMatchId(input) {
-  logger.info("Starts putMessageInChatroomByMatchId");
+  logger.info("Starts putMessageInChatroomByMatchId: "+JSON.stringify(input));
   try {
     const matchId = input.match_id;
     const senderId = input.sender_id;

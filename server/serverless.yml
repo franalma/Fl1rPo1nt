@@ -103,6 +103,9 @@ functions:
         DATABASE_MULT_PORT: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PORT}
         DATABASE_MULT_USER: ${self:custom.environments.${opt:stage}.DATABASE_MULT_USER}
         DATABASE_MULT_PASS: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PASS}
+
+        SOCKET_SERVER: ${self:custom.environments.${opt:stage}.SOCKET_SERVER}
+        SOCKET_SERVER_PORT: ${self:custom.environments.${opt:stage}.SOCKET_SERVER_PORT}
         
     vpc:
       securityGroupIds:
@@ -136,6 +139,12 @@ functions:
         TOKEN_ACTIVATION_LIFE: ${self:custom.environments.${opt:stage}.TOKEN_ACTIVATION_LIFE}
         REFRESH_TOKEN_LIFE: ${self:custom.environments.${opt:stage}.REFRESH_TOKEN_LIFE}
         REGISTRATION_VALIDATION_URL: ${self:custom.environments.${opt:stage}.REGISTRATION_VALIDATION_URL}
+
+        DATABASE_MULT_NAME: ${self:custom.environments.${opt:stage}.DATABASE_MULT_NAME}
+        DABATASE_MULT_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_MULT_SERVER}
+        DATABASE_MULT_PORT: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PORT}
+        DATABASE_MULT_USER: ${self:custom.environments.${opt:stage}.DATABASE_MULT_USER}
+        DATABASE_MULT_PASS: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PASS}
         
     vpc:
       securityGroupIds:
@@ -212,6 +221,18 @@ functions:
       uri: 392002456877.dkr.ecr.eu-west-3.amazonaws.com/floiint-docker:latest
     environment: 
         HANDLER: chat
+        DATABASE_API_NAME: ${self:custom.environments.${opt:stage}.DATABASE_API_NAME}
+        DABATASE_API_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_API_SERVER}
+        DATABASE_API_PORT: ${self:custom.environments.${opt:stage}.DATABASE_API_PORT}
+        DATABASE_API_USER: ${self:custom.environments.${opt:stage}.DATABASE_API_USER}
+        DATABASE_API_PASS: ${self:custom.environments.${opt:stage}.DATABASE_API_PASS}
+
+        DATABASE_MULT_NAME: ${self:custom.environments.${opt:stage}.DATABASE_MULT_NAME}
+        DABATASE_MULT_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_MULT_SERVER}
+        DATABASE_MULT_PORT: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PORT}
+        DATABASE_MULT_USER: ${self:custom.environments.${opt:stage}.DATABASE_MULT_USER}
+        DATABASE_MULT_PASS: ${self:custom.environments.${opt:stage}.DATABASE_MULT_PASS}
+        
         DATABASE_CHAT_NAME: ${self:custom.environments.${opt:stage}.DATABASE_CHAT_NAME}
         DABATASE_CHAT_SERVER: ${self:custom.environments.${opt:stage}.DABATASE_CHAT_SERVER}
         DATABASE_CHAT_PORT: ${self:custom.environments.${opt:stage}.DATABASE_CHAT_PORT}
@@ -235,10 +256,10 @@ functions:
           method: post
           private: true
           
-      - http:
-          path: /chat/new-contact
-          method: post
-          private: true
+      # - http:
+      #     path: /chat/new-contact
+      #     method: post
+      #     private: true
       
 
 

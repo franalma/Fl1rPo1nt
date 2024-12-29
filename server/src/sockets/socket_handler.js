@@ -10,7 +10,7 @@ function socketInit(server) {
   logger.info("Starts socket init");
   try {
     io = socketIo(server);
-
+    logger.info("after socket init");
     io.on("connection", (s) => {
       logger.info("New connection socket_id:" + s.id);
       logger.info("user_id:" + s.handshake.query.user_id);

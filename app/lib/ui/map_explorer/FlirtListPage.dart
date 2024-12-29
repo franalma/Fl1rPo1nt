@@ -130,7 +130,8 @@ class _FlirtListState extends State<FlirtListPage> {
                     height: 80, // Set equal height
                     child: ClipRRect(
                       child: Image.network(
-                        "${_nearbyFlirts[index].profileImage!}&width=80&height=80&quality=60", // Replace with your image URL
+                        // "${_nearbyFlirts[index].profileImage!}&width=80&height=80&quality=60", 
+                        _nearbyFlirts[index].profileImage!,
                         fit: BoxFit.cover, // Ensures the image covers the box
                       ),
                     ),

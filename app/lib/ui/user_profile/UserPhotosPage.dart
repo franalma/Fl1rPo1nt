@@ -184,7 +184,9 @@ class _UserPhotosPage extends State<UserPhotosPage> {
   }
 
   String _customizeImage(String url) {
-    return "$url&width=200&height=200&quality=40";
+    // return "$url&width=200&height=200&quality=40";
+    Log.d("url: $url");
+    return url; 
   }
 
   Future<void> _fechImagesFromServer() async {
@@ -193,7 +195,7 @@ class _UserPhotosPage extends State<UserPhotosPage> {
       _isLoading = true;
     });
     HostGetUserImagesRequest().run(user.userId).then((response) {
-      if (response.fileData != null) {
+      if (response.fileData != null) {        
         response.fileData!.map((e) {
           setState(() {
             String url = _customizeImage(e.url!);
@@ -233,7 +235,7 @@ class _UserPhotosPage extends State<UserPhotosPage> {
 
   Future<void> _onPop() async {
     Log.d("Starts _onPop");
-    if (_imageList.length > 0) {
+    if (_imageList.isNotEmpty) {
       LocalFile profileImage = _imageList[selectedUserProfileImage];
       Log.d("Selected file id: ${profileImage.id}");
       HostUpdateUserImageProfileRequest()

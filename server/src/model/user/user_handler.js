@@ -58,7 +58,7 @@ async function getImageByUserIdImageId(input) {
       let result = { status: 200, files: [] };
       for (let file of dbFiles) {
         try {
-          const secureUrl = s3Handler.getPresignedUrl("floiint-bucket", `users/images/${input.user_id}/${file.filename}`)
+          const secureUrl = await s3Handler.getPresignedUrl("floiint-bucket", `users/images/${input.user_id}/${file.filename}`)
           // const secureUrl = generateSignedImageUrl(file.filename);
           result.files.push({
             file_id: file.file_id,
@@ -103,7 +103,7 @@ async function createPublicProfileUser(input) {
           },
         ],
       };
-
+      query.user_id = input.id; 
       const imageData = await getImageByUserIdImageId(query);
 
       if (imageData.status == 200) {

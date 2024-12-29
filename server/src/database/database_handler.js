@@ -10,9 +10,14 @@ async function connectToDatabase(input) {
     logger.info("Starts connectToDatabase:" + input.database_name);
 
     try {
-        await input.client.connect();
-        const db = input.client.db(input.database_name);
-        return input.client;
+        const client = input.client; 
+        if (client && client.topology && !client.topology.isConnected()) {
+            logger.info("---connection to database... connection is closed")
+            await client.connect(); 
+        }
+        
+        const db = client.db(input.database_name);
+        return client;
 
     } catch (error) {
         console.error('Error loading document:', error);
@@ -166,7 +171,7 @@ async function findWithFiltersAndClient(client, filters, path) {
 }
 
 async function findWithFiltersAndClientWitPagination(client, filters, path) {
-    logger.info("Starts findWithFiltersAndClient: " + JSON.stringify(filters));
+    logger.info("Starts findWithFiltersAndClientWitPagination: " + JSON.stringify(filters));
     let result = null;
     try {        
         if (client && client.topology && client.topology.isConnected()) {

@@ -42,6 +42,11 @@ const HOST_MULT = {
   "endpoint_root": "/base",
 };
 
+const HOST_CHAT_SOCKET = {
+  "dev_ip": "http://15.188.83.61",
+  "dev_port": 8000
+};
+
 // String BASE_AUTH_URL = "http://${HOST_AUTH["dev_ip"]}:${HOST_AUTH["dev_port"]}";
 // String BASE_API_URL = "http://${HOST_API["dev_ip"]}:${HOST_API["dev_port"]}";
 // String BASE_MULT_URL = "http://${HOST_MULT["dev_ip"]}:${HOST_MULT["dev_port"]}";
@@ -51,6 +56,7 @@ String BASE_AUTH_URL = "${HOST_AUTH["dev_ip"]}";
 String BASE_API_URL = "${HOST_API["dev_ip"]}";
 String BASE_MULT_URL = "${HOST_MULT["dev_ip"]}";
 String BASE_CHAT_URL = "${HOST_CHAT["dev_ip"]}";
+String BASE_CHAT_SOCKET_URL = "${HOST_CHAT_SOCKET["dev_ip"]}:${HOST_CHAT_SOCKET["dev_port"]}";
 
 class HostActionsItem {
   String action;
@@ -278,5 +284,9 @@ class HostChatActions {
           BASE_CHAT_URL, HOST_CHAT["endpoint_root"].toString());
 
   static final HostActionsItem socketListen =
-      HostActionsItem("", BASE_CHAT_URL, "");
+      HostActionsItem("", BASE_CHAT_SOCKET_URL, "");
+      
 }
+
+
+
