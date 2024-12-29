@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "15167907654",
+    "project_id": "floiint",
+    "storage_bucket": "floiint.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:15167907654:android:92fde8b333da7d9fc36747",
+        "android_client_info": {
+          "package_name": "com.floiint.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSOQ7tMPRLwUkjULriD-1_yODKxxeDXOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,12 +1,24 @@
 import 'package:app/app_localizations.dart';
+import 'package:app/services/AnalyticsService.dart';
+import 'package:app/services/CrahsalitycsService.dart';
+import 'package:app/services/RemoteConfigService.dart';
 import 'package:app/ui/login/LoginPage.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  await Firebase.initializeApp();
+  AnalyticsService.init();
+  await AnalyticsService.logCustomEvent();
+  RemoteConfigService.init();
+  await RemoteConfigService.fetchFromHost();
+  RemoteConfigService.getApiKey();
+  CrahsalitycsService.init(); 
+  
   runApp(const MyApp());
 }
 

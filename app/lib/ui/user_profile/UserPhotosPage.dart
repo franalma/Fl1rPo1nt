@@ -8,14 +8,17 @@ import 'package:app/ui/elements/DefaultModalDialog.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../comms/model/request/user/images/HostGetUserImagesRequest.dart';
 import '../../comms/model/request/user/images/HostRemoveImageRequest.dart';
 import '../../comms/model/request/user/images/HostUpdateUserImageProfileRequest.dart';
 import '../../comms/model/request/user/images/HostUploadImageRequest.dart';
+import 'package:path/path.dart' as path;
 
 class LocalFile {
   String url;
@@ -152,17 +155,35 @@ class _UserPhotosPage extends State<UserPhotosPage> {
     );
   }
 
+  Future<XFile?> compressImage(String filePath, String targetPath) async {
+  final result = await FlutterImageCompress.compressAndGetFile(
+    filePath,
+    targetPath,
+    quality: 85, // Adjust the quality (1-100). Lower is more compression.
+  );
+
+  return result;
+}
+
   Future<void> _onAddPicture(int index) async {
     Log.d("Starts _onItemSelected");
     final XFile? pickedImage =
         await _picker.pickImage(source: ImageSource.gallery);
+        
     if (pickedImage != null) {
       setState(() {
         _isLoading = true;
       });
+      var tempDir = await getTemporaryDirectory();
+      final targetPath = path.join(tempDir.path, 'compressed_${path.basename(pickedImage.path)}');
+      final compressedImage = await FlutterImageCompress.compressAndGetFile(
+        pickedImage.path,
+        targetPath,
+        quality: 85, // Adjust quality
+      );
 
       HostUploadImageRequest()
-          .run(user.userId, pickedImage.path)
+          .run(user.userId, compressedImage!.path)
           .then((fileId) {
         if (fileId.isNotEmpty) {
           _isLoading = false;

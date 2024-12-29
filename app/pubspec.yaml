@@ -61,6 +61,14 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   widget_to_marker: ^1.0.6
   showcaseview: ^3.0.0
+  flutter_image_compress: ^2.3.0
+  path_provider: ^2.0.11
+  firebase_core: ^2.14.0
+  firebase_analytics: ^10.6.0
+  firebase_remote_config: ^4.2.3
+  firebase_crashlytics: ^3.5.7
+  in_app_purchase: ^3.2.0
+
   
   
 
