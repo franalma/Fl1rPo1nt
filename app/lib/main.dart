@@ -1,6 +1,7 @@
 import 'package:app/app_localizations.dart';
 import 'package:app/services/AnalyticsService.dart';
 import 'package:app/services/CrahsalitycsService.dart';
+import 'package:app/services/IapService.dart';
 import 'package:app/services/RemoteConfigService.dart';
 import 'package:app/ui/login/LoginPage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,7 @@ void main() async {
   await RemoteConfigService.fetchFromHost();
   RemoteConfigService.getApiKey();
   CrahsalitycsService.init(); 
+  await IapService.init();
   
   runApp(const MyApp());
 }

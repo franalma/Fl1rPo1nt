@@ -8,6 +8,7 @@ import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Styles.dart';
+import 'package:app/ui/suscriptions/SubscriptionListPage.dart';
 import 'package:app/ui/user_profile/UserDataPage.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
@@ -45,8 +46,9 @@ class _UserProfilePage extends State<UserProfilePage> {
     HostGetUserImgeUrlByIdRequest().run(values).then((response) {
       if (response.fileData != null && response.fileData!.isNotEmpty) {
         setState(() {
-          _profileImageUrl =
-              "${response.fileData![0].url!}&quality=40&width=200&height=200";
+          // _profileImageUrl =
+          //     "${response.fileData![0].url!}&quality=40&width=200&height=200";
+          _profileImageUrl = response.fileData![0].url!;
         });
       }
     });
@@ -170,15 +172,18 @@ class _UserProfilePage extends State<UserProfilePage> {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.subscriptions_outlined),
-                      onTap: () async {},
+                      trailing: const Icon(Icons.arrow_forward_ios_sharp),
+                      onTap: () async {
+                        NavigatorApp.push(SubscriptionListPage(), context);
+                      },
                       title: Text("Suscripciones",
-                          style: Styles.rowCellTitleTextStyle),                  
+                          style: Styles.rowCellTitleTextStyle),
                     ),
                     const Divider(),
                   ],
                 ),
                 ListTile(
-                  leading: const Icon(Icons.exit_to_app),
+                    leading: const Icon(Icons.exit_to_app),
                     title: const Text(
                       "Cerrar sesión",
                       style: TextStyle(color: Colors.red, fontSize: 20),

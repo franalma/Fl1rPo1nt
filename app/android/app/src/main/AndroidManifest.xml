@@ -10,6 +10,16 @@
     <uses-permission android:name="com.android.vending.BILLING" />
     
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
+
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
+    <!-- Ensure app is only available on screens typically used by phones -->
+    <supports-screens
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:xlargeScreens="false"
+        android:anyDensity="true" />
     
 
     <application
