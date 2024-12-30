@@ -3,17 +3,18 @@ import 'package:app/comms/model/request/user/profile/HostUpdateUserNameRequest.d
 import 'package:app/main.dart';
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
+import 'package:app/model/Subscription.dart';
 import 'package:app/model/User.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/elements/Styles.dart';
 import 'package:app/ui/suscriptions/SubscriptionListPage.dart';
-import 'package:app/ui/user_profile/UserDataPage.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:app/ui/utils/toast_message.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -90,6 +91,8 @@ class _UserProfilePage extends State<UserProfilePage> {
                 ),
               ),
               const Spacer(),
+              _buildSubscriptionBlock(),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -109,6 +112,24 @@ class _UserProfilePage extends State<UserProfilePage> {
         )
       ]),
     );
+  }
+
+  Widget _buildSubscriptionBlock() {
+    if (user.subscription.id != null) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Icon(
+              FontAwesomeIcons.award,
+              size: 40,
+              // color: user.subscription.color,
+            ),
+          ],
+        ),
+      );
+    }
+    return Container();
   }
 
   Future<void> _onChangeName() async {

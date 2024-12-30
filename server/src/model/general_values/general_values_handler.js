@@ -1,7 +1,11 @@
 const logger = require("../../logger/log");
 const dbHandler = require("../../database/database_handler");
 const { DB_INSTANCES } = require("../../database/databases");
-const { HOST_ERROR_CODES, genError } = require("../../constants/host_error_codes");
+const {
+  HOST_ERROR_CODES,
+  genError,
+} = require("../../constants/host_error_codes");
+const { Logform } = require("winston");
 
 function createSocialNetWork(item) {
   logger.info("Starts createSocialNetWork: " + JSON.stringify(item));
@@ -21,6 +25,17 @@ function createSocialNetworkExternal(item) {
   return result;
 }
 
+function createSubscriptionExternal(item) {
+  result = {
+    id: item.id,
+    ads: item.ads,
+    radio_visibility: item.radio_visibility,
+    smart_points: item.smart_points,
+    background: item.background,
+  };
+  return result;
+}
+
 function createGenderExternal(item) {
   result = {
     id: item.id,
@@ -31,7 +46,6 @@ function createGenderExternal(item) {
 }
 
 async function putAllSocialNetworks(input) {
-
   try {
     logger.info(
       "Starts putAllSocialNetworks: " + JSON.stringify(input.networks)
@@ -55,7 +69,7 @@ async function putAllSocialNetworks(input) {
     logger.info(error);
   }
 
-  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };;
+  return { ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR) };
 }
 
 async function getAllSocialNetworks() {
@@ -69,7 +83,6 @@ async function getAllSocialNetworks() {
     );
 
     if (dbResponse) {
-
       let networksValues = [];
       for (let network of dbResponse) {
         let item = createSocialNetworkExternal(network);
@@ -77,8 +90,8 @@ async function getAllSocialNetworks() {
       }
       return {
         ...genError(HOST_ERROR_CODES.NO_ERROR),
-        networks: networksValues
-      }
+        networks: networksValues,
+      };
     }
   } catch (error) {
     logger.info(error);
@@ -86,7 +99,7 @@ async function getAllSocialNetworks() {
 
   return {
     ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR),
-    networks: []
+    networks: [],
   };
 }
 
@@ -138,8 +151,10 @@ async function getAllSexualOrientationsRelationships() {
         };
         result.sex_orientation.push(value);
       }
-      let dbResponse2 = await dbHandler.findAllWithClient(db.client,
-        db.collections.type_relationships_collection);
+      let dbResponse2 = await dbHandler.findAllWithClient(
+        db.client,
+        db.collections.type_relationships_collection
+      );
       for (let item of dbResponse2) {
         let value = {
           id: item.id,
@@ -152,8 +167,8 @@ async function getAllSexualOrientationsRelationships() {
 
       return {
         ...genError(HOST_ERROR_CODES.NO_ERROR),
-        ...result
-      }
+        ...result,
+      };
     }
   } catch (error) {
     logger.info(error);
@@ -161,8 +176,35 @@ async function getAllSexualOrientationsRelationships() {
 
   return {
     ...genError(HOST_ERROR_CODES.INTERNAL_SERVER_ERROR),
-    ...result
+    ...result,
   };
+}
+
+async function getAllSubscriptionTypes() {
+  logger.info("Starts getAllSubscriptionTypes");
+  let result = {};
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const dbResponse = await dbHandler.findAllWithClient(
+      db.client,
+      db.collections.subscription_collection
+    );
+
+    if (dbResponse) {
+      var subscriptions = [];
+      for (let item of dbResponse) {
+        let subs = createSubscriptionExternal(item);
+        subscriptions.push(subs);
+      }
+      result = {
+        ...HOST_ERROR_CODES.NO_ERROR,
+        subscriptions: subscriptions,
+      };
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+  return result;
 }
 
 module.exports = {
@@ -170,4 +212,5 @@ module.exports = {
   getAllSocialNetworks,
   getAllSexualOrientationsRelationships,
   getAllGenders,
+  getAllSubscriptionTypes,
 };

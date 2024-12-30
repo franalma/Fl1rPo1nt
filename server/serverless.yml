@@ -86,6 +86,7 @@ provider:
 
 functions:
   floiint-api:    
+    memorySize: 256
     image:       
       uri: 392002456877.dkr.ecr.eu-west-3.amazonaws.com/floiint-docker:latest
     environment: 
@@ -119,6 +120,7 @@ functions:
           private: true
 
   floiint-auth:
+    memorySize: 256
     image:       
       uri: 392002456877.dkr.ecr.eu-west-3.amazonaws.com/floiint-docker:latest
     environment: 
@@ -167,6 +169,7 @@ functions:
           method: get          
 
   floiint-mult:    
+    memorySize: 256
     image:       
       uri: 392002456877.dkr.ecr.eu-west-3.amazonaws.com/floiint-docker:latest
     environment: 
@@ -216,7 +219,8 @@ functions:
           method: get
           private: true
 
-  floiint-chat:    
+  floiint-chat:   
+    memorySize: 256 
     image:       
       uri: 392002456877.dkr.ecr.eu-west-3.amazonaws.com/floiint-docker:latest
     environment: 

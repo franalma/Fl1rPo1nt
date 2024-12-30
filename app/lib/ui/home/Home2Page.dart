@@ -260,6 +260,7 @@ class _Home2State extends State<Home2Page> {
   Future<ConfigError> _launchConfigChecker() async {
     Log.d("Starts _launchConfigChecker");
     ConfigError result = ConfigError.noError;
+    
     try {
       result = _configService.checkConfiguration();
       _handleConfigCheckerStatus(result);

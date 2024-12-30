@@ -218,7 +218,10 @@ function requestFieldsValidation(req, res, next) {
       break;
     }
 
-    
+    case hostActions.UPDATE_USER_SUBSCRIPTION_BY_USER_ID: {
+      validationSet = validationRules.UPDATE_USER_SUBSCRIPTION_BY_USER_ID_RULES;
+      break;
+    }
 
     default: {
       logger.info("No request verification needed for " + action);

@@ -7,6 +7,7 @@ import 'package:app/model/Gender.dart';
 import 'package:app/model/Hobby.dart';
 import 'package:app/model/QrValue.dart';
 import 'package:app/model/SocialNetwork.dart';
+import 'package:app/model/Subscription.dart';
 import 'package:app/model/UserInterest.dart';
 import 'package:app/ui/utils/CommonUtils.dart';
 import 'package:app/ui/utils/Log.dart';
@@ -37,6 +38,7 @@ class User {
   late Gender genderInterest;
   late int bornDate; 
   late int age; 
+  late Subscription subscription; 
 
   User(
       this.userId,
@@ -61,7 +63,8 @@ class User {
       this.gender,
       this.genderInterest,
       this.bornDate,
-      this.age
+      this.age,
+      this.subscription
       
       );
 
@@ -93,6 +96,7 @@ class User {
       Gender genderInterest = Gender.empty();
       var bornDate = json["born_date"];
       var age = DateTime.now().year - DateTime.fromMillisecondsSinceEpoch(bornDate).year;
+      Subscription subscription = Subscription.fromJson(json["subscription"]);
 
       if (json["user_interests"]["relationship"] is Map) {
         relationShip =
@@ -175,7 +179,8 @@ class User {
           gender,
           genderInterest,
           bornDate,
-          age);      
+          age,
+          subscription);      
 
       return user;
     } catch (error, stackTrace) {

@@ -27,7 +27,7 @@ app.use(express.json());
 
 async function processRequest(req, res) {
   logger.info("processRequest:" + JSON.stringify(req.body));
-  
+
   try {
     let result = requestValidator.requestDoValidation(req);
     if (result) {
@@ -124,7 +124,7 @@ async function processRequest(req, res) {
           result = await flirtHandler.getUserFlirts(req.body.input);
           break;
         }
-        
+
         case hostActions.UPDATE_USER_BIOGRAPHY_BY_USER_ID: {
           result = await userHandler.updateUserBiographyByUserId(
             req.body.input
@@ -252,6 +252,17 @@ async function processRequest(req, res) {
           break;
         }
 
+        case hostActions.UPDATE_USER_SUBSCRIPTION_BY_USER_ID: {
+          result = await userHandler.updateSubscriptionByUserId(req.body.input);
+          break;
+        }
+
+        case hostActions.GET_ALL_SUBSCRIPTION_TYPES: {
+          result = await generalValuesHandler.getAllSubscriptionTypes();
+          break;
+        }
+
+
         
       }
 
@@ -285,10 +296,9 @@ app.post(
 //   });
 // });
 
-
-process.on('SIGINT', async () => {
-  dbHandler.connectToDatabase(DB_INSTANCES.DB_API)
-  console.log('DB connection pool closed for server api ');
+process.on("SIGINT", async () => {
+  dbHandler.connectToDatabase(DB_INSTANCES.DB_API);
+  console.log("DB connection pool closed for server api ");
   process.exit(0);
 });
 

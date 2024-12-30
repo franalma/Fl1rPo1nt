@@ -85,6 +85,7 @@ if (process.env.DATABASE_API_NAME != null) {
       user_images_collection: "user_images",
       flirts_collection: "flirts",      
       smart_points_coolection: "smart_points",
+      subscription_collection: "subscriptions"
     },
   };
   

@@ -41,7 +41,6 @@ const HOST_ERROR_CODES = {
     description: "User does not exist",
   },
 
-
   USER_BLOCKED: {
     error_code: -105,
     status: 200,
@@ -89,6 +88,12 @@ const HOST_ERROR_CODES = {
     error_code: -112,
     status: 200,
     description: "Not possible to update match",
+  },
+
+  SUBSCRIPTION_UPDATE_ERROR: {
+    error_code: -113,
+    status: 200,
+    description: "Not possible to update user subscription status",
   },
 
   USER_ALREADY_IN_YOUR_CONTACTS: {

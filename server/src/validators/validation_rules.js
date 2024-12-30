@@ -233,11 +233,10 @@ const UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID_RULES = [
     body('input.picture_access').notEmpty().isBoolean().withMessage("Picture access value is required"),    
 ];
 
-
-
-
-
-
+const UPDATE_USER_SUBSCRIPTION_BY_USER_ID_RULES = [    
+    body('input.user_id').notEmpty().isString().withMessage("User id is required"),    
+    body('input.subscription').notEmpty().isObject().withMessage("Subscription value is required"),        
+];
 
 
 module.exports = {
@@ -279,5 +278,6 @@ module.exports = {
     REMOVE_SMART_POINT_BY_POINT_ID_RULES,
     GET_SMART_POINTS_BY_POINT_ID_RULES,
     UPDATE_MATCH_AUDIO_ACCESS_BY_MATCH_ID_USER_ID_RULES,
-    UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID_RULES
+    UPDATE_MATCH_PICTURE_ACCESS_BY_MATCH_ID_USER_ID_RULES,
+    UPDATE_USER_SUBSCRIPTION_BY_USER_ID_RULES
 }

@@ -6,6 +6,7 @@ import 'package:app/model/HostErrorCode.dart';
 import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/services/DeviceInfoService.dart';
+import 'package:app/services/IapService.dart';
 import 'package:app/services/LocationService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
@@ -210,9 +211,11 @@ class _LoginPageState extends State<LoginPage2> {
       HostErrorCodesValue hostErrorCodesValue =
           HostErrorCodesValue.parse(response.hostErrorCode!.code);
       Log.d("Loging status ${hostErrorCodesValue.code}");
+      
       switch (hostErrorCodesValue) {
         case HostErrorCodesValue.NoError:
           {
+             await IapService.loadSubscriptions();
             _onLoginSuccess(response);
             break;
           }
@@ -247,6 +250,7 @@ class _LoginPageState extends State<LoginPage2> {
         Deviceinfoservice().init(context);
         Session.socketSubscription =
             SocketSubscriptionController().initializeSocketConnection();
+
 
         Session.user.getActiveFlirtByUserId().then((flirt) {
           if (flirt != null) {

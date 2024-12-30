@@ -38,6 +38,7 @@ async function creatInternalUser(input) {
     default_qr_id: "",
     radio_visibility: 10,
     born_date: input.born_date,
+    subscription: {},
   };
 
   return user;
@@ -58,7 +59,10 @@ async function getImageByUserIdImageId(input) {
       let result = { status: 200, files: [] };
       for (let file of dbFiles) {
         try {
-          const secureUrl = await s3Handler.getPresignedUrl("floiint-bucket", `users/images/${input.user_id}/${file.filename}`)
+          const secureUrl = await s3Handler.getPresignedUrl(
+            "floiint-bucket",
+            `users/images/${input.user_id}/${file.filename}`
+          );
           // const secureUrl = generateSignedImageUrl(file.filename);
           result.files.push({
             file_id: file.file_id,
@@ -78,7 +82,6 @@ async function getImageByUserIdImageId(input) {
   return { status: 500 };
 }
 
-
 async function createPublicProfileUser(input) {
   logger.info("Starts createPublicProfileUser:" + JSON.stringify(input));
   let user = {};
@@ -91,7 +94,8 @@ async function createPublicProfileUser(input) {
       hobbies: input.hobbies,
       gender: input.gender,
       default_qr_id: input.default_qr_id,
-      born_date:input.born_date
+      born_date: input.born_date,
+      subscription: input.subscription,
     };
 
     if (input.profile_image_id) {
@@ -103,7 +107,7 @@ async function createPublicProfileUser(input) {
           },
         ],
       };
-      query.user_id = input.id; 
+      query.user_id = input.id;
       const imageData = await getImageByUserIdImageId(query);
 
       if (imageData.status == 200) {
@@ -215,7 +219,8 @@ async function getUserInfoByUserId(input) {
         default_qr_id: user.default_qr_id,
         radio_visibility: user.radio_visibility,
         gender: user.gender ? user.gender : {},
-        born_date:user.born_date
+        born_date: user.born_date,
+        subscription: user.subscription,
       },
     };
 
@@ -664,7 +669,7 @@ async function updateUserScansByUserIdContactId(userId, contactId) {
 
 async function getUserPublicProfileByUserId(input) {
   let result = {};
-  try {    
+  try {
     logger.info("Starts getUserPublicProfileByUserId:" + JSON.stringify(input));
     const db = DB_INSTANCES.DB_API;
     const filter = { id: input.user_id };
@@ -678,13 +683,45 @@ async function getUserPublicProfileByUserId(input) {
       result = await createPublicProfileUser(userDB);
       result.status = 200;
     }
-    
+
     return result;
   } catch (error) {
     logger.info(error);
   }
 
   return { status: 500 };
+}
+
+async function updateSubscriptionByUserId(input) {
+  logger.info("Starts updateSubscriptionByUserId");  
+  try {
+    const db = DB_INSTANCES.DB_API;
+    const filters = { id: input.user_id };
+    const bUserExist = await checkUserExist(input.user_id);
+
+    if (bUserExist) {
+      const now = Date.now(); 
+      input.subscription.created_at = now; 
+      const newValues = {
+        subscription: input.subscription,
+        updated_at: now
+      };
+      await dbHandler.updateDocumentWithClient(
+        db.client,
+        newValues,
+        filters,
+        db.collections.user_collection
+      );
+      return { ...HOST_ERROR_CODES.NO_ERROR };
+    } else {
+      return {
+        ...HOST_ERROR_CODES.USER_NOT_EXIST,
+      };
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+  return { ...HOST_ERROR_CODES.SUBSCRIPTION_UPDATE_ERROR };
 }
 
 module.exports = {
@@ -705,5 +742,6 @@ module.exports = {
   getUserPublicProfileByUserId,
   getUserInfoByUserId,
   checkUserExist,
-  checkQrExist
+  checkQrExist,
+  updateSubscriptionByUserId,
 };
