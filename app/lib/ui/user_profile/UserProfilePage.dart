@@ -5,6 +5,7 @@ import 'package:app/model/SecureStorage.dart';
 import 'package:app/model/Session.dart';
 import 'package:app/model/Subscription.dart';
 import 'package:app/model/User.dart';
+import 'package:app/services/IapService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
@@ -121,7 +122,7 @@ class _UserProfilePage extends State<UserProfilePage> {
         child: Row(
           children: [
             Icon(
-              FontAwesomeIcons.award,
+              FontAwesomeIcons.medal, color: IapService.getSubscriptionColor(user.subscription.id!),
               size: 40,
               // color: user.subscription.color,
             ),

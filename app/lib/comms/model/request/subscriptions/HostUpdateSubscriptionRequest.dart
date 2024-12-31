@@ -6,8 +6,13 @@ import 'package:app/ui/utils/Log.dart';
 import 'package:http/http.dart' as http;
 
 class HostUpdateSubscriptionRequest extends BaseRequest {
-  Future<bool> run(String userId, int validUntil, String type,
-      String transactionDate) async {
+  Future<bool> run(
+      String userId,      
+      String subscriptionId,
+      String transactionDate,
+      bool autoRenew,      
+      String purchaseToken,
+      int purchaseState) async {
     try {
       Log.d("Start HostUpdateSubscriptionRequest");
 
@@ -17,10 +22,12 @@ class HostUpdateSubscriptionRequest extends BaseRequest {
         "action": option.action,
         "input": {
           "user_id": userId,
-          "subscription": {
-            "valid_until": validUntil,
-            "type": type,
-            "transaction_date": transactionDate
+          "subscription": {            
+            "id": subscriptionId,
+            "transaction_date": transactionDate,
+            "auto_renew": autoRenew,            
+            "purchased_token": purchaseToken,
+            "purchase_state": purchaseState
           }
         }
       };

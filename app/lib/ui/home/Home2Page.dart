@@ -1,6 +1,7 @@
 import 'package:app/model/Session.dart';
 import 'package:app/model/User.dart';
 import 'package:app/services/ConfigService.dart';
+import 'package:app/services/IapService.dart';
 import 'package:app/services/NewMessageService.dart';
 import 'package:app/ui/NavigatorApp.dart';
 import 'package:app/ui/contacts/ListContactsPage.dart';
@@ -18,8 +19,7 @@ import 'package:app/ui/user_state/UserStatePage.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:showcaseview/showcaseview.dart';
+
 
 class Home2Page extends StatefulWidget {
   @override
@@ -31,11 +31,12 @@ class _Home2State extends State<Home2Page> {
   late ConfigService _configService;
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
     Session.socketSubscription?.onNewContactRequested =
         _handleNewContactRequest;
     _configService = ConfigService(_user);
+    
     _launchTutorial();
   }
 
@@ -260,7 +261,7 @@ class _Home2State extends State<Home2Page> {
   Future<ConfigError> _launchConfigChecker() async {
     Log.d("Starts _launchConfigChecker");
     ConfigError result = ConfigError.noError;
-    
+
     try {
       result = _configService.checkConfiguration();
       _handleConfigCheckerStatus(result);

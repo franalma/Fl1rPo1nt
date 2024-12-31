@@ -28,7 +28,7 @@ class Subscription {
       String transactionDate = "";
 
       if (map.isNotEmpty) {
-        String id = map["type"];
+        String id = map["id"];
 
         if (map.containsKey("ads")) {
           ads = map["ads"];

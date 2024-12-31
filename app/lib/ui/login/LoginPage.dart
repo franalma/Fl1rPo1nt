@@ -211,11 +211,10 @@ class _LoginPageState extends State<LoginPage2> {
       HostErrorCodesValue hostErrorCodesValue =
           HostErrorCodesValue.parse(response.hostErrorCode!.code);
       Log.d("Loging status ${hostErrorCodesValue.code}");
-      
+
       switch (hostErrorCodesValue) {
         case HostErrorCodesValue.NoError:
           {
-             await IapService.loadSubscriptions();
             _onLoginSuccess(response);
             break;
           }
@@ -251,7 +250,6 @@ class _LoginPageState extends State<LoginPage2> {
         Session.socketSubscription =
             SocketSubscriptionController().initializeSocketConnection();
 
-
         Session.user.getActiveFlirtByUserId().then((flirt) {
           if (flirt != null) {
             Session.currentFlirt = flirt;
@@ -265,7 +263,8 @@ class _LoginPageState extends State<LoginPage2> {
                     .saveSecureData("refresh_token", Session.user.refreshToken);
                 SecureStorage().saveSecureData("user_id", Session.user.userId);
 
-                NavigatorApp.pushAndRemoveUntil(context, Home2Page());
+                IapService.loadSubscriptions(Session.user).then((value) =>
+                    NavigatorApp.pushAndRemoveUntil(context, Home2Page()));
               });
             }).onError((error, stackTrace) {
               NavigatorApp.pop(context);
@@ -275,8 +274,9 @@ class _LoginPageState extends State<LoginPage2> {
                   "Cerrar",
                   FontAwesomeIcons.exclamation);
             });
-          }else{
-              NavigatorApp.pushAndRemoveUntil(context, Home2Page());
+          } else {
+            IapService.loadSubscriptions(Session.user).then((value) =>
+                    NavigatorApp.pushAndRemoveUntil(context, Home2Page()));
           }
         });
       } else {

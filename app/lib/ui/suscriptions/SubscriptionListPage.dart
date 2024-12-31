@@ -3,6 +3,7 @@ import 'package:app/ui/elements/AlertDialogs.dart';
 import 'package:app/ui/elements/FlexibleAppBar.dart';
 import 'package:app/ui/utils/Log.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 class SubscriptionListPage extends StatefulWidget {
@@ -35,17 +36,46 @@ class _SuscriptionListState extends State<SubscriptionListPage> {
           return Column(
             children: [
               ListTile(
-                title: Text(_products[index].title),
+                leading: Icon(
+                  FontAwesomeIcons.medal,
+                  size: 40,
+                  color: IapService.getSubscriptionColor(_products[index].id),
+                ),
+                title: Text(
+                  _products[index].title.contains("(")
+                      ? _products[index]
+                          .title
+                          .substring(0, _products[index].title.indexOf("("))
+                      : _products[index].title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+
                 subtitle: Text(_products[index].description),
-                trailing: ElevatedButton(
-                  onPressed: ()async {await _buySuscription(index);},
-                  child: Column(
+                trailing: SizedBox(
+                  height: 80,
+                  child: Stack(   
+                               
                     children: [
-                      Text("${_products[index].price}${_products[index].currencySymbol}"),
-                      Text("Comprar")
+                      Positioned(                          
+                        child: Text(
+                          "${_products[index].price}${_products[index].currencySymbol}",
+                          style:
+                              const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                        Positioned(
+                          top:10,
+                        child: IconButton(
+                          icon: const Icon(Icons.shopping_cart),
+                          onPressed: () async {
+                            await _buySuscription(index);
+                          },
+                        ),
+                      )
+                    
                     ],
                   ),
-                ),
+                ),               
               ),
               const Divider()
             ],
@@ -70,12 +100,13 @@ class _SuscriptionListState extends State<SubscriptionListPage> {
       Log.d("$error, $stackTrace");
     }
   }
-  Future<void>_buySuscription(int index) async{
+
+  Future<void> _buySuscription(int index) async {
     Log.d("Starts _buySuscription");
-    try{
+    try {
       IapService.buyProduct(_products[index]);
-    }catch(error, stackTrace){
-        Log.d("$error, $stackTrace");
+    } catch (error, stackTrace) {
+      Log.d("$error, $stackTrace");
     }
   }
 }

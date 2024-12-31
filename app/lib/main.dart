@@ -20,6 +20,7 @@ void main() async {
   RemoteConfigService.getApiKey();
   CrahsalitycsService.init(); 
   await IapService.init();
+  await IapService.restorePurchases(); 
   
   runApp(const MyApp());
 }
